@@ -11,17 +11,23 @@ Release Notes
 
 * added geothermal district heating as `central geothermal-sourced heat pump` and `central goethermal heat source` based on DEA technology catalogue ("45.1.a Geothermal DH, 1200m, E")
 
-* added Pyrolysis for biochar 
+* added Pyrolysis for biochar
 
 * fixed unit formatting in DEA technology data sheets 105 (slow pyrolysis)
 
 * fixed DEA technology data sheet name for central water tank storage to point to actual PTES data
 
-* Fix minor issues in the code
+* added geothermal district heating as `central geothermal-sourced heat pump` based on DEA technology catalogue ("45.1.a Geothermal DH, 1200m, E")
 
 * fix minor issues in the code
 
 * added iron-air battery cost data from Form Energy
+
+* include NREL/ATB costs for electricity generation technologies in a dedicated US cost outputs
+
+* include ICCT techno-economic parameters for electrolyzers, hydrogen storage, Fischer-Tropsch, Direct air capture
+
+* include JRC data for fossil- and biomass-based hydrogen production technologies (with and without CCS)
 
 * added energy to power ratio for central water pit storage and central water tank storage
 
