@@ -1,21 +1,24 @@
 """Classes for source management and processing, for pre-packaged and user-provided data sources."""
 
 import logging
+import pathlib
 import subprocess
 from collections.abc import Iterable
-from pathlib import Path
+from datetime import datetime
+from typing import Any
 
 import frictionless as ftl
 import pandas as pd
+import requests
 
 logger = logging.getLogger(__name__)
 
-DATASOURCES_PATH = Path(__file__).parent / "datasources"
+DATASOURCES_PATH = pathlib.Path(__file__).parent / "datasources"
 SPECIFICATIONS_PATH = DATASOURCES_PATH / "specification"
 
 
 # Generate a list of all available sources currently available in the package's datasources folder.
-def _get_available_sources() -> dict[str, Path]:
+def _get_available_sources() -> dict[str, pathlib.Path]:
     """
     Determine all available sources based on the folders in datasources.
 
@@ -57,7 +60,7 @@ class Source:
 
     """
 
-    def __init__(self, name: str, path: Path | str | None = None) -> None:
+    def __init__(self, name: str, path: pathlib.Path | str | None = None) -> None:
         """
         Create a source of data that can provide one or more data features.
 
@@ -93,7 +96,7 @@ class Source:
 
         # Ensure path is a Path object
         if isinstance(path, str):
-            path = Path(path)
+            path = pathlib.Path(path)
         self.path = path
 
         # pd.DataFrame: Details on the source, containing author, title, URL and other information, loaded from the folder
@@ -101,8 +104,12 @@ class Source:
         # list[str]: List of features provided by the source (e.g., 'Technologies')
         self.available_features = self._detect_features()
 
-    def _load_details(self) -> pd.DataFrame:
-        """Load the source.csv file into a DataFrame."""
+    def _load_details(self) -> pd.DataFrame | None:
+        """Load the sources.csv file into a DataFrame."""
+        if self.path is None:
+            logger.error("The path attribute is not set.")
+            return None
+
         source_file = self.path / "sources.csv"
         schema_file = SPECIFICATIONS_PATH / "sources.schema.json"
 
@@ -122,10 +129,14 @@ class Source:
 
         return details
 
-    def _detect_features(self) -> list[str]:
+    def _detect_features(self) -> list[str] | None:
         """Detect which features are available in the source folder."""
-        features = []
         # Find all CSV files in the source folder
+
+        if self.path is None:
+            logger.error("The path attribute is not set.")
+            return None
+
         files = {file.stem for file in self.path.glob("*.csv")}
         files = files - {"sources"}  # Exclude source.csv
 
@@ -134,7 +145,7 @@ class Source:
         nicer_names = {
             "technologies": "Technologies",
         }
-        features = {nicer_names[f] for f in files}
+        features = list({nicer_names[f] for f in files})
         features = sorted(features)
 
         return features
@@ -208,6 +219,193 @@ class Source:
             )
             return True
 
+    def download_file_from_wayback(self) -> pathlib.Path | None:
+        """
+        Download a file from the Wayback Machine and save it to a specified path.
+
+        This method retrieves an archived file from the Wayback Machine using the URL
+        stored in the `details` attribute of the instance. The file is saved in the
+        specified format based on its Content-Type field in the Response Header.
+        Supported formats include:
+        - Plain text (.txt)
+        - PDF (.pdf)
+        - Excel (.xls and .xlsx)
+        - Parquet (.parquet)
+
+        The method handles HTTP errors and prints an appropriate message if an error occurs
+
+        Returns
+        -------
+        pathlib.Path
+            the specified path where the file is stored
+
+        Raises
+        ------
+            requests.exceptions.RequestException: If there is an issue with the HTTP request
+
+        Notes
+        -----
+            - The `details` attribute must contain a key "url_archived" with a valid URL
+            - The `path` and `name` attributes must be defined in the instance for saving the file
+
+        """
+        if self.details is None:
+            logger.error("The details attribute is not set.")
+            return None
+
+        url_archived = self.details["url_archived"].to_numpy()[0]
+        save_path: pathlib.Path | None = None
+
+        # Ensure self.path is not None
+        if self.path is None:
+            logger.error("The path attribute is not set.")
+            return None
+
+        try:
+            response = requests.get(url_archived)
+            response.raise_for_status()  # Check for HTTP errors
+            content_type = response.headers.get("Content-Type")
+            if "text/plain" in content_type:
+                save_path = pathlib.Path(self.path, self.name + ".txt")
+            elif "application/pdf" in content_type:
+                save_path = pathlib.Path(self.path, self.name + ".pdf")
+            elif "application/vnd.ms-excel" in content_type:
+                save_path = pathlib.Path(self.path, self.name + ".xls")
+            elif (
+                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                in content_type
+            ):
+                save_path = pathlib.Path(self.path, self.name + ".xlsx")
+            elif "application/parquet" in content_type:
+                save_path = pathlib.Path(self.path, self.name + ".parquet")
+            else:
+                logger.warning(f"Unsupported content type: {content_type}")
+                return None  # Return None if the content type is unsupported
+
+            with open(save_path, "wb") as file:
+                file.write(response.content)
+            logger.info(f"File downloaded successfully and saved to {save_path}")
+            return save_path
+        except requests.exceptions.RequestException as e:
+            logger.info(f"An error occurred: {e}")
+            return None
+
+    @staticmethod
+    def change_datetime_format(
+        input_datetime_string: str,
+        input_datetime_format: str,
+        output_datetime_format: str,
+    ) -> str | None:
+        """
+        Change the format of a given datetime string from one format to another. This function takes a
+        datetime string and its current format, then converts it to a specified output format.
+        If the input string does not match the provided input format, it logs an error and returns None.
+
+        Parameters
+        ----------
+        input_datetime_string : str
+            datetime string that needs to be reformatted
+
+        input_datetime_format : str
+            format of the input datetime string, following the strftime format codes
+
+        output_datetime_format : str
+            desired format for the output datetime string, following the strftime format codes.
+
+        Returns
+        -------
+           str | None
+               reformatted datetime string if successful, otherwise None
+
+        Raises
+        ------
+        ValueError
+            If the input datetime string does not match the input format.
+
+        """
+        try:
+            dt = datetime.strptime(input_datetime_string, input_datetime_format)
+            logger.info(
+                f"The datetime string follows the format {input_datetime_format}"
+            )
+            output_datetime_string = dt.strftime(output_datetime_format)
+            logger.info(f"The format is now changed to {output_datetime_format}")
+            return output_datetime_string
+        except ValueError as e:
+            logger.info(f"Error during datetime formatting: {e}")
+            return None
+
+    @staticmethod
+    def is_wayback_snapshot_available(
+        input_url: str, input_timestamp: str
+    ) -> str | None | Any:
+        """
+        The function queries the Internet Archive's Wayback Machine to check for the availability
+        of archived snapshots of a given URL. It constructs an API request to the Wayback Machine
+        and processes the response to extract the closest archived snapshot information.
+
+        Parameters
+        ----------
+        input_url : str
+            URL for which to retrieve the Wayback Machine snapshot
+        input_timestamp : str
+            timestamp for which to retrieve the Wayback Machine snapshot
+
+        Returns
+        -------
+        Tuple[str, str, str] | None
+            The tuple contains:
+                -) archived_url : str URL of the archived snapshot
+                -) timestamp : str timestamp of the archived snapshot with format YYYY-MM-DD hh:mm:ss
+                -) status : str status of the archived snapshot
+            Returns None if no archived snapshot is found or if an error occurs during the API request.
+
+        Raises
+        ------
+        requests.RequestException
+            If there is an issue with the HTTP request to the Wayback Machine API
+
+        """
+        api_timestamp = Source.change_datetime_format(
+            input_timestamp,
+            "%Y-%m-%d %H:%M:%S",
+            "%Y%m%d%H%M%S",
+        )
+        api_url = f"http://archive.org/wayback/available?url={input_url}&timestamp={api_timestamp}"
+        try:
+            response = requests.get(api_url)
+            # Raise an error for bad HTTP status codes
+            response.raise_for_status()
+            data = response.json()
+
+            # Extract the closest archived snapshot information
+            closest = data.get("archived_snapshots", {}).get("closest", {})
+            if closest:
+                available = closest.get("available", False)
+                archived_url = closest.get("url", "")
+                timestamp = closest.get("timestamp", "")
+                status = closest.get("status", "")
+
+                logger.info(f"Available: {available}")
+                logger.info(f"Archived URL: {archived_url}")
+                logger.info(f"Timestamp: {timestamp}")
+                logger.info(f"Status: {status}")
+
+                output_timestamp = Source.change_datetime_format(
+                    timestamp,
+                    "%Y%m%d%H%M%S",
+                    "%Y-%m-%d %H:%M:%S",
+                )
+
+                return archived_url, output_timestamp, status
+            else:
+                logger.info("No archived snapshot found.")
+                return None
+
+        except requests.RequestException as e:
+            logger.info(f"Error during API request: {e}")
+            return None
+
 
 class Sources:
     """
@@ -229,7 +427,7 @@ class Sources:
     schema = ftl.Schema(str(SPECIFICATIONS_PATH / (schema_name + ".schema.json")))
 
     def __init__(
-        self, sources: str | Source | list[str | Source] | dict[str, Path]
+        self, sources: str | Source | list[str | Source] | dict[str, pathlib.Path]
     ) -> None:
         """
         Create a collection of data sources.
@@ -284,7 +482,7 @@ class Sources:
             ]
         )
 
-    def to_csv(self, path: str | Path) -> None:
+    def to_csv(self, path: str | pathlib.Path) -> None:
         """
         Save the details of the sources to a CSV file.
 
@@ -296,7 +494,7 @@ class Sources:
         """
         self.details.to_csv(path, index=False)
 
-    def to_datapackage(self, path: str | Path, overwrite: bool = False) -> None:
+    def to_datapackage(self, path: str | pathlib.Path, overwrite: bool = False) -> None:
         """
         Export the data to a folder following the datapackage specification.
 
@@ -309,7 +507,7 @@ class Sources:
         overwrite : bool
             Existing files with the same name in the target path will be overwritten, default is False.
         """
-        path = Path(path)
+        path = pathlib.Path(path)
 
         # Check if the path exists and is empty
         if path.exists():
@@ -327,3 +525,6 @@ class Sources:
         )  # not part of the schema, drop manually here
         ftl.Resource(data).write(path=str(path / f"{self.schema_name}.csv"))
         self.schema.to_json(path=str(path / f"{self.schema_name}.schema.json"))
+
+
+__all__ = [Source, Sources, AVAILABLE_SOURCES]
