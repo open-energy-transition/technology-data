@@ -1,21 +1,25 @@
 """Classes for source management and processing, for pre-packaged and user-provided data sources."""
 
 import logging
+import pathlib
 import subprocess
 from collections.abc import Iterable
-from pathlib import Path
+from datetime import datetime
+from typing import Any
 
 import frictionless as ftl
 import pandas as pd
+import requests
+import savepagenow
 
 logger = logging.getLogger(__name__)
 
-DATASOURCES_PATH = Path(__file__).parent / "datasources"
+DATASOURCES_PATH = pathlib.Path(__file__).parent / "datasources"
 SPECIFICATIONS_PATH = DATASOURCES_PATH / "specification"
 
 
 # Generate a list of all available sources currently available in the package's datasources folder.
-def _get_available_sources() -> dict[str, Path]:
+def _get_available_sources() -> dict[str, pathlib.Path]:
     """
     Determine all available sources based on the folders in datasources.
 
@@ -57,7 +61,7 @@ class Source:
 
     """
 
-    def __init__(self, name: str, path: Path | str | None = None) -> None:
+    def __init__(self, name: str, path: pathlib.Path | str | None = None) -> None:
         """
         Create a source of data that can provide one or more data features.
 
@@ -93,7 +97,7 @@ class Source:
 
         # Ensure path is a Path object
         if isinstance(path, str):
-            path = Path(path)
+            path = pathlib.Path(path)
         self.path = path
 
         # pd.DataFrame: Details on the source, containing author, title, URL and other information, loaded from the folder
@@ -101,8 +105,12 @@ class Source:
         # list[str]: List of features provided by the source (e.g., 'Technologies')
         self.available_features = self._detect_features()
 
-    def _load_details(self) -> pd.DataFrame:
-        """Load the source.csv file into a DataFrame."""
+    def _load_details(self) -> pd.DataFrame | None:
+        """Load the sources.csv file into a DataFrame."""
+        if self.path is None:
+            logger.error("The path attribute is not set.")
+            return None
+
         source_file = self.path / "sources.csv"
         schema_file = SPECIFICATIONS_PATH / "sources.schema.json"
 
@@ -124,8 +132,12 @@ class Source:
 
     def _detect_features(self) -> list[str]:
         """Detect which features are available in the source folder."""
-        features = []
         # Find all CSV files in the source folder
+
+        if self.path is None:
+            logger.error("The path attribute is not set.")
+            return []  # return an empty list
+
         files = {file.stem for file in self.path.glob("*.csv")}
         files = files - {"sources"}  # Exclude source.csv
 
@@ -134,12 +146,12 @@ class Source:
         nicer_names = {
             "technologies": "Technologies",
         }
-        features = {nicer_names[f] for f in files}
+        features = list({nicer_names[f] for f in files})
         features = sorted(features)
 
         return features
 
-    def process(self, trusted_execution: bool = False) -> None:
+    def process(self, trusted_execution: bool = False) -> bool:
         """
         Process the source data.
 
@@ -208,6 +220,424 @@ class Source:
             )
             return True
 
+    def ensure_snapshot(self, output_file_name: str) -> None:
+        """
+        Ensure that the Source object has the url_archived and url_date fields populated for each row.
+        If not, check if the URL already has a snapshot stored. If not, store it and populate
+        url_archived and url_date for each row.
+
+        Parameters
+        ----------
+        output_file_name : str
+            The name of the output file where the updated details will be saved.
+
+        Returns
+        -------
+        None
+            This method does not return any value. It updates the Source object's details
+            and saves the updated information to a CSV file.
+
+        Raises
+        ------
+        None
+            This method logs errors if the details or URL attributes are not set, but does not raise exceptions.
+
+        Notes
+        -----
+        - The method checks if the `url_date` is populated for each row. If not, it attempts to store a snapshot
+          using the Wayback Machine and updates the `url_archived` and `url_date` fields accordingly.
+        - If a new snapshot is stored, it logs the timestamp and archived URL. If a snapshot already exists,
+          it logs that information instead.
+        - The method also updates the existing CSV file with the new attributes, excluding the first column
+          which is assumed to be `source_name`.
+
+        """
+        if self.details is None:
+            logger.error(f"The details attribute of the source {self.name} is not set.")
+            return None
+
+        if self.details.url is None:
+            logger.error(f"The url attribute of the source {self.name} is not set.")
+            return None
+
+        # Iterate over each row in the DataFrame
+        for index, row in self.details.iterrows():
+            if pd.isna(row["url_date"]) or pd.isna(row["url_archived"]):
+                archived_info = self.store_snapshot_on_wayback(row["url"])
+                if archived_info is not None:
+                    archived_url, new_capture_flag, timestamp = archived_info
+                    if new_capture_flag:
+                        logger.info(
+                            f"A new snapshot has been stored for the url {row['url']} with timestamp {timestamp} and Archive.org url {archived_url}."
+                        )
+                    else:
+                        logger.info(
+                            f"There is already a snapshot for the url {row['url']}."
+                        )
+                    self.details.loc[index, "url_date"] = timestamp
+                    self.details.loc[index, "url_archived"] = archived_url
+
+        # Update the existing .csv file with the new attributes
+        if self.path is not None:
+            output_path = pathlib.Path(self.path, output_file_name)
+        else:
+            return None
+
+        # Drop the first column source_name
+        details_df = self.details.copy()
+        details_df = details_df.drop(details_df.columns[0], axis=1)
+
+        # Export to sources.csv
+        details_df.to_csv(output_path, index=False)
+
+        logger.info(f"Updated details saved to {output_path}.")
+
+    @staticmethod
+    def store_snapshot_on_wayback(
+        url_to_archive: str,
+    ) -> tuple[Any, bool | None, str | None] | None:
+        """
+        Store a snapshot of the given URL on the Wayback Machine and extract the timestamp.
+        This method captures the specified URL using the Wayback Machine and retrieves the
+        corresponding archive URL along with a formatted timestamp. The timestamp is extracted
+        from the archive URL and converted to a more readable format.
+
+        Parameters
+        ----------
+        url_to_archive : str
+            The URL that you want to archive on the Wayback Machine.
+
+        Returns
+        -------
+        tuple[str, bool, str] | None
+            A tuple containing the archive URL, a boolean indicating if a new capture was conducted (if the boolean is True,
+            archive.org conducted a new capture. If it is False, archive.org has returned a recently cached capture
+            instead, likely taken in the previous minutes) and the formatted timestamp (with format YYYY-MM-DD hh:mm:ss)
+            if the operation is successful. Returns None if the timestamp cannot be extracted due to a ValueError (e.g.,
+            if the expected substrings are not found in the archive URL).
+
+        """
+        archive_url = savepagenow.capture_or_cache(url_to_archive)
+        try:
+            # The timestamp is between "web/" and the next "/" afterward
+            # Find the starting index of "web/"
+            start_index = archive_url[0].index("web/") + len("web/")
+            # Find the ending index of the timestamp by locating the next "/" after the start_index
+            end_index = archive_url[0].index("/", start_index)
+            # Extract the timestamp substring
+            timestamp = archive_url[0][start_index:end_index]
+            output_timestamp = Source.change_datetime_format(
+                timestamp,
+                "%Y%m%d%H%M%S",
+                "%Y-%m-%d %H:%M:%S",
+            )
+            return archive_url[0], archive_url[1], output_timestamp
+        except ValueError:
+            # If "web/" or next "/" not found, return empty string
+            return None
+
+    def download_file_from_wayback(self) -> list[pathlib.Path | None]:
+        """
+        Download a file from the Wayback Machine and save it to a specified path.
+
+        This method retrieves an archived file from the Wayback Machine using the URL
+        stored in the `details` attribute of the instance. The file is saved in the
+        specified format based on its Content-Type field in the Response Header.
+        Supported formats include:
+        - Plain text (.txt)
+        - PDF (.pdf)
+        - Excel (.xls and .xlsx)
+        - Parquet (.parquet)
+
+        Returns
+        -------
+        pathlib.Path | None
+            The specified path where the file is stored, or None if an error occurs.
+
+        Raises
+        ------
+        requests.exceptions.RequestException
+            If there is an issue with the HTTP request.
+
+        Notes
+        -----
+        - The `details` attribute must contain a key "url_archived" with a valid URL.
+        - The `path` and `name` attributes must be defined in the instance for saving the file.
+
+        """
+        if self.details is None:
+            logger.error(f"The details attribute of the source {self.name} is not set.")
+            return []
+        if (
+            "url_archived" not in self.details
+            or self.details["url_archived"].isna().all()
+        ):
+            logger.error(
+                f"The url_archived attribute of source {self.name} is not set."
+            )
+            return []
+        if self.path is None:
+            logger.error(f"The path attribute of the source {self.name} is not set.")
+            return []
+
+        saved_paths: list[pathlib.Path | None] = []  # Explicit type annotation
+        for index, row in self.details.iterrows():
+            url_archived = row["url_archived"]
+            save_path = self._get_save_path(url_archived)
+
+            if save_path is None:
+                saved_paths.append(None)
+                continue
+            saved_path = self._download_file(url_archived, save_path)
+            saved_paths.append(saved_path)
+
+        return saved_paths
+
+    def _get_save_path(self, url_archived: str) -> pathlib.Path | None:
+        """
+        Determine the save path based on the content type.
+        This method retrieves the content type of the archived URL and determines the appropriate
+        file extension based on the content type. It constructs the full save path using the
+        instance's `path` and `name` attributes.
+
+        Parameters
+        ----------
+        url_archived : str
+            The URL of the archived file from which the content type will be determined.
+
+        Returns
+        -------
+        pathlib.Path | None
+            The full path where the file should be saved, including the appropriate file extension,
+            or None if the content type is unsupported or an error occurs.
+
+        Notes
+        -----
+            - Supported content types and their corresponding file extensions:
+                - "text/plain" -> ".txt"
+                - "application/pdf" -> ".pdf"
+                - "application/vnd.ms-excel" -> ".xls"
+                - "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" -> ".xlsx"
+                - "application/parquet" -> ".parquet"
+            - If the content type is unsupported, a warning is logged.
+
+        """
+        content_type = self._get_content_type(url_archived)
+        if content_type is None:
+            return None
+
+        extension_map = {
+            "text/plain": ".txt",
+            "application/pdf": ".pdf",
+            "application/vnd.ms-excel": ".xls",
+            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": ".xlsx",
+            "application/parquet": ".parquet",
+        }
+
+        extension = extension_map.get(content_type)
+        if extension is None:
+            logger.warning(f"Unsupported content type: {content_type}")
+            return None
+
+        if self.path is not None and self.name is not None:
+            return pathlib.Path(self.path, self.name + extension)
+        else:
+            return None
+
+    @staticmethod
+    def _get_content_type(url_archived: str) -> Any:
+        """
+        Fetch the content type of the archived URL.
+
+        This method sends a HEAD request to the specified archived URL to retrieve the
+        Content-Type from the response headers. It returns the content type as a string
+        if the request is successful; otherwise, it logs an error and returns None.
+
+        Parameters
+        ----------
+        url_archived : str
+            The URL of the archived resource for which the content type is to be fetched.
+
+        Returns
+        -------
+        str | None
+            The Content-Type of the archived URL if the request is successful, or None
+            if an error occurs during the request.
+
+        Raises
+        ------
+        requests.exceptions.RequestException
+            If there is an issue with the HTTP request, an error is logged, and None is returned.
+
+        """
+        try:
+            response = requests.head(url_archived)
+            response.raise_for_status()
+            return response.headers.get("Content-Type")
+        except requests.exceptions.RequestException as e:
+            logger.error(f"Failed to retrieve content type: {e}")
+            return None
+
+    @staticmethod
+    def _download_file(
+        url_archived: str, save_path: pathlib.Path
+    ) -> pathlib.Path | None:
+        """
+        Download the file and save it to the specified path.
+
+        This method retrieves the content from the specified archived URL and saves it
+        to the provided file path. It handles HTTP errors and logs appropriate messages
+        based on the outcome of the download operation.
+
+        Parameters
+        ----------
+        url_archived : str
+            The URL of the archived file to be downloaded.
+
+        save_path : pathlib.Path
+            The path where the downloaded file will be saved, including the file name.
+
+        Returns
+        -------
+        pathlib.Path | None
+            The path where the file has been saved if the download is successful, or None
+            if an error occurs during the download process.
+
+        Raises
+        ------
+        requests.exceptions.RequestException
+            If there is an issue with the HTTP request, an error is logged, and None is returned.
+
+        """
+        try:
+            response = requests.get(url_archived)
+            response.raise_for_status()  # Check for HTTP errors
+
+            with open(save_path, "wb") as file:
+                file.write(response.content)
+
+            logger.info(f"File downloaded successfully and saved to {save_path}")
+            return save_path
+        except requests.exceptions.RequestException as e:
+            logger.error(f"An error occurred during file download: {e}")
+            return None
+
+    @staticmethod
+    def change_datetime_format(
+        input_datetime_string: str,
+        input_datetime_format: str,
+        output_datetime_format: str,
+    ) -> str | None:
+        """
+        Change the format of a given datetime string from one format to another. This method takes a
+        datetime string and its current format, then converts it to a specified output format.
+        If the input string does not match the provided input format, it logs an error and returns None.
+
+        Parameters
+        ----------
+        input_datetime_string : str
+            datetime string that needs to be reformatted
+
+        input_datetime_format : str
+            format of the input datetime string, following the strftime format codes
+
+        output_datetime_format : str
+            desired format for the output datetime string, following the strftime format codes.
+
+        Returns
+        -------
+           str | None
+               reformatted datetime string if successful, otherwise None
+
+        Raises
+        ------
+        ValueError
+            If the input datetime string does not match the input format.
+
+        """
+        try:
+            dt = datetime.strptime(input_datetime_string, input_datetime_format)
+            logger.info(
+                f"The datetime string follows the format {input_datetime_format}"
+            )
+            output_datetime_string = dt.strftime(output_datetime_format)
+            logger.info(f"The format is now changed to {output_datetime_format}")
+            return output_datetime_string
+        except ValueError as e:
+            logger.info(f"Error during datetime formatting: {e}")
+            return None
+
+    @staticmethod
+    def is_wayback_snapshot_available(
+        input_url: str, input_timestamp: str
+    ) -> str | None | Any:
+        """
+        The method queries the Internet Archive's Wayback Machine to check for the availability
+        of archived snapshots of a given URL. It constructs an API request to the Wayback Machine
+        and processes the response to extract the closest archived snapshot information.
+
+        Parameters
+        ----------
+        input_url : str
+            URL for which to retrieve the Wayback Machine snapshot
+        input_timestamp : str
+            timestamp for which to retrieve the Wayback Machine snapshot
+
+        Returns
+        -------
+        Tuple[str, str, str] | None
+            The tuple contains:
+                -) archived_url : str URL of the archived snapshot
+                -) timestamp : str timestamp of the archived snapshot with format YYYY-MM-DD hh:mm:ss
+                -) status : str status of the archived snapshot
+            Returns None if no archived snapshot is found or if an error occurs during the API request.
+
+        Raises
+        ------
+        requests.RequestException
+            If there is an issue with the HTTP request to the Wayback Machine API
+
+        """
+        api_timestamp = Source.change_datetime_format(
+            input_timestamp,
+            "%Y-%m-%d %H:%M:%S",
+            "%Y%m%d%H%M%S",
+        )
+        api_url = f"http://archive.org/wayback/available?url={input_url}&timestamp={api_timestamp}"
+        try:
+            response = requests.get(api_url)
+            # Raise an error for bad HTTP status codes
+            response.raise_for_status()
+            data = response.json()
+
+            # Extract the closest archived snapshot information
+            closest = data.get("archived_snapshots", {}).get("closest", {})
+            if closest:
+                available = closest.get("available", False)
+                archived_url = closest.get("url", "")
+                timestamp = closest.get("timestamp", "")
+                status = closest.get("status", "")
+
+                logger.info(f"Available: {available}")
+                logger.info(f"Archived URL: {archived_url}")
+                logger.info(f"Timestamp: {timestamp}")
+                logger.info(f"Status: {status}")
+
+                output_timestamp = Source.change_datetime_format(
+                    timestamp,
+                    "%Y%m%d%H%M%S",
+                    "%Y-%m-%d %H:%M:%S",
+                )
+
+                return archived_url, output_timestamp, status
+            else:
+                logger.info("No archived snapshot found.")
+                return None
+
+        except requests.RequestException as e:
+            logger.info(f"Error during API request: {e}")
+            return None
+
 
 class Sources:
     """
@@ -229,7 +659,7 @@ class Sources:
     schema = ftl.Schema(str(SPECIFICATIONS_PATH / (schema_name + ".schema.json")))
 
     def __init__(
-        self, sources: str | Source | list[str | Source] | dict[str, Path]
+        self, sources: str | Source | list[str | Source] | dict[str, pathlib.Path]
     ) -> None:
         """
         Create a collection of data sources.
@@ -255,7 +685,12 @@ class Sources:
             self.sources = [sources]
         elif isinstance(sources, dict):
             # All sources need to be loaded when specified this way
-            self.sources = [Source(name, path) for name, path in sources.items()]
+            self.sources = [
+                Source(
+                    name, path if isinstance(path, pathlib.Path) else pathlib.Path(path)
+                )
+                for name, path in sources.items()
+            ]
         elif isinstance(sources, Iterable):
             # Directly add already loaded sources to the object
             loaded_sources = [
@@ -267,6 +702,8 @@ class Sources:
             ]
             # Contains all the loaded sources
             self.sources = loaded_sources + unloaded_sources
+        else:
+            raise TypeError(f"Unsupported type for sources: {type(sources)}")
 
         # A pd.DataFrame, containing the details of all the sources
         self.details = pd.concat(
@@ -284,7 +721,7 @@ class Sources:
             ]
         )
 
-    def to_csv(self, path: str | Path) -> None:
+    def to_csv(self, path: str | pathlib.Path) -> None:
         """
         Save the details of the sources to a CSV file.
 
@@ -296,7 +733,7 @@ class Sources:
         """
         self.details.to_csv(path, index=False)
 
-    def to_datapackage(self, path: str | Path, overwrite: bool = False) -> None:
+    def to_datapackage(self, path: str | pathlib.Path, overwrite: bool = False) -> None:
         """
         Export the data to a folder following the datapackage specification.
 
@@ -309,7 +746,7 @@ class Sources:
         overwrite : bool
             Existing files with the same name in the target path will be overwritten, default is False.
         """
-        path = Path(path)
+        path = pathlib.Path(path)
 
         # Check if the path exists and is empty
         if path.exists():
