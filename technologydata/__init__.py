@@ -7,7 +7,12 @@ from technologydata.technologies import (
     Technologies,
     check_source_validity,
 )
-from technologydata.utils import DateFormatEnum, FileExtensionEnum, Utils
+from technologydata.utils import (
+    DateFormatEnum,
+    DeflatorSourceEnum,
+    FileExtensionEnum,
+    Utils,
+)
 
 __version__ = version("technologydata")
 
@@ -16,6 +21,7 @@ __all__ = [
     "Utils",
     "DateFormatEnum",
     "FileExtensionEnum",
+    "DeflatorSourceEnum",
     "Source",
     "Sources",
     "Technologies",

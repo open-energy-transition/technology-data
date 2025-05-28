@@ -1,5 +1,7 @@
 """Classes for utils methods."""
 
+from __future__ import annotations
+
 import logging
 import re
 from enum import Enum
@@ -28,6 +30,62 @@ class DateFormatEnum(str, Enum):
     SOURCES_CSV = "%Y-%m-%d %H:%M:%S"
     WAYBACK = "%Y%m%d%H%M%S"
     NONE = ""
+
+
+class DeflatorSourceEnum(str, Enum):
+    """
+    Enum representing various sources of deflation data.
+
+    Each member corresponds to a specific source of deflation data,
+    providing a concise identifier for use in applications.
+    The methods are implemented as part of the pydeflate package
+    (https://github.com/jm-rivera/pydeflate)
+
+    """
+
+    # Enum members with concise values
+    IMF_GDP_DEFLATE = "imf_gdp_deflate"
+    IMF_CPI_DEFLATE = "imf_cpi_deflate"
+    IMF_CPI_E_DEFLATE = "imf_cpi_e_deflate"
+    WB_GDP_DEFLATE = "wb_gdp_deflate"
+    WB_GDP_LINKED_DEFLATE = "wb_gdp_linked_deflate"
+    WB_CPI_DEFLATE = "wb_cpi_deflate"
+    OECD_DAC_DEFLATE = "oecd_dac_deflate"
+    NONE = ""
+
+    @classmethod
+    def get_description(cls, source: DeflatorSourceEnum) -> str:
+        """
+        Retrieve the description for a given deflator source.
+
+        Parameters
+        ----------
+        source : DeflatorSourceEnum
+            The enum member for which to retrieve the description.
+
+        Returns
+        -------
+        str
+            A description of the deflator source, or a default message if not found.
+
+        Examples
+        --------
+        >>> DeflatorSourceEnum.get_description(DeflatorSourceEnum.IMF_CPI_DEFLATE)
+        >>> "Uses GDP deflators and exchange rates from the IMF World Economic Outlook."
+        >>> DeflatorSourceEnum.get_description(DeflatorSourceEnum.NONE)
+        >>> "Description not available."
+
+        """
+        descriptions = {
+            cls.IMF_GDP_DEFLATE: "Uses GDP deflators and exchange rates from the IMF World Economic Outlook.",
+            cls.IMF_CPI_DEFLATE: "Uses Consumer Price Index and exchange rates data from the IMF World Economic Outlook.",
+            cls.IMF_CPI_E_DEFLATE: "Uses end-of-period Consumer Price Index and exchange rates data from the IMF World Economic Outlook.",
+            cls.WB_GDP_DEFLATE: "Uses GDP deflators and exchange rates from the World Bank.",
+            cls.WB_GDP_LINKED_DEFLATE: "Uses the World Bank’s linked GDP deflator and exchange rates data.",
+            cls.WB_CPI_DEFLATE: "Uses Consumer Price Index and exchange rate data from the World Bank.",
+            cls.OECD_DAC_DEFLATE: "Uses the OECD DAC deflator series (prices and exchange rates).",
+        }
+        return descriptions.get(source, "Description not available.")
 
 
 class FileExtensionEnum(Enum):
