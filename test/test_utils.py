@@ -127,3 +127,21 @@ def test_search_file_extension_in_url(
         td.FileExtensionEnum.search_file_extension_in_url(input_string)
         == expected_string
     )
+
+
+@pytest.mark.parametrize(
+    "input_string, expected_format, expected_result",
+    [
+        ("EUR-2025", r"^[A-Z]{3}-\d{4}$", True),
+        ("EU-2025", r"^[A-Z]{2}-\d{4}$", True),
+        ("EU-2025", r"^[A-Z]{3}-\d{4}$", False),
+        ("EUR-202", r"^[A-Z]{3}-\d{4}$", False),
+    ],
+)  # type: ignore
+def test_ensure_currency_unit(
+    input_string: str, expected_format: str, expected_result: bool
+) -> None:
+    """Check if a currency unit follows the wished format."""
+    assert (
+        td.Utils.ensure_currency_unit(input_string, expected_format) == expected_result
+    )

@@ -249,3 +249,36 @@ class Utils:
         # Lower case the string
         replaced = replaced.casefold()
         return replaced
+
+    @staticmethod
+    def ensure_currency_unit(
+        input_string: str, expected_format: str = r"^[A-Z]{3}-\d{4}$"
+    ) -> bool:
+        """
+        Check if the input string matches the currency unit format.
+
+        The expected format is three uppercase letters followed by a hyphen and four digits (e.g., 'USD-1234').
+
+        Parameters
+        ----------
+        input_string : str
+            The string to check.
+        expected_format : str
+            The string with the expected format.
+
+        Returns
+        -------
+        bool
+            True if the string matches the currency unit format, False otherwise.
+
+        Raises
+        ------
+        ValueError
+            If the input_string or the expected_format are not a string.
+
+        """
+        if not isinstance(input_string, str) or not isinstance(expected_format, str):
+            raise ValueError("Input must be a string.")
+
+        currency_unit_pattern = re.compile(expected_format)
+        return bool(currency_unit_pattern.fullmatch(input_string))
