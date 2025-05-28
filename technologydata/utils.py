@@ -3,10 +3,13 @@
 from __future__ import annotations
 
 import logging
+import pathlib
 import re
 from enum import Enum
 from typing import Any
 
+import pandas as pd
+import pydeflate
 from dateutil import parser
 
 logger = logging.getLogger(__name__)
@@ -340,3 +343,52 @@ class Utils:
 
         currency_unit_pattern = re.compile(expected_format)
         return bool(currency_unit_pattern.fullmatch(input_string))
+
+    @staticmethod
+    def convert_and_adjust_currency(
+        target_currency: str,
+        target_year: str,
+        pydeflate_path: pathlib.Path,
+        data: pd.DataFrame,
+        region_column: str = "region",
+    ) -> pd.DataFrame:
+        # Specify the path where deflator and exchange data will be saved
+        if pydeflate_path is not None:
+            pydeflate.set_pydeflate_path(pydeflate_path)
+        else:
+            raise ValueError(
+                "The path where the deflator and exchange data will be saved is None"
+            )
+
+        # Validate columns presence
+        required_columns = {"unit", "value", region_column}
+        if not required_columns.issubset(data.columns):
+            missing = required_columns - set(data.columns)
+            raise ValueError(f"Input DataFrame is missing required columns: {missing}")
+
+        # Create a copy to avoid modifying original data
+        results = data.copy()
+
+        # Validate unit column, making sure it fulfills the format <3-letter currency code>-<currency year>
+        invalid_rows = results[~results["unit"].apply(Utils.ensure_currency_unit)]
+        if not invalid_rows.empty:
+            details = [
+                (idx, val) for idx, val in zip(invalid_rows.index, invalid_rows["unit"])
+            ]
+            raise ValueError(f"Invalid unit found in rows (index, value): {details}")
+
+        # for each row, extract currency year and currency from the unit column
+        results[["currency", "currency_year"]] = results["unit"].str.split(
+            "-", expand=True
+        )
+
+        return results
+
+        # step1 -  if target year is different from currency year, adjust for inflation
+
+        # step2 - if target currency is different from currency, adjust for currency
+
+        # Note: I think both step1 and step2 are done automatically by pydeflate. Just provide the columns and the necessary inputs
+
+        # re-modify unit column putting together currency_year and currency columns.
+        # --> drop them afterwards
