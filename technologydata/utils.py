@@ -9,10 +9,251 @@ from enum import Enum
 from typing import Any
 
 import pandas as pd
-import pydeflate
+import pydeflate as pyd
 from dateutil import parser
 
 logger = logging.getLogger(__name__)
+
+
+deflation_function_registry = {}
+
+
+def register_deflator(name):
+    def decorator(func):
+        deflation_function_registry[name] = func
+        return func
+
+    return decorator
+
+
+@register_deflator("imf_gdp_deflate")
+def imf_gdp_deflate_wrapper(*args: Any, **kwargs: Any) -> pd.DataFrame:
+    """
+    Wrapper function for pydeflate.imf_gdp_deflate.
+
+    Uses GDP deflators and exchange rates from the IMF World Economic Outlook.
+
+    This function acts as a registered deflator under the name "imf_gdp_deflate" and delegates
+    all arguments to the underlying `imf_gdp_deflate` function from the pydeflate package.
+
+    Parameters
+    ----------
+    *args : tuple
+        Positional arguments to be passed to `pydeflate.imf_gdp_deflate`.
+    **kwargs : dict
+        Keyword arguments to be passed to `pydeflate.imf_gdp_deflate`.
+
+    Returns
+    -------
+    pandas.DataFrame
+        The DataFrame returned by `pydeflate.imf_gdp_deflate`, containing the
+        deflated values according to the specified parameters.
+
+    Notes
+    -----
+    This wrapper function is primarily used for registration purposes and does
+    not modify the behavior or signature of the underlying `imf_gdp_deflate` function.
+
+    """
+    return pyd.imf_gdp_deflate(*args, **kwargs)
+
+
+@register_deflator("imf_cpi_deflate")
+def imf_cpi_deflate_wrapper(*args: Any, **kwargs: Any) -> pd.DataFrame:
+    """
+    Wrapper function for pydeflate.imf_cpi_deflate.
+
+    Uses Consumer Price Index and exchange rates data from the IMF World Economic Outlook.
+
+    This function acts as a registered deflator under the name "imf_cpi_deflate"
+    and delegates all arguments to the underlying `imf_cpi_deflate` function
+    from the pydeflate package.
+
+    Parameters
+    ----------
+    *args : tuple
+        Positional arguments to be passed to `pydeflate.imf_cpi_deflate`.
+    **kwargs : dict
+        Keyword arguments to be passed to `pydeflate.imf_cpi_deflate`.
+
+    Returns
+    -------
+    pandas.DataFrame
+        The DataFrame returned by `pydeflate.imf_cpi_deflate`, containing the
+        deflated values according to the specified parameters.
+
+    Notes
+    -----
+    This wrapper function is primarily used for registration purposes and does
+    not modify the behavior or signature of the underlying `imf_cpi_deflate` function.
+
+    """
+    return pyd.imf_cpi_deflate(*args, **kwargs)
+
+
+@register_deflator("imf_cpi_e_deflate")
+def imf_cpi_e_deflate_wrapper(*args: Any, **kwargs: Any) -> pd.DataFrame:
+    """
+    Wrapper function for pydeflate.imf_cpi_e_deflate.
+
+    Uses end-of-period Consumer Price Index and exchange rates data from the IMF World Economic Outlook.
+
+    This function acts as a registered deflator under the name "imf_cpi_e_deflate"
+    and delegates all arguments to the underlying `imf_cpi_e_deflate` function
+    from the pydeflate package.
+
+    Parameters
+    ----------
+    *args : tuple
+        Positional arguments to be passed to `pydeflate.imf_cpi_e_deflate`.
+    **kwargs : dict
+        Keyword arguments to be passed to `pydeflate.imf_cpi_e_deflate`.
+
+    Returns
+    -------
+    pandas.DataFrame
+        The DataFrame returned by `pydeflate.imf_cpi_e_deflate`, containing the
+        deflated values according to the specified parameters.
+
+    Notes
+    -----
+    This wrapper function is primarily used for registration purposes and does
+    not modify the behavior or signature of the underlying `imf_cpi_e_deflate` function.
+
+    """
+    return pyd.imf_cpi_e_deflate(*args, **kwargs)
+
+
+@register_deflator("wb_gdp_deflate")
+def wb_gdp_deflate_wrapper(*args: Any, **kwargs: Any) -> pd.DataFrame:
+    """
+    Wrapper function for pydeflate.wb_gdp_deflate.
+
+    Uses GDP deflators and exchange rates from the World Bank.
+
+    This function acts as a registered deflator under the name "wb_gdp_deflate"
+    and delegates all arguments to the underlying `wb_gdp_deflate` function
+    from the pydeflate package.
+
+    Parameters
+    ----------
+    *args : tuple
+        Positional arguments to be passed to `pydeflate.wb_gdp_deflate`.
+    **kwargs : dict
+        Keyword arguments to be passed to `pydeflate.wb_gdp_deflate`.
+
+    Returns
+    -------
+    pandas.DataFrame
+        The DataFrame returned by `pydeflate.wb_gdp_deflate`, containing the
+        deflated values according to the specified parameters.
+
+    Notes
+    -----
+    This wrapper function is primarily used for registration purposes and does
+    not modify the behavior or signature of the underlying `wb_gdp_deflate` function.
+
+    """
+    return pyd.wb_gdp_deflate(*args, **kwargs)
+
+
+@register_deflator("wb_gdp_linked_deflate")
+def wb_gdp_linked_deflate_wrapper(*args: Any, **kwargs: Any) -> pd.DataFrame:
+    """
+    Wrapper function for pydeflate.wb_gdp_linked_deflate.
+
+    Uses the World Bank’s linked GDP deflator and exchange rates data.
+
+    This function acts as a registered deflator under the name "wb_gdp_linked_deflate"
+    and delegates all arguments to the underlying `wb_gdp_linked_deflate` function
+    from the pydeflate package.
+
+    Parameters
+    ----------
+    *args : tuple
+        Positional arguments to be passed to `pydeflate.wb_gdp_linked_deflate`.
+    **kwargs : dict
+        Keyword arguments to be passed to `pydeflate.wb_gdp_linked_deflate`.
+
+    Returns
+    -------
+    pandas.DataFrame
+        The DataFrame returned by `pydeflate.wb_gdp_linked_deflate`, containing the
+        deflated values according to the specified parameters.
+
+    Notes
+    -----
+    This wrapper function is primarily used for registration purposes and does
+    not modify the behavior or signature of the underlying `wb_gdp_linked_deflate` function.
+
+    """
+    return pyd.wb_gdp_linked_deflate(*args, **kwargs)
+
+
+@register_deflator("wb_cpi_deflate")
+def wb_cpi_deflate_wrapper(*args: Any, **kwargs: Any) -> pd.DataFrame:
+    """
+    Wrapper function for pydeflate.wb_cpi_deflate.
+
+    Uses Consumer Price Index and exchange rate data from the World Bank.
+
+    This function acts as a registered deflator under the name "wb_cpi_deflate"
+    and delegates all arguments to the underlying `wb_cpi_deflate` function
+    from the pydeflate package.
+
+    Parameters
+    ----------
+    *args : tuple
+        Positional arguments to be passed to `pydeflate.wb_cpi_deflate`.
+    **kwargs : dict
+        Keyword arguments to be passed to `pydeflate.wb_cpi_deflate`.
+
+    Returns
+    -------
+    pandas.DataFrame
+        The DataFrame returned by `pydeflate.wb_cpi_deflate`, containing the
+        deflated values according to the specified parameters.
+
+    Notes
+    -----
+    This wrapper function is primarily used for registration purposes and does
+    not modify the behavior or signature of the underlying `wb_cpi_deflate` function.
+
+    """
+    return pyd.wb_cpi_deflate(*args, **kwargs)
+
+
+@register_deflator("oecd_dac_deflate")
+def oecd_dac_deflate_wrapper(*args: Any, **kwargs: Any) -> pd.DataFrame:
+    """
+    Wrapper function for pydeflate.oecd_dac_deflate.
+
+    Uses the OECD DAC deflator series (prices and exchange rates).
+
+    This function acts as a registered deflator under the name "oecd_dac_deflate"
+    and delegates all arguments to the underlying `oecd_dac_deflate` function
+    from the pydeflate package.
+
+    Parameters
+    ----------
+    *args : tuple
+        Positional arguments to be passed to `pydeflate.oecd_dac_deflate`.
+    **kwargs : dict
+        Keyword arguments to be passed to `pydeflate.oecd_dac_deflate`.
+
+    Returns
+    -------
+    pandas.DataFrame
+        The DataFrame returned by `pydeflate.oecd_dac_deflate`, containing the
+        deflated values according to the specified parameters.
+
+    Notes
+    -----
+    This wrapper function is primarily used for registration purposes and does
+    not modify the behavior or signature of the underlying `oecd_dac_deflate` function.
+
+    """
+    return pyd.oecd_dac_deflate(*args, **kwargs)
 
 
 class DateFormatEnum(str, Enum):
@@ -33,62 +274,6 @@ class DateFormatEnum(str, Enum):
     SOURCES_CSV = "%Y-%m-%d %H:%M:%S"
     WAYBACK = "%Y%m%d%H%M%S"
     NONE = ""
-
-
-class DeflatorSourceEnum(str, Enum):
-    """
-    Enum representing various sources of deflation data.
-
-    Each member corresponds to a specific source of deflation data,
-    providing a concise identifier for use in applications.
-    The methods are implemented as part of the pydeflate package
-    (https://github.com/jm-rivera/pydeflate)
-
-    """
-
-    # Enum members with concise values
-    IMF_GDP_DEFLATE = "imf_gdp_deflate"
-    IMF_CPI_DEFLATE = "imf_cpi_deflate"
-    IMF_CPI_E_DEFLATE = "imf_cpi_e_deflate"
-    WB_GDP_DEFLATE = "wb_gdp_deflate"
-    WB_GDP_LINKED_DEFLATE = "wb_gdp_linked_deflate"
-    WB_CPI_DEFLATE = "wb_cpi_deflate"
-    OECD_DAC_DEFLATE = "oecd_dac_deflate"
-    NONE = ""
-
-    @classmethod
-    def get_description(cls, source: DeflatorSourceEnum) -> str:
-        """
-        Retrieve the description for a given deflator source.
-
-        Parameters
-        ----------
-        source : DeflatorSourceEnum
-            The enum member for which to retrieve the description.
-
-        Returns
-        -------
-        str
-            A description of the deflator source, or a default message if not found.
-
-        Examples
-        --------
-        >>> DeflatorSourceEnum.get_description(DeflatorSourceEnum.IMF_CPI_DEFLATE)
-        >>> "Uses GDP deflators and exchange rates from the IMF World Economic Outlook."
-        >>> DeflatorSourceEnum.get_description(DeflatorSourceEnum.NONE)
-        >>> "Description not available."
-
-        """
-        descriptions = {
-            cls.IMF_GDP_DEFLATE: "Uses GDP deflators and exchange rates from the IMF World Economic Outlook.",
-            cls.IMF_CPI_DEFLATE: "Uses Consumer Price Index and exchange rates data from the IMF World Economic Outlook.",
-            cls.IMF_CPI_E_DEFLATE: "Uses end-of-period Consumer Price Index and exchange rates data from the IMF World Economic Outlook.",
-            cls.WB_GDP_DEFLATE: "Uses GDP deflators and exchange rates from the World Bank.",
-            cls.WB_GDP_LINKED_DEFLATE: "Uses the World Bank’s linked GDP deflator and exchange rates data.",
-            cls.WB_CPI_DEFLATE: "Uses Consumer Price Index and exchange rate data from the World Bank.",
-            cls.OECD_DAC_DEFLATE: "Uses the OECD DAC deflator series (prices and exchange rates).",
-        }
-        return descriptions.get(source, "Description not available.")
 
 
 class FileExtensionEnum(Enum):
@@ -176,6 +361,7 @@ class FileExtensionEnum(Enum):
         --------
         >>> FileExtensionEnum.get_extension("application/pdf")
         >>> '.pdf'
+
         >>> FileExtensionEnum.get_extension("application/unknown")
         >>> None
 
@@ -204,6 +390,7 @@ class FileExtensionEnum(Enum):
         --------
         >>> FileExtensionEnum.search_file_extension_in_url("https://example.com/file.pdf")
         '.pdf'
+
         >>> FileExtensionEnum.search_file_extension_in_url("https://example.com/file.unknown")
         None
 
@@ -258,6 +445,11 @@ class Utils:
         ------
         ValueError
             If the input datetime string cannot be parsed.
+
+        Examples
+        --------
+        >>> Utils.change_datetime_format("20250520144500", DateFormatEnum.SOURCES_CSV)
+        >>> "2025-05-20 14:45:00"
 
         """
         try:
@@ -315,7 +507,7 @@ class Utils:
     def ensure_currency_unit(
         input_string: str, expected_format: str = r"^[A-Z]{3}-\d{4}$"
     ) -> bool:
-        """
+        r"""
         Check if the input string matches the currency unit format.
 
         The expected format is three uppercase letters followed by a hyphen and four digits (e.g., 'USD-1234').
@@ -337,6 +529,11 @@ class Utils:
         ValueError
             If the input_string or the expected_format are not a string.
 
+        Examples
+        --------
+        >>> Utils.ensure_currency_unit("EUR-2025", r"^[A-Z]{3}-\d{4}$")
+        >>> True
+
         """
         if not isinstance(input_string, str) or not isinstance(expected_format, str):
             raise ValueError("Input must be a string.")
@@ -350,11 +547,12 @@ class Utils:
         target_year: str,
         pydeflate_path: pathlib.Path,
         data: pd.DataFrame,
+        deflator: DeflatorSourceEnum,
         region_column: str = "region",
     ) -> pd.DataFrame:
         # Specify the path where deflator and exchange data will be saved
         if pydeflate_path is not None:
-            pydeflate.set_pydeflate_path(pydeflate_path)
+            set_pydeflate_path(pydeflate_path)
         else:
             raise ValueError(
                 "The path where the deflator and exchange data will be saved is None"
@@ -370,16 +568,29 @@ class Utils:
         results = data.copy()
 
         # Validate unit column, making sure it fulfills the format <3-letter currency code>-<currency year>
-        invalid_rows = results[~results["unit"].apply(Utils.ensure_currency_unit)]
+        invalid_rows = results[
+            ~results["unit"].apply(Utils.ensure_currency_unit, axis=1)
+        ]
         if not invalid_rows.empty:
             details = [
                 (idx, val) for idx, val in zip(invalid_rows.index, invalid_rows["unit"])
             ]
             raise ValueError(f"Invalid unit found in rows (index, value): {details}")
 
-        # for each row, extract currency year and currency from the unit column
+        # For each row, extract currency year and currency from the unit column
         results[["currency", "currency_year"]] = results["unit"].str.split(
             "-", expand=True
+        )
+
+        results = deflator(
+            data=results,
+            base_year=2015,
+            source_currency="USA",  # Data is in USD
+            target_currency="FRA",  # Convert to Euro
+            id_column="iso_code",  # must be ISO3 code
+            year_column="year",  # Can be string, integer or datetime
+            value_column="value",  # Column to be converted
+            target_value_column="value_constant",  # It could also be the same as value_column
         )
 
         return results
