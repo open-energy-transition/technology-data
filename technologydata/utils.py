@@ -5,6 +5,7 @@ from __future__ import annotations
 import logging
 import pathlib
 import re
+from collections.abc import Callable
 from enum import Enum
 from typing import Any
 
@@ -18,8 +19,33 @@ logger = logging.getLogger(__name__)
 deflation_function_registry = {}
 
 
-def register_deflator(name):
-    def decorator(func):
+def register_deflator(name: str) -> Callable[[Callable[..., Any]], Callable[..., Any]]:
+    """
+    Register a deflation function with a given name.
+
+    This decorator function allows you to register a deflation function
+    under a specified name in the deflation function registry.
+
+    Parameters
+    ----------
+    name : str
+        The name under which the deflation function will be registered.
+
+    Returns
+    -------
+    Callable[[Callable], Callable]
+        A decorator that registers the provided function as a deflation
+        function in the registry.
+
+    Examples
+    --------
+    >>> @register_deflator('example_deflator')
+    ... def example_function(data):
+    ...     return data * 0.5
+
+    """
+
+    def decorator(func: Callable[..., Any]) -> Callable[..., Any]:
         deflation_function_registry[name] = func
         return func
 
@@ -29,7 +55,7 @@ def register_deflator(name):
 @register_deflator("imf_gdp_deflate")
 def imf_gdp_deflate_wrapper(*args: Any, **kwargs: Any) -> pd.DataFrame:
     """
-    Wrapper function for pydeflate.imf_gdp_deflate.
+    Introduce wrapper function for pydeflate.imf_gdp_deflate.
 
     Uses GDP deflators and exchange rates from the IMF World Economic Outlook.
 
@@ -61,7 +87,7 @@ def imf_gdp_deflate_wrapper(*args: Any, **kwargs: Any) -> pd.DataFrame:
 @register_deflator("imf_cpi_deflate")
 def imf_cpi_deflate_wrapper(*args: Any, **kwargs: Any) -> pd.DataFrame:
     """
-    Wrapper function for pydeflate.imf_cpi_deflate.
+    Introduce wrapper function for pydeflate.imf_cpi_deflate.
 
     Uses Consumer Price Index and exchange rates data from the IMF World Economic Outlook.
 
@@ -94,7 +120,7 @@ def imf_cpi_deflate_wrapper(*args: Any, **kwargs: Any) -> pd.DataFrame:
 @register_deflator("imf_cpi_e_deflate")
 def imf_cpi_e_deflate_wrapper(*args: Any, **kwargs: Any) -> pd.DataFrame:
     """
-    Wrapper function for pydeflate.imf_cpi_e_deflate.
+    Introduce wrapper function for pydeflate.imf_cpi_e_deflate.
 
     Uses end-of-period Consumer Price Index and exchange rates data from the IMF World Economic Outlook.
 
@@ -127,7 +153,7 @@ def imf_cpi_e_deflate_wrapper(*args: Any, **kwargs: Any) -> pd.DataFrame:
 @register_deflator("wb_gdp_deflate")
 def wb_gdp_deflate_wrapper(*args: Any, **kwargs: Any) -> pd.DataFrame:
     """
-    Wrapper function for pydeflate.wb_gdp_deflate.
+    Introduce wrapper function for pydeflate.wb_gdp_deflate.
 
     Uses GDP deflators and exchange rates from the World Bank.
 
@@ -160,7 +186,7 @@ def wb_gdp_deflate_wrapper(*args: Any, **kwargs: Any) -> pd.DataFrame:
 @register_deflator("wb_gdp_linked_deflate")
 def wb_gdp_linked_deflate_wrapper(*args: Any, **kwargs: Any) -> pd.DataFrame:
     """
-    Wrapper function for pydeflate.wb_gdp_linked_deflate.
+    Introduce wrapper function for pydeflate.wb_gdp_linked_deflate.
 
     Uses the World Bank’s linked GDP deflator and exchange rates data.
 
@@ -193,7 +219,7 @@ def wb_gdp_linked_deflate_wrapper(*args: Any, **kwargs: Any) -> pd.DataFrame:
 @register_deflator("wb_cpi_deflate")
 def wb_cpi_deflate_wrapper(*args: Any, **kwargs: Any) -> pd.DataFrame:
     """
-    Wrapper function for pydeflate.wb_cpi_deflate.
+    Introduce wrapper function for pydeflate.wb_cpi_deflate.
 
     Uses Consumer Price Index and exchange rate data from the World Bank.
 
@@ -226,7 +252,7 @@ def wb_cpi_deflate_wrapper(*args: Any, **kwargs: Any) -> pd.DataFrame:
 @register_deflator("oecd_dac_deflate")
 def oecd_dac_deflate_wrapper(*args: Any, **kwargs: Any) -> pd.DataFrame:
     """
-    Wrapper function for pydeflate.oecd_dac_deflate.
+    Introduce wrapper function for pydeflate.oecd_dac_deflate.
 
     Uses the OECD DAC deflator series (prices and exchange rates).
 
@@ -543,16 +569,15 @@ class Utils:
 
     @staticmethod
     def convert_and_adjust_currency(
-        target_currency: str,
-        target_year: str,
+        deflator_function_name: str,
+        base_year: int,
         pydeflate_path: pathlib.Path,
         data: pd.DataFrame,
-        deflator: DeflatorSourceEnum,
         region_column: str = "region",
     ) -> pd.DataFrame:
         # Specify the path where deflator and exchange data will be saved
         if pydeflate_path is not None:
-            set_pydeflate_path(pydeflate_path)
+            pyd.set_pydeflate_path(pydeflate_path)
         else:
             raise ValueError(
                 "The path where the deflator and exchange data will be saved is None"
@@ -582,24 +607,8 @@ class Utils:
             "-", expand=True
         )
 
-        results = deflator(
-            data=results,
-            base_year=2015,
-            source_currency="USA",  # Data is in USD
-            target_currency="FRA",  # Convert to Euro
-            id_column="iso_code",  # must be ISO3 code
-            year_column="year",  # Can be string, integer or datetime
-            value_column="value",  # Column to be converted
-            target_value_column="value_constant",  # It could also be the same as value_column
-        )
+        final_results = results.apply(use_deflator, axis=1)
 
-        return results
+        final_results = final_results.drop(columns=["currency", "currency_year"])
 
-        # step1 -  if target year is different from currency year, adjust for inflation
-
-        # step2 - if target currency is different from currency, adjust for currency
-
-        # Note: I think both step1 and step2 are done automatically by pydeflate. Just provide the columns and the necessary inputs
-
-        # re-modify unit column putting together currency_year and currency columns.
-        # --> drop them afterwards
+        return final_results

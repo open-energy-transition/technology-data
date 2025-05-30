@@ -9,7 +9,6 @@ from technologydata.technologies import (
 )
 from technologydata.utils import (
     DateFormatEnum,
-    DeflatorSourceEnum,
     FileExtensionEnum,
     Utils,
 )
@@ -21,7 +20,6 @@ __all__ = [
     "Utils",
     "DateFormatEnum",
     "FileExtensionEnum",
-    "DeflatorSourceEnum",
     "Source",
     "Sources",
     "Technologies",
