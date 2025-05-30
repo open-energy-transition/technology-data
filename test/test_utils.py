@@ -132,14 +132,16 @@ def test_search_file_extension_in_url(
 @pytest.mark.parametrize(
     "input_string, expected_format, expected_result",
     [
-        ("EUR-2025", r"^[A-Z]{3}-\d{4}$", True),
-        ("EU-2025", r"^[A-Z]{2}-\d{4}$", True),
-        ("EU-2025", r"^[A-Z]{3}-\d{4}$", False),
-        ("EUR-202", r"^[A-Z]{3}-\d{4}$", False),
+        ("EUR-2025", r"^[A-Z]{3}-\d{4}$", "EUR-2025"),
+        ("EU-2025", r"^[A-Z]{2}-\d{4}$", "EU-2025"),
+        ("The currency unit is EU-2025", r"[A-Z]{3}-\d{4}", None),
+        ("The currency unit is EUR-202", r"[A-Z]{3}-\d{4}", None),
+        ("The currency unit is EUR-2025", r"[A-Z]{3}-\d{4}", "EUR-2025"),
+        ("The currency unit is US-2025", r"[A-Z]{2}-\d{4}", "US-2025"),
     ],
 )  # type: ignore
 def test_ensure_currency_unit(
-    input_string: str, expected_format: str, expected_result: bool
+    input_string: str, expected_format: str, expected_result: str | None
 ) -> None:
     """Check if a currency unit follows the wished format."""
     assert (

@@ -532,11 +532,11 @@ class Utils:
     @staticmethod
     def ensure_currency_unit(
         input_string: str, expected_format: str = r"^[A-Z]{3}-\d{4}$"
-    ) -> bool:
+    ) -> str | None:
         r"""
-        Check if the input string matches the currency unit format.
+        Check if the input string contains a currency unit.
 
-        The expected format is three uppercase letters followed by a hyphen and four digits (e.g., 'USD-1234').
+        The method searches for a substring that matches the expected format and extract it if found.
 
         Parameters
         ----------
@@ -547,8 +547,8 @@ class Utils:
 
         Returns
         -------
-        bool
-            True if the string matches the currency unit format, False otherwise.
+        str
+            The matched currency unit if found, None otherwise.
 
         Raises
         ------
@@ -557,15 +557,19 @@ class Utils:
 
         Examples
         --------
-        >>> Utils.ensure_currency_unit("EUR-2025", r"^[A-Z]{3}-\d{4}$")
-        >>> True
+        >>> Utils.ensure_currency_unit("The price is USD-2025", r"^[A-Z]{3}-\d{4}$")
+        'USD-2025'
+        >>> Utils.ensure_currency_unit("No currency here", r"^[A-Z]{3}-\d{4}$")
+        None
 
         """
         if not isinstance(input_string, str) or not isinstance(expected_format, str):
             raise ValueError("Input must be a string.")
 
         currency_unit_pattern = re.compile(expected_format)
-        return bool(currency_unit_pattern.fullmatch(input_string))
+        match = currency_unit_pattern.search(input_string)
+
+        return match.group(0) if match else None
 
     @staticmethod
     def convert_and_adjust_currency(
@@ -593,21 +597,23 @@ class Utils:
         results = data.copy()
 
         # Validate unit column, making sure it fulfills the format <3-letter currency code>-<currency year>
-        invalid_rows = results[
-            ~results["unit"].apply(Utils.ensure_currency_unit, axis=1)
-        ]
-        if not invalid_rows.empty:
+        invalid_rows = results[results["unit"].apply(Utils.ensure_currency_unit).isna()]
+
+        if invalid_rows.empty:
+            # For each row, extract currency year and currency from the unit column
+            results[["currency", "currency_year"]] = (
+                results["unit"]
+                .apply(Utils.ensure_currency_unit)
+                .str.split("-", expand=True)
+            )
+        else:
             details = [
                 (idx, val) for idx, val in zip(invalid_rows.index, invalid_rows["unit"])
             ]
             raise ValueError(f"Invalid unit found in rows (index, value): {details}")
 
-        # For each row, extract currency year and currency from the unit column
-        results[["currency", "currency_year"]] = results["unit"].str.split(
-            "-", expand=True
-        )
-
-        final_results = results.apply(use_deflator, axis=1)
+        # final_results = results.apply(use_deflator, axis=1)
+        final_results = results
 
         final_results = final_results.drop(columns=["currency", "currency_year"])
 
