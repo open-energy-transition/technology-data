@@ -2,6 +2,7 @@
 
 import pathlib
 import sys
+import warnings
 from typing import Any
 
 import pandas as pd
@@ -151,13 +152,25 @@ def test_ensure_currency_unit(
 
 
 def test_convert_and_adjust_currency() -> None:
-    data = {
-        "region": ["FRA", "USA", "CAN"],
-        "unit": ["EUR-2020", "USD-2020", "CAD-2020"],
-        "value": [50, 100, 200],  # Current prices in USD
-    }
-    df = pd.DataFrame(data)
-    new_df = td.Utils.convert_and_adjust_currency(
-        2020, "imf_gdp_deflate", "USA", pathlib.Path(path_cwd, "pydeflate"), df
-    )
-    print(new_df)
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore", DeprecationWarning)
+        data = {
+            "region": ["FRA", "USA", "CAN"],
+            "unit": ["EUR-2020", "USD-2020", "CAD-2020"],
+            "value": [50, 100, 200],
+        }
+        df = pd.DataFrame(data)
+        new_df = td.Utils.convert_and_adjust_currency(
+            2020, "imf_gdp_deflate", "USA", pathlib.Path(path_cwd, "pydeflate"), df
+        )
+
+        new_df.loc[:, "adjusted_value"] = round(new_df.adjusted_value.astype(float), 2)
+        # Expected DataFrame (replace with the actual expected output)
+        expected_data = {
+            "region": ["FRA", "USA", "CAN"],
+            "unit": ["EUR-2020", "USD-2020", "CAD-2020"],
+            "value": [50, 100, 200],
+            "adjusted_value": [57.06, 100.00, 149.13],
+        }
+        expected_df = pd.DataFrame(expected_data)
+        pd.testing.assert_frame_equal(new_df, expected_df)

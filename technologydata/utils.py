@@ -610,12 +610,12 @@ class Utils:
         data: pd.DataFrame,
     ) -> pd.DataFrame:
         # Specify the path where deflator and exchange data will be saved
-        if pydeflate_path is not None:
-            pyd.set_pydeflate_path(pydeflate_path)
-        else:
-            raise ValueError(
-                "The path where the deflator and exchange data will be saved is None"
-            )
+        # if pydeflate_path is not None:
+        #    pyd.set_pydeflate_path(pydeflate_path)
+        # else:
+        #    raise ValueError(
+        #        "The path where the deflator and exchange data will be saved is None"
+        #    )
 
         # Validate columns presence
         required_columns = {"unit", "value", "region"}
@@ -636,6 +636,11 @@ class Utils:
                 .apply(Utils.ensure_currency_unit)
                 .str.split("-", expand=True)
             )
+
+            # Cast 'currency_year' column to integer type
+            results["currency_year"] = pd.to_numeric(
+                results["currency_year"], errors="coerce"
+            ).astype(int)
         else:
             details = [
                 (idx, val) for idx, val in zip(invalid_rows.index, invalid_rows["unit"])
