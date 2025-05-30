@@ -4,6 +4,7 @@ import pathlib
 import sys
 from typing import Any
 
+import pandas as pd
 import pytest
 
 import technologydata as td
@@ -147,3 +148,16 @@ def test_ensure_currency_unit(
     assert (
         td.Utils.ensure_currency_unit(input_string, expected_format) == expected_result
     )
+
+
+def test_convert_and_adjust_currency() -> None:
+    data = {
+        "region": ["FRA", "USA", "CAN"],
+        "unit": ["EUR-2020", "USD-2020", "CAD-2020"],
+        "value": [50, 100, 200],  # Current prices in USD
+    }
+    df = pd.DataFrame(data)
+    new_df = td.Utils.convert_and_adjust_currency(
+        2020, "imf_gdp_deflate", "USA", pathlib.Path(path_cwd, "pydeflate"), df
+    )
+    print(new_df)

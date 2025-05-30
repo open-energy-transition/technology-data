@@ -531,12 +531,12 @@ class Utils:
 
     @staticmethod
     def ensure_currency_unit(
-        input_string: str, expected_format: str = r"^[A-Z]{3}-\d{4}$"
+        input_string: str, expected_format: str = r"[A-Z]{3}-\d{4}"
     ) -> str | None:
         r"""
         Check if the input string contains a currency unit.
 
-        The method searches for a substring that matches the expected format and extract it if found.
+        The method searches for a substring that matches the expected format and extracts it if found.
 
         Parameters
         ----------
@@ -557,9 +557,9 @@ class Utils:
 
         Examples
         --------
-        >>> Utils.ensure_currency_unit("The price is USD-2025", r"^[A-Z]{3}-\d{4}$")
+        >>> Utils.ensure_currency_unit("The price is USD-2025", r"[A-Z]{3}-\d{4}")
         'USD-2025'
-        >>> Utils.ensure_currency_unit("No currency here", r"^[A-Z]{3}-\d{4}$")
+        >>> Utils.ensure_currency_unit("No currency here", r"[A-Z]{3}-\d{4}")
         None
 
         """
@@ -568,16 +568,46 @@ class Utils:
 
         currency_unit_pattern = re.compile(expected_format)
         match = currency_unit_pattern.search(input_string)
-
         return match.group(0) if match else None
 
     @staticmethod
-    def convert_and_adjust_currency(
-        deflator_function_name: str,
+    def get_deflate_row_function(
         base_year: int,
+        deflator_name: str,
+        target_currency: str,
+        year: str,
+        iso_code: str,
+        target_value_column: str,
+    ):
+        deflation_function = deflation_function_registry.get(deflator_name)
+        if deflation_function is None:
+            raise ValueError(
+                f"Deflator function '{deflator_name}' not found in registry"
+            )
+
+        def deflate_row(row):
+            row_df = pd.DataFrame([row])
+            deflated_df = deflation_function(
+                data=row_df,
+                base_year=base_year,
+                source_currency=row[iso_code],
+                target_currency=target_currency,
+                id_column=iso_code,
+                year_column=year,
+                value_column="value",
+                target_value_column=target_value_column,
+            )
+            return deflated_df.iloc[0]
+
+        return deflate_row
+
+    @staticmethod
+    def convert_and_adjust_currency(
+        base_year_val: int,
+        deflator_function_name: str,
+        target_currency: str,
         pydeflate_path: pathlib.Path,
         data: pd.DataFrame,
-        region_column: str = "region",
     ) -> pd.DataFrame:
         # Specify the path where deflator and exchange data will be saved
         if pydeflate_path is not None:
@@ -588,7 +618,7 @@ class Utils:
             )
 
         # Validate columns presence
-        required_columns = {"unit", "value", region_column}
+        required_columns = {"unit", "value", "region"}
         if not required_columns.issubset(data.columns):
             missing = required_columns - set(data.columns)
             raise ValueError(f"Input DataFrame is missing required columns: {missing}")
@@ -612,9 +642,20 @@ class Utils:
             ]
             raise ValueError(f"Invalid unit found in rows (index, value): {details}")
 
-        # final_results = results.apply(use_deflator, axis=1)
-        final_results = results
+        deflate_row_func = Utils.get_deflate_row_function(
+            base_year=base_year_val,
+            deflator_name=deflator_function_name,
+            target_currency=target_currency,
+            year="currency_year",
+            iso_code="region",
+            target_value_column="adjusted_value",
+        )
+
+        final_results = results.apply(deflate_row_func, axis=1)
 
         final_results = final_results.drop(columns=["currency", "currency_year"])
 
         return final_results
+
+        # TODO: modify the unit, adding the new currency. For example, if you convert from EUR to USD, you need to update the value column from EUR/Mwh_el to USD/Mwh_el
+        # TODO: not all rows of the dataframe will contain units containing currencies. Hence you should modify those with the currencies and leave untouched the other rows.
