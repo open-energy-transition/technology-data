@@ -30,7 +30,8 @@ def test_ensure_currency_unit(
 ) -> None:
     """Check if a currency unit follows the wished format."""
     assert (
-        td.CurrencyUtils.ensure_currency_unit(input_string, expected_format) == expected_result
+        td.CurrencyUtils.ensure_currency_unit(input_string, expected_format)
+        == expected_result
     )
 
 

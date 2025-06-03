@@ -8,9 +8,9 @@ import re
 from collections.abc import Callable
 from typing import Any
 
+import hdx_python_country as hpc
 import pandas as pd
 import pydeflate as pyd
-import hdx_python_country as hpc
 
 logger = logging.getLogger(__name__)
 
@@ -316,6 +316,7 @@ class CurrencyUtils:
     ... )
     ...
     # Returns a DataFrame with adjusted currency values.
+
     """
 
     @staticmethod
@@ -416,11 +417,13 @@ class CurrencyUtils:
         results = data.copy()
 
         # Select rows that correspond to a unit column that fulfills the format <3-letter currency code>-<currency year>
-        has_currency_mask = results["unit"].apply(CurrencyUtils.ensure_currency_unit).notna()
+        has_currency_mask = (
+            results["unit"].apply(CurrencyUtils.ensure_currency_unit).notna()
+        )
         currency_rows = results.loc[has_currency_mask].copy()
 
         if currency_rows.empty:
-            raise ValueError(f"No rows contain a valid currency unit.")
+            raise ValueError("No rows contain a valid currency unit.")
         else:
             # For each row, extract currency year and currency from the unit column
             currency_rows[["currency", "currency_year"]] = (
