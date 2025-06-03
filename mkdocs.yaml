@@ -12,9 +12,13 @@ nav:
   - Quick Start: quick-start.md
   - FAQ: faq.md
   - Users: users.md
-  # - Examples:
-  # - User Guide:
-  # - Reference:
+      # - Examples:
+      # - User Guide:
+- Reference:
+  - Classes:
+    - Sources: api/sources.md
+    - Technologies: api/technologies.md
+  - Utilities: api/utils.md
 
 theme:
   name: material
@@ -27,7 +31,7 @@ theme:
   - navigation.path
   - navigation.top
   - navigation.footer
-    # - content.action.edit
+      # - content.action.edit
   - toc.follow
   - search.suggest
   - announce.dismiss
@@ -88,14 +92,14 @@ plugins:
           signature_crossrefs: true
           summary: true
           show_if_no_docstring: true
-            # docstring_section_style: list
-            # backlinks: flat
-            # find_stubs_package: true
-            # parameter_headings: false
-            # merge_init_into_class: true
-            # separate_signature: true
-            # show_signature_annotations: true
-            # signature_crossrefs: true
+              # docstring_section_style: list
+              # backlinks: flat
+              # find_stubs_package: true
+              # parameter_headings: false
+              # merge_init_into_class: true
+              # separate_signature: true
+              # show_signature_annotations: true
+              # signature_crossrefs: true
           show_inheritance_diagram: true
           extra:
             show_base_class: true
