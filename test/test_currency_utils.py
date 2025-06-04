@@ -82,7 +82,7 @@ def test_convert_and_adjust_currency() -> None:
         warnings.simplefilter("ignore", DeprecationWarning)
         data = {
             "region": ["FRA", "USA", "CAN", "ITA"],
-            "unit": ["EUR-2020", "USD-2020", "CAD-2020", "MWh"],
+            "unit": ["EUR-2020/MWh_el", "USD-2020", "CAD-2020", "MWh"],
             "value": [50.0, 100.0, 200.0, 300.0],
         }
         input_dataframe = pd.DataFrame(data)
@@ -94,18 +94,20 @@ def test_convert_and_adjust_currency() -> None:
 
         new_dataframe = td.CurrencyUtils.convert_and_adjust_currency(
             2020,
-            "imf_gdp_deflate",
             "USA",
             pathlib.Path(path_cwd, "pydeflate"),
             input_dataframe,
+            "imf_gdp_deflate",
         )
 
         new_dataframe["value"] = new_dataframe["value"].astype(float).round(2)
 
+        print(new_dataframe)
+
         # Expected DataFrame (replace with the actual expected output)
         expected_data = {
             "region": ["FRA", "USA", "CAN", "ITA"],
-            "unit": ["EUR-2020", "USD-2020", "CAD-2020", "MWh"],
+            "unit": ["USD-2020/MWh_el", "USD-2020", "USD-2020", "MWh"],
             "value": [57.06, 100.00, 149.13, 300],
         }
         expected_df = pd.DataFrame(expected_data)

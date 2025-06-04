@@ -424,14 +424,59 @@ class CurrencyUtils:
         year: str,
         iso_code: str,
         target_value_column: str,
-    ):
+    ) -> Callable[[pd.Series], pd.Series]:
+        """
+        Retrieve a function to deflate a row of data based on specified parameters.
+
+        This method retrieves a deflation function from the registry using the provided deflator name
+        and returns a closure that can be used to deflate a single row of data. The returned function
+        takes a row as input and applies the deflation logic to it, returning the deflated row.
+
+        Parameters
+        ----------
+        base_year : int
+            The base year to which the values should be deflated.
+        deflator_name : str
+            The name of the deflation function to retrieve from the registry.
+        target_currency : str
+            The currency to which the values should be converted.
+        year : str
+            The name of the column that contains the year information for deflation.
+        iso_code : str
+            The name of the column that contains the ISO code for the currency.
+        target_value_column : str
+            The name of the column that contains the target value to be adjusted.
+
+        Returns
+        -------
+        Callable[[pd.Series], pd.Series]
+            A function that takes a row (as a pandas Series) and returns the deflated row (as a pandas Series).
+
+        Raises
+        ------
+        ValueError
+            If the specified deflator function name is not found in the deflation function registry.
+
+        Examples
+        --------
+        >>> deflator_func = CurrencyUtils.get_deflate_row_function(
+        ...     base_year=2022,
+        ...     deflator_name='cpi_deflator',
+        ...     target_currency='USD',
+        ...     year='currency_year',
+        ...     iso_code='region',
+        ...     target_value_column='value'
+        ... )
+        >>> deflated_row = deflator_func(row)  # where row is a pandas Series
+
+        """
         deflation_function = deflation_function_registry.get(deflator_name)
         if deflation_function is None:
             raise ValueError(
                 f"Deflator function '{deflator_name}' not found in registry"
             )
 
-        def deflate_row(row):
+        def deflate_row(row: pd.Series) -> pd.Series:
             row_df = pd.DataFrame([row])
             deflated_df = deflation_function(
                 data=row_df,
@@ -450,11 +495,68 @@ class CurrencyUtils:
     @staticmethod
     def convert_and_adjust_currency(
         base_year_val: int,
-        deflator_function_name: str,
         target_currency_country_code: str,
         pydeflate_path: pathlib.Path,
         data: pd.DataFrame,
+        deflator_function_name: str = "wb_gdp_deflate",
     ) -> pd.DataFrame:
+        """
+        Convert and/or adjust currency values in a DataFrame to a target currency and base year using deflation.
+
+        This function adjusts the currency values in the input DataFrame by deflating and/or converting
+        them to a specified target currency and base year. It identifies rows with currency units
+        matching the format `<CURRENCY_CODE>-<YEAR>`, applies a deflator function to adjust the values,
+        and updates the currency codes in the 'unit' column accordingly.
+
+        Parameters
+        ----------
+        base_year_val : int
+            The base year to which the currency values should be adjusted.
+        target_currency_country_code : str
+            The ISO3 country code representing the target currency to convert to.
+        pydeflate_path : pathlib.Path
+            The file system path where deflator and exchange rate data will be saved or loaded from.
+        data : pandas.DataFrame
+            The input DataFrame containing at least the columns 'unit', 'value', and 'region'.
+            The 'unit' column must have currency codes in the format `<3-letter currency code>-<year>`.
+        deflator_function_name : str
+            The name of the deflation function to use from the deflation function registry.
+
+        Returns
+        -------
+        pandas.DataFrame
+            A DataFrame with currency values deflated to the specified base year and converted to the
+            target currency. The 'unit' column will have updated currency codes reflecting the target currency.
+
+        Raises
+        ------
+        ValueError
+            If `pydeflate_path` is None.
+            If any of the required columns ('unit', 'value', 'region') are missing from the input DataFrame.
+            If no rows in the DataFrame contain a valid currency unit matching the expected pattern.
+            If the specified deflator function name is not found in the deflation function registry.
+
+        Examples
+        --------
+        >>> data = pd.DataFrame({
+        ...     'unit': ['USD-2020', 'EUR-2021', 'JPY-2019'],
+        ...     'value': [100, 200, 300],
+        ...     'region': ['USA', 'FRA', 'JPN']
+        ... })
+        >>> adjusted_data = CurrencyUtils.convert_and_adjust_currency(
+        ...     base_year_val=2022,
+        ...     target_currency_country_code='USA',
+        ...     pydeflate_path=pathlib.Path('/path/to/data'),
+        ...     data=data
+        ...     deflator_function_name=some_name,
+        ... )
+        >>> adjusted_data['unit']
+        0    USD-2022
+        1    USD-2022
+        2    USD-2022
+        Name: unit, dtype: object
+
+        """
         # Specify the path where deflator and exchange data will be saved
         if pydeflate_path is not None:
             pyd.set_pydeflate_path(pydeflate_path)
@@ -467,7 +569,7 @@ class CurrencyUtils:
         required_columns = {"unit", "value", "region"}
         if not required_columns.issubset(data.columns):
             missing = required_columns - set(data.columns)
-            raise ValueError(f"Input DataFrame is missing required columns: {missing}")
+            raise ValueError(f"Input dataFrame is missing required columns: {missing}")
 
         # Create a copy of the original data to avoid modifying input directly
         results = data.copy()
@@ -512,5 +614,10 @@ class CurrencyUtils:
 
         # Replace updated rows back into results DataFrame
         results.loc[has_currency_mask, adjusted_rows.columns] = adjusted_rows
+
+        # Update the 'unit' column with the new currency code
+        results.loc[has_currency_mask, "unit"] = currency_rows["unit"].apply(
+            lambda unit: CurrencyUtils.replace_currency_code(unit, target_currency_code)
+        )
 
         return results
