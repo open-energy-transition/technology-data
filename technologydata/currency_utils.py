@@ -8,9 +8,9 @@ import re
 from collections.abc import Callable
 from typing import Any
 
-import hdx_python_country as hpc
 import pandas as pd
 import pydeflate as pyd
+from hdx.location.country import Country
 
 logger = logging.getLogger(__name__)
 
@@ -361,6 +361,49 @@ class CurrencyUtils:
         return match.group(0) if match else None
 
     @staticmethod
+    def replace_currency_code(input_string: str, new_currency_code: str) -> str:
+        """
+        Replace the currency code in the input string with a new currency code.
+
+        Parameters
+        ----------
+        input_string : str
+            The string containing the currency unit to be replaced.
+        new_currency_code : str
+            The new currency code to replace the existing one.
+
+        Returns
+        -------
+        str
+            The modified string with the currency code replaced.
+
+        Raises
+        ------
+        ValueError
+            If no currency unit is found in the input string.
+
+        Examples
+        --------
+        >>> CurrencyUtils.replace_currency_code("The price is EUR-2025", "USD")
+        'The price is USD-2025'
+        >>> CurrencyUtils.replace_currency_code("No currency here", "USD")
+        ValueError: No currency unit found in the input string "No currency here".
+
+        """
+        currency_unit = CurrencyUtils.ensure_currency_unit(input_string)
+        if currency_unit:
+            # Extract the numeric part of the currency unit
+            numeric_part = currency_unit.split("-")[1]
+            # Construct the new currency unit
+            new_currency_unit = f"{new_currency_code}-{numeric_part}"
+            # Replace the old currency unit with the new one
+            return input_string.replace(currency_unit, new_currency_unit)
+        else:
+            raise ValueError(
+                f"No currency unit found in the input string {input_string}."
+            )
+
+    @staticmethod
     def get_deflate_row_function(
         base_year: int,
         deflator_name: str,
@@ -446,7 +489,9 @@ class CurrencyUtils:
             target_value_column="value",
         )
 
-        target_currency_code = hpc.Country(target_currency_country_code).currency_code
+        target_currency_code = Country.get_currency_from_iso3(
+            target_currency_country_code
+        )
 
         adjusted_rows = currency_rows.apply(deflate_row_func, axis=1)
 

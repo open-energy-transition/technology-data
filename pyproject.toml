@@ -48,6 +48,9 @@ Source = "https://github.com/PyPSA/technology-data"
 
 # Setuptools_scm settings
 
+[tool.uv]
+package = true
+
 [tool.setuptools_scm]
 version_scheme = "no-guess-dev"
 
