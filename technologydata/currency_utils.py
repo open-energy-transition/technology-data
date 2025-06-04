@@ -1,7 +1,5 @@
 """Classes for utils methods."""
 
-from __future__ import annotations
-
 import logging
 import pathlib
 import re
@@ -9,8 +7,9 @@ from collections.abc import Callable
 from typing import Any
 
 import pandas as pd
-import pydeflate as pyd
 from hdx.location.country import Country
+
+import pydeflate as pyd
 
 logger = logging.getLogger(__name__)
 

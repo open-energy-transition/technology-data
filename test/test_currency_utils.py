@@ -76,43 +76,65 @@ def test_replace_currency_code(
         assert result == expected_result
 
 
-def test_convert_and_adjust_currency() -> None:
-    """Check if a currency is converted and inflation adjusted correctly."""
+import pytest
+import pandas as pd
+import pathlib
+import shutil
+import warnings
+
+path_cwd = pathlib.Path.cwd()
+
+@pytest.mark.parametrize(
+    "base_year_val, target_currency_country_code, deflator_function_name, input_dataframe, expected_dataframe",
+    [
+        (
+            2020,
+            "USA",
+            "imf_gdp_deflate",
+            pd.DataFrame({
+                "region": ["FRA", "USA", "CAN", "ITA"],
+                "unit": ["EUR-2020/MWh_el", "USD-2020", "CAD-2020", "MWh"],
+                "value": [50.0, 100.0, 200.0, 300.0],
+            }),
+            pd.DataFrame({
+                "region": ["FRA", "USA", "CAN", "ITA"],
+                "unit": ["USD-2020/MWh_el", "USD-2020", "USD-2020", "MWh"],
+                "value": [57.06, 100.00, 149.13, 300],
+            }),
+        ),
+        # Additional test cases can be added here
+    ]
+)
+def test_convert_and_adjust_currency(
+    base_year_val: int,
+    target_currency_country_code: str,
+    deflator_function_name: str,
+    input_dataframe: pd.DataFrame,
+    expected_dataframe: pd.DataFrame,
+) -> None:
+    """Check if currency conversion and inflation adjustment work correctly."""
     with warnings.catch_warnings():
         warnings.simplefilter("ignore", DeprecationWarning)
-        data = {
-            "region": ["FRA", "USA", "CAN", "ITA"],
-            "unit": ["EUR-2020/MWh_el", "USD-2020", "CAD-2020", "MWh"],
-            "value": [50.0, 100.0, 200.0, 300.0],
-        }
-        input_dataframe = pd.DataFrame(data)
 
         pydeflate_path = pathlib.Path(path_cwd, "pydeflate")
 
-        # Create the folder
+        # Create the folder if needed
         pydeflate_path.mkdir(parents=True, exist_ok=True)
 
+        # Assume td.CurrencyUtils is imported in the test context
         new_dataframe = td.CurrencyUtils.convert_and_adjust_currency(
-            2020,
-            "USA",
-            pathlib.Path(path_cwd, "pydeflate"),
+            base_year_val,
+            target_currency_country_code,
+            pydeflate_path,
             input_dataframe,
-            "imf_gdp_deflate",
+            deflator_function_name,
         )
 
         new_dataframe["value"] = new_dataframe["value"].astype(float).round(2)
 
-        print(new_dataframe)
-
-        # Expected DataFrame (replace with the actual expected output)
-        expected_data = {
-            "region": ["FRA", "USA", "CAN", "ITA"],
-            "unit": ["USD-2020/MWh_el", "USD-2020", "USD-2020", "MWh"],
-            "value": [57.06, 100.00, 149.13, 300],
-        }
-        expected_df = pd.DataFrame(expected_data)
-
         if pydeflate_path.exists() and pydeflate_path.is_dir():
             shutil.rmtree(pydeflate_path)
 
-        pd.testing.assert_frame_equal(new_dataframe, expected_df)
+        pd.testing.assert_frame_equal(new_dataframe, expected_dataframe)
+
+

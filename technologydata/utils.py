@@ -1,7 +1,5 @@
 """Classes for utils methods."""
 
-from __future__ import annotations
-
 import logging
 import re
 from enum import Enum
