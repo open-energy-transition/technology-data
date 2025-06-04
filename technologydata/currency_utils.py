@@ -393,7 +393,7 @@ class CurrencyUtils:
         >>> CurrencyUtils.replace_currency_code("The price is EUR-2025", "USD")
         'The price is USD-2025'
         >>> CurrencyUtils.replace_currency_code("No currency here", "USD")
-        ValueError: No currency unit found in the input string "No currency here".
+        None
 
         """
         if (

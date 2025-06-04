@@ -46,20 +46,29 @@ def test_ensure_currency_unit(
             "The currency unit is GPD-2025",
         ),
         ("The currency unit", "USD", r"[A-Z]{3}-\d{4}", None),
+        (12345, "USD", r"[A-Z]{3}-\d{4}", ValueError),
+        ("The currency unit", 123, r"[A-Z]{3}-\d{4}", ValueError),
+        ("The currency unit", "USD", 123, ValueError),
     ],
 )  # type: ignore
 def test_replace_currency_code(
     input_string: str,
     new_currency_code: str,
     expected_format: str,
-    expected_result: str | None,
+    expected_result: str | None | ValueError,
 ) -> None:
     """Check if a currency unit is correctly replaced."""
-    result = td.CurrencyUtils.replace_currency_code(
+    if isinstance(expected_result, type) and expected_result is ValueError:
+        with pytest.raises(ValueError, match="Input must be a string."):
+            td.CurrencyUtils.replace_currency_code(
+                input_string, new_currency_code, expected_format
+            )
+    else:
+        result = td.CurrencyUtils.replace_currency_code(
             input_string, new_currency_code, expected_format
         )
-    assert result == expected_result
-#TODO: add test for inputstring nuercurecode and expected format not being a string. Do it also for ensure_currency_unit
+        assert result == expected_result
+
 
 def test_convert_and_adjust_currency() -> None:
     """Check if a currency is converted and inflation adjusted correctly."""
