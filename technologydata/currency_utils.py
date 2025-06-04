@@ -514,6 +514,3 @@ class CurrencyUtils:
         results.loc[has_currency_mask, adjusted_rows.columns] = adjusted_rows
 
         return results
-
-        # TODO: modify the unit, adding the new currency. For example, if you convert from EUR to USD, you need to update the value column from EUR/Mwh_el to USD/Mwh_el
-        # TODO: not all rows of the dataframe will contain units containing currencies. Hence you should modify those with the currencies and leave untouched the other rows.
