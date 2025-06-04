@@ -35,6 +35,32 @@ def test_ensure_currency_unit(
     )
 
 
+@pytest.mark.parametrize(
+    "input_string, new_currency_code, expected_format, expected_result",
+    [
+        ("EUR-2025", "USD", r"^[A-Z]{3}-\d{4}$", "USD-2025"),
+        (
+            "The currency unit is EUR-2025",
+            "GPD",
+            r"[A-Z]{3}-\d{4}",
+            "The currency unit is GPD-2025",
+        ),
+        ("The currency unit", "USD", r"[A-Z]{3}-\d{4}", None),
+    ],
+)  # type: ignore
+def test_replace_currency_code(
+    input_string: str,
+    new_currency_code: str,
+    expected_format: str,
+    expected_result: str | None,
+) -> None:
+    """Check if a currency unit is correctly replaced."""
+    result = td.CurrencyUtils.replace_currency_code(
+            input_string, new_currency_code, expected_format
+        )
+    assert result == expected_result
+#TODO: add test for inputstring nuercurecode and expected format not being a string. Do it also for ensure_currency_unit
+
 def test_convert_and_adjust_currency() -> None:
     """Check if a currency is converted and inflation adjusted correctly."""
     with warnings.catch_warnings():

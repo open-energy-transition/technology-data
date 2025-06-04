@@ -361,7 +361,11 @@ class CurrencyUtils:
         return match.group(0) if match else None
 
     @staticmethod
-    def replace_currency_code(input_string: str, new_currency_code: str) -> str:
+    def replace_currency_code(
+        input_string: str,
+        new_currency_code: str,
+        expected_format: str = r"[A-Z]{3}-\d{4}",
+    ) -> str | None:
         """
         Replace the currency code in the input string with a new currency code.
 
@@ -371,16 +375,18 @@ class CurrencyUtils:
             The string containing the currency unit to be replaced.
         new_currency_code : str
             The new currency code to replace the existing one.
+        expected_format: str
+            The string expected format.
 
         Returns
         -------
         str
-            The modified string with the currency code replaced.
+            The modified string with the currency code replaced, None otherwise.
 
         Raises
         ------
         ValueError
-            If no currency unit is found in the input string.
+            If the input_string or the expected_format or the new_currency_code are not a string.
 
         Examples
         --------
@@ -390,7 +396,16 @@ class CurrencyUtils:
         ValueError: No currency unit found in the input string "No currency here".
 
         """
-        currency_unit = CurrencyUtils.ensure_currency_unit(input_string)
+        if (
+            not isinstance(input_string, str)
+            or not isinstance(expected_format, str)
+            or not isinstance(new_currency_code, str)
+        ):
+            raise ValueError("Input must be a string.")
+
+        currency_unit = CurrencyUtils.ensure_currency_unit(
+            input_string, expected_format
+        )
         if currency_unit:
             # Extract the numeric part of the currency unit
             numeric_part = currency_unit.split("-")[1]
@@ -399,9 +414,7 @@ class CurrencyUtils:
             # Replace the old currency unit with the new one
             return input_string.replace(currency_unit, new_currency_unit)
         else:
-            raise ValueError(
-                f"No currency unit found in the input string {input_string}."
-            )
+            return None
 
     @staticmethod
     def get_deflate_row_function(
