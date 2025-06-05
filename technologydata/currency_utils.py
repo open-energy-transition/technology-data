@@ -16,7 +16,7 @@ logger = logging.getLogger(__name__)
 deflation_function_registry = {}
 
 
-def register_deflator(name: str) -> Callable[[Callable[..., Any]], Callable[..., Any]]:
+def _register_deflator(name: str) -> Callable[[Callable[..., Any]], Callable[..., Any]]:
     """
     Register a deflation function with a given name.
 
@@ -36,7 +36,7 @@ def register_deflator(name: str) -> Callable[[Callable[..., Any]], Callable[...,
 
     Examples
     --------
-    >>> @register_deflator('example_deflator')
+    >>> @_register_deflator('example_deflator')
     ... def example_function(data):
     ...     return data * 0.5
 
@@ -49,8 +49,8 @@ def register_deflator(name: str) -> Callable[[Callable[..., Any]], Callable[...,
     return decorator
 
 
-@register_deflator("imf_gdp_deflate")
-def imf_gdp_deflate_wrapper(*args: Any, **kwargs: Any) -> pd.DataFrame:
+@_register_deflator("imf_gdp_deflate")
+def _imf_gdp_deflate_wrapper(*args: Any, **kwargs: Any) -> pd.DataFrame:
     """
     Introduce wrapper function for pydeflate.imf_gdp_deflate.
 
@@ -81,74 +81,8 @@ def imf_gdp_deflate_wrapper(*args: Any, **kwargs: Any) -> pd.DataFrame:
     return pyd.imf_gdp_deflate(*args, **kwargs)
 
 
-@register_deflator("imf_cpi_deflate")
-def imf_cpi_deflate_wrapper(*args: Any, **kwargs: Any) -> pd.DataFrame:
-    """
-    Introduce wrapper function for pydeflate.imf_cpi_deflate.
-
-    Uses Consumer Price Index and exchange rates data from the IMF World Economic Outlook.
-
-    This function acts as a registered deflator under the name "imf_cpi_deflate"
-    and delegates all arguments to the underlying `imf_cpi_deflate` function
-    from the pydeflate package.
-
-    Parameters
-    ----------
-    *args : tuple
-        Positional arguments to be passed to `pydeflate.imf_cpi_deflate`.
-    **kwargs : dict
-        Keyword arguments to be passed to `pydeflate.imf_cpi_deflate`.
-
-    Returns
-    -------
-    pandas.DataFrame
-        The DataFrame returned by `pydeflate.imf_cpi_deflate`, containing the
-        deflated values according to the specified parameters.
-
-    Notes
-    -----
-    This wrapper function is primarily used for registration purposes and does
-    not modify the behavior or signature of the underlying `imf_cpi_deflate` function.
-
-    """
-    return pyd.imf_cpi_deflate(*args, **kwargs)
-
-
-@register_deflator("imf_cpi_e_deflate")
-def imf_cpi_e_deflate_wrapper(*args: Any, **kwargs: Any) -> pd.DataFrame:
-    """
-    Introduce wrapper function for pydeflate.imf_cpi_e_deflate.
-
-    Uses end-of-period Consumer Price Index and exchange rates data from the IMF World Economic Outlook.
-
-    This function acts as a registered deflator under the name "imf_cpi_e_deflate"
-    and delegates all arguments to the underlying `imf_cpi_e_deflate` function
-    from the pydeflate package.
-
-    Parameters
-    ----------
-    *args : tuple
-        Positional arguments to be passed to `pydeflate.imf_cpi_e_deflate`.
-    **kwargs : dict
-        Keyword arguments to be passed to `pydeflate.imf_cpi_e_deflate`.
-
-    Returns
-    -------
-    pandas.DataFrame
-        The DataFrame returned by `pydeflate.imf_cpi_e_deflate`, containing the
-        deflated values according to the specified parameters.
-
-    Notes
-    -----
-    This wrapper function is primarily used for registration purposes and does
-    not modify the behavior or signature of the underlying `imf_cpi_e_deflate` function.
-
-    """
-    return pyd.imf_cpi_e_deflate(*args, **kwargs)
-
-
-@register_deflator("wb_gdp_deflate")
-def wb_gdp_deflate_wrapper(*args: Any, **kwargs: Any) -> pd.DataFrame:
+@_register_deflator("wb_gdp_deflate")
+def _wb_gdp_deflate_wrapper(*args: Any, **kwargs: Any) -> pd.DataFrame:
     """
     Introduce wrapper function for pydeflate.wb_gdp_deflate.
 
@@ -180,8 +114,8 @@ def wb_gdp_deflate_wrapper(*args: Any, **kwargs: Any) -> pd.DataFrame:
     return pyd.wb_gdp_deflate(*args, **kwargs)
 
 
-@register_deflator("wb_gdp_linked_deflate")
-def wb_gdp_linked_deflate_wrapper(*args: Any, **kwargs: Any) -> pd.DataFrame:
+@_register_deflator("wb_gdp_linked_deflate")
+def _wb_gdp_linked_deflate_wrapper(*args: Any, **kwargs: Any) -> pd.DataFrame:
     """
     Introduce wrapper function for pydeflate.wb_gdp_linked_deflate.
 
@@ -213,72 +147,6 @@ def wb_gdp_linked_deflate_wrapper(*args: Any, **kwargs: Any) -> pd.DataFrame:
     return pyd.wb_gdp_linked_deflate(*args, **kwargs)
 
 
-@register_deflator("wb_cpi_deflate")
-def wb_cpi_deflate_wrapper(*args: Any, **kwargs: Any) -> pd.DataFrame:
-    """
-    Introduce wrapper function for pydeflate.wb_cpi_deflate.
-
-    Uses Consumer Price Index and exchange rate data from the World Bank.
-
-    This function acts as a registered deflator under the name "wb_cpi_deflate"
-    and delegates all arguments to the underlying `wb_cpi_deflate` function
-    from the pydeflate package.
-
-    Parameters
-    ----------
-    *args : tuple
-        Positional arguments to be passed to `pydeflate.wb_cpi_deflate`.
-    **kwargs : dict
-        Keyword arguments to be passed to `pydeflate.wb_cpi_deflate`.
-
-    Returns
-    -------
-    pandas.DataFrame
-        The DataFrame returned by `pydeflate.wb_cpi_deflate`, containing the
-        deflated values according to the specified parameters.
-
-    Notes
-    -----
-    This wrapper function is primarily used for registration purposes and does
-    not modify the behavior or signature of the underlying `wb_cpi_deflate` function.
-
-    """
-    return pyd.wb_cpi_deflate(*args, **kwargs)
-
-
-@register_deflator("oecd_dac_deflate")
-def oecd_dac_deflate_wrapper(*args: Any, **kwargs: Any) -> pd.DataFrame:
-    """
-    Introduce wrapper function for pydeflate.oecd_dac_deflate.
-
-    Uses the OECD DAC deflator series (prices and exchange rates).
-
-    This function acts as a registered deflator under the name "oecd_dac_deflate"
-    and delegates all arguments to the underlying `oecd_dac_deflate` function
-    from the pydeflate package.
-
-    Parameters
-    ----------
-    *args : tuple
-        Positional arguments to be passed to `pydeflate.oecd_dac_deflate`.
-    **kwargs : dict
-        Keyword arguments to be passed to `pydeflate.oecd_dac_deflate`.
-
-    Returns
-    -------
-    pandas.DataFrame
-        The DataFrame returned by `pydeflate.oecd_dac_deflate`, containing the
-        deflated values according to the specified parameters.
-
-    Notes
-    -----
-    This wrapper function is primarily used for registration purposes and does
-    not modify the behavior or signature of the underlying `oecd_dac_deflate` function.
-
-    """
-    return pyd.oecd_dac_deflate(*args, **kwargs)
-
-
 class CurrencyUtils:
     """
     A utility class for handling currency-related operations.
@@ -288,24 +156,24 @@ class CurrencyUtils:
 
     Methods
     -------
-    ensure_currency_unit(input_string: str, expected_format: str = regex) -> str | None:
+    extract_currency_unit(input_string: str, expected_format: str = regex) -> str | None:
         Check if the input string contains a currency unit and extract it if found.
 
     get_deflate_row_function(base_year: int, deflator_name: str, target_currency: str, year: str, iso_code: str, target_value_column: str):
         Get a function to deflate a row of data based on the specified parameters.
 
-    convert_and_adjust_currency(base_year_val: int, deflator_function_name: str, target_currency: str, pydeflate_path: pathlib.Path, data: pd.DataFrame) -> pd.DataFrame:
+    adjust_currency(base_year_val: int, deflator_function_name: str, target_currency: str, pydeflate_path: pathlib.Path, data: pd.DataFrame) -> pd.DataFrame:
         Convert and adjust currency values in a DataFrame using a specified deflator function.
 
     Examples
     --------
-    >>> CurrencyUtils.ensure_currency_unit("The price is USD-2025", "regex")
+    >>> CurrencyUtils.extract_currency_unit("The price is USD-2025", "regex")
     'USD-2025'
 
-    >>> CurrencyUtils.ensure_currency_unit("No currency here", "regex")
+    >>> CurrencyUtils.extract_currency_unit("No currency here", "regex")
     None
 
-    >>> CurrencyUtils.convert_and_adjust_currency(
+    >>> CurrencyUtils.adjust_currency(
     ...     base_year_val=2020,
     ...     deflator_function_name="example_deflator",
     ...     target_currency="USD",
@@ -318,7 +186,7 @@ class CurrencyUtils:
     """
 
     @staticmethod
-    def ensure_currency_unit(
+    def extract_currency_unit(
         input_string: str, expected_format: str = r"[A-Z]{3}-\d{4}"
     ) -> str | None:
         r"""
@@ -345,9 +213,9 @@ class CurrencyUtils:
 
         Examples
         --------
-        >>> CurrencyUtils.ensure_currency_unit("The price is USD-2025", r"[A-Z]{3}-\d{4}")
+        >>> CurrencyUtils.extract_currency_unit("The price is USD-2025", r"[A-Z]{3}-\d{4}")
         'USD-2025'
-        >>> CurrencyUtils.ensure_currency_unit("No currency here", r"[A-Z]{3}-\d{4}")
+        >>> CurrencyUtils.extract_currency_unit("No currency here", r"[A-Z]{3}-\d{4}")
         None
 
         """
@@ -401,7 +269,7 @@ class CurrencyUtils:
         ):
             raise ValueError("Input must be a string.")
 
-        currency_unit = CurrencyUtils.ensure_currency_unit(
+        currency_unit = CurrencyUtils.extract_currency_unit(
             input_string, expected_format
         )
         if currency_unit:
@@ -530,7 +398,7 @@ class CurrencyUtils:
         return deflate_row
 
     @staticmethod
-    def convert_and_adjust_currency(
+    def adjust_currency(
         base_year_val: int,
         pydeflate_path: pathlib.Path,
         data: pd.DataFrame,
@@ -587,7 +455,7 @@ class CurrencyUtils:
         ...     'value': [100, 200, 300],
         ...     'region': ['USA', 'FRA', 'JPN']
         ... })
-        >>> adjusted_data = CurrencyUtils.convert_and_adjust_currency(
+        >>> adjusted_data = CurrencyUtils.adjust_currency(
         ...     base_year_val=2022,
         ...     target_currency='USD',
         ...     pydeflate_path=pathlib.Path('/path/to/data'),
@@ -636,7 +504,7 @@ class CurrencyUtils:
 
         # Select rows that correspond to a unit column that fulfills the format <3-letter currency code>-<currency year>
         has_currency_mask = (
-            results["unit"].apply(CurrencyUtils.ensure_currency_unit).notna()
+            results["unit"].apply(CurrencyUtils.extract_currency_unit).notna()
         )
         currency_rows = results.loc[has_currency_mask].copy()
 
@@ -646,7 +514,7 @@ class CurrencyUtils:
             # For each row, extract currency year and currency from the unit column
             currency_rows[["currency", "currency_year"]] = (
                 currency_rows["unit"]
-                .apply(CurrencyUtils.ensure_currency_unit)
+                .apply(CurrencyUtils.extract_currency_unit)
                 .str.split("-", expand=True)
             )
 
