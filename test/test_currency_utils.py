@@ -76,13 +76,12 @@ def test_replace_currency_code(
         assert result == expected_result
 
 
-import pytest
-import pandas as pd
 import pathlib
-import shutil
-import warnings
+
+import pytest
 
 path_cwd = pathlib.Path.cwd()
+
 
 @pytest.mark.parametrize(
     "base_year_val, target_currency_country_code, deflator_function_name, input_dataframe, expected_dataframe",
@@ -91,19 +90,23 @@ path_cwd = pathlib.Path.cwd()
             2020,
             "USA",
             "imf_gdp_deflate",
-            pd.DataFrame({
-                "region": ["FRA", "USA", "CAN", "ITA"],
-                "unit": ["EUR-2020/MWh_el", "USD-2020", "CAD-2020", "MWh"],
-                "value": [50.0, 100.0, 200.0, 300.0],
-            }),
-            pd.DataFrame({
-                "region": ["FRA", "USA", "CAN", "ITA"],
-                "unit": ["USD-2020/MWh_el", "USD-2020", "USD-2020", "MWh"],
-                "value": [57.06, 100.00, 149.13, 300],
-            }),
+            pd.DataFrame(
+                {
+                    "region": ["FRA", "USA", "CAN", "ITA"],
+                    "unit": ["EUR-2020/MWh_el", "USD-2020", "CAD-2020", "MWh"],
+                    "value": [50.0, 100.0, 200.0, 300.0],
+                }
+            ),
+            pd.DataFrame(
+                {
+                    "region": ["FRA", "USA", "CAN", "ITA"],
+                    "unit": ["USD-2020/MWh_el", "USD-2020", "USD-2020", "MWh"],
+                    "value": [57.06, 100.00, 149.13, 300],
+                }
+            ),
         ),
         # Additional test cases can be added here
-    ]
+    ],
 )
 def test_convert_and_adjust_currency(
     base_year_val: int,
@@ -136,5 +139,3 @@ def test_convert_and_adjust_currency(
             shutil.rmtree(pydeflate_path)
 
         pd.testing.assert_frame_equal(new_dataframe, expected_dataframe)
-
-

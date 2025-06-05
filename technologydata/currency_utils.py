@@ -7,9 +7,8 @@ from collections.abc import Callable
 from typing import Any
 
 import pandas as pd
-from hdx.location.country import Country
-
 import pydeflate as pyd
+from hdx.location.country import Country
 
 logger = logging.getLogger(__name__)
 
