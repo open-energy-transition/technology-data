@@ -77,11 +77,9 @@ def test_replace_currency_code(
 
 
 @pytest.mark.parametrize(
-    "base_year_val, target_currency_country_code, deflator_function_name, input_dataframe, expected_dataframe",
-    [
-        (
+    "base_year_val, deflator_function_name, input_dataframe, use_case, target_currency, expected_dataframe",
+    [        (
             2020,
-            "USA",
             "imf_gdp_deflate",
             pd.DataFrame(
                 {
@@ -90,6 +88,8 @@ def test_replace_currency_code(
                     "value": [50.0, 100.0, 200.0, 300.0],
                 }
             ),
+            "currency_conversion",
+            "USA",
             pd.DataFrame(
                 {
                     "region": ["FRA", "USA", "CAN", "ITA"],
@@ -98,14 +98,34 @@ def test_replace_currency_code(
                 }
             ),
         ),
-        # Additional test cases can be added here
+        (
+            2020,
+            "imf_gdp_deflate",
+            pd.DataFrame(
+                {
+                    "region": ["FRA", "USA", "CAN", "ITA"],
+                    "unit": ["EUR-2015/MWh_el", "USD-2015", "CAD-2015", "MWh"],
+                    "value": [50.0, 100.0, 200.0, 300.0],
+                }
+            ),
+            "inflation_adjustment",
+            None,
+            pd.DataFrame(
+                {
+                    "region": ["FRA", "USA", "CAN", "ITA"],
+                    "unit": ["EUR-2015/MWh_el", "USD-2015", "CAD-2015", "MWh"],
+                    "value": [53.33, 108.27, 215.56, 300],
+                }
+            ),
+        ),
     ],
 )  # type: ignore
 def test_convert_and_adjust_currency(
     base_year_val: int,
-    target_currency_country_code: str,
     deflator_function_name: str,
     input_dataframe: pd.DataFrame,
+    use_case: str,
+    target_currency: str | None,
     expected_dataframe: pd.DataFrame,
 ) -> None:
     """Check if currency conversion and inflation adjustment work correctly."""
@@ -120,14 +140,15 @@ def test_convert_and_adjust_currency(
         # Assume td.CurrencyUtils is imported in the test context
         new_dataframe = td.CurrencyUtils.convert_and_adjust_currency(
             base_year_val,
-            target_currency_country_code,
             pydeflate_path,
             input_dataframe,
+            use_case,
+            target_currency,
             deflator_function_name,
         )
 
         new_dataframe["value"] = new_dataframe["value"].astype(float).round(2)
-
+        print(new_dataframe)
         if pydeflate_path.exists() and pydeflate_path.is_dir():
             shutil.rmtree(pydeflate_path)
 
