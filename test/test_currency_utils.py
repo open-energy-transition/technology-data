@@ -76,13 +76,6 @@ def test_replace_currency_code(
         assert result == expected_result
 
 
-import pathlib
-
-import pytest
-
-path_cwd = pathlib.Path.cwd()
-
-
 @pytest.mark.parametrize(
     "base_year_val, target_currency_country_code, deflator_function_name, input_dataframe, expected_dataframe",
     [
@@ -107,7 +100,7 @@ path_cwd = pathlib.Path.cwd()
         ),
         # Additional test cases can be added here
     ],
-)
+)  # type: ignore
 def test_convert_and_adjust_currency(
     base_year_val: int,
     target_currency_country_code: str,
