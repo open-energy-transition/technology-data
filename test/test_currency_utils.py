@@ -77,8 +77,9 @@ def test_replace_currency_code(
 
 
 @pytest.mark.parametrize(
-    "base_year_val, deflator_function_name, input_dataframe, use_case, target_currency, expected_dataframe",
-    [        (
+    "base_year_val, deflator_function_name, input_dataframe, use_case, target_currency, expected_result, expected_exception_message",
+    [
+        (
             2020,
             "imf_gdp_deflate",
             pd.DataFrame(
@@ -97,6 +98,7 @@ def test_replace_currency_code(
                     "value": [57.06, 100.00, 149.13, 300],
                 }
             ),
+            None,
         ),
         (
             2020,
@@ -117,6 +119,81 @@ def test_replace_currency_code(
                     "value": [53.33, 108.27, 215.56, 300],
                 }
             ),
+            None,
+        ),
+        (
+            2020,
+            "imf_gdp_deflate",
+            pd.DataFrame(
+                {
+                    "unit": ["EUR-2015/MWh_el", "USD-2015", "CAD-2015", "MWh"],
+                    "value": [50.0, 100.0, 200.0, 300.0],
+                }
+            ),
+            "inflation_adjustment",
+            None,
+            ValueError,
+            "Input dataFrame is missing required columns:",
+        ),
+        (
+            2020,
+            "imf_gdp_deflate",
+            pd.DataFrame(
+                {
+                    "region": ["FRA", "USA"],
+                    "unit": ["MWh_el", "MWh"],
+                    "value": [50.0, 100.0],
+                }
+            ),
+            "inflation_adjustment",
+            None,
+            ValueError,
+            "No rows contain a valid currency unit.",
+        ),
+        (
+            2020,
+            "imf_gdp_deflate",
+            pd.DataFrame(
+                {
+                    "region": ["FRA", "USA", "CAN", "ITA"],
+                    "unit": ["EUR-2020/MWh_el", "USD-2020", "CAD-2020", "MWh"],
+                    "value": [50.0, 100.0, 200.0, 300.0],
+                }
+            ),
+            "conversion",
+            "USA",
+            ValueError,
+            "use_case_flag must be either 'currency_conversion' or 'inflation_adjustment'",
+        ),
+        (
+            2020,
+            "random_deflate",
+            pd.DataFrame(
+                {
+                    "region": ["FRA", "USA", "CAN", "ITA"],
+                    "unit": ["EUR-2020/MWh_el", "USD-2020", "CAD-2020", "MWh"],
+                    "value": [50.0, 100.0, 200.0, 300.0],
+                }
+            ),
+            "currency_conversion",
+            "USA",
+            ValueError,
+            "Deflator function 'random_deflate' not found in registry",
+        ),
+        (
+            2020,
+            "imf_gdp_deflate",
+            pd.DataFrame(
+                {
+                    "region": ["FRA", "USA", "CAN", "ITA"],
+                    "unit": ["EUR-2020/MWh_el", "USD-2020", "CAD-2020", "MWh"],
+                    "value": [50.0, 100.0, 200.0, 300.0],
+                }
+            ),
+            "currency_conversion",
+            None,
+            ValueError,
+            "target_currency must be provided when use_case_flag is 'currency_conversion'",
         ),
     ],
 )  # type: ignore
@@ -126,7 +203,8 @@ def test_convert_and_adjust_currency(
     input_dataframe: pd.DataFrame,
     use_case: str,
     target_currency: str | None,
-    expected_dataframe: pd.DataFrame,
+    expected_result: pd.DataFrame | ValueError,
+    expected_exception_message: str | None,
 ) -> None:
     """Check if currency conversion and inflation adjustment work correctly."""
     with warnings.catch_warnings():
@@ -134,22 +212,32 @@ def test_convert_and_adjust_currency(
 
         pydeflate_path = pathlib.Path(path_cwd, "pydeflate")
 
-        # Create the folder if needed
-        pydeflate_path.mkdir(parents=True, exist_ok=True)
+        if isinstance(expected_result, type) and expected_result is ValueError:
+            with pytest.raises(ValueError, match=expected_exception_message):
+                td.CurrencyUtils.convert_and_adjust_currency(
+                    base_year_val,
+                    pydeflate_path,
+                    input_dataframe,
+                    use_case,
+                    target_currency,
+                    deflator_function_name,
+                )
+        else:
+            # Create the folder if needed
+            pydeflate_path.mkdir(parents=True, exist_ok=True)
 
-        # Assume td.CurrencyUtils is imported in the test context
-        new_dataframe = td.CurrencyUtils.convert_and_adjust_currency(
-            base_year_val,
-            pydeflate_path,
-            input_dataframe,
-            use_case,
-            target_currency,
-            deflator_function_name,
-        )
+            # Assume td.CurrencyUtils is imported in the test context
+            new_dataframe = td.CurrencyUtils.convert_and_adjust_currency(
+                base_year_val,
+                pydeflate_path,
+                input_dataframe,
+                use_case,
+                target_currency,
+                deflator_function_name,
+            )
 
-        new_dataframe["value"] = new_dataframe["value"].astype(float).round(2)
-        print(new_dataframe)
-        if pydeflate_path.exists() and pydeflate_path.is_dir():
-            shutil.rmtree(pydeflate_path)
+            new_dataframe["value"] = new_dataframe["value"].astype(float).round(2)
+            if pydeflate_path.exists() and pydeflate_path.is_dir():
+                shutil.rmtree(pydeflate_path)
 
-        pd.testing.assert_frame_equal(new_dataframe, expected_dataframe)
+            pd.testing.assert_frame_equal(new_dataframe, expected_result)
