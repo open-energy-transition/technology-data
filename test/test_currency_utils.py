@@ -140,21 +140,6 @@ def test_replace_currency_code(
             "imf_gdp_deflate",
             pd.DataFrame(
                 {
-                    "region": ["FRA", "USA"],
-                    "unit": ["MWh_el", "MWh"],
-                    "value": [50.0, 100.0],
-                }
-            ),
-            "inflation_adjustment",
-            None,
-            ValueError,
-            "No rows contain a valid currency unit.",
-        ),
-        (
-            2020,
-            "imf_gdp_deflate",
-            pd.DataFrame(
-                {
                     "region": ["FRA", "USA", "CAN", "ITA"],
                     "unit": ["EUR-2020/MWh_el", "USD-2020", "CAD-2020", "MWh"],
                     "value": [50.0, 100.0, 200.0, 300.0],

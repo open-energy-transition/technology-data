@@ -509,7 +509,7 @@ class CurrencyUtils:
         currency_rows = results.loc[has_currency_mask].copy()
 
         if currency_rows.empty:
-            raise ValueError("No rows contain a valid currency unit.")
+            logger.warning("No rows contain a valid currency unit.")
         else:
             # For each row, extract currency year and currency from the unit column
             currency_rows[["currency", "currency_year"]] = (
