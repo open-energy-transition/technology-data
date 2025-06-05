@@ -78,7 +78,8 @@ def test_replace_currency_code(
 
 @pytest.mark.parametrize(
     "base_year_val, deflator_function_name, input_dataframe, use_case, target_currency, expected_dataframe",
-    [        (
+    [
+        (
             2020,
             "imf_gdp_deflate",
             pd.DataFrame(
