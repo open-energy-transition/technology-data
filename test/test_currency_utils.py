@@ -203,7 +203,6 @@ def test_adjust_currency(
             with pytest.raises(ValueError, match=expected_exception_message):
                 td.Currencies.adjust_currency(
                     base_year_val,
-                    pydeflate_path,
                     input_dataframe,
                     use_case,
                     target_currency,
@@ -216,7 +215,6 @@ def test_adjust_currency(
             # Assume td.CurrencyUtils is imported in the test context
             new_dataframe = td.Currencies.adjust_currency(
                 base_year_val,
-                pydeflate_path,
                 input_dataframe,
                 use_case,
                 target_currency,

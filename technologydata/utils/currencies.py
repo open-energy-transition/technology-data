@@ -15,6 +15,8 @@ logger = logging.getLogger(__name__)
 
 deflation_function_registry = {}
 
+path_cwd = pathlib.Path.cwd()
+
 
 def _register_deflator(name: str) -> Callable[[Callable[..., Any]], Callable[..., Any]]:
     """
@@ -177,7 +179,6 @@ class Currencies:
     ...     base_year_val=2020,
     ...     deflator_function_name="example_deflator",
     ...     target_currency="USD",
-    ...     pydeflate_path=pathlib.Path("/path/to/deflator"),
     ...     data=pd.DataFrame({"unit": ["USD-2020", "EUR-2020"], "value": [100, 200], "region": ["US", "EU"]})
     ... )
     ...
@@ -400,11 +401,11 @@ class Currencies:
     @staticmethod
     def adjust_currency(
         base_year_val: int,
-        pydeflate_path: pathlib.Path,
         data: pd.DataFrame,
         use_case_flag: str,
         target_currency: str | None = None,
         deflator_function_name: str = "wb_gdp_deflate",
+        pydeflate_path: pathlib.Path = pathlib.Path(path_cwd, "pydeflate"),
     ) -> pd.DataFrame:
         """
         Convert and/or adjust currency values in a DataFrame to a target currency and base year using deflation.
@@ -418,8 +419,6 @@ class Currencies:
         ----------
         base_year_val : int
             The base year to which the currency values should be adjusted.
-        pydeflate_path : pathlib.Path
-            The file system path where deflator and exchange rate data will be saved or loaded from.
         data : pandas.DataFrame
             The input DataFrame containing at least the columns 'unit', 'value', and 'region'.
             The 'unit' column must have currency codes in the format `<3-letter currency code>-<year>`.
@@ -431,6 +430,8 @@ class Currencies:
             "inflation_adjustment". Default is None.
         deflator_function_name : str
             The name of the deflation function to use from the deflation function registry. Default is "wb_gdp_deflate".
+        pydeflate_path : pathlib.Path
+            The file system path where deflator and exchange rate data will be saved or loaded from.
 
         Returns
         -------
@@ -458,9 +459,9 @@ class Currencies:
         >>> adjusted_data = Currencies.adjust_currency(
         ...     base_year_val=2022,
         ...     target_currency='USD',
-        ...     pydeflate_path=pathlib.Path('/path/to/data'),
         ...     data=data,
         ...     deflator_function_name='some_name',
+        ...     pydeflate_path=pathlib.Path('/path/to/data'),
         ... )
         >>> adjusted_data['unit']
         0    USD-2022
