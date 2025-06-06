@@ -2,24 +2,24 @@
 
 from importlib.metadata import version
 
-from technologydata.currency_utils import CurrencyUtils
 from technologydata.sources import AVAILABLE_SOURCES, Source, Sources
 from technologydata.technologies import (
     Technologies,
     check_source_validity,
 )
-from technologydata.utils import (
+from technologydata.utils.commons import (
+    Commons,
     DateFormatEnum,
     FileExtensionEnum,
-    Utils,
 )
+from technologydata.utils.currencies import Currencies
 
 __version__ = version("technologydata")
 
 
 __all__ = [
-    "Utils",
-    "CurrencyUtils",
+    "Commons",
+    "Currencies",
     "DateFormatEnum",
     "FileExtensionEnum",
     "Source",

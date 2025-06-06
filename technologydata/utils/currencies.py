@@ -1,4 +1,4 @@
-"""Classes for utils methods."""
+"""Classes for Currencies methods."""
 
 import logging
 import pathlib
@@ -147,7 +147,7 @@ def _wb_gdp_linked_deflate_wrapper(*args: Any, **kwargs: Any) -> pd.DataFrame:
     return pyd.wb_gdp_linked_deflate(*args, **kwargs)
 
 
-class CurrencyUtils:
+class Currencies:
     """
     A utility class for handling currency-related operations.
 
@@ -167,13 +167,13 @@ class CurrencyUtils:
 
     Examples
     --------
-    >>> CurrencyUtils.extract_currency_unit("The price is USD-2025", "regex")
+    >>> Currencies.extract_currency_unit("The price is USD-2025", "regex")
     'USD-2025'
 
-    >>> CurrencyUtils.extract_currency_unit("No currency here", "regex")
+    >>> Currencies.extract_currency_unit("No currency here", "regex")
     None
 
-    >>> CurrencyUtils.adjust_currency(
+    >>> Currencies.adjust_currency(
     ...     base_year_val=2020,
     ...     deflator_function_name="example_deflator",
     ...     target_currency="USD",
@@ -213,9 +213,9 @@ class CurrencyUtils:
 
         Examples
         --------
-        >>> CurrencyUtils.extract_currency_unit("The price is USD-2025", r"[A-Z]{3}-\d{4}")
+        >>> Currencies.extract_currency_unit("The price is USD-2025", r"[A-Z]{3}-\d{4}")
         'USD-2025'
-        >>> CurrencyUtils.extract_currency_unit("No currency here", r"[A-Z]{3}-\d{4}")
+        >>> Currencies.extract_currency_unit("No currency here", r"[A-Z]{3}-\d{4}")
         None
 
         """
@@ -256,9 +256,9 @@ class CurrencyUtils:
 
         Examples
         --------
-        >>> CurrencyUtils.replace_currency_code("The price is EUR-2025", "USD")
+        >>> Currencies.replace_currency_code("The price is EUR-2025", "USD")
         'The price is USD-2025'
-        >>> CurrencyUtils.replace_currency_code("No currency here", "USD")
+        >>> Currencies.replace_currency_code("No currency here", "USD")
         None
 
         """
@@ -269,7 +269,7 @@ class CurrencyUtils:
         ):
             raise ValueError("Input must be a string.")
 
-        currency_unit = CurrencyUtils.extract_currency_unit(
+        currency_unit = Currencies.extract_currency_unit(
             input_string, expected_format
         )
         if currency_unit:
@@ -331,7 +331,7 @@ class CurrencyUtils:
 
         Examples
         --------
-        >>> deflator_func = CurrencyUtils.get_deflate_row_function(
+        >>> deflator_func = Currencies.get_deflate_row_function(
         ...     base_year=2022,
         ...     deflator_name='cpi_deflator',
         ...     year='currency_year',
@@ -341,7 +341,7 @@ class CurrencyUtils:
         ...     target_currency='USD',
         ... )
         >>> deflated_row = deflator_func(row)  # where row is a pandas Series
-        >>> deflator_func_inflation = CurrencyUtils.get_deflate_row_function(
+        >>> deflator_func_inflation = Currencies.get_deflate_row_function(
         ...     base_year=2022,
         ...     deflator_name='cpi_deflator',
         ...     year='currency_year',
@@ -455,7 +455,7 @@ class CurrencyUtils:
         ...     'value': [100, 200, 300],
         ...     'region': ['USA', 'FRA', 'JPN']
         ... })
-        >>> adjusted_data = CurrencyUtils.adjust_currency(
+        >>> adjusted_data = Currencies.adjust_currency(
         ...     base_year_val=2022,
         ...     target_currency='USD',
         ...     pydeflate_path=pathlib.Path('/path/to/data'),
@@ -504,7 +504,7 @@ class CurrencyUtils:
 
         # Select rows that correspond to a unit column that fulfills the format <3-letter currency code>-<currency year>
         has_currency_mask = (
-            results["unit"].apply(CurrencyUtils.extract_currency_unit).notna()
+            results["unit"].apply(Currencies.extract_currency_unit).notna()
         )
         currency_rows = results.loc[has_currency_mask].copy()
 
@@ -514,7 +514,7 @@ class CurrencyUtils:
             # For each row, extract currency year and currency from the unit column
             currency_rows[["currency", "currency_year"]] = (
                 currency_rows["unit"]
-                .apply(CurrencyUtils.extract_currency_unit)
+                .apply(Currencies.extract_currency_unit)
                 .str.split("-", expand=True)
             )
 
@@ -526,7 +526,7 @@ class CurrencyUtils:
         # Use match statement to determine the deflation function
         match use_case_flag.casefold():
             case "currency_conversion":
-                deflate_row_func = CurrencyUtils.get_deflate_row_function(
+                deflate_row_func = Currencies.get_deflate_row_function(
                     base_year=base_year_val,
                     deflator_name=deflator_function_name,
                     year="currency_year",
@@ -536,7 +536,7 @@ class CurrencyUtils:
                     target_currency=target_currency,
                 )
             case "inflation_adjustment":
-                deflate_row_func = CurrencyUtils.get_deflate_row_function(
+                deflate_row_func = Currencies.get_deflate_row_function(
                     base_year=base_year_val,
                     deflator_name=deflator_function_name,
                     year="currency_year",
@@ -559,7 +559,7 @@ class CurrencyUtils:
 
             # Update the 'unit' column with the new currency code
             results.loc[has_currency_mask, "unit"] = currency_rows["unit"].apply(
-                lambda unit: CurrencyUtils.replace_currency_code(
+                lambda unit: Currencies.replace_currency_code(
                     unit, target_currency_code
                 )
             )

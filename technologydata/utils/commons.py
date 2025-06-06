@@ -1,4 +1,4 @@
-"""Classes for utils methods."""
+"""Classes for Commons methods."""
 
 import logging
 import re
@@ -155,7 +155,7 @@ class FileExtensionEnum(Enum):
         return None
 
 
-class Utils:
+class Commons:
     """
     A utility class for various helper functions.
 
@@ -171,9 +171,9 @@ class Utils:
 
     Examples
     --------
-    >>> Utils.change_datetime_format("20250520144500", DateFormatEnum.SOURCES_CSV)
+    >>> Commons.change_datetime_format("20250520144500", DateFormatEnum.SOURCES_CSV)
     '2025-05-20 14:45:00'
-    >>> Utils.replace_special_characters("Hello, World! Welcome to Python @ 2023.")
+    >>> Commons.replace_special_characters("Hello, World! Welcome to Python @ 2023.")
     'hello_world_welcome_to_python_2023'
 
     """
@@ -209,7 +209,7 @@ class Utils:
 
         Examples
         --------
-        >>> Utils.change_datetime_format("20250520144500", DateFormatEnum.SOURCES_CSV)
+        >>> Commons.change_datetime_format("20250520144500", DateFormatEnum.SOURCES_CSV)
         >>> "2025-05-20 14:45:00"
 
         """

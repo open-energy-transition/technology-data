@@ -33,10 +33,10 @@ def test_extract_currency_unit(
     """Check if a currency unit follows the wished format."""
     if isinstance(expected_result, type) and expected_result is ValueError:
         with pytest.raises(ValueError, match="Input must be a string."):
-            td.CurrencyUtils.extract_currency_unit(input_string, expected_format)
+            td.Currencies.extract_currency_unit(input_string, expected_format)
     else:
         assert (
-            td.CurrencyUtils.extract_currency_unit(input_string, expected_format)
+            td.Currencies.extract_currency_unit(input_string, expected_format)
             == expected_result
         )
 
@@ -66,11 +66,11 @@ def test_replace_currency_code(
     """Check if a currency unit is correctly replaced."""
     if isinstance(expected_result, type) and expected_result is ValueError:
         with pytest.raises(ValueError, match="Input must be a string."):
-            td.CurrencyUtils.replace_currency_code(
+            td.Currencies.replace_currency_code(
                 input_string, new_currency_code, expected_format
             )
     else:
-        result = td.CurrencyUtils.replace_currency_code(
+        result = td.Currencies.replace_currency_code(
             input_string, new_currency_code, expected_format
         )
         assert result == expected_result
@@ -199,7 +199,7 @@ def test_adjust_currency(
 
         if isinstance(expected_result, type) and expected_result is ValueError:
             with pytest.raises(ValueError, match=expected_exception_message):
-                td.CurrencyUtils.adjust_currency(
+                td.Currencies.adjust_currency(
                     base_year_val,
                     pydeflate_path,
                     input_dataframe,
@@ -212,7 +212,7 @@ def test_adjust_currency(
             pydeflate_path.mkdir(parents=True, exist_ok=True)
 
             # Assume td.CurrencyUtils is imported in the test context
-            new_dataframe = td.CurrencyUtils.adjust_currency(
+            new_dataframe = td.Currencies.adjust_currency(
                 base_year_val,
                 pydeflate_path,
                 input_dataframe,
