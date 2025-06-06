@@ -269,9 +269,7 @@ class Currencies:
         ):
             raise ValueError("Input must be a string.")
 
-        currency_unit = Currencies.extract_currency_unit(
-            input_string, expected_format
-        )
+        currency_unit = Currencies.extract_currency_unit(input_string, expected_format)
         if currency_unit:
             # Extract the numeric part of the currency unit
             numeric_part = currency_unit.split("-")[1]
