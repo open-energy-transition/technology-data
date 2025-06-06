@@ -213,9 +213,11 @@ class Currencies:
 
         Examples
         --------
-        >>> Currencies.extract_currency_unit("The price is USD-2025", r"[A-Z]{3}-\d{4}")
+        >>> Currencies.extract_currency_unit("The price is USD-2025/kW_el", r"[A-Z]{3}-\d{4}")
         'USD-2025'
         >>> Currencies.extract_currency_unit("No currency here", r"[A-Z]{3}-\d{4}")
+        None
+        >>> Currencies.extract_currency_unit("US_2025", r"[A-Z]{2}-\d{4}")
         None
 
         """
@@ -269,9 +271,7 @@ class Currencies:
         ):
             raise ValueError("Input must be a string.")
 
-        currency_unit = Currencies.extract_currency_unit(
-            input_string, expected_format
-        )
+        currency_unit = Currencies.extract_currency_unit(input_string, expected_format)
         if currency_unit:
             # Extract the numeric part of the currency unit
             numeric_part = currency_unit.split("-")[1]
