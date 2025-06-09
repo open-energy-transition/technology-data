@@ -214,50 +214,68 @@ class Technologies:
     def adjust_currency(
         self,
         currency: str,
-        currency_year: int,
+        base_year: int,
+        use_case: str,
         source: str = "World Bank",
-        parameters: list[str] | None = None,
-    ) -> Technologies:
+    ) -> None:
         """
-        Change the currency of the data and adjust for inflation based on the region the data is from.
+        Adjust currency values in the instance's data based on the specified parameters.
 
-        Params
-        -------
-        currency: str
-            The currency to convert to.
-        currency_year: int
-            The year to adjust for inflation.
-        region: str
-            The region to adjust for inflation.
-        source: str
-            Source of the data to use for inflation adjustments, supports 'World Bank' and 'International Monetary Fund'.
-            'World Bank' is the default based on historic data, but is limited to the past (current year -2).
-            'International Monetary Fund' includes past values and projections into the future.
-        parameters: list[str]
-            Parameters which are affected by the currency conversion, by default the function will only rows related to the indicators
-            ['investment', 'capex', 'opex'].
+        This method modifies the instance's data by converting and/or adjusting currency values
+        to a target currency and base year using a specified deflation source. It determines
+        the appropriate conversion function based on the provided source and applies the
+        adjustment to the data.
+
+        Parameters
+        ----------
+        currency : str
+            The target currency to which the values should be adjusted. This should be
+            specified as an ISO3 currency code (e.g., 'USD', 'EUR').
+
+        base_year : int
+            The base year to which the currency values should be adjusted. This year will be
+            used for deflation calculations.
+
+        use_case : str
+            A flag indicating the use case for the adjustment. It should be either
+            "currency_conversion" or "inflation_adjustment", determining how the adjustment
+            is applied.
+
+        source : str, optional
+            The source of the deflation data to be used for the adjustment. Supported values
+            are "World Bank", "World Bank Linked", and "International Monetary Fund".
+            The default is "World Bank".
+
+        Raises
+        ------
+        ValueError
+            If the specified source is not recognized. Supported sources are
+            'World Bank', 'World Bank Linked', and 'International Monetary Fund'.
+
+        Notes
+        -----
+        This method directly modifies the instance's `data` attribute, which is expected
+        to be a DataFrame containing currency values that need to be adjusted.
+
+        Examples
+        --------
+        >>> instance.adjust_currency(currency='USD', base_year=2022, use_case='currency_conversion')
+
         """
-        # TODO implement
-        raise NotImplementedError("Currency conversion is not implemented yet.")
+        if source.casefold() == "world bank":
+            conversion_function = "wb_gdp_deflate"
+        elif source.casefold() == "world bank linked":
+            conversion_function = "wb_gdp_linked_deflate"
+        elif source.casefold() == "International Monetary Fund":
+            conversion_function = "imf_gdp_deflate"
+        else:
+            raise ValueError(
+                f"Unknown source '{source}'. Supported sources are 'World Bank', 'World Bank Linked' and 'International Monetary Fund'."
+            )
 
-        # import pydeflate
-
-        # if source == "World Bank":
-        #     conversion_function = pydeflate.wb_exchange
-        # elif source == "International Monetary Fund":
-        #     conversion_function = pydeflate.imf_exchange
-        # else:
-        #     raise ValueError(
-        #         f"Unknown source '{source}'. Supported sources are 'World Bank' and 'International Monetary Fund'."
-        #     )
-
-        # # Default parameters
-        # if parameters is None:
-        #     parameters = [
-        #         "investment",
-        #         "capex",
-        #         "opex",
-        #     ]
+        self.data = td.Currencies.adjust_currency(
+            base_year, self.data, use_case, currency, conversion_function
+        )
 
     def adjust_scale(
         self,
