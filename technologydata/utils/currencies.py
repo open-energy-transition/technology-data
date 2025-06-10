@@ -15,8 +15,6 @@ logger = logging.getLogger(__name__)
 
 deflation_function_registry = {}
 
-path_cwd = pathlib.Path.cwd()
-
 
 def _register_deflator(name: str) -> Callable[[Callable[..., Any]], Callable[..., Any]]:
     """
@@ -185,6 +183,8 @@ class Currencies:
     # Returns a DataFrame with adjusted currency values.
 
     """
+
+    PYDEFLATE_BASE_PATH = pathlib.Path(__file__).resolve().parent
 
     @staticmethod
     def extract_currency_unit(
@@ -405,7 +405,7 @@ class Currencies:
         use_case_flag: str,
         target_currency: str | None = None,
         deflator_function_name: str = "wb_gdp_deflate",
-        pydeflate_path: pathlib.Path = pathlib.Path(path_cwd, "pydeflate"),
+        pydeflate_path: pathlib.Path = pathlib.Path(PYDEFLATE_BASE_PATH, "pydeflate"),
     ) -> pd.DataFrame:
         """
         Convert and/or adjust currency values in a DataFrame to a target currency and base year using deflation.
@@ -458,6 +458,7 @@ class Currencies:
         ... })
         >>> adjusted_data = Currencies.adjust_currency(
         ...     base_year_val=2022,
+        ...     use_case_flag='currency_conversion',
         ...     target_currency='USD',
         ...     data=data,
         ...     deflator_function_name='some_name',
@@ -489,6 +490,7 @@ class Currencies:
         # Specify the path where deflator and exchange data will be saved
         if pydeflate_path is not None:
             pyd.set_pydeflate_path(pydeflate_path)
+            pydeflate_path.mkdir(parents=True, exist_ok=True)
         else:
             raise ValueError(
                 "The path where the deflator and exchange data will be saved is None"

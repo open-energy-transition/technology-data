@@ -219,6 +219,7 @@ def test_adjust_currency(
                 use_case,
                 target_currency,
                 deflator_function_name,
+                pydeflate_path,
             )
 
             new_dataframe["value"] = new_dataframe["value"].astype(float).round(2)
