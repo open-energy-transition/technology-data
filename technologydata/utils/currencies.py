@@ -154,23 +154,6 @@ class Currencies:
     This class provides static methods for ensuring currency units, deflating values based on a deflator function, and
     converting and adjusting currency values in a DataFrame.
 
-    Examples
-    --------
-    >>> Currencies.extract_currency_unit("The price is USD-2025", "regex")
-    'USD-2025'
-
-    >>> Currencies.extract_currency_unit("No currency here", "regex")
-    None
-
-    >>> Currencies.adjust_currency(
-    ...     base_year_val=2020,
-    ...     deflator_function_name="example_deflator",
-    ...     target_currency="USD",
-    ...     data=pd.DataFrame({"unit": ["USD-2020", "EUR-2020"], "value": [100, 200], "region": ["US", "EU"]})
-    ... )
-    ...
-    # Returns a DataFrame with adjusted currency values.
-
     """
 
     PYDEFLATE_BASE_PATH = pathlib.Path(__file__).resolve().parent
