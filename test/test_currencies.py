@@ -116,7 +116,7 @@ def test_update_currency_unit(
     "base_year_val, deflator_function_name, input_dataframe, target_currency, expected_result, expected_exception_message",
     [
         (
-            2020,
+            2021,
             "international_monetary_fund",
             pd.DataFrame(
                 {
@@ -129,28 +129,8 @@ def test_update_currency_unit(
             pd.DataFrame(
                 {
                     "region": ["FRA", "USA", "CAN", "ITA"],
-                    "unit": ["USD-2020/MWh_el", "USD-2020", "USD-2020", "MWh"],
-                    "value": [57.06, 100.00, 149.13, 300],
-                }
-            ),
-            None,
-        ),
-        (
-            2020,
-            "international_monetary_fund",
-            pd.DataFrame(
-                {
-                    "region": ["FRA", "USA", "CAN", "ITA"],
-                    "unit": ["EUR-2015/MWh_el", "USD-2015", "CAD-2015", "MWh"],
-                    "value": [50.0, 100.0, 200.0, 300.0],
-                }
-            ),
-            None,
-            pd.DataFrame(
-                {
-                    "region": ["FRA", "USA", "CAN", "ITA"],
-                    "unit": ["EUR-2015/MWh_el", "USD-2015", "CAD-2015", "MWh"],
-                    "value": [53.33, 108.27, 215.56, 300],
+                    "unit": ["USD-2021/MWh_el", "USD-2021", "USD-2021", "MWh"],
+                    "value": [59.93, 104.57, 171.92, 300],
                 }
             ),
             None,
@@ -164,7 +144,7 @@ def test_update_currency_unit(
                     "value": [50.0, 100.0, 200.0, 300.0],
                 }
             ),
-            None,
+            "USA",
             ValueError,
             "Input dataFrame is missing required columns:",
         ),
