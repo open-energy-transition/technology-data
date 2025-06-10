@@ -419,8 +419,7 @@ class Currencies:
         ...     base_year_val=2022,
         ...     target_currency='USD',
         ...     data=data,
-        ...     deflator_function_name='some_name',
-        ...     pydeflate_path=pathlib.Path('/path/to/data'),
+        ...     deflator_function_name='international_monetary_fund',
         ... )
         >>> adjusted_data['unit']
         0    USD-2022
