@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import logging
+import re
 from pathlib import Path
 from typing import Any
 
@@ -213,9 +214,7 @@ class Technologies:
 
     def adjust_currency(
         self,
-        currency: str,
-        base_year: int,
-        use_case: str,
+        to_currency: str,
         source: str = "World Bank",
     ) -> None:
         """
@@ -228,18 +227,9 @@ class Technologies:
 
         Parameters
         ----------
-        currency : str
-            The target currency to which the values should be adjusted. This should be
-            specified as an ISO3 currency code (e.g., 'USD', 'EUR').
-
-        base_year : int
-            The base year to which the currency values should be adjusted. This year will be
-            used for deflation calculations.
-
-        use_case : str
-            A flag indicating the use case for the adjustment. It should be either
-            "currency_conversion" or "inflation_adjustment", determining how the adjustment
-            is applied.
+        to_currency : str
+            The target currency units matching the format `<CURRENCY_CODE>-<YEAR>`,
+            with the currency code specified with the ISO3 standard (e.g. 'USD', 'EUR').
 
         source : str, optional
             The source of the deflation data to be used for the adjustment. Supported values
@@ -259,23 +249,20 @@ class Technologies:
 
         Examples
         --------
-        >>> instance.adjust_currency(currency='USD', base_year=2022, use_case='currency_conversion')
+        >>> techs.adjust_currency("USD-2022", "International_Monetary_Fund")
 
         """
-        if source.casefold() == "world bank":
-            conversion_function = "wb_gdp_deflate"
-        elif source.casefold() == "world bank linked":
-            conversion_function = "wb_gdp_linked_deflate"
-        elif source.casefold() == "International Monetary Fund":
-            conversion_function = "imf_gdp_deflate"
-        else:
-            raise ValueError(
-                f"Unknown source '{source}'. Supported sources are 'World Bank', 'World Bank Linked' and 'International Monetary Fund'."
+        match = re.match(td.Currencies.CURRENCY_UNIT_DEFAULT_FORMAT, to_currency)
+        if match:
+            currency = match.group(1)
+            base_year = match.group(2)
+            self.data = td.Currencies.adjust_currency(
+                int(base_year), currency, self.data, source.casefold()
             )
-
-        self.data = td.Currencies.adjust_currency(
-            base_year, self.data, use_case, currency, conversion_function
-        )
+        else:
+            ValueError(
+                "The target currency unit does not match the requested format `<3-letter currency code>-<year>`."
+            )
 
     def adjust_scale(
         self,

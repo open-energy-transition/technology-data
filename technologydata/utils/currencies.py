@@ -49,7 +49,7 @@ def _register_deflator(name: str) -> Callable[[Callable[..., Any]], Callable[...
     return decorator
 
 
-@_register_deflator("imf_gdp_deflate")
+@_register_deflator("international_monetary_fund")
 def _imf_gdp_deflate_wrapper(*args: Any, **kwargs: Any) -> pd.DataFrame:
     """
     Introduce wrapper function for pydeflate.imf_gdp_deflate.
@@ -81,7 +81,7 @@ def _imf_gdp_deflate_wrapper(*args: Any, **kwargs: Any) -> pd.DataFrame:
     return pyd.imf_gdp_deflate(*args, **kwargs)
 
 
-@_register_deflator("wb_gdp_deflate")
+@_register_deflator("world_bank")
 def _wb_gdp_deflate_wrapper(*args: Any, **kwargs: Any) -> pd.DataFrame:
     """
     Introduce wrapper function for pydeflate.wb_gdp_deflate.
@@ -114,7 +114,7 @@ def _wb_gdp_deflate_wrapper(*args: Any, **kwargs: Any) -> pd.DataFrame:
     return pyd.wb_gdp_deflate(*args, **kwargs)
 
 
-@_register_deflator("wb_gdp_linked_deflate")
+@_register_deflator("world_bank_linked")
 def _wb_gdp_linked_deflate_wrapper(*args: Any, **kwargs: Any) -> pd.DataFrame:
     """
     Introduce wrapper function for pydeflate.wb_gdp_linked_deflate.
@@ -154,17 +154,6 @@ class Currencies:
     This class provides static methods for ensuring currency units, deflating values based on a deflator function, and
     converting and adjusting currency values in a DataFrame.
 
-    Methods
-    -------
-    extract_currency_unit(input_string: str, expected_format: str = regex) -> str | None:
-        Check if the input string contains a currency unit and extract it if found.
-
-    get_deflate_row_function(base_year: int, deflator_name: str, target_currency: str, year: str, iso_code: str, target_value_column: str):
-        Get a function to deflate a row of data based on the specified parameters.
-
-    adjust_currency(base_year_val: int, deflator_function_name: str, target_currency: str, pydeflate_path: pathlib.Path, data: pd.DataFrame) -> pd.DataFrame:
-        Convert and adjust currency values in a DataFrame using a specified deflator function.
-
     Examples
     --------
     >>> Currencies.extract_currency_unit("The price is USD-2025", "regex")
@@ -185,10 +174,11 @@ class Currencies:
     """
 
     PYDEFLATE_BASE_PATH = pathlib.Path(__file__).resolve().parent
+    CURRENCY_UNIT_DEFAULT_FORMAT = r"[A-Z]{3}-\d{4}"
 
     @staticmethod
     def extract_currency_unit(
-        input_string: str, expected_format: str = r"[A-Z]{3}-\d{4}"
+        input_string: str, expected_format: str = CURRENCY_UNIT_DEFAULT_FORMAT
     ) -> str | None:
         r"""
         Check if the input string contains a currency unit.
@@ -230,13 +220,14 @@ class Currencies:
         return match.group(0) if match else None
 
     @staticmethod
-    def replace_currency_code(
+    def update_currency_unit(
         input_string: str,
         new_currency_code: str,
-        expected_format: str = r"[A-Z]{3}-\d{4}",
+        new_currency_year: str,
+        expected_format: str = CURRENCY_UNIT_DEFAULT_FORMAT,
     ) -> str | None:
         """
-        Replace the currency code in the input string with a new currency code.
+        Replace the currency code and/or currency unit in the input string.
 
         Parameters
         ----------
@@ -244,41 +235,51 @@ class Currencies:
             The string containing the currency unit to be replaced.
         new_currency_code : str
             The new currency code to replace the existing one.
+        new_currency_year : str
+            The new currency year to replace the existing one.
         expected_format: str
             The string expected format.
 
         Returns
         -------
         str
-            The modified string with the currency code replaced, None otherwise.
+            The modified string with the currency code and/or currency_year replaced, None otherwise.
 
         Raises
         ------
         ValueError
-            If the input_string or the expected_format or the new_currency_code are not a string.
+            If the input_string or the expected_format or the new_currency_code or the new_currency_year are not a string.
 
         Examples
         --------
-        >>> Currencies.replace_currency_code("The price is EUR-2025", "USD")
+        >>> Currencies.update_currency_unit("The price is EUR-2025", "USD")
         'The price is USD-2025'
-        >>> Currencies.replace_currency_code("No currency here", "USD")
+        >>> Currencies.update_currency_unit("The price is EUR-2025", "2024")
+        'The price is EUR-2024'
+        >>> Currencies.update_currency_unit("No currency here", "USD")
         None
 
         """
-        if (
-            not isinstance(input_string, str)
-            or not isinstance(expected_format, str)
-            or not isinstance(new_currency_code, str)
-        ):
+        if not isinstance(input_string, str) or not isinstance(expected_format, str):
             raise ValueError("Input must be a string.")
+        if new_currency_code is not None and not isinstance(new_currency_code, str):
+            raise ValueError("new_currency_code must be a string.")
+        if new_currency_year is not None and not isinstance(new_currency_year, str):
+            raise ValueError("new_currency_year must be a string.")
 
         currency_unit = Currencies.extract_currency_unit(input_string, expected_format)
         if currency_unit:
-            # Extract the numeric part of the currency unit
-            numeric_part = currency_unit.split("-")[1]
-            # Construct the new currency unit
-            new_currency_unit = f"{new_currency_code}-{numeric_part}"
-            # Replace the old currency unit with the new one
+            currency_code = (
+                new_currency_code
+                if new_currency_code is not None
+                else currency_unit.split("-")[0]
+            )
+            currency_year = (
+                new_currency_year
+                if new_currency_year is not None
+                else currency_unit.split("-")[1]
+            )
+            new_currency_unit = f"{currency_code}-{currency_year}"
             return input_string.replace(currency_unit, new_currency_unit)
         else:
             return None
@@ -290,8 +291,7 @@ class Currencies:
         year: str,
         iso_code: str,
         target_value_column: str,
-        use_case_flag: str,
-        target_currency: str | None = None,
+        target_currency: str,
     ) -> Callable[[pd.Series], pd.Series]:
         """
         Retrieve a function to deflate a row of data based on specified parameters.
@@ -312,8 +312,6 @@ class Currencies:
             The name of the column that contains the ISO code for the currency.
         target_value_column : str
             The name of the column that contains the target value to be adjusted.
-        use_case_flag : str
-            A flag indicating the use case: "currency_conversion" or "inflation_adjustment".
         target_currency : str, optional
             The ISO3 country code representing the target currency to convert to. Required if use_case_flag is "currency_conversion".
             Ignored if use_case_flag is "inflation_adjustment".
@@ -338,37 +336,10 @@ class Currencies:
         ...     year='currency_year',
         ...     iso_code='region',
         ...     target_value_column='value',
-        ...     use_case_flag='currency_conversion'
         ...     target_currency='USD',
-        ... )
-        >>> deflated_row = deflator_func(row)  # where row is a pandas Series
-        >>> deflator_func_inflation = Currencies.get_deflate_row_function(
-        ...     base_year=2022,
-        ...     deflator_name='cpi_deflator',
-        ...     year='currency_year',
-        ...     iso_code='region',
-        ...     target_value_column='value',
-        ...     use_case_flag='inflation_adjustment'
         ... )
 
         """
-        # Validate use_case_flag
-        if use_case_flag.casefold() not in (
-            "currency_conversion",
-            "inflation_adjustment",
-        ):
-            raise ValueError(
-                "use_case_flag must be either 'currency_conversion' or 'inflation_adjustment'"
-            )
-
-        if (
-            use_case_flag.casefold() == "currency_conversion"
-            and target_currency is None
-        ):
-            raise ValueError(
-                "target_currency must be provided when use_case_flag is 'currency_conversion'"
-            )
-
         deflation_function = deflation_function_registry.get(deflator_name)
         if deflation_function is None:
             raise ValueError(
@@ -378,17 +349,11 @@ class Currencies:
         def deflate_row(row: pd.Series) -> pd.Series:
             row_df = pd.DataFrame([row])
 
-            # Adjust target_currency based on use_case_flag
-            if use_case_flag.casefold() == "inflation_adjustment":
-                currency_to_use = row[iso_code]
-            else:
-                currency_to_use = target_currency
-
             deflated_df = deflation_function(
                 data=row_df,
                 base_year=base_year,
                 source_currency=row[iso_code],
-                target_currency=currency_to_use,
+                target_currency=target_currency,
                 id_column=iso_code,
                 year_column=year,
                 value_column="value",
@@ -401,10 +366,9 @@ class Currencies:
     @staticmethod
     def adjust_currency(
         base_year_val: int,
+        target_currency: str,
         data: pd.DataFrame,
-        use_case_flag: str,
-        target_currency: str | None = None,
-        deflator_function_name: str = "wb_gdp_deflate",
+        deflator_function_name: str = "world_bank",
         pydeflate_path: pathlib.Path = pathlib.Path(PYDEFLATE_BASE_PATH, "pydeflate"),
     ) -> pd.DataFrame:
         """
@@ -419,17 +383,13 @@ class Currencies:
         ----------
         base_year_val : int
             The base year to which the currency values should be adjusted.
+        target_currency : str
+            The ISO3 country code representing the target currency to convert to.
         data : pandas.DataFrame
             The input DataFrame containing at least the columns 'unit', 'value', and 'region'.
             The 'unit' column must have currency codes in the format `<3-letter currency code>-<year>`.
-        use_case_flag : str
-            A flag indicating the use case: "currency_conversion" or "inflation_adjustment".
-        target_currency : Optional[str], optional
-            The ISO3 country code representing the target currency to convert to. This argument is required
-            if `use_case_flag` is "currency_conversion". It is ignored if `use_case_flag` is
-            "inflation_adjustment". Default is None.
         deflator_function_name : str
-            The name of the deflation function to use from the deflation function registry. Default is "wb_gdp_deflate".
+            The name of the deflation function to use from the deflation function registry. Default is "world_bank".
         pydeflate_path : pathlib.Path
             The file system path where deflator and exchange rate data will be saved or loaded from.
 
@@ -446,7 +406,6 @@ class Currencies:
             If any of the required columns ('unit', 'value', 'region') are missing from the input DataFrame.
             If no rows in the DataFrame contain a valid currency unit matching the expected pattern.
             If the specified deflator function name is not found in the deflation function registry.
-            If `use_case_flag` is not one of the allowed values.
             If `target_currency` is required but not provided when `use_case_flag` is "currency_conversion".
 
         Examples
@@ -458,7 +417,6 @@ class Currencies:
         ... })
         >>> adjusted_data = Currencies.adjust_currency(
         ...     base_year_val=2022,
-        ...     use_case_flag='currency_conversion',
         ...     target_currency='USD',
         ...     data=data,
         ...     deflator_function_name='some_name',
@@ -471,22 +429,6 @@ class Currencies:
         Name: unit, dtype: object
 
         """
-        if use_case_flag.casefold() not in (
-            "currency_conversion",
-            "inflation_adjustment",
-        ):
-            raise ValueError(
-                "use_case_flag must be either 'currency_conversion' or 'inflation_adjustment'"
-            )
-
-        if (
-            use_case_flag.casefold() == "currency_conversion"
-            and target_currency is None
-        ):
-            raise ValueError(
-                "target_currency must be provided when use_case_flag is 'currency_conversion'"
-            )
-
         # Specify the path where deflator and exchange data will be saved
         if pydeflate_path is not None:
             pyd.set_pydeflate_path(pydeflate_path)
@@ -526,29 +468,14 @@ class Currencies:
                 currency_rows["currency_year"], errors="coerce"
             ).astype(int)
 
-        # Use match statement to determine the deflation function
-        match use_case_flag.casefold():
-            case "currency_conversion":
-                deflate_row_func = Currencies.get_deflate_row_function(
-                    base_year=base_year_val,
-                    deflator_name=deflator_function_name,
-                    year="currency_year",
-                    iso_code="region",
-                    target_value_column="value",
-                    use_case_flag=use_case_flag,
-                    target_currency=target_currency,
-                )
-            case "inflation_adjustment":
-                deflate_row_func = Currencies.get_deflate_row_function(
-                    base_year=base_year_val,
-                    deflator_name=deflator_function_name,
-                    year="currency_year",
-                    iso_code="region",
-                    target_value_column="value",
-                    use_case_flag=use_case_flag,
-                )
-            case _:
-                raise ValueError("Invalid use_case_flag provided.")
+        deflate_row_func = Currencies.get_deflate_row_function(
+            base_year=base_year_val,
+            deflator_name=deflator_function_name,
+            year="currency_year",
+            iso_code="region",
+            target_value_column="value",
+            target_currency=target_currency,
+        )
 
         adjusted_rows = currency_rows.apply(deflate_row_func, axis=1)
 
@@ -557,14 +484,15 @@ class Currencies:
         # Replace updated rows back into results DataFrame
         results.loc[has_currency_mask, adjusted_rows.columns] = adjusted_rows
 
-        if use_case_flag.casefold() == "currency_conversion":
-            target_currency_code = Country.get_currency_from_iso3(target_currency)
+        target_currency_code = Country.get_currency_from_iso3(target_currency)
 
-            # Update the 'unit' column with the new currency code
-            results.loc[has_currency_mask, "unit"] = currency_rows["unit"].apply(
-                lambda unit: Currencies.replace_currency_code(
-                    unit, target_currency_code
-                )
+        # Update the 'unit' column with the new currency code
+        results.loc[has_currency_mask, "unit"] = currency_rows["unit"].apply(
+            lambda unit: Currencies.update_currency_unit(
+                unit,
+                target_currency_code,
+                str(base_year_val),
             )
+        )
 
         return results
