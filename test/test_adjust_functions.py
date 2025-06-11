@@ -7,19 +7,21 @@ import pytest
 import technologydata as td
 
 
-@pytest.fixture  # type: ignore
-def forecast_technologies() -> td.Technologies:
-    """Fixture to provide an example dataset for time-related forecasting."""
-    return td.Technologies(
-        {"forecast01": pathlib.Path("test", "test_adjust_functions", "forecast01")}
-    )
-
-
 @pytest.mark.parametrize(
     "example_technologies",
     [
-        {"technologies_name": "example01"},
-        {"technologies_name": "example02"},
+        {
+            "technologies_name": "example01",
+            "technologies_path": pathlib.Path(
+                "technologydata", "datasources", "example01"
+            ),
+        },
+        {
+            "technologies_name": "example02",
+            "technologies_path": pathlib.Path(
+                "technologydata", "datasources", "example02"
+            ),
+        },
     ],
     indirect=True,
 )  # type: ignore
@@ -45,8 +47,18 @@ def test_no_economies_of_scale(example_technologies: td.Technologies) -> None:
 @pytest.mark.parametrize(
     "example_technologies",
     [
-        {"technologies_name": "example01"},
-        {"technologies_name": "example02"},
+        {
+            "technologies_name": "example01",
+            "technologies_path": pathlib.Path(
+                "technologydata", "datasources", "example01"
+            ),
+        },
+        {
+            "technologies_name": "example02",
+            "technologies_path": pathlib.Path(
+                "technologydata", "datasources", "example02"
+            ),
+        },
     ],
     indirect=True,
 )  # type: ignore
@@ -73,11 +85,23 @@ def test_economies_of_scale(example_technologies: td.Technologies) -> None:
     ), "Scaling with exponent 0.5 should change the value to approx 0.7"
 
 
+@pytest.mark.parametrize(
+    "example_technologies",
+    [
+        {
+            "technologies_name": "forecast01",
+            "technologies_path": pathlib.Path(
+                "test", "test_adjust_functions", "forecast01"
+            ),
+        }
+    ],
+    indirect=True,
+)  # type: ignore
 def test_adjust_year_linear_interpolation(
-    forecast_technologies: td.Technologies,
+    example_technologies: td.Technologies,
 ) -> None:
     """Test linear forecasting through a middle value in 2025."""
-    forecast = forecast_technologies.adjust_year(year=2025, model={"method": "linear"})
+    forecast = example_technologies.adjust_year(year=2025, model={"method": "linear"})
 
     assert forecast.shape[0] == 3, "Forecasted data missing additional row"
     assert forecast.iloc[1]["value"] == 150, (
@@ -85,11 +109,23 @@ def test_adjust_year_linear_interpolation(
     )
 
 
+@pytest.mark.parametrize(
+    "example_technologies",
+    [
+        {
+            "technologies_name": "forecast01",
+            "technologies_path": pathlib.Path(
+                "test", "test_adjust_functions", "forecast01"
+            ),
+        }
+    ],
+    indirect=True,
+)  # type: ignore
 def test_adjust_year_linear_extrapolation(
-    forecast_technologies: td.Technologies,
+    example_technologies: td.Technologies,
 ) -> None:
     """Test linear forecasting for a value outside the range of entries provided."""
-    forecast = forecast_technologies.adjust_year(
+    forecast = example_technologies.adjust_year(
         year=2040,
         model={
             "method": "linear",
