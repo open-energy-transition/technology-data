@@ -13,7 +13,7 @@ from hdx.location.country import Country
 logger = logging.getLogger(__name__)
 
 
-deflation_function_registry = {}
+deflation_function_registry: dict[Any, Any] = {}
 
 
 def _register_deflator(name: str) -> Callable[[Callable[..., Any]], Callable[..., Any]]:
@@ -44,7 +44,9 @@ def _register_deflator(name: str) -> Callable[[Callable[..., Any]], Callable[...
 
     def decorator(func: Callable[..., Any]) -> Callable[..., Any]:
         if name.casefold() in deflation_function_registry.keys():
-            raise KeyError("Another deflator with the same name has already been registered.")
+            raise KeyError(
+                "Another deflator with the same name has already been registered."
+            )
         deflation_function_registry[name.casefold()] = func
         return func
 
