@@ -43,13 +43,15 @@ def _register_deflator(name: str) -> Callable[[Callable[..., Any]], Callable[...
     """
 
     def decorator(func: Callable[..., Any]) -> Callable[..., Any]:
-        deflation_function_registry[name] = func
+        if name.casefold() in deflation_function_registry.keys():
+            raise KeyError("Another deflator with the same name has already been registered.")
+        deflation_function_registry[name.casefold()] = func
         return func
 
     return decorator
 
 
-@_register_deflator("international_monetary_fund")
+@_register_deflator("International Monetary Fund")
 def _imf_gdp_deflate_wrapper(*args: Any, **kwargs: Any) -> pd.DataFrame:
     """
     Introduce wrapper function for pydeflate.imf_gdp_deflate.
@@ -81,7 +83,7 @@ def _imf_gdp_deflate_wrapper(*args: Any, **kwargs: Any) -> pd.DataFrame:
     return pyd.imf_gdp_deflate(*args, **kwargs)
 
 
-@_register_deflator("world_bank")
+@_register_deflator("World Bank")
 def _wb_gdp_deflate_wrapper(*args: Any, **kwargs: Any) -> pd.DataFrame:
     """
     Introduce wrapper function for pydeflate.wb_gdp_deflate.
@@ -114,7 +116,7 @@ def _wb_gdp_deflate_wrapper(*args: Any, **kwargs: Any) -> pd.DataFrame:
     return pyd.wb_gdp_deflate(*args, **kwargs)
 
 
-@_register_deflator("world_bank_linked")
+@_register_deflator("World Bank (Linked)")
 def _wb_gdp_linked_deflate_wrapper(*args: Any, **kwargs: Any) -> pd.DataFrame:
     """
     Introduce wrapper function for pydeflate.wb_gdp_linked_deflate.
@@ -157,7 +159,7 @@ class Currencies:
     """
 
     PYDEFLATE_BASE_PATH = pathlib.Path(__file__).resolve().parent
-    CURRENCY_UNIT_DEFAULT_FORMAT = r"[A-Z]{3}-\d{4}"
+    CURRENCY_UNIT_DEFAULT_FORMAT = r"([A-Z]{3})-(\d{4})"
 
     @staticmethod
     def extract_currency_unit(
@@ -351,7 +353,7 @@ class Currencies:
         base_year_val: int,
         target_currency: str,
         data: pd.DataFrame,
-        deflator_function_name: str = "world_bank",
+        deflator_function_name: str = "World Bank",
         pydeflate_path: pathlib.Path = pathlib.Path(PYDEFLATE_BASE_PATH, "pydeflate"),
     ) -> pd.DataFrame:
         """
@@ -402,7 +404,7 @@ class Currencies:
         ...     base_year_val=2022,
         ...     target_currency='USD',
         ...     data=data,
-        ...     deflator_function_name='international_monetary_fund',
+        ...     deflator_function_name='International Monetary Fund',
         ... )
         >>> adjusted_data['unit']
         0    USD-2022
@@ -452,7 +454,7 @@ class Currencies:
 
         deflate_row_func = Currencies.get_deflate_row_function(
             base_year=base_year_val,
-            deflator_name=deflator_function_name,
+            deflator_name=deflator_function_name.casefold(),
             year="currency_year",
             iso_code="region",
             target_value_column="value",

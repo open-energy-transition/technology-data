@@ -117,7 +117,7 @@ def test_update_currency_unit(
     [
         (
             2021,
-            "international_monetary_fund",
+            "internaTiOnAl Monetary fUnD",
             pd.DataFrame(
                 {
                     "region": ["FRA", "USA", "CAN", "ITA"],
@@ -137,7 +137,7 @@ def test_update_currency_unit(
         ),
         (
             2020,
-            "international_monetary_fund",
+            "International Monetary Fund",
             pd.DataFrame(
                 {
                     "unit": ["EUR-2015/MWh_el", "USD-2015", "CAD-2015", "MWh"],
