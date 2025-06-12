@@ -139,3 +139,26 @@ def test_adjust_year_linear_extrapolation(
     assert forecast.iloc[2]["value"] == 200, (
         "Linear forecasted value for 2040 is incorrect and should be equal to the last support year value, i.e. 2030"
     )
+
+
+# @pytest.mark.parametrize(
+#     "example_technologies",
+#     [
+#         {
+#             "technologies_name": "forecast01",
+#             "technologies_path": pathlib.Path(
+#                 "test", "test_adjust_functions", "currency_conversion01"
+#             ),
+#         }
+#     ],
+#     indirect=True,
+# )  # type: ignore
+# def test_adjust_currency(
+#     example_technologies: td.Technologies,
+# ) -> None:
+#     """Test currency conversion and inflation adjustments."""
+#     example_technologies.adjust_currency(
+#         to_currency="USA-2020", source="International Monetary Fund"
+#     )
+#     example_technologies.to_csv(path="integrunittest.csv")
+#    assert False

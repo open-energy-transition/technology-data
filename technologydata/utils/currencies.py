@@ -164,6 +164,46 @@ class Currencies:
     CURRENCY_UNIT_DEFAULT_FORMAT = r"([A-Z]{3})-(\d{4})"
 
     @staticmethod
+    def get_country_from_currency(currency_code: str) -> list[str]:
+        """
+        Retrieve a list of country ISO3 codes associated with a given currency code.
+
+        This method accesses a predefined dictionary of countries and their corresponding
+        currencies, and returns a list of countries that use the specified currency.
+
+        Parameters
+        ----------
+        currency_code: str
+            The ISO3 currency code for which to find associated countries.
+
+        Returns
+        -------
+        list[str]
+            A list of ISO3 country codes that use the specified currency. If the currency code is not found, an empty list is returned.
+
+        Raises
+        ------
+        KeyError
+            If the currency_code is not found in the currency data.
+
+        Examples
+        --------
+        >>> get_country_from_currency("AFN")
+        ["AFG"]
+
+        """
+        hdx_currency_dict = Country.countriesdata()["currencies"]
+        currency_countries: dict[str, list[str]] = {}
+        # Populate the new dictionary
+        for country, currency in hdx_currency_dict.items():
+            if currency is not None:
+                if currency not in currency_countries.keys():
+                    currency_countries[currency] = []
+                currency_countries[currency].append(country)
+
+        return currency_countries[currency_code]
+
+    @staticmethod
     def extract_currency_unit(
         input_string: str, expected_format: str = CURRENCY_UNIT_DEFAULT_FORMAT
     ) -> str | None:
@@ -476,7 +516,7 @@ class Currencies:
         results.loc[has_currency_mask, "unit"] = currency_rows["unit"].apply(
             lambda unit: Currencies.update_currency_unit(
                 unit,
-                target_currency_code,
+                str(target_currency_code),
                 str(base_year_val),
             )
         )

@@ -3,7 +3,6 @@
 import pathlib
 import shutil
 import sys
-import warnings
 
 import pandas as pd
 import pytest
@@ -47,6 +46,14 @@ def test_extract_currency_unit(
     "input_string, new_currency_code, new_currency_year, expected_format, expected_result, expected_exception_message",
     [
         ("EUR-2025", "USD", None, r"^[A-Z]{3}-\d{4}$", "USD-2025", None),
+        (
+            "EUR-2025",
+            "USD",
+            "2023",
+            td.Currencies.CURRENCY_UNIT_DEFAULT_FORMAT,
+            "USD-2023",
+            None,
+        ),
         ("EUR-2025", None, "2021", r"^[A-Z]{3}-\d{4}$", "EUR-2021", None),
         (
             "The currency unit is EUR-2025",
@@ -173,34 +180,46 @@ def test_adjust_currency(
     expected_exception_message: str | None,
 ) -> None:
     """Check if currency conversion and inflation adjustment work correctly."""
-    with warnings.catch_warnings():
-        warnings.simplefilter("ignore", DeprecationWarning)
+    pydeflate_path = pathlib.Path(path_cwd, "pydeflate")
 
-        pydeflate_path = pathlib.Path(path_cwd, "pydeflate")
-
-        if isinstance(expected_result, type) and expected_result is ValueError:
-            with pytest.raises(ValueError, match=expected_exception_message):
-                td.Currencies.adjust_currency(
-                    base_year_val,
-                    target_currency,
-                    input_dataframe,
-                    deflator_function_name,
-                )
-        else:
-            # Create the folder if needed
-            pydeflate_path.mkdir(parents=True, exist_ok=True)
-
-            # Assume td.CurrencyUtils is imported in the test context
-            new_dataframe = td.Currencies.adjust_currency(
+    if isinstance(expected_result, type) and expected_result is ValueError:
+        with pytest.raises(ValueError, match=expected_exception_message):
+            td.Currencies.adjust_currency(
                 base_year_val,
                 target_currency,
                 input_dataframe,
                 deflator_function_name,
-                pydeflate_path,
             )
+    else:
+        # Create the folder if needed
+        pydeflate_path.mkdir(parents=True, exist_ok=True)
 
-            new_dataframe["value"] = new_dataframe["value"].astype(float).round(2)
-            if pydeflate_path.exists() and pydeflate_path.is_dir():
-                shutil.rmtree(pydeflate_path)
+        # Assume td.CurrencyUtils is imported in the test context
+        new_dataframe = td.Currencies.adjust_currency(
+            base_year_val,
+            target_currency,
+            input_dataframe,
+            deflator_function_name,
+            pydeflate_path,
+        )
 
-            pd.testing.assert_frame_equal(new_dataframe, expected_result)
+        new_dataframe["value"] = new_dataframe["value"].astype(float).round(2)
+        if pydeflate_path.exists() and pydeflate_path.is_dir():
+            shutil.rmtree(pydeflate_path)
+
+        pd.testing.assert_frame_equal(new_dataframe, expected_result)
+
+
+def test_get_country_from_currency() -> None:
+    """Verify that the country(ies) ISO3 code(s) are correctly returned for a given currency ISO3 code."""
+    expected_afn_countries = ["AFG"]
+    result_afn = td.Currencies.get_country_from_currency("AFN")
+    assert result_afn == expected_afn_countries, (
+        f"Expected {expected_afn_countries} but got {result_afn} for currency 'AFN'"
+    )
+
+    expected_xof_countries = ["BEN", "BFA", "CIV", "GNB", "MLI", "NER", "SEN", "TGO"]
+    result_xof = td.Currencies.get_country_from_currency("XOF")
+    assert result_xof == expected_xof_countries, (
+        f"Expected {expected_xof_countries} but got {result_xof} for currency 'XOF'"
+    )

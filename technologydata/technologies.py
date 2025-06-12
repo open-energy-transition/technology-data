@@ -255,9 +255,9 @@ class Technologies:
         match = re.match(td.Currencies.CURRENCY_UNIT_DEFAULT_FORMAT, to_currency)
         if match:
             currency = match.group(1)
-            base_year = match.group(2)
+            base_year = int(match.group(2))
             self.data = td.Currencies.adjust_currency(
-                int(base_year), currency, self.data, source.casefold()
+                base_year, currency, self.data, source
             )
         else:
             ValueError(
@@ -492,7 +492,7 @@ class Technologies:
         path : str|Path
             The path to save the CSV file to.
         """
-        self.data.to_csv(path=path, index=False)
+        self.data.to_csv(path, index=False)
 
     def to_datapackage(self, path: str | Path, overwrite: bool = False) -> None:
         """
