@@ -16,16 +16,16 @@ path_cwd = pathlib.Path.cwd()
 @pytest.mark.parametrize(
     "input_string, expected_format, expected_result",
     [
-        ("EUR-2025", r"^[A-Z]{3}-\d{4}$", "EUR-2025"),
-        ("EU-2025", r"^[A-Z]{2}-\d{4}$", "EU-2025"),
-        ("The currency unit is EU-2025", r"[A-Z]{3}-\d{4}", None),
-        ("The currency unit is EUR-202", r"[A-Z]{3}-\d{4}", None),
-        ("The currency unit is EUR-2025/kW_el", r"[A-Z]{3}-\d{4}", "EUR-2025"),
-        ("The currency unit is US-2025", r"[A-Z]{2}-\d{4}", "US-2025"),
+        ("EUR_2025", r"^[A-Z]{3}_\d{4}$", "EUR_2025"),
+        ("EU_2025", r"^[A-Z]{2}_\d{4}$", "EU_2025"),
+        ("The currency unit is EU_2025", r"[A-Z]{3}_\d{4}", None),
+        ("The currency unit is EUR_202", r"[A-Z]{3}_\d{4}", None),
+        ("The currency unit is EUR_2025/kW_el", r"[A-Z]{3}_\d{4}", "EUR_2025"),
+        ("The currency unit is US_2025", r"[A-Z]{2}_\d{4}", "US_2025"),
         ("USD_2025", r"[A-Z]{3}_\d{4}", "USD_2025"),
         ("USD_2025", r"[A-Z]{3}-\d{4}", None),
-        (123, r"[A-Z]{3}-\d{4}", ValueError),
-        (r"[A-Z]{3}-\d{4}", 123, ValueError),
+        (123, r"[A-Z]{3}_\d{4}", ValueError),
+        (r"[A-Z]{3}_\d{4}", 123, ValueError),
     ],
 )  # type: ignore
 def test_extract_currency_unit(
@@ -45,30 +45,30 @@ def test_extract_currency_unit(
 @pytest.mark.parametrize(
     "input_string, new_currency_code, new_currency_year, expected_format, expected_result, expected_exception_message",
     [
-        ("EUR-2025", "USD", None, r"^[A-Z]{3}-\d{4}$", "USD-2025", None),
+        ("EUR_2025", "USD", None, r"^[A-Z]{3}_\d{4}$", "USD_2025", None),
         (
-            "EUR-2025",
+            "EUR_2025",
             "USD",
             "2023",
             td.Currencies.CURRENCY_UNIT_DEFAULT_FORMAT,
-            "USD-2023",
+            "USD_2023",
             None,
         ),
-        ("EUR-2025", None, "2021", r"^[A-Z]{3}-\d{4}$", "EUR-2021", None),
+        ("EUR_2025", None, "2021", r"^[A-Z]{3}_\d{4}$", "EUR_2021", None),
         (
-            "The currency unit is EUR-2025",
+            "The currency unit is EUR_2025",
             "GPD",
             "2021",
-            r"[A-Z]{3}-\d{4}",
-            "The currency unit is GPD-2021",
+            r"[A-Z]{3}_\d{4}",
+            "The currency unit is GPD_2021",
             None,
         ),
-        ("The currency unit", "USD", "2019", r"[A-Z]{3}-\d{4}", None, None),
+        ("The currency unit", "USD", "2019", r"[A-Z]{3}_\d{4}", None, None),
         (
             12345,
             "USD",
             "2019",
-            r"[A-Z]{3}-\d{4}",
+            r"[A-Z]{3}_\d{4}",
             ValueError,
             "Input must be a string.",
         ),
@@ -76,7 +76,7 @@ def test_extract_currency_unit(
             "The currency unit",
             123,
             "2019",
-            r"[A-Z]{3}-\d{4}",
+            r"[A-Z]{3}_\d{4}",
             ValueError,
             "new_currency_code must be a string.",
         ),
@@ -84,7 +84,7 @@ def test_extract_currency_unit(
             "The currency unit",
             "USD",
             123,
-            r"[A-Z]{3}-\d{4}",
+            r"[A-Z]{3}_\d{4}",
             ValueError,
             "new_currency_year must be a string.",
         ),
@@ -128,7 +128,7 @@ def test_update_currency_unit(
             pd.DataFrame(
                 {
                     "region": ["FRA", "USA", "CAN", "ITA"],
-                    "unit": ["EUR-2020/MWh_el", "USD-2020", "CAD-2020", "MWh"],
+                    "unit": ["EUR_2020/MWh_el", "USD_2020", "CAD_2020", "MWh"],
                     "value": [50.0, 100.0, 200.0, 300.0],
                 }
             ),
@@ -136,7 +136,7 @@ def test_update_currency_unit(
             pd.DataFrame(
                 {
                     "region": ["FRA", "USA", "CAN", "ITA"],
-                    "unit": ["USD-2021/MWh_el", "USD-2021", "USD-2021", "MWh"],
+                    "unit": ["USD_2021/MWh_el", "USD_2021", "USD_2021", "MWh"],
                     "value": [59.93, 104.57, 171.92, 300],
                 }
             ),
@@ -147,7 +147,7 @@ def test_update_currency_unit(
             "International Monetary Fund",
             pd.DataFrame(
                 {
-                    "unit": ["EUR-2015/MWh_el", "USD-2015", "CAD-2015", "MWh"],
+                    "unit": ["EUR_2015/MWh_el", "USD_2015", "CAD_2015", "MWh"],
                     "value": [50.0, 100.0, 200.0, 300.0],
                 }
             ),
@@ -161,7 +161,7 @@ def test_update_currency_unit(
             pd.DataFrame(
                 {
                     "region": ["FRA", "USA", "CAN", "ITA"],
-                    "unit": ["EUR-2020/MWh_el", "USD-2020", "CAD-2020", "MWh"],
+                    "unit": ["EUR_2020/MWh_el", "USD_2020", "CAD_2020", "MWh"],
                     "value": [50.0, 100.0, 200.0, 300.0],
                 }
             ),

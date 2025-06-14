@@ -161,7 +161,7 @@ class Currencies:
     """
 
     PYDEFLATE_BASE_PATH = pathlib.Path(__file__).resolve().parent
-    CURRENCY_UNIT_DEFAULT_FORMAT = r"([A-Z]{3})-(\d{4})"
+    CURRENCY_UNIT_DEFAULT_FORMAT = r"([A-Z]{3})_(\d{4})"
 
     @staticmethod
     def get_country_from_currency(currency_code: str) -> list[str]:
@@ -231,11 +231,11 @@ class Currencies:
 
         Examples
         --------
-        >>> Currencies.extract_currency_unit("The price is USD-2025/kW_el", r"[A-Z]{3}-\d{4}")
+        >>> Currencies.extract_currency_unit("The price is USD_2025/kW_el", r"[A-Z]{3}_\d{4}")
         'USD-2025'
-        >>> Currencies.extract_currency_unit("No currency here", r"[A-Z]{3}-\d{4}")
+        >>> Currencies.extract_currency_unit("No currency here", r"[A-Z]{3}_\d{4}")
         None
-        >>> Currencies.extract_currency_unit("US_2025", r"[A-Z]{2}-\d{4}")
+        >>> Currencies.extract_currency_unit("US-2025", r"[A-Z]{2}_\d{4}")
         None
 
         """
@@ -252,6 +252,7 @@ class Currencies:
         new_currency_code: str,
         new_currency_year: str,
         expected_format: str = CURRENCY_UNIT_DEFAULT_FORMAT,
+        separator: str = "_",
     ) -> str | None:
         """
         Replace the currency code and/or currency unit in the input string.
@@ -266,6 +267,8 @@ class Currencies:
             The new currency year to replace the existing one.
         expected_format: str
             The string expected format.
+        separator: str
+            The currency unit separator.  #TODO make it automatically detectable
 
         Returns
         -------
@@ -279,10 +282,10 @@ class Currencies:
 
         Examples
         --------
-        >>> Currencies.update_currency_unit("The price is EUR-2025", "USD")
-        'The price is USD-2025'
-        >>> Currencies.update_currency_unit("The price is EUR-2025", "2024")
-        'The price is EUR-2024'
+        >>> Currencies.update_currency_unit("The price is EUR_2025", "USD")
+        'The price is USD_2025'
+        >>> Currencies.update_currency_unit("The price is EUR_2025", "2024")
+        'The price is EUR_2024'
         >>> Currencies.update_currency_unit("No currency here", "USD")
         None
 
@@ -299,14 +302,14 @@ class Currencies:
             currency_code = (
                 new_currency_code
                 if new_currency_code is not None
-                else currency_unit.split("-")[0]
+                else currency_unit.split(separator)[0]
             )
             currency_year = (
                 new_currency_year
                 if new_currency_year is not None
-                else currency_unit.split("-")[1]
+                else currency_unit.split(separator)[1]
             )
-            new_currency_unit = f"{currency_code}-{currency_year}"
+            new_currency_unit = f"{currency_code}{separator}{currency_year}"
             return input_string.replace(currency_unit, new_currency_unit)
         else:
             return None
@@ -397,13 +400,14 @@ class Currencies:
         data: pd.DataFrame,
         deflator_function_name: str = "World Bank",
         pydeflate_path: pathlib.Path = pathlib.Path(PYDEFLATE_BASE_PATH, "pydeflate"),
+        separator: str = "_",
     ) -> pd.DataFrame:
         """
         Convert and/or adjust currency values in a DataFrame to a target currency and base year using deflation.
 
         This function adjusts the currency values in the input DataFrame by deflating and/or converting
         them to a specified target currency and base year. It identifies rows with currency units
-        matching the format `<CURRENCY_CODE>-<YEAR>`, applies a deflator function to adjust the values,
+        matching the format `<CURRENCY_CODE>_<YEAR>`, applies a deflator function to adjust the values,
         and updates the currency codes in the 'unit' column accordingly.
 
         Parameters
@@ -419,6 +423,8 @@ class Currencies:
             The name of the deflation function to use from the deflation function registry. Default is "world_bank".
         pydeflate_path : pathlib.Path
             The file system path where deflator and exchange rate data will be saved or loaded from.
+        separator : str
+            Currency unit separator #TODO: try to make it automatically detectable
 
         Returns
         -------
@@ -486,7 +492,7 @@ class Currencies:
             currency_rows[["currency", "currency_year"]] = (
                 currency_rows["unit"]
                 .apply(Currencies.extract_currency_unit)
-                .str.split("-", expand=True)
+                .str.split(separator, expand=True)
             )
 
             # Cast 'currency_year' column to integer type
