@@ -171,6 +171,10 @@ class Currencies:
         This method accesses a predefined dictionary of countries and their corresponding
         currencies, and returns a list of countries that use the specified currency.
 
+        Given the fact that the Euro and US Dollar are used in several countries, the method returns:
+        EUR -> [EUR]
+        USD -> [USD]
+
         Parameters
         ----------
         currency_code: str
@@ -201,7 +205,12 @@ class Currencies:
                     currency_countries[currency] = []
                 currency_countries[currency].append(country)
 
-        return currency_countries[currency_code]
+        if currency_code in ["EUR", "USD"]:
+            output_currency_list = [currency_code]
+        else:
+            output_currency_list = currency_countries[currency_code]
+
+        return output_currency_list
 
     @staticmethod
     def extract_currency_unit(
@@ -321,7 +330,7 @@ class Currencies:
         year: str,
         iso_code: str,
         target_value_column: str,
-        target_currency: str,
+        target_country: str,
     ) -> Callable[[pd.Series], pd.Series]:
         """
         Retrieve a function to deflate a row of data based on specified parameters.
@@ -342,9 +351,8 @@ class Currencies:
             The name of the column that contains the ISO code for the currency.
         target_value_column : str
             The name of the column that contains the target value to be adjusted.
-        target_currency : str, optional
-            The ISO3 country code representing the target currency to convert to. Required if use_case_flag is "currency_conversion".
-            Ignored if use_case_flag is "inflation_adjustment".
+        target_country : str
+            The ISO3 country representing the target currency to convert to.
 
         Returns
         -------
@@ -355,8 +363,6 @@ class Currencies:
         ------
         ValueError
             If the specified deflator function name is not found in the deflation function registry.
-            Or if use_case_flag is not one of the allowed values.
-            Or if use_case_flag is "currency_conversion" and target_currency is not provided.
 
         Examples
         --------
@@ -366,7 +372,7 @@ class Currencies:
         ...     year='currency_year',
         ...     iso_code='region',
         ...     target_value_column='value',
-        ...     target_currency='USD',
+        ...     target_country='USD',
         ... )
 
         """
@@ -383,7 +389,7 @@ class Currencies:
                 data=row_df,
                 base_year=base_year,
                 source_currency=row[iso_code],
-                target_currency=target_currency,
+                target_currency=target_country,
                 id_column=iso_code,
                 year_column=year,
                 value_column="value",
@@ -415,7 +421,7 @@ class Currencies:
         base_year_val : int
             The base year to which the currency values should be adjusted.
         target_currency : str
-            The ISO3 country code representing the target currency to convert to.
+            The ISO3 currency code representing the target currency to convert to.
         data : pandas.DataFrame
             The input DataFrame containing at least the columns 'unit', 'value', and 'region'.
             The 'unit' column must have currency codes in the format `<3-letter currency code>-<year>`.
@@ -439,7 +445,6 @@ class Currencies:
             If any of the required columns ('unit', 'value', 'region') are missing from the input DataFrame.
             If no rows in the DataFrame contain a valid currency unit matching the expected pattern.
             If the specified deflator function name is not found in the deflation function registry.
-            If `target_currency` is required but not provided when `use_case_flag` is "currency_conversion".
 
         Examples
         --------
@@ -500,13 +505,15 @@ class Currencies:
                 currency_rows["currency_year"], errors="coerce"
             ).astype(int)
 
+        target_country = Currencies.get_country_from_currency(target_currency)[0]
+
         deflate_row_func = Currencies.get_deflate_row_function(
             base_year=base_year_val,
             deflator_name=deflator_function_name.casefold(),
             year="currency_year",
             iso_code="region",
             target_value_column="value",
-            target_currency=target_currency,
+            target_country=target_country,
         )
 
         adjusted_rows = currency_rows.apply(deflate_row_func, axis=1)
@@ -516,13 +523,11 @@ class Currencies:
         # Replace updated rows back into results DataFrame
         results.loc[has_currency_mask, adjusted_rows.columns] = adjusted_rows
 
-        target_currency_code = Country.get_currency_from_iso3(target_currency)
-
         # Update the 'unit' column with the new currency code
         results.loc[has_currency_mask, "unit"] = currency_rows["unit"].apply(
             lambda unit: Currencies.update_currency_unit(
                 unit,
-                str(target_currency_code),
+                target_currency,
                 str(base_year_val),
             )
         )

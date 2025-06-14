@@ -120,7 +120,8 @@ def test_update_currency_unit(
 
 
 @pytest.mark.parametrize(
-    "base_year_val, deflator_function_name, input_dataframe, target_currency, expected_result, expected_exception_message",
+    "base_year_val, deflator_function_name, input_dataframe, target_currency, expected_result, "
+    "expected_exception_message",
     [
         (
             2021,
@@ -132,7 +133,7 @@ def test_update_currency_unit(
                     "value": [50.0, 100.0, 200.0, 300.0],
                 }
             ),
-            "USA",
+            "USD",
             pd.DataFrame(
                 {
                     "region": ["FRA", "USA", "CAN", "ITA"],
@@ -151,7 +152,7 @@ def test_update_currency_unit(
                     "value": [50.0, 100.0, 200.0, 300.0],
                 }
             ),
-            "USA",
+            "USD",
             ValueError,
             "Input dataFrame is missing required columns:",
         ),
@@ -165,7 +166,7 @@ def test_update_currency_unit(
                     "value": [50.0, 100.0, 200.0, 300.0],
                 }
             ),
-            "USA",
+            "USD",
             ValueError,
             "Deflator function 'random_deflate' not found in registry",
         ),
@@ -210,16 +211,23 @@ def test_adjust_currency(
         pd.testing.assert_frame_equal(new_dataframe, expected_result)
 
 
-def test_get_country_from_currency() -> None:
+@pytest.mark.parametrize(
+    "input_currency, expected_countries_list",
+    [
+        ("AFN", ["AFG"]),
+        ("XOF", ["BEN", "BFA", "CIV", "GNB", "MLI", "NER", "SEN", "TGO"]),
+        ("EUR", ["EUR"]),
+        ("USD", ["USD"]),
+        ("CNY", ["CHN"]),
+    ],
+)  # type: ignore
+def test_get_country_from_currency(
+    input_currency: str, expected_countries_list: list[str]
+) -> None:
     """Verify that the country(ies) ISO3 code(s) are correctly returned for a given currency ISO3 code."""
-    expected_afn_countries = ["AFG"]
-    result_afn = td.Currencies.get_country_from_currency("AFN")
-    assert result_afn == expected_afn_countries, (
-        f"Expected {expected_afn_countries} but got {result_afn} for currency 'AFN'"
-    )
-
-    expected_xof_countries = ["BEN", "BFA", "CIV", "GNB", "MLI", "NER", "SEN", "TGO"]
-    result_xof = td.Currencies.get_country_from_currency("XOF")
-    assert result_xof == expected_xof_countries, (
-        f"Expected {expected_xof_countries} but got {result_xof} for currency 'XOF'"
+    result = td.Currencies.get_country_from_currency(input_currency)
+    for i in result:
+        print(i)
+    assert result == expected_countries_list, (
+        f"Expected {expected_countries_list} but got {result} for currency {input_currency}"
     )

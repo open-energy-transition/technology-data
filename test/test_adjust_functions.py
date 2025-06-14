@@ -141,24 +141,51 @@ def test_adjust_year_linear_extrapolation(
     )
 
 
-# @pytest.mark.parametrize(
-#     "example_technologies",
-#     [
-#         {
-#             "technologies_name": "forecast01",
-#             "technologies_path": pathlib.Path(
-#                 "test", "test_adjust_functions", "currency_conversion01"
-#             ),
-#         }
-#     ],
-#     indirect=True,
-# )  # type: ignore
-# def test_adjust_currency(
-#     example_technologies: td.Technologies,
-# ) -> None:
-#     """Test currency conversion and inflation adjustments."""
-#     example_technologies.adjust_currency(
-#         to_currency="USA-2020", source="International Monetary Fund"
-#     )
-#     example_technologies.to_csv(path="integrunittest.csv")
-#    assert False
+@pytest.mark.parametrize(
+    "example_technologies, to_currency, output_file_name",
+    [
+        (
+            {
+                "technologies_name": "forecast01",
+                "technologies_path": pathlib.Path(
+                    "test", "test_adjust_functions", "currency_conversion01"
+                ),
+            },
+            "USD_2020",
+            "integrunittest_USD.csv",
+        ),
+        (
+            {
+                "technologies_name": "forecast01",
+                "technologies_path": pathlib.Path(
+                    "test", "test_adjust_functions", "currency_conversion01"
+                ),
+            },
+            "EUR_2020",
+            "integrunittest_EUR.csv",
+        ),
+        (
+            {
+                "technologies_name": "forecast01",
+                "technologies_path": pathlib.Path(
+                    "test", "test_adjust_functions", "currency_conversion01"
+                ),
+            },
+            "CNY_2020",
+            "integrunittest_CNY.csv",
+        ),
+    ],
+)  # type: ignore
+def test_adjust_currency(
+    example_technologies: td.Technologies,
+    to_currency: str,
+    output_file_name: str,
+) -> None:
+    """Test currency conversion and inflation adjustments."""
+    # Adjust the currency using the specified method
+    example_technologies.adjust_currency(
+        to_currency=to_currency, source="International Monetary Fund"
+    )
+
+    # Save the results to a CSV file
+    example_technologies.to_csv(path=output_file_name)
