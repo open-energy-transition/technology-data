@@ -207,6 +207,8 @@ class Currencies:
 
         if currency_code in ["EUR", "USD"]:
             output_currency_list = [currency_code]
+        elif currency_code == "GBP":
+            output_currency_list = ["GBR"]
         else:
             output_currency_list = currency_countries[currency_code]
 
@@ -330,6 +332,7 @@ class Currencies:
         year: str,
         iso_code: str,
         target_value_column: str,
+        source_country: str,
         target_country: str,
     ) -> Callable[[pd.Series], pd.Series]:
         """
@@ -348,9 +351,11 @@ class Currencies:
         year : str
             The name of the column that contains the year information for deflation.
         iso_code : str
-            The name of the column that contains the ISO code for the currency.
+            The name of the column that contains the ISO code for the country.
         target_value_column : str
             The name of the column that contains the target value to be adjusted.
+        source_country : str
+            The name of the column that contains the ISO3 country representing the source currency to convert from.
         target_country : str
             The ISO3 country representing the target currency to convert to.
 
@@ -372,6 +377,7 @@ class Currencies:
         ...     year='currency_year',
         ...     iso_code='region',
         ...     target_value_column='value',
+        ...     source_country='currency_code',
         ...     target_country='USD',
         ... )
 
@@ -388,7 +394,7 @@ class Currencies:
             deflated_df = deflation_function(
                 data=row_df,
                 base_year=base_year,
-                source_currency=row[iso_code],
+                source_currency=row[source_country],
                 target_currency=target_country,
                 id_column=iso_code,
                 year_column=year,
@@ -494,7 +500,7 @@ class Currencies:
             logger.warning("No rows contain a valid currency unit.")
         else:
             # For each row, extract currency year and currency from the unit column
-            currency_rows[["currency", "currency_year"]] = (
+            currency_rows[["currency_code", "currency_year"]] = (
                 currency_rows["unit"]
                 .apply(Currencies.extract_currency_unit)
                 .str.split(separator, expand=True)
@@ -506,6 +512,11 @@ class Currencies:
             ).astype(int)
 
         target_country = Currencies.get_country_from_currency(target_currency)[0]
+        currency_rows["source_country"] = currency_rows["currency_code"].apply(
+            lambda c: Currencies.get_country_from_currency(c)[0]
+            if Currencies.get_country_from_currency(c)
+            else None
+        )
 
         deflate_row_func = Currencies.get_deflate_row_function(
             base_year=base_year_val,
@@ -513,12 +524,15 @@ class Currencies:
             year="currency_year",
             iso_code="region",
             target_value_column="value",
+            source_country="source_country",
             target_country=target_country,
         )
 
         adjusted_rows = currency_rows.apply(deflate_row_func, axis=1)
 
-        adjusted_rows = adjusted_rows.drop(columns=["currency", "currency_year"])
+        adjusted_rows = adjusted_rows.drop(
+            columns=["currency_code", "currency_year", "source_country"]
+        )
 
         # Explicitly cast the data types of adjusted_rows to match results
         adjusted_rows["value"] = pd.to_numeric(

@@ -127,7 +127,7 @@ def test_update_currency_unit(
             pd.DataFrame(
                 {
                     "region": ["FRA", "USA", "CAN", "ITA"],
-                    "unit": ["WB_EUR_2020/MWh_el", "WB_USD_2020", "CAD_2020", "MWh"],
+                    "unit": ["EUR_2020/MWh_el", "USD_2020", "CAD_2020", "MWh"],
                     "value": [50.0, 100.0, 200.0, 300.0],
                 }
             ),
@@ -160,7 +160,7 @@ def test_update_currency_unit(
             pd.DataFrame(
                 {
                     "region": ["FRA", "USA", "CAN", "ITA"],
-                    "unit": ["WB_EUR_2020/MWh_el", "WB_USD_2020", "CAD_2020", "MWh"],
+                    "unit": ["EUR_2020/MWh_el", "USD_2020", "CAD_2020", "MWh"],
                     "value": [50.0, 100.0, 200.0, 300.0],
                 }
             ),
@@ -203,6 +203,7 @@ def test_adjust_currency(
         )
 
         new_dataframe["value"] = new_dataframe["value"].astype(float).round(2)
+
         if pydeflate_path.exists() and pydeflate_path.is_dir():
             shutil.rmtree(pydeflate_path)
 
@@ -217,6 +218,7 @@ def test_adjust_currency(
         ("EUR", ["EUR"]),
         ("USD", ["USD"]),
         ("CNY", ["CHN"]),
+        ("GBP", ["GBR"]),
     ],
 )  # type: ignore
 def test_get_country_from_currency(
@@ -224,8 +226,6 @@ def test_get_country_from_currency(
 ) -> None:
     """Verify that the country(ies) ISO3 code(s) are correctly returned for a given currency ISO3 code."""
     result = td.Currencies.get_country_from_currency(input_currency)
-    for i in result:
-        print(i)
     assert result == expected_countries_list, (
         f"Expected {expected_countries_list} but got {result} for currency {input_currency}"
     )
