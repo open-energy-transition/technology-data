@@ -2,9 +2,12 @@
 
 import pathlib
 
+import pandas as pd
 import pytest
 
 import technologydata as td
+
+path_cwd = pathlib.Path.cwd()
 
 
 @pytest.mark.parametrize(
@@ -142,7 +145,7 @@ def test_adjust_year_linear_extrapolation(
 
 
 @pytest.mark.parametrize(
-    "example_technologies, to_currency, output_file_name",
+    "example_technologies, to_currency, output_file_path",
     [
         (
             {
@@ -152,7 +155,7 @@ def test_adjust_year_linear_extrapolation(
                 ),
             },
             "USD_2020",
-            "integrunittest_USD.csv",
+            pathlib.Path("test", "test_adjust_functions", "currency_conversion01"),
         ),
         (
             {
@@ -162,7 +165,7 @@ def test_adjust_year_linear_extrapolation(
                 ),
             },
             "EUR_2020",
-            "integrunittest_EUR.csv",
+            pathlib.Path("test", "test_adjust_functions", "currency_conversion01"),
         ),
         (
             {
@@ -172,20 +175,57 @@ def test_adjust_year_linear_extrapolation(
                 ),
             },
             "CNY_2020",
-            "integrunittest_CNY.csv",
+            pathlib.Path("test", "test_adjust_functions", "currency_conversion01"),
         ),
     ],
+    indirect=["example_technologies"],
 )  # type: ignore
 def test_adjust_currency(
     example_technologies: td.Technologies,
     to_currency: str,
-    output_file_name: str,
+    output_file_path: pathlib.Path,
 ) -> None:
     """Test currency conversion and inflation adjustments."""
     # Adjust the currency using the specified method
     example_technologies.adjust_currency(
         to_currency=to_currency, source="International Monetary Fund"
     )
+    output_file_path = pathlib.Path(
+        path_cwd,
+        output_file_path,
+        "output",
+        to_currency,
+        "technologies.csv",
+    )
+    reference_data = pd.read_csv(output_file_path)
+    reference_data["comment"] = reference_data["comment"].fillna("")
+    example_technologies.data["comment"] = example_technologies.data["comment"].fillna(
+        ""
+    )
+    pd.testing.assert_frame_equal(reference_data, example_technologies.data)
 
-    # Save the results to a CSV file
-    example_technologies.to_csv(path=output_file_name)
+
+# @pytest.mark.parametrize(
+#     "example_technologies, to_currency",
+#     [
+#         (
+#             {
+#                 "technologies_name": "forecast01",
+#                 "technologies_path": pathlib.Path(
+#                     "test", "test_adjust_functions", "currency_conversion01"
+#                 ),
+#             },
+#             "USD_2028",
+#         )
+#     ],
+#     indirect=["example_technologies"],
+# )  # type: ignore
+# def test_adjust_currency_fails(
+#     example_technologies: td.Technologies,
+#     to_currency: str,
+# ) -> None:
+#     """Test currency conversion and inflation adjustments."""
+#     # Adjust the currency using the specified method
+#     example_technologies.adjust_currency(
+#         to_currency=to_currency, source="International Monetary Fund"
+#    )

@@ -2,14 +2,12 @@
 
 import pathlib
 import shutil
-import sys
 
 import pandas as pd
 import pytest
 
 import technologydata as td
 
-sys.path.append("./technology-data")
 path_cwd = pathlib.Path.cwd()
 
 
