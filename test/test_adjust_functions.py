@@ -145,37 +145,60 @@ def test_adjust_year_linear_extrapolation(
 
 
 @pytest.mark.parametrize(
-    "example_technologies, to_currency, output_file_path",
+    "example_technologies, to_currency, source, reference_technologies",
     [
         (
             {
-                "technologies_name": "forecast01",
+                "technologies_name": "input",
                 "technologies_path": pathlib.Path(
-                    "test", "test_adjust_functions", "currency_conversion01"
+                    "test", "test_adjust_functions", "currency_conversion01", "input"
                 ),
             },
             "USD_2020",
-            pathlib.Path("test", "test_adjust_functions", "currency_conversion01"),
+            "World Bank",
+            {
+                "output_USD_2020": pathlib.Path(
+                    "test",
+                    "test_adjust_functions",
+                    "currency_conversion01",
+                    "output",
+                    "WB_USD_2020",
+                ),
+            },
         ),
         (
             {
-                "technologies_name": "forecast01",
+                "technologies_name": "input",
                 "technologies_path": pathlib.Path(
-                    "test", "test_adjust_functions", "currency_conversion01"
+                    "test", "test_adjust_functions", "currency_conversion01", "input"
                 ),
             },
             "EUR_2020",
-            pathlib.Path("test", "test_adjust_functions", "currency_conversion01"),
+            "World Bank",
+            {
+                "output_EUR_2020": pathlib.Path(
+                    "test",
+                    "test_adjust_functions",
+                    "currency_conversion01",
+                    "output",
+                    "WB_EUR_2020",
+                ),
+            },
         ),
         (
             {
-                "technologies_name": "forecast01",
+                "technologies_name": "input",
                 "technologies_path": pathlib.Path(
-                    "test", "test_adjust_functions", "currency_conversion01"
+                    "test", "test_adjust_functions", "currency_conversion01", "input"
                 ),
             },
             "CNY_2020",
-            pathlib.Path("test", "test_adjust_functions", "currency_conversion01"),
+            "World Bank",
+            {
+                "output_CNY_2020": pathlib.Path(
+                    "test/test_adjust_functions/currency_conversion01/output/WB_CNY_2020",
+                ),
+            },
         ),
     ],
     indirect=["example_technologies"],
@@ -183,35 +206,21 @@ def test_adjust_year_linear_extrapolation(
 def test_adjust_currency(
     example_technologies: td.Technologies,
     to_currency: str,
-    output_file_path: pathlib.Path,
+    source: str,
+    reference_technologies: dict[str, pathlib.Path],
 ) -> None:
     """Test currency conversion and inflation adjustments."""
-    source = "World Bank"
-    match source:
-        case "World Bank":
-            source_prefix = "WB"
-        case "World Bank (Linked)":
-            source_prefix = "WBL"
-        case "International Monetary Fund":
-            source_prefix = "IMF"
-        case _:
-            raise ValueError("Deflator is not considered")
+    # Load the reference technologies data
+    references_techs = td.Technologies(reference_technologies)
 
     # Adjust the currency using the specified method
     example_technologies.adjust_currency(to_currency=to_currency, source=source)
-    output_file_path = pathlib.Path(
-        path_cwd,
-        output_file_path,
-        "output",
-        f"{source_prefix}_{to_currency}",
-        "technologies.csv",
-    )
-    reference_data = pd.read_csv(output_file_path)
-    reference_data["comment"] = reference_data["comment"].fillna("")
-    example_technologies.data["comment"] = example_technologies.data["comment"].fillna(
-        ""
-    )
-    pd.testing.assert_frame_equal(reference_data, example_technologies.data)
+
+    # Fill known NaN values in comments
+    references_techs.data = references_techs.data.fillna({"comments": ""})
+    example_technologies.data = example_technologies.data.fillna({"comments": ""})
+
+    pd.testing.assert_frame_equal(references_techs.data, example_technologies.data)
 
 
 @pytest.mark.parametrize(
@@ -219,9 +228,9 @@ def test_adjust_currency(
     [
         (
             {
-                "technologies_name": "forecast01",
+                "technologies_name": "input",
                 "technologies_path": pathlib.Path(
-                    "test", "test_adjust_functions", "currency_conversion01"
+                    "test", "test_adjust_functions", "currency_conversion01", "input"
                 ),
             },
             "USD_2020",
@@ -230,9 +239,9 @@ def test_adjust_currency(
         ),
         (
             {
-                "technologies_name": "forecast01",
+                "technologies_name": "input",
                 "technologies_path": pathlib.Path(
-                    "test", "test_adjust_functions", "currency_conversion01"
+                    "test", "test_adjust_functions", "currency_conversion01", "input"
                 ),
             },
             "USD_2023",
@@ -241,9 +250,9 @@ def test_adjust_currency(
         ),
         (
             {
-                "technologies_name": "forecast01",
+                "technologies_name": "input",
                 "technologies_path": pathlib.Path(
-                    "test", "test_adjust_functions", "currency_conversion01"
+                    "test", "test_adjust_functions", "currency_conversion01", "input"
                 ),
             },
             "USD_2031",
@@ -252,9 +261,9 @@ def test_adjust_currency(
         ),
         (
             {
-                "technologies_name": "forecast01",
+                "technologies_name": "input",
                 "technologies_path": pathlib.Path(
-                    "test", "test_adjust_functions", "currency_conversion01"
+                    "test", "test_adjust_functions", "currency_conversion01", "input"
                 ),
             },
             "USD_2020",
@@ -263,9 +272,9 @@ def test_adjust_currency(
         ),
         (
             {
-                "technologies_name": "forecast01",
+                "technologies_name": "input",
                 "technologies_path": pathlib.Path(
-                    "test", "test_adjust_functions", "currency_conversion01"
+                    "test", "test_adjust_functions", "currency_conversion01", "input"
                 ),
             },
             "USD_2023",
@@ -274,9 +283,9 @@ def test_adjust_currency(
         ),
         (
             {
-                "technologies_name": "forecast01",
+                "technologies_name": "input",
                 "technologies_path": pathlib.Path(
-                    "test", "test_adjust_functions", "currency_conversion01"
+                    "test", "test_adjust_functions", "currency_conversion01", "input"
                 ),
             },
             "USD_2031",
