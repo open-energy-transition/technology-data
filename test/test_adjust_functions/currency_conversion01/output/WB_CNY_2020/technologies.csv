@@ -5,7 +5,6 @@ currency_conversion01,example tech,example tech - detailed,EU publication histor
 currency_conversion01,example tech,example tech - detailed,EU publication historic,ITA,investment,2015,833.762573,CNY_2020/MW_electric,1.0,MW,
 currency_conversion01,example tech,example tech - detailed,EU publication historic,ITA,investment,2020,788.202952,CNY_2020/MW_electric,1.0,MW,
 currency_conversion01,example tech,example tech - detailed,UK publication about France,FRA,investment,2020,1576.405905,CNY_2020/MW_electric,1.0,MW,
-currency_conversion01,example tech,example tech - detailed,US publication future,ITA,investment,2030,,CNY_2020/MW_electric,1.0,MW,
 currency_conversion01,example tech,example tech - detailed,US publication future,ITA,total investment,2030,2364608.857179,CNY_2020,1.0,MW,
 currency_conversion01,example tech,example tech - detailed,US publication historic,FRA,investment,2015,839.849719,CNY_2020/MW_electric,1.0,MW,
 currency_conversion01,example tech,example tech - detailed,US publication historic,ITA,investment,2015,1667.525146,CNY_2020/MW_electric,1.0,MW,
@@ -14,5 +13,3 @@ currency_conversion01,example tech,example tech - detailed,US publication histor
 currency_conversion01,example tech,example tech - detailed,US publication historic,ITA,total investment,2020,1576405.904786,CNY_2020,1.0,MW,
 currency_conversion01,example tech,example tech - detailed,US publication historic,USA,investment,2020,690.076727,CNY_2020/MW_electric,1.0,MW,
 currency_conversion01,example tech,example tech - detailed,US publication historic 2023,ITA,investment,2023,1633.324945,CNY_2020/MW_electric,1.0,MW,
-currency_conversion01,example tech,example tech - detailed,US publication historic 2024,ITA,investment,2024,,CNY_2020/MW_electric,1.0,MW,
-currency_conversion01,example tech,example tech - detailed,US publication historic 2025,ITA,investment,2025,,CNY_2020/MW_electric,1.0,MW,
