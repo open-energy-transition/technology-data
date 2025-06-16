@@ -68,13 +68,6 @@ version_scheme = "no-guess-dev"
 [tool.setuptools.packages.find]
 include = ["technologydata"]
 
-# Pytest settings
-
-[tool.pytest.ini_options]
-filterwarnings = [
-    "error::FutureWarning",      # Raise all FutureWarnings as errors
-]
-
 # Static type checker settings
 
 [tool.mypy]

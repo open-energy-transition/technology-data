@@ -168,7 +168,7 @@ class Currencies:
         """
         Retrieve a list of country ISO3 codes associated with a given currency code.
 
-        This method accesses a predefined dictionary of countries and their corresponding
+        This method accesses a predefined dictionary of countries from the hdx package and their corresponding
         currencies, and returns a list of countries that use the specified currency.
 
         Given the fact that the Euro and US Dollar are used in several countries, the method returns:
@@ -192,7 +192,7 @@ class Currencies:
 
         Examples
         --------
-        >>> get_country_from_currency("AFN")
+        >>> Currencies.get_country_from_currency("AFN")
         ["AFG"]
 
         """
@@ -424,7 +424,7 @@ class Currencies:
             The ISO3 currency code representing the target currency to convert to.
         data : pandas.DataFrame
             The input DataFrame containing at least the columns 'unit', 'value', and 'region'.
-            The 'unit' column must have currency codes in the format `<3-letter currency code>-<year>`.
+            The 'unit' column must have currency codes in the format `<3-letter currency code>_<year>`.
         deflator_function_name : str
             The name of the deflation function to use from the deflation function registry. Default is "world_bank".
         pydeflate_path : pathlib.Path
@@ -449,7 +449,7 @@ class Currencies:
         Examples
         --------
         >>> data = pd.DataFrame({
-        ...     'unit': ['USD-2020', 'EUR-2021', 'JPY-2019'],
+        ...     'unit': ['WB_USD_2020', 'EUR_2021', 'JPY_2019'],
         ...     'value': [100, 200, 300],
         ...     'region': ['USA', 'FRA', 'JPN']
         ... })
@@ -460,9 +460,9 @@ class Currencies:
         ...     deflator_function_name='International Monetary Fund',
         ... )
         >>> adjusted_data['unit']
-        0    USD-2022
-        1    USD-2022
-        2    USD-2022
+        0    USD_2022
+        1    USD_2022
+        2    USD_2022
         Name: unit, dtype: object
 
         """
@@ -519,6 +519,11 @@ class Currencies:
         adjusted_rows = currency_rows.apply(deflate_row_func, axis=1)
 
         adjusted_rows = adjusted_rows.drop(columns=["currency", "currency_year"])
+
+        # Explicitly cast the data types of adjusted_rows to match results
+        adjusted_rows["value"] = pd.to_numeric(
+            adjusted_rows["value"], errors="coerce"
+        ).astype(float)
 
         # Replace updated rows back into results DataFrame
         results.loc[has_currency_mask, adjusted_rows.columns] = adjusted_rows

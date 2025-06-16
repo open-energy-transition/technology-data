@@ -186,15 +186,24 @@ def test_adjust_currency(
     output_file_path: pathlib.Path,
 ) -> None:
     """Test currency conversion and inflation adjustments."""
+    source = "World Bank"
+    match source:
+        case "World Bank":
+            source_prefix = "WB"
+        case "World Bank (Linked)":
+            source_prefix = "WBL"
+        case "International Monetary Fund":
+            source_prefix = "IMF"
+        case _:
+            raise ValueError("Deflator is not considered")
+
     # Adjust the currency using the specified method
-    example_technologies.adjust_currency(
-        to_currency=to_currency, source="International Monetary Fund"
-    )
+    example_technologies.adjust_currency(to_currency=to_currency, source=source)
     output_file_path = pathlib.Path(
         path_cwd,
         output_file_path,
         "output",
-        to_currency,
+        f"{source_prefix}_{to_currency}",
         "technologies.csv",
     )
     reference_data = pd.read_csv(output_file_path)
@@ -205,27 +214,87 @@ def test_adjust_currency(
     pd.testing.assert_frame_equal(reference_data, example_technologies.data)
 
 
-# @pytest.mark.parametrize(
-#     "example_technologies, to_currency",
-#     [
-#         (
-#             {
-#                 "technologies_name": "forecast01",
-#                 "technologies_path": pathlib.Path(
-#                     "test", "test_adjust_functions", "currency_conversion01"
-#                 ),
-#             },
-#             "USD_2028",
-#         )
-#     ],
-#     indirect=["example_technologies"],
-# )  # type: ignore
-# def test_adjust_currency_fails(
-#     example_technologies: td.Technologies,
-#     to_currency: str,
-# ) -> None:
-#     """Test currency conversion and inflation adjustments."""
-#     # Adjust the currency using the specified method
-#     example_technologies.adjust_currency(
-#         to_currency=to_currency, source="International Monetary Fund"
-#    )
+@pytest.mark.parametrize(
+    "example_technologies, to_currency, source, expected_result",
+    [
+        (
+            {
+                "technologies_name": "forecast01",
+                "technologies_path": pathlib.Path(
+                    "test", "test_adjust_functions", "currency_conversion01"
+                ),
+            },
+            "USD_2020",
+            "International Monetary Fund",
+            "no failure",
+        ),
+        (
+            {
+                "technologies_name": "forecast01",
+                "technologies_path": pathlib.Path(
+                    "test", "test_adjust_functions", "currency_conversion01"
+                ),
+            },
+            "USD_2023",
+            "International Monetary Fund",
+            "no failure",
+        ),
+        (
+            {
+                "technologies_name": "forecast01",
+                "technologies_path": pathlib.Path(
+                    "test", "test_adjust_functions", "currency_conversion01"
+                ),
+            },
+            "USD_2031",
+            "International Monetary Fund",
+            ValueError,
+        ),
+        (
+            {
+                "technologies_name": "forecast01",
+                "technologies_path": pathlib.Path(
+                    "test", "test_adjust_functions", "currency_conversion01"
+                ),
+            },
+            "USD_2020",
+            "World Bank",
+            "no failure",
+        ),
+        (
+            {
+                "technologies_name": "forecast01",
+                "technologies_path": pathlib.Path(
+                    "test", "test_adjust_functions", "currency_conversion01"
+                ),
+            },
+            "USD_2023",
+            "World Bank",
+            "no failure",
+        ),
+        (
+            {
+                "technologies_name": "forecast01",
+                "technologies_path": pathlib.Path(
+                    "test", "test_adjust_functions", "currency_conversion01"
+                ),
+            },
+            "USD_2031",
+            "World Bank",
+            ValueError,
+        ),
+    ],
+    indirect=["example_technologies"],
+)  # type: ignore
+def test_adjust_currency_fails(
+    example_technologies: td.Technologies,
+    to_currency: str,
+    source: str,
+    expected_result: str | ValueError,
+) -> None:
+    """Test if currency conversion and inflation adjustments work for different years."""
+    if isinstance(expected_result, type) and expected_result is ValueError:
+        with pytest.raises(ValueError, match="No data found for base year"):
+            example_technologies.adjust_currency(to_currency=to_currency, source=source)
+    else:
+        example_technologies.adjust_currency(to_currency=to_currency, source=source)

@@ -127,7 +127,7 @@ def test_update_currency_unit(
             pd.DataFrame(
                 {
                     "region": ["FRA", "USA", "CAN", "ITA"],
-                    "unit": ["EUR_2020/MWh_el", "USD_2020", "CAD_2020", "MWh"],
+                    "unit": ["WB_EUR_2020/MWh_el", "WB_USD_2020", "CAD_2020", "MWh"],
                     "value": [50.0, 100.0, 200.0, 300.0],
                 }
             ),
@@ -160,7 +160,7 @@ def test_update_currency_unit(
             pd.DataFrame(
                 {
                     "region": ["FRA", "USA", "CAN", "ITA"],
-                    "unit": ["EUR_2020/MWh_el", "USD_2020", "CAD_2020", "MWh"],
+                    "unit": ["WB_EUR_2020/MWh_el", "WB_USD_2020", "CAD_2020", "MWh"],
                     "value": [50.0, 100.0, 200.0, 300.0],
                 }
             ),
