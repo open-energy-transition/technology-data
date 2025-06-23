@@ -1,7 +1,6 @@
 """Test the utility methods."""
 
 import pathlib
-import shutil
 
 import pandas as pd
 import pytest
@@ -179,7 +178,6 @@ def test_adjust_currency(
     expected_exception_message: str | None,
 ) -> None:
     """Check if currency conversion and inflation adjustment work correctly."""
-
     if isinstance(expected_result, type) and expected_result is ValueError:
         with pytest.raises(ValueError, match=expected_exception_message):
             td.Currencies.adjust_currency(
@@ -189,7 +187,6 @@ def test_adjust_currency(
                 deflator_function_name,
             )
     else:
-
         # Assume td.CurrencyUtils is imported in the test context
         new_dataframe = td.Currencies.adjust_currency(
             base_year_val,
