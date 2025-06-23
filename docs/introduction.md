@@ -29,7 +29,7 @@ To replace the currency code and/or year in a string representing a currency uni
 
 #### Adjusting Currency Values
 
-To convert and adjust currency values in a DataFrame to a target currency and base year, use the `adjust_currency` method.
+To convert and adjust currency values in a DataFrame to a target currency and base year, use the `adjust_currency` method. The method uses deflator and exchange rates from a selected number of resource, namely the International Monetary Fund World Economic Outlook, GDP deflators and exchange rates from the World Bank and the World Bank’s linked GDP deflator and exchange rates. The currency adjustment is performed in-place and updates the input DataFrame.
 
 ### Limitations
 
@@ -47,4 +47,29 @@ The assumptions are:
 
 ### Conclusion
 
-The Currencies class is a powerful utility for managing currency operations in Python, leveraging the capabilities of the pydeflate and hdx packages. By following the usage examples and being aware of the limitations and assumptions, users can effectively integrate currency handling into their data processing workflows.
+The `Currencies` class is a powerful utility for managing currency operations in Python, leveraging the capabilities of the pydeflate and hdx packages. By following the usage examples and being aware of the limitations and assumptions, users can effectively integrate currency handling into their data processing workflows.
+
+## Technologies Class Documentation
+
+The `Technologies` class provides a convenient interface for working with collections of technology data, including loading datasets and performing various adjustments such as currency conversion.
+
+### Creating a Technologies object
+
+You can create a `Technologies` object by providing a list of sources. Sources can be specified as strings (referring to available datasets), `Source` objects, or dictionaries mapping source names to paths.
+
+```bibtex
+from technologydata import Technologies
+
+# Example: Load all available sources
+techs = Technologies(sources=["source1", "source2"])
+
+# Or, if you want to load a single source
+techs = Technologies(sources="source1")
+
+# You can also use a dictionary mapping
+# techs = Technologies(sources={"source1": Path("/path/to/source1")})
+```
+
+### Adjusting the currencies
+
+The `adjust_currency` method allows you to convert all currency values in the dataset to a specified target currency and year. It uses the `adjust_currency` method from the `Currencies` class. The currency adjustment is performed in-place and updates the `data` attribute of the `Technologies` object.
