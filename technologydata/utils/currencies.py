@@ -508,8 +508,7 @@ class Currencies:
 
             # Cast 'currency_year' column to integer type
             currency_rows["currency_year"] = pd.to_numeric(
-                currency_rows["currency_year"], errors="coerce"
-            ).astype(int)
+                currency_rows["currency_year"]).astype(int)
 
         target_country = Currencies.get_country_from_currency(target_currency)[0]
         currency_rows["source_country"] = currency_rows["currency_code"].apply(
