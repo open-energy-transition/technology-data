@@ -243,7 +243,7 @@ class Currencies:
         Examples
         --------
         >>> Currencies.extract_currency_unit("The price is USD_2025/kW_el", r"[A-Z]{3}_\d{4}")
-        'USD-2025'
+        'USD_2025'
         >>> Currencies.extract_currency_unit("No currency here", r"[A-Z]{3}_\d{4}")
         None
         >>> Currencies.extract_currency_unit("US-2025", r"[A-Z]{2}_\d{4}")
