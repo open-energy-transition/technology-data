@@ -382,7 +382,7 @@ class Currencies:
         ... )
 
         """
-        deflation_function = deflation_function_registry.get(deflator_name)
+        deflation_function = deflation_function_registry.get(deflator_name.casefold())
         if deflation_function is None:
             raise ValueError(
                 f"Deflator function '{deflator_name}' not found in registry"
@@ -520,7 +520,7 @@ class Currencies:
 
         deflate_row_func = Currencies.get_deflate_row_function(
             base_year=base_year_val,
-            deflator_name=deflator_function_name.casefold(),
+            deflator_name=deflator_function_name,
             year="currency_year",
             iso_code="region",
             target_value_column="value",

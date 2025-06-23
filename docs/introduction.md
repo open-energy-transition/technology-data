@@ -35,7 +35,7 @@ To convert and adjust currency values in a DataFrame to a target currency and ba
 
 The limitations of the class are:
 - the `get_country_from_currency` method assumes that the currency code provided is valid and exists in the HDX country data. If the currency code is not found, it may return an empty list or raise a `KeyError`. 
-- the `extract_currency_unit` method relies on a specific format for currency units (i.e., `<ISO3 CURRENCY_CODE>_<YEAR>`). If the input string does not match this format, it will return `None`. I.e. currency values need to provided with the correctly formatted currency unit, e.g. `USD_2020`, `EUR_2023` or `CNY_2025`. The currency symbols follow [ISO 4217](https://de.wikipedia.org/wiki/ISO_4217)
+- the `extract_currency_unit` method relies on a specific format for currency units (i.e., `<ISO3 CURRENCY_CODE>_<YEAR>`). If the input string does not match this format, it will return `None`. I.e. currency values need to provided with the correctly formatted currency unit, e.g. `USD_2020`, `EUR_2023` or `CNY_2025`. The currency symbols follow [ISO 4217](https://de.wikipedia.org/wiki/ISO_4217).
 - the `adjust_currency` method requires the input DataFrame to contain specific columns: `unit`, `value`, and `region`. If any of these columns are missing, a `ValueError` will be raised.
 
 ### Assumptions
