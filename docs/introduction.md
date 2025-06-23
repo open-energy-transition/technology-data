@@ -5,7 +5,7 @@
 ### Overview
 
 The `Currencies` class provides utility methods for handling currency-related operations, including deflating values based on specified deflator functions, converting currency values in a DataFrame, and ensuring currency units are correctly formatted. 
-This class utilizes the `pydeflate` package for deflation calculations and the `hdx` package for relating country and currency ISO3 codes.
+This class utilizes the `pydeflate` package for inflation adjustment and currency conversion calculations and the `hdx` package for relating country and currency ISO3 codes.
 
 ### Installation
 
