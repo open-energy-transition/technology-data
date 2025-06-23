@@ -179,7 +179,6 @@ def test_adjust_currency(
     expected_exception_message: str | None,
 ) -> None:
     """Check if currency conversion and inflation adjustment work correctly."""
-    pydeflate_path = pathlib.Path(path_cwd, "pydeflate")
 
     if isinstance(expected_result, type) and expected_result is ValueError:
         with pytest.raises(ValueError, match=expected_exception_message):
@@ -190,8 +189,6 @@ def test_adjust_currency(
                 deflator_function_name,
             )
     else:
-        # Create the folder if needed
-        pydeflate_path.mkdir(parents=True, exist_ok=True)
 
         # Assume td.CurrencyUtils is imported in the test context
         new_dataframe = td.Currencies.adjust_currency(
@@ -199,13 +196,9 @@ def test_adjust_currency(
             target_currency,
             input_dataframe,
             deflator_function_name,
-            pydeflate_path,
         )
 
         new_dataframe["value"] = new_dataframe["value"].astype(float).round(2)
-
-        if pydeflate_path.exists() and pydeflate_path.is_dir():
-            shutil.rmtree(pydeflate_path)
 
         pd.testing.assert_frame_equal(new_dataframe, expected_result)
 
