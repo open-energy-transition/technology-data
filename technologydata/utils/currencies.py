@@ -206,11 +206,10 @@ class Currencies:
         # Response cache - builds only on first call
         if len(Currencies._currency_countries_cache) == 0:
             hdx_currency_dict = Country.countriesdata()["currencies"]
-            for country, currency in hdx_currency_dict.items():
-                if currency is not None:
-                    if currency not in Currencies._currency_countries_cache.keys():
-                        Currencies._currency_countries_cache[currency] = []
-                    Currencies._currency_countries_cache[currency].append(country)
+            Currencies._currency_countries_cache = {
+                currency: [country for country, curr in hdx_currency_dict.items() if curr == currency]
+                for currency in set(curr for curr in hdx_currency_dict.values() if curr is not None)
+            }
 
         # Handle special cases for specific currency codes
         special_cases = {
@@ -239,6 +238,7 @@ class Currencies:
         elif currency_code not in Currencies._currency_countries_cache:
             raise KeyError(f"Unsupported currency code {currency_code}")
         else:
+            # check whether the list in the value of the dict is one-dim
             return Currencies._currency_countries_cache[currency_code][0]
 
     @staticmethod
