@@ -172,8 +172,7 @@ class Currencies:
         This method accesses a predefined dictionary of countries from the hdx package and their corresponding
         currencies, and returns a list of countries that use the specified currency.
 
-        Moreover, it handles special cases (like EUR/USD) and proxies for multi-country currencies
-        according to defined selection criteria based on economic indicators.
+        Additionally, the method accommodates special cases, such as EUR/USD, and proxies for multi-country currencies based on established selection criteria derived from economic indicators. It is designed to be used alongside the 'pydeflate' functions, which accept currency codes instead of country codes for currencies of particular importance. Consequently, for the Euro and US Dollar, this method will return USD and EUR, respectively.
 
         Currency to Country Mapping Rules:
             - EUR/USD: Return currency code itself (special pydeflate handling)
@@ -476,9 +475,10 @@ class Currencies:
         ------
         ValueError
             If `pydeflate_path` is None.
-            If any of the required columns ('unit', 'value', 'region') are missing from the input DataFrame.
             If no rows in the DataFrame contain a valid currency unit matching the expected pattern.
             If the specified deflator function name is not found in the deflation function registry.
+        KeyError
+            If any of the required columns ('unit', 'value', 'region') are missing from the input DataFrame.
 
         Examples
         --------
@@ -513,7 +513,7 @@ class Currencies:
         required_columns = {"unit", "value", "region"}
         if not required_columns.issubset(data.columns):
             missing = required_columns - set(data.columns)
-            raise ValueError(f"Input dataFrame is missing required columns: {missing}")
+            raise KeyError(f"Input dataFrame is missing required columns: {missing}")
 
         # Create a copy of the original data to avoid modifying input directly
         results = data.copy()

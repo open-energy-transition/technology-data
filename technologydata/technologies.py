@@ -228,19 +228,19 @@ class Technologies:
         Parameters
         ----------
         to_currency : str
-            The target currency units matching the format `<CURRENCY_CODE>-<YEAR>`,
-            with the currency code specified with the ISO3 standard (e.g. 'USD', 'EUR').
+            The target currency units matching the format `<CURRENCY_CODE>_<YEAR>`,
+            with the currency code specified with the ISO 4217 standard (e.g. 'USD', 'EUR').
 
         source : str, optional
             The source of the deflation data to be used for the adjustment. Supported values
-            are "World Bank", "World Bank Linked", and "International Monetary Fund".
+            are "World Bank", "World Bank (Linked)", and "International Monetary Fund".
             The default is "World Bank".
 
         Raises
         ------
         ValueError
             If the specified source is not recognized. Supported sources are
-            'World Bank', 'World Bank Linked', and 'International Monetary Fund'.
+            'World Bank', 'World Bank (Linked)', and 'International Monetary Fund'.
 
         Notes
         -----
@@ -249,7 +249,7 @@ class Technologies:
 
         Examples
         --------
-        >>> techs.adjust_currency("USD-2022", "International_Monetary_Fund")
+        >>> techs.adjust_currency("USD-2022", "International Monetary Fund")
 
         """
         match = re.match(td.Currencies.CURRENCY_UNIT_DEFAULT_FORMAT, to_currency)

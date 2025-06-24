@@ -150,7 +150,7 @@ def test_update_currency_unit(
                 }
             ),
             "USD",
-            ValueError,
+            KeyError,
             "Input dataFrame is missing required columns:",
         ),
         (
@@ -174,12 +174,20 @@ def test_adjust_currency(
     deflator_function_name: str,
     input_dataframe: pd.DataFrame,
     target_currency: str,
-    expected_result: pd.DataFrame | ValueError,
+    expected_result: pd.DataFrame | ValueError | KeyError,
     expected_exception_message: str | None,
 ) -> None:
     """Check if currency conversion and inflation adjustment work correctly."""
     if isinstance(expected_result, type) and expected_result is ValueError:
         with pytest.raises(ValueError, match=expected_exception_message):
+            td.Currencies.adjust_currency(
+                base_year_val,
+                target_currency,
+                input_dataframe,
+                deflator_function_name,
+            )
+    elif isinstance(expected_result, type) and expected_result is KeyError:
+        with pytest.raises(KeyError, match=expected_exception_message):
             td.Currencies.adjust_currency(
                 base_year_val,
                 target_currency,
