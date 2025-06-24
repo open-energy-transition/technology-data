@@ -17,7 +17,23 @@ To use the `Currencies` class, ensure you have the following packages installed:
 
 #### Getting Country from Currency Code
 
-To retrieve a list of country ISO3 codes associated with a given currency code, use the `get_country_from_currency` method.
+To retrieve a list of country ISO3 codes associated with a given currency code, use the `get_country_from_currency` method. The method handles special cases (like EUR or USD) and proxies for multi-country currencies according to defined selection criteria based on economic indicators. Namely
+```bibtex
+"EUR": "EUR",  # special code in pydeflate
+"USD": "USD",  # special code in pydeflate
+"GBP": "GBR",  # Based on GDP, pop
+"NZD": "NZL",  # Based on GDP, pop
+"NOK": "NOR",  # Based on GDP, pop
+"AUD": "AUS",  # Based on GDP, pop
+"ILS": "ISR",  # Based on GDP, pop
+"CHF": "CHE",  # Based on GDP, pop
+"MAD": "MAR",  # Based on GDP, pop
+"ANG": "CUW",  # Based on GDP, pop; Issue in hdx, since 04/2025 ANG and CUW use XCG (XCG is not supported by `pydeflate` and hdx yet)
+"XPF": "PYF",  # Missing data for "NCL", "WLF" for a range of years in World Bank data / "pydeflate"
+"XOF": "NER",  # Chosen as proxy, because the difference between NER inflation and unweighted-average inflation rate of all XOF member countries is the lowest for 2015-2023 (XOF average: 1.180816, NER: 1.173449)
+"XCD": "GRD",  # Chosen as proxy, because the difference between GRD inflation and unweighted-average inflation rate of all XCD member countries is the lowest for 2015-2023 (XCD average: 1.147741, GRD: 1.156121)
+"XAF": "CAF",  # Chosen as proxy, because the difference between CAF inflation and unweighted-average inflation rate of all XAF member countries is the lowest for 2015-2023 (XAF average: 1.300318, CAF: 1.277488)
+```
 
 #### Extracting Currency Unit
 

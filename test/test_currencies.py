@@ -201,30 +201,38 @@ def test_adjust_currency(
 
 
 @pytest.mark.parametrize(
-    "input_currency, expected_country",
+    "input_currency, expected_country, expected_exception_message",
     [
-        ("AFN", "AFG"),
-        ("CNY", "CHN"),
-        ("EUR", "EUR"),
-        ("USD", "USD"),
-        ("GBP", "GBR"),
-        ("NZD", "NZL"),
-        ("NOK", "NOR"),
-        ("AUD", "AUS"),
-        ("ILS", "ISR"),
-        ("CHF", "CHE"),
-        ("MAD", "MAR"),
-        ("ANG", "CUW"),
-        ("XPF", "PYF"),
-        ("XOF", "NER"),
-        ("XCD", "GRD"),
-        ("XAF", "CAF"),
-        ("YEA", ""),
+        ("AFN", "AFG", None),
+        ("CNY", "CHN", None),
+        ("EUR", "EUR", None),
+        ("USD", "USD", None),
+        ("GBP", "GBR", None),
+        ("NZD", "NZL", None),
+        ("NOK", "NOR", None),
+        ("AUD", "AUS", None),
+        ("ILS", "ISR", None),
+        ("CHF", "CHE", None),
+        ("MAD", "MAR", None),
+        ("ANG", "CUW", None),
+        ("XPF", "PYF", None),
+        ("XOF", "NER", None),
+        ("XCD", "GRD", None),
+        ("XAF", "CAF", None),
+        ("YEA", KeyError, "Unsupported currency code"),
     ],
 )  # type: ignore
-def test_get_country_from_currency(input_currency: str, expected_country: str) -> None:
+def test_get_country_from_currency(
+    input_currency: str,
+    expected_country: str | KeyError,
+    expected_exception_message: str | None,
+) -> None:
     """Verify that the country(ies) ISO3 code(s) are correctly returned for a given currency ISO3 code."""
-    result = td.Currencies.get_country_from_currency(input_currency)
-    assert result == expected_country, (
-        f"Expected {expected_country} but got {result} for currency {input_currency}"
-    )
+    if isinstance(expected_country, type) and expected_country is KeyError:
+        with pytest.raises(KeyError, match=expected_exception_message):
+            td.Currencies.get_country_from_currency(input_currency)
+    else:
+        result = td.Currencies.get_country_from_currency(input_currency)
+        assert result == expected_country, (
+            f"Expected {expected_country} but got {result} for currency {input_currency}"
+        )

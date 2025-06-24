@@ -162,6 +162,7 @@ class Currencies:
 
     PYDEFLATE_BASE_PATH = pathlib.Path(__file__).resolve().parent
     CURRENCY_UNIT_DEFAULT_FORMAT = r"([A-Z]{3})_(\d{4})"
+    _currency_countries_cache: dict[str, list[str]] = {}
 
     @staticmethod
     def get_country_from_currency(currency_code: str) -> str:
@@ -171,9 +172,14 @@ class Currencies:
         This method accesses a predefined dictionary of countries from the hdx package and their corresponding
         currencies, and returns a list of countries that use the specified currency.
 
-        Given the fact that the Euro and US Dollar are used in several countries, the method returns:
-        EUR -> EUR
-        USD -> USD
+        Moreover, it handles special cases (like EUR/USD) and proxies for multi-country currencies
+        according to defined selection criteria based on economic indicators.
+
+        Currency to Country Mapping Rules:
+            - EUR/USD: Return currency code itself (special pydeflate handling)
+            - GBP/NZD/etc: Return largest economy in currency zone
+            - Regional currencies (XAF/XOF/XCD/XPF): Proxy countries based on inflation alignment
+            - Others: First country found using the currency in HDX data
 
         Parameters
         ----------
@@ -188,22 +194,24 @@ class Currencies:
         Raises
         ------
         KeyError
-            If the currency_code is not found in the currency data.
+            If currency code is not found in either special cases or HDX data
 
         Examples
         --------
         >>> Currencies.get_country_from_currency("AFN")
         "AFG"
+        >>> Currencies.get_country_from_currency("USD")
+        "USD"
 
         """
-        hdx_currency_dict = Country.countriesdata()["currencies"]
-        currency_countries: dict[str, list[str]] = {}
-        # Populate the new dictionary
-        for country, currency in hdx_currency_dict.items():
-            if currency is not None:
-                if currency not in currency_countries.keys():
-                    currency_countries[currency] = []
-                currency_countries[currency].append(country)
+        # Response cache - builds only on first call
+        if len(Currencies._currency_countries_cache) == 0:
+            hdx_currency_dict = Country.countriesdata()["currencies"]
+            for country, currency in hdx_currency_dict.items():
+                if currency is not None:
+                    if currency not in Currencies._currency_countries_cache.keys():
+                        Currencies._currency_countries_cache[currency] = []
+                    Currencies._currency_countries_cache[currency].append(country)
 
         # Handle special cases for specific currency codes
         special_cases = {
@@ -225,12 +233,11 @@ class Currencies:
 
         # Return the special case if it exists
         if currency_code in special_cases:
-            output_country = special_cases[currency_code]
-        elif currency_code not in currency_countries.keys():
-            raise KeyError(f"Currency code {currency_code} is not supported")
+            return special_cases[currency_code]
+        elif currency_code not in Currencies._currency_countries_cache:
+            raise KeyError(f"Unsupported currency code {currency_code}")
         else:
-            output_country = currency_countries.get(currency_code, "")[0]
-        return output_country
+            return Currencies._currency_countries_cache[currency_code][0]
 
     @staticmethod
     def extract_currency_unit(
