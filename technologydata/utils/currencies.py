@@ -164,7 +164,7 @@ class Currencies:
     CURRENCY_UNIT_DEFAULT_FORMAT = r"([A-Z]{3})_(\d{4})"
 
     @staticmethod
-    def get_country_from_currency(currency_code: str) -> list[str]:
+    def get_country_from_currency(currency_code: str) -> str:
         """
         Retrieve a list of country ISO3 codes associated with a given currency code.
 
@@ -172,8 +172,8 @@ class Currencies:
         currencies, and returns a list of countries that use the specified currency.
 
         Given the fact that the Euro and US Dollar are used in several countries, the method returns:
-        EUR -> [EUR]
-        USD -> [USD]
+        EUR -> EUR
+        USD -> USD
 
         Parameters
         ----------
@@ -182,8 +182,8 @@ class Currencies:
 
         Returns
         -------
-        list[str]
-            A list of ISO3 country codes that use the specified currency. If the currency code is not found, an empty list is returned.
+        str
+            ISO3 country code that use the specified currency.
 
         Raises
         ------
@@ -193,7 +193,7 @@ class Currencies:
         Examples
         --------
         >>> Currencies.get_country_from_currency("AFN")
-        ["AFG"]
+        "AFG"
 
         """
         hdx_currency_dict = Country.countriesdata()["currencies"]
@@ -205,14 +205,32 @@ class Currencies:
                     currency_countries[currency] = []
                 currency_countries[currency].append(country)
 
-        if currency_code in ["EUR", "USD"]:
-            output_currency_list = [currency_code]
-        elif currency_code == "GBP":
-            output_currency_list = ["GBR"]
-        else:
-            output_currency_list = currency_countries[currency_code]
+        # Handle special cases for specific currency codes
+        special_cases = {
+            "EUR": "EUR",  # special code in pydeflate
+            "USD": "USD",  # special code in pydeflate
+            "GBP": "GBR",  # Based on GDP, pop
+            "NZD": "NZL",  # Based on GDP, pop
+            "NOK": "NOR",  # Based on GDP, pop
+            "AUD": "AUS",  # Based on GDP, pop
+            "ILS": "ISR",  # Based on GDP, pop
+            "CHF": "CHE",  # Based on GDP, pop
+            "MAD": "MAR",  # Based on GDP, pop
+            "ANG": "CUW",  # Based on GDP, pop; Issue in hdx, since 04/2025 ANG and CUW use XCG (XCG is not supported by `pydeflate` and hdx yet)
+            "XPF": "PYF",  # Missing data for "NCL", "WLF" for a range of years in World Bank data / "pydeflate"
+            "XOF": "NER",  # Chosen as proxy, because the difference between NER inflation and unweighted-average inflation rate of all XOF member countries is the lowest for 2015-2023 (XOF average: 1.180816, NER: 1.173449)
+            "XCD": "GRD",  # Chosen as proxy, because the difference between GRD inflation and unweighted-average inflation rate of all XCD member countries is the lowest for 2015-2023 (XCD average: 1.147741, GRD: 1.156121)
+            "XAF": "CAF",  # Chosen as proxy, because the difference between CAF inflation and unweighted-average inflation rate of all XAF member countries is the lowest for 2015-2023 (XAF average: 1.300318, CAF: 1.277488)
+        }
 
-        return output_currency_list
+        # Return the special case if it exists
+        if currency_code in special_cases:
+            output_country = special_cases[currency_code]
+        elif currency_code not in currency_countries.keys():
+            raise KeyError(f"Currency code {currency_code} is not supported")
+        else:
+            output_country = currency_countries.get(currency_code, "")[0]
+        return output_country
 
     @staticmethod
     def extract_currency_unit(
@@ -511,9 +529,9 @@ class Currencies:
                 currency_rows["currency_year"]
             ).astype(int)
 
-        target_country = Currencies.get_country_from_currency(target_currency)[0]
+        target_country = Currencies.get_country_from_currency(target_currency)
         currency_rows["source_country"] = currency_rows["currency_code"].apply(
-            lambda c: Currencies.get_country_from_currency(c)[0]
+            lambda c: Currencies.get_country_from_currency(c)
             if Currencies.get_country_from_currency(c)
             else None
         )

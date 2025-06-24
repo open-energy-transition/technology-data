@@ -201,21 +201,30 @@ def test_adjust_currency(
 
 
 @pytest.mark.parametrize(
-    "input_currency, expected_countries_list",
+    "input_currency, expected_country",
     [
-        ("AFN", ["AFG"]),
-        ("XOF", ["BEN", "BFA", "CIV", "GNB", "MLI", "NER", "SEN", "TGO"]),
-        ("EUR", ["EUR"]),
-        ("USD", ["USD"]),
-        ("CNY", ["CHN"]),
-        ("GBP", ["GBR"]),
+        ("AFN", "AFG"),
+        ("CNY", "CHN"),
+        ("EUR", "EUR"),
+        ("USD", "USD"),
+        ("GBP", "GBR"),
+        ("NZD", "NZL"),
+        ("NOK", "NOR"),
+        ("AUD", "AUS"),
+        ("ILS", "ISR"),
+        ("CHF", "CHE"),
+        ("MAD", "MAR"),
+        ("ANG", "CUW"),
+        ("XPF", "PYF"),
+        ("XOF", "NER"),
+        ("XCD", "GRD"),
+        ("XAF", "CAF"),
+        ("YEA", ""),
     ],
 )  # type: ignore
-def test_get_country_from_currency(
-    input_currency: str, expected_countries_list: list[str]
-) -> None:
+def test_get_country_from_currency(input_currency: str, expected_country: str) -> None:
     """Verify that the country(ies) ISO3 code(s) are correctly returned for a given currency ISO3 code."""
     result = td.Currencies.get_country_from_currency(input_currency)
-    assert result == expected_countries_list, (
-        f"Expected {expected_countries_list} but got {result} for currency {input_currency}"
+    assert result == expected_country, (
+        f"Expected {expected_country} but got {result} for currency {input_currency}"
     )
