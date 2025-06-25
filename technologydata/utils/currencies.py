@@ -192,7 +192,7 @@ class Currencies:
 
         Raises
         ------
-        KeyError
+        ValueError
             If currency code is not found in either special cases or HDX data
 
         Examples
