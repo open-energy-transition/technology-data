@@ -26,4 +26,5 @@ jobs:
         uv sync
 
     - name: Run unit tests
-      run: pytest test
+      run: |
+        uv run pytest && uv run coverage xml
