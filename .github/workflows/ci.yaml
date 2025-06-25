@@ -19,11 +19,11 @@ jobs:
       with:
         python-version: '3.13'
 
-    - name: Install uv
-      run: pip install uv
-
-    - name: Install dependencies with uv (including the package)
-      run: uv sync
+    - name: Install package and dependencies
+      run: |
+        python -m pip install uv
+        uv lock
+        uv sync
 
     - name: Run unit tests
       run: pytest test
