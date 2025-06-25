@@ -279,7 +279,7 @@ class Technologies:
 
             scaling factor = (to_capacity / original capacity) ** (scaling_exponent - 1)
 
-        The scaling factor is applied to all parameters specified in the `parameters['scaling']` list.
+        The scaling factor is applied to all parameters specified in by `scaled_parameters`.
         The parameters affected by the scaling factor are the ones that are typically related to specific values, such as 'specific-investment' or 'specific-capex';
         these parameters are defined through the `scaling_parameters` argument.
 
@@ -350,7 +350,7 @@ class Technologies:
                 group_df.loc[mask, "value"] *= scaling_factor
 
             else:
-                logger.error(
+                raise ValueError(
                     f"Multiple rows with parameter='capacity' found for technology {group_keys}. Skipping scaling for this technology."
                 )
 
