@@ -194,7 +194,11 @@ def test_adjust_year_linear_extrapolation(
             "World Bank",
             {
                 "output_CNY_2020": pathlib.Path(
-                    "test", "test_adjust_functions", "currency_conversion01", "output", "WB_CNY_2020",
+                    "test",
+                    "test_adjust_functions",
+                    "currency_conversion01",
+                    "output",
+                    "WB_CNY_2020",
                 ),
             },
         ),

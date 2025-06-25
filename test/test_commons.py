@@ -1,13 +1,10 @@
 """Test the utility methods."""
 
-import pathlib
 from typing import Any
 
 import pytest
 
 import technologydata as td
-
-path_cwd = pathlib.Path.cwd()
 
 
 @pytest.mark.parametrize(
