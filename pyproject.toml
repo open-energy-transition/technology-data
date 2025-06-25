@@ -55,9 +55,6 @@ docs = [
     "mkdocstrings>=0.29.1",
     "mkdocstrings-python>=1.16.11",
 ]
-dev = [
-    "coverage",
-]
 
 
 # Setuptools_scm settings
@@ -70,17 +67,6 @@ version_scheme = "no-guess-dev"
 
 [tool.setuptools.packages.find]
 include = ["technologydata"]
-
-# Coverage settings
-
-[tool.coverage.run]
-branch = true
-source = ["pypsa"]
-omit = ["test/*"]
-[tool.coverage.report]
-exclude_also = [
-    "if TYPE_CHECKING:",
-]
 
 # Static type checker settings
 
