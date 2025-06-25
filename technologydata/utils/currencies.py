@@ -160,7 +160,9 @@ class Currencies:
 
     """
 
-    PYDEFLATE_BASE_PATH = pathlib.Path(__file__).resolve().parent
+    PYDEFLATE_BASE_PATH = pathlib.Path(
+        pathlib.Path(__file__).resolve().parent, "pydeflate"
+    )
     CURRENCY_UNIT_DEFAULT_FORMAT = r"([A-Z]{3})_(\d{4})"
     _currency_countries_cache: dict[str, list[str]] = {}
 
@@ -443,7 +445,7 @@ class Currencies:
         target_currency: str,
         data: pd.DataFrame,
         deflator_function_name: str = "World Bank",
-        pydeflate_path: pathlib.Path = pathlib.Path(PYDEFLATE_BASE_PATH, "pydeflate"),
+        pydeflate_path: pathlib.Path = PYDEFLATE_BASE_PATH,
         separator: str = "_",
     ) -> pd.DataFrame:
         """
