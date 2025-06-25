@@ -260,8 +260,8 @@ class Technologies:
                 base_year, currency, self.data, source
             )
         else:
-            ValueError(
-                "The target currency unit does not match the requested format `<3-letter currency code>-<year>`."
+            raise ValueError(
+                "The target currency unit does not match the requested format `<3-letter currency code>_<year>`."
             )
 
     def adjust_scale(

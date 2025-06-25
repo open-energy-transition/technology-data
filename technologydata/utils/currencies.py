@@ -242,7 +242,7 @@ class Currencies:
             if len(Currencies._currency_countries_cache[currency_code]) == 1:
                 return Currencies._currency_countries_cache[currency_code][0]
             else:
-                raise ValueError(
+                raise KeyError(
                     f"The currency {currency_code} corresponds to more than one country. Namely: {Currencies._currency_countries_cache[currency_code]}"
                 )
 
