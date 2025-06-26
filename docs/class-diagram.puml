@@ -137,7 +137,7 @@ end note
 Container <|-- TechnologyContainer
 Container <|-- SourceContainer
 Technology --> "1" SourceContainer : based on
-Technology --> "*" UnitValue : uses for its' members
+Technology --> "*" UnitValue : uses for its members
 TechnologyContainer --> "*" Technology : consists of
 SourceContainer --> "*" Source : consists of
 Datapackage --> "1" SourceContainer : contains
