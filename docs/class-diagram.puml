@@ -49,13 +49,13 @@ class Technology {
 }
 
 note right of Technology::inputs
-    A technology generall represents an conversion between
+    A technology generally represents a conversion between
     an input and an output. These are all the inputs, e.g.
     quantity of water and electricity.
 end note
 
 note right of Technology::outputs
-    A technology generall represents an conversion between
+    A technology generally represents a conversion between
     an input and an output. These are all the outputs, e.g.
     quantity hydrogen, oxygen and heat.
 end note
