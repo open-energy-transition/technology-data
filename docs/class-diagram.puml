@@ -124,7 +124,7 @@ class Datapackage {
 }
 
 note right of Datapackage::name
-  Currently we use "source" as an reference to pre-packaged data and for a column in "technologies.csv".
+  Currently we use "source" as a reference to pre-packaged data and for a column in "technologies.csv".
   The Datapackage.name would substitute for referencing to pre-packaged data, e.g. "example01" would be
   a packaged data included with `technologydata`.
 end note
