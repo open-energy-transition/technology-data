@@ -14,10 +14,18 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
 
+    - name: Cache pydeflate data
+      uses: actions/cache@v4
+      with:
+        path: technologydata/utils/pydeflate
+        key: ${{ runner.os }}-pydeflate-${{ hashFiles('technologydata/utils/pydeflate/*') }}
+        restore-keys: |
+          ${{ runner.os }}-pydeflate-
+
     - name: Set up Python
       uses: actions/setup-python@v5
       with:
-        python-version: '3.13'
+        python-version: "3.13"
 
     - name: Install package and dependencies
       run: |
