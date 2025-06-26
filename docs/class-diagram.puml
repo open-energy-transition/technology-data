@@ -1,0 +1,145 @@
+@startuml
+class UnitValue {
+  - value: float
+  - unit: str
+}
+
+class Source {
+  - name: str
+  - authors: str
+  - url: str
+  - url_archive: str
+  - urldate: str
+  - urldate_archive: str
+
+  + store_in_wayback()
+  + retrieve_from_wayback()
+}
+
+note right of Source::store_in_wayback
+  Stores the source in the Internet Archive's Wayback Machine,
+  to keep it accessible in the future.
+end note
+
+note right of Source::retrieve_from_wayback
+  Retrieves the archive of the source, e.g., from a URL.
+end note
+
+class Technology {
+  - region: str
+  - case: str
+  - year: int
+  - technology: str
+  - detailed_technology: str
+  - capacity: UnitValue
+  - investment: UnitValue
+  - specific_investment: UnitValue
+  - lifetime: UnitValue
+  - vom: UnitValue
+  - wacc: UnitValue
+  - inputs: List<UnitValue>
+  - outputs: List<UnitValue>
+
+  + adjust_currency(): Technology
+  + adjust_region(): Technology
+  + adjust_scale(): Technology
+  + calculate_EAC(): UnitValue
+  + calculate_efficiency(): UnitValue
+  + calculate_specific_investment(): UnitValue
+}
+
+note right of Technology::inputs
+    A technology generall represents an conversion between
+    an input and an output. These are all the inputs, e.g.
+    quantity of water and electricity.
+end note
+
+note right of Technology::outputs
+    A technology generall represents an conversion between
+    an input and an output. These are all the outputs, e.g.
+    quantity hydrogen, oxygen and heat.
+end note
+
+note right of Technology::adjust_currency
+  Changes the currency used by all attributes using currencies.
+end note
+
+note right of Technology::adjust_region
+  Based on yet-to-be-determined logic and inputs, change the
+  attributes of the Technology to match a different region.
+end note
+
+note right of Technology::adjust_scale
+  Scales some members values (e.g., capacity, investment) to a
+  different capacity based on a scaling factor.
+end note
+
+note right of Technology::calculate_EAC
+  The `calculate_XXX` methods use attributes from the
+  Technology object to calculate the values of missing attributes
+  (or potentially calculate and then compare with current values
+  to check for consistency).
+end note
+
+class Container {
+  - schema_name: str
+  - schema_path: Path
+  + to_csv()
+  + to_excel()
+}
+
+class TechnologyContainer {
+
+  + create_projection(): TechnologyContainer
+  ' TODO: Think about more methods here
+}
+
+note right of Container::to_csv
+  Export the data to a csv file for sharing / usage in e.g. Excel, ... .
+  Aligned with datapackage schema.
+  e.g. all {technology} or {source} objects.
+  Like the current Technologies(...).to_csv() method.
+end note
+
+note right of Container::to_excel
+  Export all the data to a excel file for usage in Excel and similar tools, ... .
+  Aligned with datapackage schema.
+end note
+
+class SourceContainer {
+
+  + retrieve_all_archives()
+}
+
+note right of SourceContainer::retrieve_all_archives
+  Triggers the retrieve_from_wayback method for all sources
+  and stores the files locally.
+end note
+
+
+class Datapackage {
+  - name: str
+  - path: Path
+  + to_datapackage()
+}
+
+note right of Datapackage::name
+  Currently we use "source" as an reference to pre-packaged data and for a column in "technologies.csv".
+  The Datapackage.name would substitute for referencing to pre-packaged data, e.g. "example01" would be
+  a packaged data included with `technologydata`.
+end note
+
+note right of Datapackage::to_datapackage
+  Exports all member Source and TechnologyContainer to a folder following the datapackage
+  specification, including the schema .json files and the .csv files.
+end note
+
+Container <|-- TechnologyContainer
+Container <|-- SourceContainer
+Technology --> "1" SourceContainer : based on
+Technology --> "*" UnitValue : uses for its' members
+TechnologyContainer --> "*" Technology : consists of
+SourceContainer --> "*" Source : consists of
+Datapackage --> "1" SourceContainer : contains
+Datapackage --> "1" TechnologyContainer : contains
+@enduml
