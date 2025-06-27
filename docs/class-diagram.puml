@@ -26,13 +26,15 @@ note right of Source::retrieve_from_wayback
 end note
 
 class Parameter {
-  - value: float
-  - unit: str
+  - quantity: UnitValue
   - sources: SourceContainer
 }
 
+Parameter --> UnitValue : quantity
+
 note right of Parameter
-  Encapsulates a value, its unit, and its provenance (source).
+  Encapsulates a value, its unit (via UnitValue, as quantity),
+  data provenance (via sources).
 end note
 
 class Technology {
