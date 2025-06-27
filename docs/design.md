@@ -256,3 +256,57 @@ tech["EAC"].value  # Access the calculated EAC parameter value
 
 -
 
+### 🧾 UC-004: Compare techno-economic indicators across datasets
+
+#### 🧑‍💻 Actor(s)
+- **Primary**: Energy Analyst, Energy System Modeller
+
+#### 🎯 Goal
+Enable the user to systematically compare key techno-economic parameters (e.g., CAPEX, OPEX, efficiency) across multiple harmonized datasets in a tabular format.
+
+#### 📚 Pre-conditions
+- Two or more `Technology` objects available as `TechnologyContainer` or `DataPackage` objects
+- User knows which parameters and technologies to compare
+
+#### 🚦 Trigger
+- User wants to compare indicators across datasets for quality control, reporting, or analysis
+
+#### 🧵 Main Flow
+
+1. User selects datasets for comparison and technologies based on similar features, e.g. the same technology name.
+2. User aligns datasets on specified parameters.
+3. User generates a comparison table (e.g., pandas DataFrame) showing values from each dataset side by side.
+4. User reviews the DataFrame, exports it for further analysis and optionally creates visualizations using external tools.
+
+#### 🔁 Alternate Flows
+
+- **Manually created comparison**: User can manually create a comparison table by selecting specific parameters and technologies individually through their `.values` attributes.
+
+#### ✅ Post-conditions
+- Tabular comparison of selected parameters across datasets is available for review and export.
+
+#### 🧪 Sample Input/Output
+
+```python
+from technologydata import DataPackage
+
+dp = DataPackage([dp1, dp2])
+
+techs = dp.technologies
+
+techs = techs.get(technology="Solar PV", region="EUR")
+comparison_df.to_dataframe()
+
+techs["lifetime"].values  # Access lifetime values across technologies
+```
+
+#### 📊 Importance & Frequency
+
+* Importance: Medium
+* Usage Frequency: Regular, especially for data quality checks and exploring values to be included into a model
+
+#### 📌 Notes
+
+* Tabular comparison is the core feature; visualizations can be build on top of the DataFrame by the user themselves.
+* Optional: Outlier detection and summary statistics could be a nice feature, but are also part of `pandas` already, so we can put this into the documentation as a suggestion for the user to explore themselves.
+
