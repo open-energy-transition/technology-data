@@ -25,27 +25,37 @@ note right of Source::retrieve_from_wayback
   Retrieves the archive of the source, e.g., from a URL.
 end note
 
+class Parameter {
+  - value: float
+  - unit: str
+  - sources: SourceContainer
+}
+
+note right of Parameter
+  Encapsulates a value, its unit, and its provenance (source).
+end note
+
 class Technology {
   - region: str
   - case: str
   - year: int
   - technology: str
   - detailed_technology: str
-  - capacity: UnitValue
-  - investment: UnitValue
-  - specific_investment: UnitValue
-  - lifetime: UnitValue
-  - vom: UnitValue
-  - wacc: UnitValue
-  - inputs: List<UnitValue>
-  - outputs: List<UnitValue>
+  - capacity: Parameter
+  - investment: Parameter
+  - specific_investment: Parameter
+  - lifetime: Parameter
+  - vom: Parameter
+  - wacc: Parameter
+  - inputs: List<Parameter>
+  - outputs: List<Parameter>
 
-  + adjust_currency(): Technology
-  + adjust_region(): Technology
-  + adjust_scale(): Technology
-  + calculate_EAC(): UnitValue
-  + calculate_efficiency(): UnitValue
-  + calculate_specific_investment(): UnitValue
+  + adjust_currency(): Technology               // or overwrite the object attributes
+  + adjust_region(): Technology                 // or overwrite the object attributes
+  + adjust_scale(): Technology                  // or overwrite the object attributes
+  + calculate_EAC(): Parameter                  // or set the object attributes
+  + calculate_efficiency(): Parameter           // or set the object attributes
+  + calculate_specific_investment(): Parameter  // or set the object attributes
 }
 
 note right of Technology::inputs
@@ -86,6 +96,7 @@ class Container {
   - schema_path: Path
   + to_csv()
   + to_excel()
+  + to_dataframe()
 }
 
 class TechnologyContainer {
@@ -93,6 +104,13 @@ class TechnologyContainer {
   + create_projection(): TechnologyContainer
   ' TODO: Think about more methods here
 }
+
+note right of TechnologyContainer::create_projection
+  e.g. learning curve, interpolation, extrapolation;
+  based on the Technology objects in the container.
+  Either returns a new TechnologyContainer or adds the 
+  Technology objects to the current container.
+end note
 
 note right of Container::to_csv
   Export the data to a csv file for sharing / usage in e.g. Excel, ... .
@@ -106,6 +124,11 @@ note right of Container::to_excel
   Aligned with datapackage schema.
 end note
 
+note right of Container::to_dataframe
+  Flatten the Container and its members into a pandas DataFrame, that can be manipulated.
+  Dataframe should be compatible with the datapackage schema, such that it can be used for e.g. the to_csv() method.
+end note
+
 class SourceContainer {
 
   + retrieve_all_archives()
@@ -116,10 +139,11 @@ note right of SourceContainer::retrieve_all_archives
   and stores the files locally.
 end note
 
-
 class Datapackage {
   - name: str
   - path: Path
+  - technologies: List<Technology>
+  - sources: List<Source>
   + to_datapackage()
 }
 
@@ -129,6 +153,14 @@ note right of Datapackage::name
   a packaged data included with `technologydata`.
 end note
 
+note right of Datapackage::technologies
+  Derived from the TechnologyContainer.
+end note
+
+note right of Datapackage::sources
+  Derived from all Source objects that are related to the TechnologyContainer (i.e., all sources referenced by technologies and their parameters).
+end note
+
 note right of Datapackage::to_datapackage
   Exports all member Source and TechnologyContainer to a folder following the datapackage
   specification, including the schema .json files and the .csv files.
@@ -136,10 +168,9 @@ end note
 
 Container <|-- TechnologyContainer
 Container <|-- SourceContainer
-Technology --> "1" SourceContainer : based on
-Technology --> "*" UnitValue : uses for its members
+Parameter --> SourceContainer : sources
+Technology --> "*" Parameter : uses for its members
 TechnologyContainer --> "*" Technology : consists of
 SourceContainer --> "*" Source : consists of
-Datapackage --> "1" SourceContainer : contains
 Datapackage --> "1" TechnologyContainer : contains
 @enduml
