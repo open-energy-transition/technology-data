@@ -122,3 +122,72 @@ tech["parameter_name"] = "new_value"  # Update a parameter value
 
 * Consistency logic includes checks for units, and dependency constraints between parameters (e.g. one parameter may be derived from one or more other parameters).
 * Schema-based validation is extensible to new parameter types and sources.
+
+### 🧾 UC-002: Harmonize multiple input datasets  
+
+#### 🧑‍💻 Actor(s)
+- **Primary**: Energy System Modeller, Energy Analyst
+- **Secondary**: Data Engineer
+
+#### 🎯 Goal
+Enable the user to bring multiple techno-economic datasets to a common basis (currency, year, units) using explicit, user-invoked transformation methods, so that they can be compared or combined.
+
+#### 📚 Pre-conditions
+- Python environment with `technologydata` installed
+- One or more Technology objects loaded as `DataPackage` or `TechnologyContainer` objects
+- User is familiar with available transformation methods (e.g., `adjust_currency`, `adjust_scale`, `adjust_region`)
+
+#### 🚦 Trigger
+- User loads multiple datasets and wishes to harmonize them for comparison or integration
+
+#### 🧵 Main Flow
+
+1. User loads datasets (e.g., from JSON, CSV, or DataFrame) into separate `DataPackage` or `TechnologyContainer` objects or creates them programmatically through the package's class interface.
+2. User inspects the datasets to identify differences in currency, year, units, or other conventions.
+3. User applies transformation methods as needed:
+    - `.adjust_currency(target_currency)`
+    - `.adjust_scale(target_capacity, scaling_exponent)`
+    - `.adjust_region(target_region)`
+    - Unit conversions per parameter via Technology or TechnologyContainer level methods
+4. User repeats or chains transformations as required or desired for each dataset.
+5. User verifies harmonization by inspecting key parameters and units.
+6. Harmonized datasets are now ready for comparison, merging, or further analysis.
+
+#### 🔁 Alternate Flows
+
+- **Unsupported transformation**: System raises an error if a requested transformation is not supported due to missing parameters in one or more of the Technology objects.
+- **Partial harmonization**: User can harmonize only a subset of parameters.
+
+#### ✅ Post-conditions
+- All datasets are harmonized to the user-specified conventions, e.g. currency, currency year, units.
+
+#### 🧪 Sample Input/Output
+
+```python
+from technologydata import DataPackage
+
+dp1 = DataPackage.from_json("dataset1.json")
+dp2 = DataPackage.from_json("dataset2.json")
+
+dp1.technologies = dp1.technologies.adjust_currency(to_currency="EUR_2020")
+dp2.technologies = dp2.technologies.adjust_currency(to_currency="EUR_2020")
+dp1.technologies = dp1.technologies.adjust_scale(to_capacity=100, scaling_exponent=0.5)
+dp2.technologies = dp2.technologies.adjust_scale(to_capacity=100, scaling_exponent=0.5)
+
+dp1.technologies = dp1.technologies.adjust_region(to_region="EUR")
+dp2.technologies = dp2.technologies.adjust_region(to_region="EUR")
+
+dp1.technologies = dp1.technologies.adjust_units(parameter="specific-investment", to_unit="EUR/kW")
+# ... further harmonization as needed
+```
+
+#### 📊 Importance & Frequency
+
+* Importance: High
+* Usage Frequency: Frequent, especially when integrating or comparing datasets
+
+#### 📌 Notes
+
+* All harmonization steps are explicit and user-driven; no automatic harmonization is performed.
+* The user is responsible for the order and combination of transformations.
+* Optionally, each transformation could be logged as data provenance, allowing users to trace back the steps taken and record them in e.g. a output file for documentation.
