@@ -203,3 +203,59 @@ dp1.technologies = dp1.technologies.adjust_units(parameter="specific-investment"
 * All harmonization steps are explicit and user-driven; no automatic harmonization is performed.
 * The user is responsible for the order and combination of transformations.
 * Optionally, each transformation could be logged as data provenance, allowing users to trace back the steps taken and record them in e.g. a output file for documentation.
+
+### 🧾 UC-003: Transform assumptions into model-ready formats
+
+#### 🧑‍💻 Actor(s)
+- **Primary**: Energy System Modeller, Programmer
+
+#### 🎯 Goal
+Allow the user to derive and access all model-relevant parameters (e.g., EAC, specific investment) from harmonized data, ready for direct use in energy system models such as PyPSA-Eur.
+
+#### 📚 Pre-conditions
+- One `Technology` object or multiple in a `TechnologyContainer` or `DataPackage` available
+- User knows which parameters are required for the target model
+
+#### 🚦 Trigger
+- User wants to prepare data for model input, e.g., for PyPSA-Eur
+
+#### 🧵 Main Flow
+
+1. User ensures all required base parameters (e.g., WACC, lifetime, investment) are present and harmonized.
+2. User invokes calculation methods to derive model-ready parameters:
+    - `.calculate_parameters(parameters="EAC")`
+    - `.calculate_parameters(parameters="specific-investment")`
+3. System computes and adds the derived parameters to the relevant `Technology` objects.
+4. User accesses the parameters directly from the `Technology` objects for export or further use.
+5. User can export the data to CSV, Excel, or DataFrame using container methods (`to_csv()`, `to_excel()`, `to_dataframe()`).
+
+#### 🔁 Alternate Flows
+
+- **Missing base parameters**: System raises an error if parameters required for the calculation are missing.
+- **Calculation error**: System logs the error and aborts the calculation.
+
+#### ✅ Post-conditions
+- All required model parameters are present and accessible in the `Technology` objects, ready for export or direct use.
+
+#### 🧪 Sample Input/Output
+
+```python
+techs = dp.technologies
+techs = techs.calculate_parameters(parameters=["specific-investment"])
+df = techs.to_dataframe()
+
+tech = techs[0]  # Access a specific Technology object
+tech.calculate_parameters(parameters="EAC")
+tech["EAC"].value  # Access the calculated EAC parameter value
+```
+
+#### 📊 Importance & Frequency
+
+* Importance: High
+* Usage Frequency: Frequent, especially before running model scenarios
+
+#### 📌 Notes
+
+* Output is typically a single value for the calculated parameter, or a DataFrame of all technologies with the calculated parameters
+* The user can define or select which parameters to calculate and export.
+
