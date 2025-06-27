@@ -1,5 +1,15 @@
 # Design
 
+1. [Design](#design)
+    1. [Target audience](#target-audience)
+    2. [Use Cases](#use-cases)
+        1. [🧾 UC-001: Screen techno-economic inputs for validity and completeness](#uc-001-screen-techno-economic-inputs-for-validity-and-completeness)
+        2. [🧾 UC-002: Harmonize multiple input datasets](#uc-002-harmonize-multiple-input-datasets)
+        3. [🧾 UC-003: Transform assumptions into model-ready formats](#uc-003-transform-assumptions-into-model-ready-formats)
+        4. [🧾 UC-004: Compare techno-economic indicators across datasets](#uc-004-compare-techno-economic-indicators-across-datasets)
+        5. [🧾 UC-005: Audit data provenance and transformation trace](#uc-005-audit-data-provenance-and-transformation-trace)
+
+
 `technologydata` is designed for energy system modellers in mind.
 It intendeds to serve common use cases encountered during the design, development and execution of energy system model experiments, such as:
 
@@ -45,8 +55,7 @@ The users differ in their experience with Python and programming in general, we 
 
 Below follow central use cases that we want to serve with `technologydata`.
 
-### 🧾 Use Case ID: UC-001  
-#### Title: Screen techno-economic inputs for validity and completeness
+### 🧾 UC-001: Screen techno-economic inputs for validity and completeness
 
 #### 🧑‍💻 Actor(s)
 - **Primary**: Energy System Modeller, Programmer
