@@ -47,17 +47,25 @@ class Technology {
   - investment: Parameter
   - specific_investment: Parameter
   - lifetime: Parameter
-  - vom: Parameter
   - wacc: Parameter
+  - ...: Parameter  // Just examples, should be able to accommodate any additional parameters
+  // TODO: how to distinguish different inputs/outputs?
+  // Alternative 1:
   - inputs: List<Parameter>
   - outputs: List<Parameter>
+  // Alternative 2:
+  - input-hydrogen: Parameter
+  - input-electricity: Parameter
+  - ...
+  - output-hydrogen: Parameter
+  - output-electricity: Parameter
 
-  + adjust_currency(): Technology               // or overwrite the object attributes
-  + adjust_region(): Technology                 // or overwrite the object attributes
-  + adjust_scale(): Technology                  // or overwrite the object attributes
-  + calculate_EAC(): Parameter                  // or set the object attributes
-  + calculate_efficiency(): Parameter           // or set the object attributes
-  + calculate_specific_investment(): Parameter  // or set the object attributes
+  + adjust_currency(): Technology               // or inplace
+  + adjust_region(): Technology                 // or inplace
+  + adjust_scale(): Technology                  // or inplace
+  + calculate_EAC(): Parameter                  // or inplace
+  + calculate_efficiency(): Parameter           // or inplace
+  + calculate_specific_investment(): Parameter  // or inplace
 }
 
 note right of Technology::inputs
@@ -144,10 +152,19 @@ end note
 class Datapackage {
   - name: str
   - path: Path
-  - technologies: List<Technology>
-  - sources: List<Source>
+  - technologies: TechnologyContainer
+  - sources: SourceContainer
+  - // potentially other Containers in the future
   + to_datapackage()
 }
+
+note top of Datapackage
+  Represents a datapackage, which is a collection of data files
+  and metadata that describes the data.
+  Our package includes pre-packaged data in this format and allows
+  enables to read and write data in this standardised way.
+  Currently implemented through frictionless with .csv and schema.json files.
+end note
 
 note right of Datapackage::name
   Currently we use "source" as a reference to pre-packaged data and for a column in "technologies.csv".
