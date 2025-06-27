@@ -310,3 +310,55 @@ techs["lifetime"].values  # Access lifetime values across technologies
 * Tabular comparison is the core feature; visualizations can be build on top of the DataFrame by the user themselves.
 * Optional: Outlier detection and summary statistics could be a nice feature, but are also part of `pandas` already, so we can put this into the documentation as a suggestion for the user to explore themselves.
 
+### 🧾 UC-005: Audit data provenance and transformation trace
+
+#### 🧑‍💻 Actor(s)
+- **Primary**: Energy System Modeller
+- **Secondary**: Energy Analyst
+
+#### 🎯 Goal
+Allow the user to trace the origin and transformation history of each data point, enabling transparency and reproducibility.
+
+#### 📚 Pre-conditions
+- Data loaded and/or transformed using `technologydata`
+
+#### 🚦 Trigger
+- User requests provenance or transformation history for a specific parameter, object or Container.
+
+#### 🧵 Main Flow
+
+1. User selects a data point, parameter, or technology to audit.
+2. System provides the information about:
+    - Original source(s) of the data (from `Source` and `SourceContainer`)
+    - All transformations applied by our package (e.g., currency adjustment, scaling, calculations, including the values that were used for these transformations)
+3. User can export or document the provenance trace for reporting or documentation.
+
+#### 🔁 Alternate Flows
+
+- **Manually changed information**: If the user made manual changes at some point, then the system only  notifies and provides trace over what was done by the package; User changes are not tracked.
+
+#### ✅ Post-conditions
+- User has access to a detailed provenance and transformation trace for any data point.
+- Reports or logs can be exported for documentation.
+
+#### 🧪 Sample Input/Output
+
+```python
+trace = tech.get_provenance("capex")
+print(trace)
+
+techs = dp.technologies
+techs.to_dataframe() # Includes provenance information in the DataFrame as a dedicated column
+
+dp.to_json("<datapackage_folder>") # Includes provenance information in the JSON output
+```
+
+#### 📊 Importance & Frequency
+
+* Importance: Medium (for transparency and reproducibility)
+* Usage Frequency: Occasional, but critical for future-us, report writing and rapport
+
+#### 📌 Notes
+
+* Only transformations performed by the package are tracked; user-made changes must be recorded manually.
+* Provenance tracking should be automatic and cover all package-driven transformations.
