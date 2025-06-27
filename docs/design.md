@@ -97,7 +97,7 @@ Detect and correct inconsistencies or omissions in techno-economic input data, e
 #### 🧪 Sample Input/Output
 
 ```python
-from technologydata import DataPackage
+from technologydata import DataPackage, Parameter, Technology, Source
 dp = DataPackage.from_json("path/to/data_package") # triggers validation
 techs = dp.technologies # Access the TechnologyContainer
 
@@ -107,10 +107,22 @@ techs = techs.calculate_parameters(parameters=["specific-investment", "eac"])
 tech = techs[0] # Access a specific Technology object
 
 tech.check_consistency()  # Check consistency of a single Technology object
-tech = tech.calculate_parameters(parameters="missing")  # Calculate missing parameters
+tech = tech.calculate_parameters(parameters="<missing>")  # Calculate missing parameters
 
-tech["parameter_name"]  # Access a specific parameter
-tech["parameter_name"] = "new_value"  # Update a parameter value
+# Manually created Technology object
+src = Source(name="A source", url="http://example.com/source")
+src2 = Source(name="Another source", url="http://example.com/source2")
+tech = Technology(
+    name="Example Technology",
+    parameters={
+        "specific-investment": Parameter(value=1000, unit="EUR_2020/kW", sources=src),
+        "investment": Parameter(value=9000, unit="EUR_2020", sources=src2),
+        "lifetime": Parameter(value=20, unit="years", sources=[src,src2])
+    },
+)
+
+print(tech["lifetime"])  # Access and show a specific parameter (value, unit, sources)
+tech["lifetime"].value = 50 # Update a parameter value
 ```
 
 #### 📊 Importance & Frequency
