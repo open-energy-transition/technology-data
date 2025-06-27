@@ -227,7 +227,6 @@ Allow the user to derive and access all model-relevant parameters (e.g., EAC, sp
     - `.calculate_parameters(parameters="specific-investment")`
 3. System computes and adds the derived parameters to the relevant `Technology` objects.
 4. User accesses the parameters directly from the `Technology` objects for export or further use.
-5. User can export the data to CSV, Excel, or DataFrame using container methods (`to_csv()`, `to_excel()`, `to_dataframe()`).
 
 #### 🔁 Alternate Flows
 
@@ -242,7 +241,6 @@ Allow the user to derive and access all model-relevant parameters (e.g., EAC, sp
 ```python
 techs = dp.technologies
 techs = techs.calculate_parameters(parameters=["specific-investment"])
-df = techs.to_dataframe()
 
 tech = techs[0]  # Access a specific Technology object
 tech.calculate_parameters(parameters="EAC")
@@ -256,6 +254,5 @@ tech["EAC"].value  # Access the calculated EAC parameter value
 
 #### 📌 Notes
 
-* Output is typically a single value for the calculated parameter, or a DataFrame of all technologies with the calculated parameters
-* The user can define or select which parameters to calculate and export.
+-
 
