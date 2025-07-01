@@ -4,6 +4,12 @@ class UnitValue {
   - unit: str
 }
 
+note left of UnitValue::unit
+  Unit should be able to accomodate any unit of measurement,
+  currencies+years, LHVs and different energy carriers.
+  e.g. EUR_2020, kWh_electricity, kWh_hydrogen_LHV
+end note
+
 class Source {
   - name: str
   - authors: str
@@ -27,6 +33,8 @@ end note
 
 class Parameter {
   - quantity: UnitValue
+  - provenance: str
+  - note: str
   - sources: SourceContainer
 }
 
@@ -48,12 +56,10 @@ class Technology {
   - specific_investment: Parameter
   - lifetime: Parameter
   - wacc: Parameter
-  - ...: Parameter  // Just examples, should be able to accommodate any additional parameters
-  // TODO: how to distinguish different inputs/outputs?
-  // Alternative 1:
-  - inputs: List<Parameter>
-  - outputs: List<Parameter>
-  // Alternative 2:
+  // Parameters are examples
+  // The user should be able to freely add more parameters
+  - ...: Parameter
+  // To distinguish different inputs/outputs, use prefixes like
   - input-hydrogen: Parameter
   - input-electricity: Parameter
   - ...
