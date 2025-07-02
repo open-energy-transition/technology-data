@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: The technology-data authors
+#
+# SPDX-License-Identifier: MIT
+
 """
 Parameter class for encapsulating a value, its unit, provenance, notes, and sources.
 

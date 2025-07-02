@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: The technology-data authors
+#
+# SPDX-License-Identifier: MIT
+
 """
 Source class for representing bibliographic and web sources, with archiving support.
 

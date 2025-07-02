@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: The technology-data authors
+#
+# SPDX-License-Identifier: MIT
+
 """
 UnitValue class for representing a value with an associated unit.
 
