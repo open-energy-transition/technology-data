@@ -8,24 +8,25 @@ DataPackage class for managing collections of Technology objects and batch opera
 Examples
 --------
 >>> dp = DataPackage.from_json("path/to/data_package.json")
->>> dp.technologies[0].check_consistency()
 
 """
-
+from __future__ import annotations
 import json
-from typing import Any
-
-from pydantic import BaseModel, Field
+from pathlib import Path
+from pydantic import BaseModel
 
 from technologydata.technology import Technology
+from technologydata.technologycollection import TechnologyCollection
 
 
 class DataPackage(BaseModel):
     """
-    Container for a collection of Technology objects, with batch operations and loading utilities.
+    Container for a collection of Technology objects and/or Source objects, with batch operations and loading utilities.
 
     Parameters
     ----------
+    name : str
+        The short-name code of the source
     technologies : List[Technology]
         List of Technology objects.
 
@@ -36,18 +37,19 @@ class DataPackage(BaseModel):
 
     """
 
-    technologies: list[Technology] = Field(
-        default_factory=list, description="List of Technology objects."
-    )
+    name: str
+    path: Path
+    technologies: TechnologyCollection
+    sources: SourceCollection
 
     @classmethod
-    def from_json(cls, path: str) -> "DataPackage":
+    def from_json(cls, path: Path) -> DataPackage:
         """
         Load a DataPackage from a JSON file.
 
         Parameters
         ----------
-        path : str
+        path : Path
             Path to the JSON file.
 
         Returns
@@ -58,38 +60,12 @@ class DataPackage(BaseModel):
         """
         with open(path) as f:
             data = json.load(f)
-        techs = [Technology(**t) for t in data.get("technologies", [])]
-        return cls(technologies=techs)
+        techs = TechnologyCollection([Technology(**t) for t in data.get("technologies", [])])
+        # You should also handle 'name', 'sources', etc. as needed
+        return cls(
+            name=data.get("name", ""),
+            path=path,
+            technologies=techs,
+            sources=SourceCollection(data.get("sources", []))
+        )
 
-    def check_consistency(self) -> dict[int, bool]:
-        """
-        Check consistency for all Technology objects in the package.
-
-        Returns
-        -------
-        Dict[int, bool]
-            Dictionary mapping index to consistency result.
-
-        """
-        return {i: tech.check_consistency() for i, tech in enumerate(self.technologies)}
-
-    def calculate_parameters(self, parameters: Any | None = None) -> "DataPackage":
-        """
-        Calculate parameters for all Technology objects in the package.
-
-        Parameters
-        ----------
-        parameters : Optional[Any]
-            List of parameter names to calculate, or "<missing>" for all missing.
-
-        Returns
-        -------
-        DataPackage
-            A new DataPackage with calculated parameters.
-
-        """
-        techs = [
-            tech.calculate_parameters(parameters=parameters)
-            for tech in self.technologies
-        ]
-        return DataPackage(technologies=techs)
