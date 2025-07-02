@@ -144,7 +144,7 @@ tech["lifetime"].value = 50 # Update a parameter value
 * Consistency logic includes checks for units, and dependency constraints between parameters (e.g. one parameter may be derived from one or more other parameters).
 * Schema-based validation is extensible to new parameter types and sources.
 
-### 🧾 UC-002: Harmonize multiple input datasets  
+### 🧾 UC-002: Harmonize multiple input datasets
 
 #### 🧑‍💻 Actor(s)
 - **Primary**: Energy System Modeller, Energy Analyst

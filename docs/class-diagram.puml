@@ -172,7 +172,7 @@ end note
 note right of TechnologyContainer::create_projection
   e.g. learning curve, interpolation, extrapolation;
   based on the Technology objects in the container.
-  Either returns a new TechnologyContainer or adds the 
+  Either returns a new TechnologyContainer or adds the
   Technology objects to the current container.
 end note
 
