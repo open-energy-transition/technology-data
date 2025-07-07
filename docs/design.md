@@ -1,3 +1,7 @@
+<!--
+SPDX-FileCopyrightText: The technology-data authors
+SPDX-License-Identifier: MIT
+-->
 # Design
 
 1. [Design](#design)

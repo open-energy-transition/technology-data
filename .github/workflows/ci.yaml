@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: The technology-data authors
+#
+# SPDX-License-Identifier: MIT
 name: Technologydata prototype CI
 
 on:

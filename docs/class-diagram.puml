@@ -1,3 +1,8 @@
+/'
+SPDX-FileCopyrightText: The technology-data authors
+SPDX-License-Identifier: MIT
+'/
+
 @startuml Class Diagram
 class UnitValue {
   - value: float

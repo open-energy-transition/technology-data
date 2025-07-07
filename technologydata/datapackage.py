@@ -10,9 +10,12 @@ Examples
 >>> dp = DataPackage.from_json("path/to/data_package.json")
 
 """
+
 from __future__ import annotations
+
 import json
 from pathlib import Path
+
 from pydantic import BaseModel
 
 from technologydata.technology import Technology
@@ -40,6 +43,7 @@ class DataPackage(BaseModel):
     name: str
     path: Path
     technologies: TechnologyCollection
+    sources: SourceCollection
 
     @classmethod
     def from_json(cls, path: Path) -> DataPackage:
@@ -59,13 +63,19 @@ class DataPackage(BaseModel):
         """
         with open(path) as f:
             data = json.load(f)
+        techs = TechnologyCollection(
+            [Technology(**t) for t in data.get("technologies", [])]
+        )
         # TODO: redo this part once an example JSON is available
-        techs = TechnologyCollection([Technology(**t) for t in data.get("technologies", [])])
+        techs = TechnologyCollection(
+            [Technology(**t) for t in data.get("technologies", [])]
+        )
         # You should also handle 'name', 'sources', etc. as needed
         return cls(
             name=data.get("name", ""),
             path=path,
             technologies=techs,
+            sources=SourceCollection(data.get("sources", [])),
         )
 
     @classmethod
