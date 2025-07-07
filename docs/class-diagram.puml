@@ -195,8 +195,7 @@ class Datapackage {
   + to_datapackage()
   + from_json()
   + to_json()
-  + from_csv()
-  + to_csv()
+  + get_source_collection()
 }
 
 note top of Datapackage
@@ -205,12 +204,13 @@ note top of Datapackage
   Our package includes pre-packaged data in this format and allows
   enables to read and write data in this standardised way.
   Currently implemented through frictionless with .csv and schema.json files.
+  Please note that the "sources" field is built in the background from "technologies"
 end note
 
 note right of Datapackage::name
   Currently we use "source" as a reference to pre-packaged data and for a column in "technologies.csv".
   The Datapackage.name would substitute for referencing to pre-packaged data, e.g. "example01" would be
-  a packaged data included with `technologydata`.
+  a packaged data included with `technologydata`. It is meant to be independent of the "TechnologyCollection" or its members.
 end note
 
 note right of Datapackage::technologies
@@ -218,7 +218,7 @@ note right of Datapackage::technologies
 end note
 
 note right of Datapackage::sources
-  Derived from all Source objects that are related to the TechnologyCollection (i.e., all sources referenced by technologies and their parameters).
+  Built in the background with the get_source_collection() method, which derives it from all Source objects that are related to the TechnologyCollection (i.e., all sources referenced by technologies and their parameters).
 end note
 
 note right of Datapackage::to_datapackage

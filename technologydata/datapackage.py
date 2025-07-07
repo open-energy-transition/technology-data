@@ -40,7 +40,6 @@ class DataPackage(BaseModel):
     name: str
     path: Path
     technologies: TechnologyCollection
-    sources: SourceCollection
 
     @classmethod
     def from_json(cls, path: Path) -> DataPackage:
@@ -60,12 +59,19 @@ class DataPackage(BaseModel):
         """
         with open(path) as f:
             data = json.load(f)
+        # TODO: redo this part once an example JSON is available
         techs = TechnologyCollection([Technology(**t) for t in data.get("technologies", [])])
         # You should also handle 'name', 'sources', etc. as needed
         return cls(
             name=data.get("name", ""),
             path=path,
             technologies=techs,
-            sources=SourceCollection(data.get("sources", []))
         )
 
+    @classmethod
+    def to_json(cls, path: Path) -> None:
+        pass
+
+    @classmethod
+    def to_datapackage(cls, path: Path) -> DataPackage:
+        pass
