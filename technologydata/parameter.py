@@ -17,9 +17,8 @@ Examples
 
 from pydantic import BaseModel, Field
 
-from technologydata.source import Source
-from technologydata.unit_value import UnitValue
 from technologydata.source_collection import SourceCollection
+from technologydata.unit_value import UnitValue
 
 
 class Parameter(BaseModel):

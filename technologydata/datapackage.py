@@ -18,8 +18,9 @@ from pathlib import Path
 
 from pydantic import BaseModel
 
+from technologydata.source_collection import SourceCollection
 from technologydata.technology import Technology
-from technologydata.technologycollection import TechnologyCollection
+from technologydata.technology_collection import TechnologyCollection
 
 
 class DataPackage(BaseModel):
