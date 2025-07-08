@@ -19,6 +19,7 @@ from pydantic import BaseModel, Field
 
 from technologydata.source import Source
 from technologydata.unit_value import UnitValue
+from technologydata.source_collection import SourceCollection
 
 
 class Parameter(BaseModel):
@@ -33,7 +34,7 @@ class Parameter(BaseModel):
         Description of the data's provenance.
     note : Optional[str]
         Additional notes about the parameter.
-    sources : Union[Source, List[Source]]
+    sources : SourceCollection
         One or more sources for the parameter.
 
     Attributes
@@ -44,7 +45,7 @@ class Parameter(BaseModel):
         Description of the data's provenance.
     note : Optional[str]
         Additional notes about the parameter.
-    sources : List[Source]
+    sources : SourceCollection
         List of sources for the parameter.
 
     """
@@ -52,14 +53,7 @@ class Parameter(BaseModel):
     quantity: UnitValue = Field(..., description="The value and its unit.")
     provenance: str | None = Field(None, description="Data provenance.")
     note: str | None = Field(None, description="Additional notes.")
-    sources: list[Source] = Field(..., description="List of sources.")
-
-    def __init__(self, **data):
-        # Accept a single Source or list of Sources
-        sources = data.get("sources")
-        if sources is not None and not isinstance(sources, list):
-            data["sources"] = [sources]
-        super().__init__(**data)
+    sources: SourceCollection = Field(..., description="Collection of Sources.")
 
     @property
     def value(self) -> float:
