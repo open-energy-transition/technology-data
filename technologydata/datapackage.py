@@ -13,14 +13,13 @@ Examples
 
 from __future__ import annotations
 
-import json
 from pathlib import Path
 
 from pydantic import BaseModel
 
 from technologydata.source_collection import SourceCollection
-from technologydata.technology import Technology
-#from technologydata.technology_collection import TechnologyCollection
+
+# from technologydata.technology_collection import TechnologyCollection
 
 
 class DataPackage(BaseModel):
@@ -43,7 +42,7 @@ class DataPackage(BaseModel):
 
     name: str
     path: Path
-    #technologies: TechnologyCollection
+    # technologies: TechnologyCollection
     sources: SourceCollection
 
     # @classmethod
