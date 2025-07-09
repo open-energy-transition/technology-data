@@ -11,7 +11,7 @@ from pydantic import BaseModel, Field
 from technologydata.source import Source
 
 
-class SourceCollection(BaseModel):
+class SourceCollection(BaseModel):  # type: ignore
     """
     Represents a collection of sources.
 

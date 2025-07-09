@@ -28,7 +28,7 @@ from pydantic import BaseModel, Field
 from technologydata.parameter import Parameter
 
 
-class Technology(BaseModel):
+class Technology(BaseModel):  # type: ignore
     """
     Represents a technology with region, year, and a flexible set of parameters.
 

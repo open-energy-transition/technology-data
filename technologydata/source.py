@@ -26,7 +26,7 @@ import technologydata as td
 logger = logging.getLogger(__name__)
 
 
-class Source(BaseModel):
+class Source(BaseModel):  # type: ignore
     """
     Represents a data source, including bibliographic and web information.
 
@@ -159,7 +159,7 @@ class Source(BaseModel):
             timestamp = archive_url[0][start_index:end_index]
             output_timestamp = td.Commons.change_datetime_format(
                 timestamp,
-                td.Commons.DateFormatEnum.SOURCES_CSV,
+                td.DateFormatEnum.SOURCES_CSV,
             )
             return archive_url[0], archive_url[1], output_timestamp
         except ValueError:
@@ -220,11 +220,13 @@ class Source(BaseModel):
             logger.warning(
                 f"It was not possible to determine a file path for the source {source_title}."
             )
+            return None
 
         if save_path.is_file():
             logger.warning(
                 f"There is already a file stored at the path {save_path}. Not downloading or overwriting this file."
             )
+            return None
 
         storage_path = self._download_file(self.url_archive, save_path)
         return storage_path

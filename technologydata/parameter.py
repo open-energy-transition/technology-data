@@ -21,7 +21,7 @@ from technologydata.source_collection import SourceCollection
 from technologydata.unit_value import UnitValue
 
 
-class Parameter(BaseModel):
+class Parameter(BaseModel):  # type: ignore
     """
     Encapsulates a value with its unit, provenance, notes, and sources.
 

@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: The technology-data authors
+#
+# SPDX-License-Identifier: MIT
+
 """Test the utility methods."""
 
 from typing import Any

@@ -23,7 +23,7 @@ from pydantic import BaseModel, Field
 ureg = UnitRegistry()
 
 
-class UnitValue(BaseModel):
+class UnitValue(BaseModel):  # type: ignore
     """
     Represents a numerical value with an associated unit of measurement.
 
