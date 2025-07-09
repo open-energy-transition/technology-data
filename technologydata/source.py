@@ -69,7 +69,7 @@ class Source(BaseModel):
     urldate: str | None = Field(None, description="Date the URL was accessed.")
     urldate_archive: str | None = Field(None, description="Date the URL was archived.")
 
-    def ensure_snapshot(self) -> None:
+    def snapshot_url(self) -> None:
         """
         Ensure that the source URL is archived in the Wayback Machine.
 
@@ -91,7 +91,7 @@ class Source(BaseModel):
         --------
         >>> from technologydata import Source
         >>> source = Source(name="Example Source", url="http://example.com")
-        >>> source.ensure_snapshot()
+        >>> source.snapshot_url()
         >>> print(source.url_archive)
         'https://web.archive.org/web/20250708/http://example.com'
 
