@@ -20,7 +20,7 @@ from pydantic import BaseModel
 
 from technologydata.source_collection import SourceCollection
 from technologydata.technology import Technology
-from technologydata.technology_collection import TechnologyCollection
+#from technologydata.technology_collection import TechnologyCollection
 
 
 class DataPackage(BaseModel):
@@ -43,41 +43,41 @@ class DataPackage(BaseModel):
 
     name: str
     path: Path
-    technologies: TechnologyCollection
+    #technologies: TechnologyCollection
     sources: SourceCollection
 
-    @classmethod
-    def from_json(cls, path: Path) -> DataPackage:
-        """
-        Load a DataPackage from a JSON file.
-
-        Parameters
-        ----------
-        path : Path
-            Path to the JSON file.
-
-        Returns
-        -------
-        DataPackage
-            The loaded DataPackage instance.
-
-        """
-        with open(path) as f:
-            data = json.load(f)
-        techs = TechnologyCollection(
-            [Technology(**t) for t in data.get("technologies", [])]
-        )
-        # TODO: redo this part once an example JSON is available
-        techs = TechnologyCollection(
-            [Technology(**t) for t in data.get("technologies", [])]
-        )
-        # You should also handle 'name', 'sources', etc. as needed
-        return cls(
-            name=data.get("name", ""),
-            path=path,
-            technologies=techs,
-            sources=SourceCollection(data.get("sources", [])),
-        )
+    # @classmethod
+    # def from_json(cls, path: Path) -> DataPackage:
+    #     """
+    #     Load a DataPackage from a JSON file.
+    #
+    #     Parameters
+    #     ----------
+    #     path : Path
+    #         Path to the JSON file.
+    #
+    #     Returns
+    #     -------
+    #     DataPackage
+    #         The loaded DataPackage instance.
+    #
+    #     """
+    #     with open(path) as f:
+    #         data = json.load(f)
+    #     techs = TechnologyCollection(
+    #         [Technology(**t) for t in data.get("technologies", [])]
+    #     )
+    #     # TODO: redo this part once an example JSON is available
+    #     techs = TechnologyCollection(
+    #         [Technology(**t) for t in data.get("technologies", [])]
+    #     )
+    #     # You should also handle 'name', 'sources', etc. as needed
+    #     return cls(
+    #         name=data.get("name", ""),
+    #         path=path,
+    #         technologies=techs,
+    #         sources=SourceCollection(data.get("sources", [])),
+    #     )
 
     @classmethod
     def to_json(cls, path: Path) -> None:
