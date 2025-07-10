@@ -185,8 +185,8 @@ end note
 class SourceCollection {
   - sources: Iterable<Source>
   + retrieve_all_archives()
-  + flatten_to_json()
-  + flatten_to_csv()
+  + export_to_json()
+  + export_to_csv()
 }
 
 note left of SourceCollection::retrieve_all_archives
@@ -194,8 +194,8 @@ note left of SourceCollection::retrieve_all_archives
   and stores the files locally.
 end note
 
-note left of SourceCollection::flatten_to_csv
-  Flatten the source collection into a csv/json file.
+note left of SourceCollection::export_to_csv
+  Export the source collection into a csv/json file.
 end note
 
 class Datapackage {
