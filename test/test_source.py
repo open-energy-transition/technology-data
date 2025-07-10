@@ -1,9 +1,12 @@
+# SPDX-FileCopyrightText: The technology-data authors
+#
+# SPDX-License-Identifier: MIT
+
 """Test different ways of loading and initializing the Source and Sources objects."""
 
 import pathlib
 from datetime import datetime
 
-import pandas as pd
 import pytest
 
 import technologydata as td
@@ -15,34 +18,44 @@ path_cwd = pathlib.Path.cwd()
     "example_source",
     [
         {
-            "source_name": "example03",
-            "source_path": pathlib.Path("technologydata", "datasources", "example03"),
-        }
+            "source_title": "atb_nrel",
+            "source_authors": "NREL/ATB",
+            "source_url": "https://oedi-data-lake.s3.amazonaws.com/ATB/electricity/parquet/2024/v3.0.0/ATBe.parquet",
+            "source_url_archive": "https://web.archive.org/web/20250522150802/https://oedi-data-lake.s3.amazonaws.com/ATB/electricity/parquet/2024/v3.0.0/ATBe.parquet",
+            "source_url_date": "2025-05-22 15:08:02",
+            "source_url_date_archive": "2025-05-22 15:08:02",
+        },
+        {
+            "source_title": "tech_data_generation",
+            "source_authors": "Danish Energy Agency",
+            "source_url": "https://ens.dk/media/3273/download",
+            "source_url_archive": "http://web.archive.org/web/20250506160204/https://ens.dk/media/3273/download",
+            "source_url_date": "2025-05-06 16:02:04",
+            "source_url_date_archive": "2025-05-06 16:02:04",
+        },
     ],
     indirect=True,
 )  # type: ignore
-def test_download_file_from_wayback(example_source: td.Source) -> None:
+def test_retrieve_from_wayback(example_source: td.Source) -> None:
     """Check if the example source is downloaded from the Internet Archive Wayback Machine."""
-    storage_paths = example_source.download_file_from_wayback(path_cwd)
+    storage_path = example_source.retrieve_from_wayback(path_cwd)
     # Check if storage_paths is not None and is a list
-    assert storage_paths is not None, (
-        "Expected a valid storage path dictionary, but got None."
+    assert storage_path is not None, "Expected a valid storage path, but got None."
+    assert isinstance(storage_path, pathlib.Path), (
+        "Expected storage_path to be a pathlib.Path."
     )
-    assert isinstance(storage_paths, dict), "Expected storage_paths to be a dict."
-    for storage_path in storage_paths.values():
-        # Check if each storage_path is not None
-        assert storage_path is not None, "Expected a valid storage path, but got None."
-        assert storage_path.is_file(), (
-            f"Expected {storage_path} to be a file, but it does not exist."
-        )
-        # Delete the downloaded file
-        storage_path.unlink(missing_ok=True)
+    assert storage_path is not None, "Expected a valid storage path, but got None."
+    assert storage_path.is_file(), (
+        f"Expected {storage_path} to be a file, but it does not exist."
+    )
+    # Delete the downloaded file
+    storage_path.unlink(missing_ok=True)
 
 
 def test_store_snapshot_on_wayback() -> None:
     """Check if a given url is correctly stored as a snapshot on Internet Archive Wayback Machine."""
     url_to_archive = "https://openenergytransition.org/outputs.html"
-    archived_info = td.Source.store_snapshot_on_wayback(url_to_archive)
+    archived_info = td.Source.store_in_wayback(url_to_archive)
 
     # Check if archived_info is None
     assert archived_info is not None, "archived_info should not be None"
@@ -64,8 +77,9 @@ def test_store_snapshot_on_wayback() -> None:
     "example_source",
     [
         {
-            "source_name": "example04",
-            "source_path": pathlib.Path("technologydata", "datasources", "example04"),
+            "source_title": "OET project page",
+            "source_authors": "Open Energy Transition gGmbH",
+            "source_url": "https://openenergytransition.org/outputs.html",
         },
     ],
     indirect=["example_source"],
@@ -73,17 +87,8 @@ def test_store_snapshot_on_wayback() -> None:
 def test_snapshot_url(example_source: td.Source) -> None:
     # Ensure the snapshot is created
     example_source.snapshot_url()
-
-    assert example_source.details is not None, "Details should not be None"
-    assert "url_archive_date" in example_source.details.columns, (
-        "url_archive_date column is missing"
-    )
-    assert "url_archived" in example_source.details.columns, (
-        "url_archived column is missing"
-    )
-
-    assert pd.isna(example_source.details["url_archive_date"]).sum() == 0
-    assert pd.isna(example_source.details["url_archived"]).sum() == 0
+    assert example_source.url_date_archive is not None
+    assert example_source.url_archive is not None
 
 
 @pytest.mark.parametrize(
