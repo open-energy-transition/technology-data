@@ -4,6 +4,7 @@
 
 """SourceCollection class."""
 
+import csv
 import pathlib
 from collections.abc import Iterator
 
@@ -74,3 +75,45 @@ class SourceCollection(BaseModel):  # type: ignore
         return [
             source.retrieve_from_wayback(download_directory) for source in self.sources
         ]
+
+    def export_to_csv(self, file_path: pathlib.Path) -> None:
+        """
+        Export the SourceCollection to a CSV file.
+
+        Parameters
+        ----------
+        file_path : pathlib.Path
+            The path to the CSV file to be created.
+
+        """
+        with open(file_path, mode="w", newline="", encoding="utf-8") as csvfile:
+            fieldnames = [
+                "title",
+                "authors",
+                "url",
+                "url_archive",
+                "url_date",
+                "url_date_archive",
+            ]
+            writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+
+            # Write the header
+            writer.writeheader()
+
+            # Write each source as a row in the CSV
+            for source in self.sources:
+                writer.writerow(source.model_dump())
+
+    def export_to_json(self, file_path: pathlib.Path) -> None:
+        """
+        Exports the SourceCollection to a JSON file.
+
+        Parameters
+        ----------
+        file_path : pathlib.Path
+            The path to the JSON file to be created.
+
+        """
+        with open(file_path, mode="w", encoding="utf-8") as jsonfile:
+            json_data = self.model_dump_json(indent=4)  # Convert to JSON string
+            jsonfile.write(json_data)
