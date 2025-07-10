@@ -14,7 +14,6 @@ modules in the same directory and subdirectories, promoting code
 reusability and organization.
 """
 
-
 import pathlib
 import sys
 
@@ -33,9 +32,14 @@ def example_source(request: pytest.FixtureRequest) -> td.Source:
     source_title = request.param.get("source_title", "example_source_01")
     source_authors = request.param.get("source_authors", "example_author")
     source_url = request.param.get("source_url", "https://example.com")
-    source_url_archive = request.param.get("source_url_archive", "https://web.archive.org/web/20250522150802/https://example.com")
+    source_url_archive = request.param.get(
+        "source_url_archive",
+        "https://web.archive.org/web/20250522150802/https://example.com",
+    )
     source_url_date = request.param.get("source_url_date", "2025-05-22 15:08:02")
-    source_url_date_archive = request.param.get("source_url_date_archive", "2025-05-22 15:08:02")
+    source_url_date_archive = request.param.get(
+        "source_url_date_archive", "2025-05-22 15:08:02"
+    )
 
     def load_example_source() -> td.Source:
         """Inner function to create the source object."""
