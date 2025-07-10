@@ -52,7 +52,7 @@ def test_retrieve_from_wayback(example_source: td.Source) -> None:
     storage_path.unlink(missing_ok=True)
 
 
-def test_store_snapshot_on_wayback() -> None:
+def test_store_in_wayback() -> None:
     """Check if a given url is correctly stored as a snapshot on Internet Archive Wayback Machine."""
     url_to_archive = "https://openenergytransition.org/outputs.html"
     archived_info = td.Source.store_in_wayback(url_to_archive)
@@ -85,6 +85,7 @@ def test_store_snapshot_on_wayback() -> None:
     indirect=["example_source"],
 )  # type: ignore
 def test_snapshot_url(example_source: td.Source) -> None:
+    """Check if the snapshot URL is created correctly."""
     # Ensure the snapshot is created
     example_source.snapshot_url()
     assert example_source.url_date_archive is not None
