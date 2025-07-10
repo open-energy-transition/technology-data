@@ -123,10 +123,10 @@ tech.check_consistency()  # Check consistency of a single Technology object
 tech = tech.calculate_parameters(parameters="<missing>")  # Calculate missing parameters
 
 # Manually created Technology object
-src = Source(name="A source", url="http://example.com/source")
-src2 = Source(name="Another source", url="http://example.com/source2")
+src = Source(title="A source", url="http://example.com/source")
+src2 = Source(title="Another source", url="http://example.com/source2")
 tech = Technology(
-    name="Example Technology",
+    title="Example Technology",
     parameters={
         "specific-investment": Parameter(value=1000, unit="EUR_2020/kW", sources=src),
         "investment": Parameter(value=9000, unit="EUR_2020", sources=src2),

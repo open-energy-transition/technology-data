@@ -185,11 +185,17 @@ end note
 class SourceCollection {
   - sources: Iterable<Source>
   + retrieve_all_archives()
+  + flatten_to_json()
+  + flatten_to_csv()
 }
 
 note left of SourceCollection::retrieve_all_archives
   Triggers the retrieve_from_wayback method for all sources
   and stores the files locally.
+end note
+
+note left of SourceCollection::flatten_to_csv
+  Flatten the source collection into a csv/json file.
 end note
 
 class Datapackage {

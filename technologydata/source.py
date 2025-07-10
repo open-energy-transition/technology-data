@@ -7,7 +7,7 @@ Source class for representing bibliographic and web sources, with archiving supp
 
 Examples
 --------
->>> src = Source(name="Example Source", url="http://example.com")
+>>> src = Source(title="Example Source", url="http://example.com")
 >>> src.store_in_wayback()
 >>> src.retrieve_from_wayback()
 
@@ -32,42 +32,42 @@ class Source(BaseModel):  # type: ignore
 
     Parameters
     ----------
-    name : str
-        Name of the source.
-    authors : Optional[str]
+    title : str
+        Title of the source.
+    authors : str
         Authors of the source.
     url : Optional[str]
         URL of the source.
     url_archive : Optional[str]
         Archived URL (e.g., from the Wayback Machine).
-    urldate : Optional[str]
+    url_date : Optional[str]
         Date the URL was accessed.
-    urldate_archive : Optional[str]
+    url_date_archive : Optional[str]
         Date the URL was archived.
 
     Attributes
     ----------
-    name : str
-        Name of the source.
-    authors : Optional[str]
+    title : str
+        Title of the source.
+    authors : str
         Authors of the source.
     url : Optional[str]
         URL of the source.
     url_archive : Optional[str]
         Archived URL.
-    urldate : Optional[str]
+    url_date : Optional[str]
         Date the URL was accessed.
-    urldate_archive : Optional[str]
+    url_date_archive : Optional[str]
         Date the URL was archived.
 
     """
 
-    name: str = Field(..., description="Name of the source.")
-    authors: str | None = Field(None, description="Authors of the source.")
+    title: str = Field(..., description="Title of the source.")
+    authors: str = Field(..., description="Authors of the source.")
     url: str | None = Field(None, description="URL of the source.")
     url_archive: str | None = Field(None, description="Archived URL.")
-    urldate: str | None = Field(None, description="Date the URL was accessed.")
-    urldate_archive: str | None = Field(None, description="Date the URL was archived.")
+    url_date: str | None = Field(None, description="Date the URL was accessed.")
+    url_date_archive: str | None = Field(None, description="Date the URL was archived.")
 
     def snapshot_url(self) -> None:
         """
@@ -80,7 +80,7 @@ class Source(BaseModel):  # type: ignore
         Returns
         -------
         None
-            This method updates the Source object's `url_archive` and `urldate_archive` attributes in place.
+            This method updates the Source object's `url_archive` and `url_date_archive` attributes in place.
 
         Raises
         ------
@@ -90,7 +90,7 @@ class Source(BaseModel):  # type: ignore
         Examples
         --------
         >>> from technologydata import Source
-        >>> source = Source(name="Example Source", url="http://example.com")
+        >>> source = Source(title="Example Source", url="http://example.com")
         >>> source.snapshot_url()
         >>> print(source.url_archive)
         'https://web.archive.org/web/20250708/http://example.com'
@@ -98,10 +98,10 @@ class Source(BaseModel):  # type: ignore
         """
         if self.url is None:
             raise ValueError(
-                f"The url attribute of the source {self.name} is not set or contains a NaN value."
+                f"The url attribute of the source {self.title} is not set or contains a NaN value."
             )
 
-        if self.url_archive is None and self.urldate_archive is None:
+        if self.url_archive is None and self.url_date_archive is None:
             archived_info = self.store_in_wayback(self.url)
             if archived_info is not None:
                 archived_url, new_capture_flag, timestamp = archived_info
@@ -113,7 +113,7 @@ class Source(BaseModel):  # type: ignore
                     logger.info(
                         f"There is already a snapshot for the url {self.url} with timestamp {timestamp} and Archive.org url {archived_url}."
                     )
-                self.urldate_archive = timestamp
+                self.url_date_archive = timestamp
                 self.url_archive = archived_url
 
     @staticmethod
@@ -205,13 +205,15 @@ class Source(BaseModel):  # type: ignore
 
         """
         if self.url_archive is None:
-            logger.error(f"The url_archive attribute of source {self.name} is not set.")
+            logger.error(
+                f"The url_archive attribute of source {self.title} is not set."
+            )
             return None
         if download_directory is None:
-            logger.error(f"The base path of the source {self.name} is not set.")
+            logger.error(f"The base path of the source {self.title} is not set.")
             return None
 
-        source_title = td.Commons.replace_special_characters(self.name)
+        source_title = td.Commons.replace_special_characters(self.title)
         save_path = self._get_save_path(
             self.url_archive, download_directory, source_title
         )

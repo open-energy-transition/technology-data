@@ -1,0 +1,116 @@
+"""Test different ways of loading and initializing the Source and Sources objects."""
+
+import pathlib
+from datetime import datetime
+
+import pandas as pd
+import pytest
+
+import technologydata as td
+
+path_cwd = pathlib.Path.cwd()
+
+
+@pytest.mark.parametrize(
+    "example_source",
+    [
+        {
+            "source_name": "example03",
+            "source_path": pathlib.Path("technologydata", "datasources", "example03"),
+        }
+    ],
+    indirect=True,
+)  # type: ignore
+def test_download_file_from_wayback(example_source: td.Source) -> None:
+    """Check if the example source is downloaded from the Internet Archive Wayback Machine."""
+    storage_paths = example_source.download_file_from_wayback(path_cwd)
+    # Check if storage_paths is not None and is a list
+    assert storage_paths is not None, (
+        "Expected a valid storage path dictionary, but got None."
+    )
+    assert isinstance(storage_paths, dict), "Expected storage_paths to be a dict."
+    for storage_path in storage_paths.values():
+        # Check if each storage_path is not None
+        assert storage_path is not None, "Expected a valid storage path, but got None."
+        assert storage_path.is_file(), (
+            f"Expected {storage_path} to be a file, but it does not exist."
+        )
+        # Delete the downloaded file
+        storage_path.unlink(missing_ok=True)
+
+
+def test_store_snapshot_on_wayback() -> None:
+    """Check if a given url is correctly stored as a snapshot on Internet Archive Wayback Machine."""
+    url_to_archive = "https://openenergytransition.org/outputs.html"
+    archived_info = td.Source.store_snapshot_on_wayback(url_to_archive)
+
+    # Check if archived_info is None
+    assert archived_info is not None, "archived_info should not be None"
+
+    archived_url, new_capture, output_timestamp = archived_info
+
+    assert "https://web.archive.org/web/" in archived_url
+    assert url_to_archive in archived_url
+    assert isinstance(new_capture, bool)
+
+    assert output_timestamp is not None, "output_timestamp should not be None"
+    try:
+        datetime.strptime(output_timestamp, td.DateFormatEnum.SOURCES_CSV)
+    except ValueError:
+        pytest.fail("Valid date-time string did not match the format")
+
+
+@pytest.mark.parametrize(
+    "example_source",
+    [
+        {
+            "source_name": "example04",
+            "source_path": pathlib.Path("technologydata", "datasources", "example04"),
+        },
+    ],
+    indirect=["example_source"],
+)  # type: ignore
+def test_snapshot_url(example_source: td.Source) -> None:
+    # Ensure the snapshot is created
+    example_source.snapshot_url()
+
+    assert example_source.details is not None, "Details should not be None"
+    assert "url_archive_date" in example_source.details.columns, (
+        "url_archive_date column is missing"
+    )
+    assert "url_archived" in example_source.details.columns, (
+        "url_archived column is missing"
+    )
+
+    assert pd.isna(example_source.details["url_archive_date"]).sum() == 0
+    assert pd.isna(example_source.details["url_archived"]).sum() == 0
+
+
+@pytest.mark.parametrize(
+    "url_archived, source_path, source_title, expected_path",
+    [
+        (
+            "http://web.archive.org/web/20250506160204/https://ens.dk/media/3273/download",
+            path_cwd,
+            "title",
+            pathlib.Path(path_cwd, "title.pdf"),
+        ),
+        (
+            "https://web.archive.org/web/20250522150802/https://oedi-data-lake.s3.amazonaws.com/ATB/electricity/parquet/2024/v3.0.0/ATBe.parquet",
+            path_cwd,
+            "title",
+            pathlib.Path(path_cwd, "title.parquet"),
+        ),
+    ],
+)  # type: ignore
+def test_get_save_path(
+    url_archived: str,
+    source_path: pathlib.Path,
+    source_title: str,
+    expected_path: pathlib.Path,
+) -> None:
+    """Check if the path where to store the file to download follows the requested pattern."""
+    assert (
+        td.Source._get_save_path(url_archived, source_path, source_title)
+        == expected_path
+    )
