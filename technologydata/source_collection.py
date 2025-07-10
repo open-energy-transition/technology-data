@@ -4,6 +4,7 @@
 
 """SourceCollection class."""
 
+import pathlib
 from collections.abc import Iterator
 
 from pydantic import BaseModel, Field
@@ -17,12 +18,12 @@ class SourceCollection(BaseModel):  # type: ignore
 
     Parameters
     ----------
-    sources : list[Source]
+    sources : List[Source]
         List of Source objects.
 
     Attributes
     ----------
-    sources : list[Source]
+    sources : List[Source]
         List of Source objects.
 
     """
@@ -52,3 +53,24 @@ class SourceCollection(BaseModel):  # type: ignore
 
         """
         return len(self.sources)
+
+    def retrieve_all_archives(
+        self, download_directory: pathlib.Path
+    ) -> list[pathlib.Path | None]:
+        """
+        Download archived files for all sources in the collection using retrieve_from_wayback.
+
+        Parameters
+        ----------
+        download_directory : pathlib.Path
+            The base directory where all files will be saved.
+
+        Returns
+        -------
+        list[pathlib.Path | None]
+            List of paths where each file was stored, or None if download failed for a source.
+
+        """
+        return [
+            source.retrieve_from_wayback(download_directory) for source in self.sources
+        ]

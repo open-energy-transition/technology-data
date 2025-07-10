@@ -2,7 +2,7 @@
 #
 # SPDX-License-Identifier: MIT
 
-"""Test different ways of loading and initializing the Source and Sources objects."""
+"""Test the initialization and methods of the Source class."""
 
 import pathlib
 from datetime import datetime

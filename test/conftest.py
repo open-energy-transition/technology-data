@@ -25,27 +25,39 @@ sys.path.append("./technology-data")
 path_cwd = pathlib.Path.cwd()
 
 
+def create_source_from_params(params: dict[str, str]) -> td.Source:
+    """Helper to create a Source object from a parameter dictionary, with validation."""
+    required_fields = ["source_title", "source_authors"]
+    missing = [f for f in required_fields if f not in params]
+    if missing:
+        raise ValueError(f"Missing required fields for Source: {missing}")
+    return td.Source(
+        title=params["source_title"],
+        authors=params["source_authors"],
+        url=params.get("source_url"),
+        url_archive=params.get("source_url_archive"),
+        url_date=params.get("source_url_date"),
+        url_date_archive=params.get("source_url_date_archive"),
+    )
+
+
 @pytest.fixture(scope="function")  # type: ignore
 def example_source(request: pytest.FixtureRequest) -> td.Source:
     """Fixture to create an example source."""
-    # Fetch the necessary values from the request object
-    source_title = request.param.get("source_title", "example_source_01")
-    source_authors = request.param.get("source_authors", "example_author")
-    source_url = request.param["source_url"]
-    source_url_archive = request.param["source_url_archive"]
-    source_url_date = request.param["source_url_date"]
-    source_url_date_archive = request.param["source_url_date_archive"]
+    return create_source_from_params(request.param)
 
-    def load_example_source() -> td.Source:
-        """Inner function to create the source object."""
-        return td.Source(
-            title=source_title,
-            authors=source_authors,
-            url=source_url,
-            url_archive=source_url_archive,
-            url_date=source_url_date,
-            url_date_archive=source_url_date_archive,
-        )
 
-    # Call the inner function and return the result
-    return load_example_source()
+@pytest.fixture(scope="function")  # type: ignore
+def example_source_collection(request: pytest.FixtureRequest) -> td.SourceCollection:
+    """
+    Fixture to create an example SourceCollection from a list of parameter dicts.
+
+    Each dict in the list must contain the following keys:
+        - source_title
+        - source_authors
+
+    This fixture is compatible with pytest parametrize.
+    """
+    sources_params: list[dict[str, str]] = request.param
+    sources = [create_source_from_params(params) for params in sources_params]
+    return td.SourceCollection(sources=sources)
