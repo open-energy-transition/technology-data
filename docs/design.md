@@ -123,19 +123,20 @@ tech.check_consistency()  # Check consistency of a single Technology object
 tech = tech.calculate_parameters(parameters="<missing>")  # Calculate missing parameters
 
 # Manually created Technology object
-src = Source(title="A source", url="http://example.com/source")
-src2 = Source(title="Another source", url="http://example.com/source2")
+src = Source(title="A source", authors="example authors", url="http://example.com/source")
+src2 = Source(title="Another source", authors="example authors", url="http://example.com/source2")
+params: dict[str, Parameter] = {
+    "efficiency": Parameter(value=0.85, unit="fraction"),
+    "cost": Parameter(value=1500.0, unit="USD/kW"),
+}
 tech = Technology(
-    title="Example Technology",
-    parameters={
-        "specific-investment": Parameter(value=1000, unit="EUR_2020/kW", sources=src),
-        "investment": Parameter(value=9000, unit="EUR_2020", sources=src2),
-        "lifetime": Parameter(value=20, unit="years", sources=[src,src2])
-    },
+    name="Solar Photovoltaic",
+    region="North America",
+    year=2023,
+    parameters=params,
+    case="Best Case",
+    detailed_technology="Monocrystalline Solar Panels"
 )
-
-print(tech["lifetime"])  # Access and show a specific parameter (value, unit, sources)
-tech["lifetime"].value = 50 # Update a parameter value
 ```
 
 #### 📊 Importance & Frequency
