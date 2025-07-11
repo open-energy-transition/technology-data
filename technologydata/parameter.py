@@ -10,7 +10,7 @@ Examples
 >>> from technologydata.unit_value import UnitValue
 >>> from technologydata.source import Source
 >>> uv = UnitValue(value=1000, unit="EUR_2020/kW")
->>> src = Source(name="Example Source", url="http://example.com")
+>>> src = Source(name="Example Source", authors="some authors", url="http://example.com")
 >>> param = Parameter(quantity=uv, provenance="literature", note="Estimated", sources=[src])
 
 """
