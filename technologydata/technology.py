@@ -30,7 +30,7 @@ from technologydata.parameter import Parameter
 
 class Technology(BaseModel):  # type: ignore
     """
-    Represents a technology with region, year, and a flexible set of parameters.
+    Represent a technology with region, year, and a flexible set of parameters.
 
     Parameters
     ----------

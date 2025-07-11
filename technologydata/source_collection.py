@@ -15,7 +15,7 @@ from technologydata.source import Source
 
 class SourceCollection(BaseModel):  # type: ignore
     """
-    Represents a collection of sources.
+    Represent a collection of sources.
 
     Parameters
     ----------
@@ -106,7 +106,7 @@ class SourceCollection(BaseModel):  # type: ignore
 
     def export_to_json(self, file_path: pathlib.Path) -> None:
         """
-        Exports the SourceCollection to a JSON file.
+        Export the SourceCollection to a JSON file.
 
         Parameters
         ----------

@@ -7,7 +7,7 @@ Source class for representing bibliographic and web sources, with archiving supp
 
 Examples
 --------
->>> src = Source(title="Example Source", url="http://example.com")
+>>> src = Source(title="Example Source", authors="The Authors")
 >>> src.store_in_wayback()
 >>> src.retrieve_from_wayback()
 
@@ -28,7 +28,7 @@ logger = logging.getLogger(__name__)
 
 class Source(BaseModel):  # type: ignore
     """
-    Represents a data source, including bibliographic and web information.
+    Represent a data source, including bibliographic and web information.
 
     Parameters
     ----------
@@ -77,6 +77,10 @@ class Source(BaseModel):  # type: ignore
         an archived URL or archive date is already present. If neither is available, it attempts to archive the
         URL using the Wayback Machine and updates the corresponding attributes.
 
+        Parameters
+        ----------
+        None
+
         Returns
         -------
         None
@@ -90,10 +94,13 @@ class Source(BaseModel):  # type: ignore
         Examples
         --------
         >>> from technologydata import Source
-        >>> source = Source(title="Example Source", url="http://example.com")
+        >>> source = Source(url="http://example.com", title="Example Site", authors="The Authors")
         >>> source.snapshot_url()
-        >>> print(source.url_archive)
-        'https://web.archive.org/web/20250708/http://example.com'
+        A new snapshot has been stored for the url http://example.com with timestamp 2023-10-01T12:00:00Z and Archive.org url http://web.archive.org/web/20231001120000/http://example.com.
+        >>> source.url_archive
+        'http://web.archive.org/web/20231001120000/http://example.com'
+        >>> source.url_date_archive
+        '2023-10-01T12:00:00Z'
 
         """
         if self.url is None:
@@ -145,7 +152,7 @@ class Source(BaseModel):  # type: ignore
         --------
         >>> from technologydata import Source
         >>> some_url = "some_url"
-        >>> archived_info = td.Source.store_in_wayback(some_url)
+        >>> archived_info = Source.store_in_wayback(some_url)
 
         """
         archive_url = savepagenow.capture_or_cache(url_to_archive)
@@ -200,8 +207,8 @@ class Source(BaseModel):  # type: ignore
         Examples
         --------
         >>> from technologydata import Source
-        >>> source = Source("example01", "./some/local/path/")
-        >>> storage_path = source.retrieve_from_wayback(pathlib.Path("base_path"))
+        >>> source = Source(title="example01", authors="The Authors")
+        >>> output_path = source.retrieve_from_wayback(pathlib.Path("base_path"))
 
         """
         if self.url_archive is None:

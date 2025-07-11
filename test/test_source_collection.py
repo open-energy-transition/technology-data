@@ -32,6 +32,8 @@ path_cwd = pathlib.Path.cwd()
 def test_example_source_collection(
     example_source_collection: td.SourceCollection,
 ) -> None:
+    """Check if the example source collection is instantiated correctly."""
+
     # Check that the returned object is a SourceCollection
     assert isinstance(example_source_collection, td.SourceCollection)
 

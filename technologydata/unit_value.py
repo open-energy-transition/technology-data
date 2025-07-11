@@ -25,7 +25,7 @@ ureg = UnitRegistry()
 
 class UnitValue(BaseModel):  # type: ignore
     """
-    Represents a numerical value with an associated unit of measurement.
+    Represent a numerical value with an associated unit of measurement.
 
     Parameters
     ----------

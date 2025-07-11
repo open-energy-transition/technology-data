@@ -23,7 +23,7 @@ from technologydata.unit_value import UnitValue
 
 class Parameter(BaseModel):  # type: ignore
     """
-    Encapsulates a value with its unit, provenance, notes, and sources.
+    Encapsulate a value with its unit, provenance, notes, and sources.
 
     Parameters
     ----------

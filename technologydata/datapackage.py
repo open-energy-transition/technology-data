@@ -77,11 +77,11 @@ class DataPackage(BaseModel):  # type: ignore
     #         technologies=techs,
     #         sources=SourceCollection(data.get("sources", [])),
     #     )
-
-    @classmethod
-    def to_json(cls, path: Path) -> None:
-        pass
-
-    @classmethod
-    def to_datapackage(cls, path: Path) -> None:
-        pass
+    #
+    # @classmethod
+    # def to_json(cls, path: Path) -> None:
+    #     pass
+    #
+    # @classmethod
+    # def to_datapackage(cls, path: Path) -> None:
+    #     pass

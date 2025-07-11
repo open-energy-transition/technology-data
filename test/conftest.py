@@ -26,7 +26,43 @@ path_cwd = pathlib.Path.cwd()
 
 
 def create_source_from_params(params: dict[str, str]) -> td.Source:
-    """Helper to create a Source object from a parameter dictionary, with validation."""
+    """
+    Create a Source object from a parameter dictionary with validation.
+
+    This function takes a dictionary of parameters and validates that the required fields are present.
+    If any required fields are missing, a ValueError is raised. If all required fields are present,
+    a new Source object is created and returned.
+
+    Parameters
+    ----------
+    params : dict[str, str]
+        A dictionary containing the parameters for creating a Source object.
+        Must include the keys "source_title" and "source_authors".
+        Other keys are optional.
+
+    Returns
+    -------
+    td.Source
+        A Source object initialized with the provided parameters.
+
+    Raises
+    ------
+    ValueError
+        If any of the required fields ("source_title", "source_authors") are missing from the params.
+
+    Examples
+    --------
+    >>> params_dict = {
+    ...     "source_title": "Example Title",
+    ...     "source_authors": "John Doe",
+    ...     "source_url": "http://example.com",
+    ...     "source_url_archive": "http://web.archive.org/web/20231001120000/http://example.com",
+    ...     "source_url_date": "2023-10-01",
+    ...     "source_url_date_archive": "2023-10-01T12:00:00Z"
+    ... }
+    >>> source = create_source_from_params(params_dict)
+
+    """
     required_fields = ["source_title", "source_authors"]
     missing = [f for f in required_fields if f not in params]
     if missing:
