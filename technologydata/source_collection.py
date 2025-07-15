@@ -5,6 +5,7 @@
 """SourceCollection class."""
 
 import csv
+import json
 import pathlib
 from collections.abc import Iterator
 
@@ -106,7 +107,7 @@ class SourceCollection(BaseModel):  # type: ignore
 
     def export_to_json(self, file_path: pathlib.Path) -> None:
         """
-        Export the SourceCollection to a JSON file.
+        Export the SourceCollection to a JSON file, together with a data schema.
 
         Parameters
         ----------
@@ -114,6 +115,16 @@ class SourceCollection(BaseModel):  # type: ignore
             The path to the JSON file to be created.
 
         """
+
+        schema_path = pathlib.Path(file_path.parent, "source_collection_schema.json")
+
+        # Export the model's schema with descriptions to a dict
+        schema = self.model_json_schema()
+
+        # Save the schema (which includes descriptions) to a JSON file
+        with open(schema_path, 'w') as f:
+            json.dump(schema, f, indent=4)
+
         with open(file_path, mode="w", encoding="utf-8") as jsonfile:
             json_data = self.model_dump_json(indent=4)  # Convert to JSON string
             jsonfile.write(json_data)

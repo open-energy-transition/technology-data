@@ -152,6 +152,9 @@ def test_export_to_csv(example_source_collection: td.SourceCollection) -> None:
 def test_export_to_json(example_source_collection: td.SourceCollection) -> None:
     """Check if the example source collection is exported to JSON."""
     output_file = pathlib.Path(path_cwd, "export.json")
+    schema_file = pathlib.Path(path_cwd, "source_collection_schema.json")
     example_source_collection.export_to_json(pathlib.Path(output_file))
     assert output_file.is_file()
+    assert schema_file.is_file()
     output_file.unlink(missing_ok=True)
+    schema_file.unlink(missing_ok=True)
