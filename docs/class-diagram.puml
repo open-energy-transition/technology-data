@@ -113,52 +113,6 @@ note right of Technology::calculate_EAC
   to check for consistency).
 end note
 
-class Collection {
-  - schema_name: str
-  - schema_path: Path
-  + get(**criteria): object | Collection | None
-  + to_csv()
-  + to_excel()
-  + to_dataframe()
-}
-
-note top of Collection
-  Consider 'Collection' as abstract base class for all Collections
-  for unifying the common export and schema-related functionality
-  required by all data-holding classes.
-end note
-
-note left of Collection::schema_name
-  The name of the schema used for this collection, e.g. currently "technologies" or "sources".
-  This is used to identify the type of data contained in the collection.
-end note
-
-note left of Collection::get
- Provides a generic get(**criteria)
-  method to retrieve contained objects matching selection criteria:
-  - If exactly one object matches, returns that object or a Collection with this one object.
-  - If multiple objects match, returns a Collection of the same type with the matches.
-  - If no matches, returns None or an empty Collection.
-end note
-
-note left of Collection::to_csv
-  Export the data to a csv file for sharing / usage in e.g. Excel, ... .
-  Aligned with datapackage schema.
-  e.g. all {technology} or {source} objects.
-  Like the current Technologies(...).to_csv() method.
-end note
-
-note left of Collection::to_excel
-  Export all the data to a excel file for usage in Excel and similar tools, ... .
-  Aligned with datapackage schema.
-end note
-
-note left of Collection::to_dataframe
-  Flatten the Collection and its members into a pandas DataFrame, that can be manipulated.
-  Dataframe should be compatible with the datapackage schema, such that it can be used for e.g. the to_csv() method.
-end note
-
-
 class TechnologyCollection {
   - technologies: Iterable<Technology>
   + get(**criteria): Technology | TechnologyCollection | None
@@ -238,8 +192,6 @@ note right of Datapackage::to_datapackage
   specification, including the schema .json files and the .csv files.
 end note
 
-Collection <|-- TechnologyCollection
-Collection <|-- SourceCollection
 Parameter --> SourceCollection : sources
 Technology --> "*" Parameter : uses for its members
 TechnologyCollection --> "*" Technology : consists of
