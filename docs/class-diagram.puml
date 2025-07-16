@@ -121,7 +121,6 @@ class TechnologyCollection {
 }
 
 note right of TechnologyCollection::get
-  Implements the generic get method from "Collection" for "TechnologyCollection".
   Filters contained Technology objects by the attributes and returns matches:
   region, case, year, technology, detailed_technology.
   - If exactly one Technology matches, returns that Technology.
