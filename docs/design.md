@@ -112,7 +112,7 @@ Detect and correct inconsistencies or omissions in techno-economic input data, e
 ```python
 from technologydata import DataPackage, Parameter, Technology, Source
 dp = DataPackage.from_json("path/to/data_package") # triggers validation
-techs = dp.technologies # Access the TechnologyContainer
+techs = dp.technologies # Access the TechnologyCollection
 
 techs.check_consistency() # Checks all technologies for consistency
 techs = techs.calculate_parameters(parameters=["specific-investment", "eac"])
@@ -160,7 +160,7 @@ Enable the user to bring multiple techno-economic datasets to a common basis (cu
 
 #### 📚 Pre-conditions
 - Python environment with `technologydata` installed
-- One or more Technology objects loaded as `DataPackage` or `TechnologyContainer` objects
+- One or more Technology objects loaded as `DataPackage` or `TechnologyCollection` objects
 - User is familiar with available transformation methods (e.g., `adjust_currency`, `adjust_scale`, `adjust_region`)
 
 #### 🚦 Trigger
@@ -168,13 +168,13 @@ Enable the user to bring multiple techno-economic datasets to a common basis (cu
 
 #### 🧵 Main Flow
 
-1. User loads datasets (e.g., from JSON, CSV, or DataFrame) into separate `DataPackage` or `TechnologyContainer` objects or creates them programmatically through the package's class interface.
+1. User loads datasets (e.g., from JSON, CSV, or DataFrame) into separate `DataPackage` or `TechnologyCollection` objects or creates them programmatically through the package's class interface.
 2. User inspects the datasets to identify differences in currency, year, units, or other conventions.
 3. User applies transformation methods as needed:
     - `.adjust_currency(target_currency)`
     - `.adjust_scale(target_capacity, scaling_exponent)`
     - `.adjust_region(target_region)`
-    - Unit conversions per parameter via Technology or TechnologyContainer level methods
+    - Unit conversions per parameter via Technology or TechnologyCollection level methods
 4. User repeats or chains transformations as required or desired for each dataset.
 5. User verifies harmonization by inspecting key parameters and units.
 6. Harmonized datasets are now ready for comparison, merging, or further analysis.
@@ -227,7 +227,7 @@ dp1.technologies = dp1.technologies.adjust_units(parameter="specific-investment"
 Allow the user to derive and access all model-relevant parameters (e.g., EAC, specific investment) from harmonized data, ready for direct use in energy system models such as PyPSA-Eur.
 
 #### 📚 Pre-conditions
-- One `Technology` object or multiple in a `TechnologyContainer` or `DataPackage` available
+- One `Technology` object or multiple in a `TechnologyCollection` or `DataPackage` available
 - User knows which parameters are required for the target model
 
 #### 🚦 Trigger
@@ -279,7 +279,7 @@ tech["EAC"].value  # Access the calculated EAC parameter value
 Enable the user to systematically compare key techno-economic parameters (e.g., CAPEX, OPEX, efficiency) across multiple harmonized datasets in a tabular format.
 
 #### 📚 Pre-conditions
-- Two or more `Technology` objects available as `TechnologyContainer` or `DataPackage` objects
+- Two or more `Technology` objects available as `TechnologyCollection` or `DataPackage` objects
 - User knows which parameters and technologies to compare
 
 #### 🚦 Trigger
@@ -337,21 +337,21 @@ Allow the user to trace the origin and transformation history of each data point
 - Data loaded and/or transformed using `technologydata`
 
 #### 🚦 Trigger
-- User requests provenance or transformation history for a specific parameter, object or Container.
+- User requests provenance or transformation history for a specific parameter, object or Collection.
 
 #### 🧵 Main Flow
 
 1. User selects a `parameter` of a `Technology` object.
 2. The user requests the provenance information for that parameter.
 3. System provides the information about:
-    - Original source(s) of the data (from `Source` and `SourceContainer`) of the parameter
+    - Original source(s) of the data (from `Source` and `SourceCollection`) of the parameter
     - All transformations applied by our package (e.g., currency adjustment, scaling, calculations, including the values that were used for these transformations)
 4. User can export or document the provenance trace for reporting or documentation.
 
 #### 🔁 Alternate Flows
 
 - **Manually changed information**: If the user made manual changes at some point, then the system only  notifies and provides trace over what was done by the package; User changes are not tracked.
-- **Requesting provenance for a Technology or TechnologyContainer**: The user can access the provenance information for all parameters of a Technology or TechnologyContainer by exporting it to a DataFrame or JSON.
+- **Requesting provenance for a Technology or TechnologyCollection**: The user can access the provenance information for all parameters of a Technology or TechnologyCollection by exporting it to a DataFrame or JSON.
 
 #### ✅ Post-conditions
 - User has access to a detailed provenance and transformation trace for any data point.
