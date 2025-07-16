@@ -360,7 +360,7 @@ Allow the user to trace the origin and transformation history of each data point
 #### 🧪 Sample Input/Output
 
 ```python
-print(tech["EAC].provenance)
+print(tech["EAC"].provenance)
 
 techs = dp.technologies
 techs.to_dataframe() # Includes provenance information in the DataFrame as a dedicated column

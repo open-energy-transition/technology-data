@@ -6,6 +6,7 @@
 
 import pathlib
 
+import pandas as pd
 import pytest
 
 import technologydata as td
@@ -117,10 +118,10 @@ def test_retrieve_all_archives(example_source_collection: td.SourceCollection) -
     ],
     indirect=True,
 )  # type: ignore
-def test_export_to_csv(example_source_collection: td.SourceCollection) -> None:
+def test_to_csv(example_source_collection: td.SourceCollection) -> None:
     """Check if the example source collection is exported to CSV."""
     output_file = pathlib.Path(path_cwd, "export.csv")
-    example_source_collection.export_to_csv(pathlib.Path(output_file))
+    example_source_collection.to_csv(pathlib.Path(output_file))
     assert output_file.is_file()
     output_file.unlink(missing_ok=True)
 
@@ -149,12 +150,51 @@ def test_export_to_csv(example_source_collection: td.SourceCollection) -> None:
     ],
     indirect=True,
 )  # type: ignore
-def test_export_to_json(example_source_collection: td.SourceCollection) -> None:
+def test_to_json(example_source_collection: td.SourceCollection) -> None:
     """Check if the example source collection is exported to JSON."""
-    output_file = pathlib.Path(path_cwd, "export.json")
+    output_file = pathlib.Path(path_cwd, "sources.json")
     schema_file = pathlib.Path(path_cwd, "source_collection_schema.json")
-    example_source_collection.export_to_json(pathlib.Path(output_file))
+    example_source_collection.to_json(pathlib.Path(output_file))
     assert output_file.is_file()
     assert schema_file.is_file()
     output_file.unlink(missing_ok=True)
     schema_file.unlink(missing_ok=True)
+
+
+@pytest.mark.parametrize(
+    "example_source_collection",
+    [
+        [
+            {
+                "source_title": "atb_nrel",
+                "source_authors": "NREL/ATB",
+                "source_url": "https://oedi-data-lake.s3.amazonaws.com/ATB/electricity/parquet/2024/v3.0.0/ATBe.parquet",
+                "source_url_archive": "https://web.archive.org/web/20250522150802/https://oedi-data-lake.s3.amazonaws.com/ATB/electricity/parquet/2024/v3.0.0/ATBe.parquet",
+                "source_url_date": "2025-05-22 15:08:02",
+                "source_url_date_archive": "2025-05-22 15:08:02",
+            },
+            {
+                "source_title": "tech_data_generation",
+                "source_authors": "Danish Energy Agency",
+                "source_url": "https://ens.dk/media/3273/download",
+                "source_url_archive": "http://web.archive.org/web/20250506160204/https://ens.dk/media/3273/download",
+                "source_url_date": "2025-05-06 16:02:04",
+                "source_url_date_archive": "2025-05-06 16:02:04",
+            },
+        ],
+    ],
+    indirect=True,
+)  # type: ignore
+def test_to_dataframe(example_source_collection: td.SourceCollection) -> None:
+    """Check if the example source collection is exported to pandas dataframe."""
+    assert isinstance(example_source_collection.to_dataframe(), pd.DataFrame)
+
+
+def test_from_json() -> None:
+    """Check if the example source collection is exported to JSON."""
+    input_file = pathlib.Path(
+        path_cwd, "test", "test_data", "solar_photovoltaics_example_03", "sources.json"
+    )
+    source_collection = td.SourceCollection.from_json(input_file)
+    assert isinstance(source_collection, td.SourceCollection)
+    assert len(source_collection) == 2

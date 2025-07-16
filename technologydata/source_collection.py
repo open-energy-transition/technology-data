@@ -9,6 +9,7 @@ import json
 import pathlib
 from collections.abc import Iterator
 
+import pandas as pd
 from pydantic import BaseModel, Field
 
 from technologydata.source import Source
@@ -77,7 +78,19 @@ class SourceCollection(BaseModel):  # type: ignore
             source.retrieve_from_wayback(download_directory) for source in self.sources
         ]
 
-    def export_to_csv(self, file_path: pathlib.Path) -> None:
+    def to_dataframe(self) -> pd.DataFrame:
+        """
+        Convert the SourceCollection to a pandas DataFrame.
+
+        Returns
+        -------
+        pd.DataFrame
+            A DataFrame containing the source data.
+
+        """
+        return pd.DataFrame([source.model_dump() for source in self.sources])
+
+    def to_csv(self, file_path: pathlib.Path) -> None:
         """
         Export the SourceCollection to a CSV file.
 
@@ -87,25 +100,10 @@ class SourceCollection(BaseModel):  # type: ignore
             The path to the CSV file to be created.
 
         """
-        with open(file_path, mode="w", newline="", encoding="utf-8") as csvfile:
-            fieldnames = [
-                "title",
-                "authors",
-                "url",
-                "url_archive",
-                "url_date",
-                "url_date_archive",
-            ]
-            writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+        output_dataframe = self.to_dataframe()
+        output_dataframe.to_csv(file_path, index=False, quoting=csv.QUOTE_NONNUMERIC)
 
-            # Write the header
-            writer.writeheader()
-
-            # Write each source as a row in the CSV
-            for source in self.sources:
-                writer.writerow(source.model_dump())
-
-    def export_to_json(self, file_path: pathlib.Path) -> None:
+    def to_json(self, file_path: pathlib.Path) -> None:
         """
         Export the SourceCollection to a JSON file, together with a data schema.
 
@@ -127,3 +125,18 @@ class SourceCollection(BaseModel):  # type: ignore
         with open(file_path, mode="w", encoding="utf-8") as jsonfile:
             json_data = self.model_dump_json(indent=4)  # Convert to JSON string
             jsonfile.write(json_data)
+
+    @classmethod
+    def from_json(cls, file_path: pathlib.Path) -> "SourceCollection":
+        """
+        Import the SourceCollection from a JSON file.
+
+        Parameters
+        ----------
+        file_path : pathlib.Path
+            The path to the JSON file to be imported.
+
+        """
+        with open(file_path, encoding="utf-8") as jsonfile:
+            json_data = json.load(jsonfile)
+        return cls(**json_data)
