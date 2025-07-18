@@ -146,7 +146,7 @@ class SourceCollection(pydantic.BaseModel):  # type: ignore
             jsonfile.write(json_data)
 
     @classmethod
-    def from_json(cls, file_path: pathlib.Path) -> "SourceCollection":
+    def from_json(cls, file_path: pathlib.Path | str) -> "SourceCollection":
         """
         Import the SourceCollection from a JSON file.
 
@@ -156,6 +156,10 @@ class SourceCollection(pydantic.BaseModel):  # type: ignore
             The path to the JSON file to be imported.
 
         """
+        if isinstance(file_path, pathlib.Path | str):
+            file_path = pathlib.Path(file_path)
+        else:
+            raise TypeError("file_path must be a pathlib.Path or str")
         with open(file_path, encoding="utf-8") as jsonfile:
             json_data = json.load(jsonfile)
         return cls(**json_data)
