@@ -63,10 +63,6 @@ def create_source_from_params(params: dict[str, str]) -> td.Source:
     >>> source = create_source_from_params(params_dict)
 
     """
-    required_fields = ["source_title", "source_authors"]
-    missing = [f for f in required_fields if f not in params]
-    if missing:
-        raise ValueError(f"Missing required fields for Source: {missing}")
     return td.Source(
         title=params["source_title"],
         authors=params["source_authors"],
