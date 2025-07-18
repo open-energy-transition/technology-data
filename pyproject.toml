@@ -13,7 +13,8 @@ keywords = ["energy", "modelling", "techno-economics", "macroeconomics"] # TODO 
 description = "Package for providing common data assumptions for energy system modelling on techno-economics and macro-economics."
 readme = "README.md"
 authors = [
-    { name = "Contributors to technologydata", email = "johannes.hampp@openenergytransition.org" }
+    { name = "Contributors to technologydata", email = "johannes.hampp@openenergytransition.org" },
+    { name = "Contributors to technologydata", email = "fabrizio.finozzi.business@gmail.com" },
 ]
 classifiers=[
     "Programming Language :: Python :: 3.12",
