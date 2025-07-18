@@ -5,7 +5,6 @@ SPDX-PackageDownloadLocation = "https://github.com/pypsa/technology-data"
 
 [[annotations]]
 path = "uv.lock"
-precedence = "override"
 SPDX-FileCopyrightText = "The technology-data authors"
 SPDX-License-Identifier = "MIT"
 
