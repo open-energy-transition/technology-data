@@ -1,7 +1,7 @@
 # SPDX-FileCopyrightText: The technology-data authors
 # SPDX-License-Identifier: MIT
 
-"""Provide classes and utilities for handling techno-economic data for energy system modeling."""
+"""technologydata: A package for managing and analyzing technology data used for energy system models."""
 
 from technologydata.datapackage import DataPackage
 from technologydata.parameter import Parameter

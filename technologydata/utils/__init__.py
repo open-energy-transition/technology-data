@@ -2,7 +2,7 @@
 #
 # SPDX-License-Identifier: MIT
 
-"""technologydata: A package for managing and analyzing technology data used for energy system models."""
+"""Provide classes and utilities for handling techno-economic data for energy system modeling."""
 
 from technologydata.utils.commons import Commons, DateFormatEnum, FileExtensionEnum
 
