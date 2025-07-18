@@ -71,11 +71,11 @@ def test_example_source_collection(
     ],
     indirect=True,
 )  # type: ignore
-def test_retrieve_all_archives(
+def test_retrieve_all_from_wayback(
     example_source_collection: technologydata.SourceCollection,
 ) -> None:
     """Check if the example source collection is downloaded from the Internet Archive Wayback Machine."""
-    storage_paths = example_source_collection.retrieve_all_archives(path_cwd)
+    storage_paths = example_source_collection.retrieve_all_from_wayback(path_cwd)
 
     # Check if storage_paths is not None and is a list
     assert storage_paths is not None, "Expected storage_paths to be not None."

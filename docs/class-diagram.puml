@@ -137,14 +137,14 @@ end note
 
 class SourceCollection {
   - sources: Iterable<Source>
-  + retrieve_all_archives()
+  + retrieve_all_from_wayback()
   + to_json()
   + to_csv()
   + to_dataframe()
   + from_json()
 }
 
-note left of SourceCollection::retrieve_all_archives
+note left of SourceCollection::retrieve_all_from_wayback
   Triggers the retrieve_from_wayback method for all sources
   and stores the files locally.
 end note
