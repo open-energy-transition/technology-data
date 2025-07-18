@@ -11,6 +11,5 @@ SPDX-License-Identifier = "MIT"
 
 [[annotations]]
 path = "test/test_data/*/*"
-precedence = "override"
 SPDX-FileCopyrightText = "The technology-data authors"
 SPDX-License-Identifier = "MIT"
