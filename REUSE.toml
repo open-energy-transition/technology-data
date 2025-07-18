@@ -9,11 +9,6 @@ precedence = "override"
 SPDX-FileCopyrightText = "The technology-data authors"
 SPDX-License-Identifier = "MIT"
 
-[[annotations]]
-path = "technologydata/utils/pydeflate/wb_*.parquet"
-precedence = "override"
-SPDX-FileCopyrightText = "The technology-data authors"
-SPDX-License-Identifier = "CC-BY-4.0"
 
 [[annotations]]
 path = "test/test_data/*/*"
