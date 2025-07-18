@@ -50,9 +50,7 @@ class Parameter(pydantic.BaseModel):  # type: ignore
 
     """
 
-    quantity: UnitValue = pydantic.Field(
-        ..., description="The value and its unit."
-    )
+    quantity: UnitValue = pydantic.Field(..., description="The value and its unit.")
     provenance: str | None = pydantic.Field(None, description="Data provenance.")
     note: str | None = pydantic.Field(None, description="Additional notes.")
     sources: SourceCollection = pydantic.Field(

@@ -30,9 +30,7 @@ class SourceCollection(pydantic.BaseModel):  # type: ignore
 
     """
 
-    sources: list[Source] = pydantic.Field(
-        ..., description="List of Source objects."
-    )
+    sources: list[Source] = pydantic.Field(..., description="List of Source objects.")
 
     def __len__(self) -> int:
         """
