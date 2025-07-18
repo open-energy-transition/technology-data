@@ -2,7 +2,6 @@
 #
 # SPDX-License-Identifier: MIT
 
-"""SourceCollection class."""
 
 import csv
 import json
