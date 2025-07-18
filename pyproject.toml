@@ -9,7 +9,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "technologydata"
 dynamic = ["version"]
-keywords = ["energy", "modelling", "techno-economics", "macroeconomics"]
+keywords = ["energy", "modelling", "techno-economics", "macroeconomics"] # TODO update
 description = "Package for providing common data assumptions for energy system modelling on techno-economics and macro-economics."
 readme = "README.md"
 authors = [
