@@ -77,7 +77,8 @@ class SourceCollection(pydantic.BaseModel):  # type: ignore
         """
         return pandas.DataFrame([source.model_dump() for source in self.sources])
 
-    def to_csv(self, file_path: pathlib.Path) -> None:
+    def to_csv(self, **kwargs) -> None:
+    """kwargs = all that pd.DataFrame.to_csv(...) accepts
         """
         Export the SourceCollection to a CSV file.
 
