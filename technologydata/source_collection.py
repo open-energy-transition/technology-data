@@ -7,6 +7,7 @@
 import csv
 import json
 import pathlib
+import re
 
 import pandas
 import pydantic
@@ -31,6 +32,39 @@ class SourceCollection(pydantic.BaseModel):  # type: ignore
     """
 
     sources: list[Source] = pydantic.Field(..., description="List of Source objects.")
+
+    def get(self, title: str, authors: str) -> "SourceCollection":
+        """
+        Filter sources based on regex patterns for non-optional attributes.
+
+        Parameters
+        ----------
+        title : str
+            Regex pattern to filter titles.
+        authors : str
+            Regex pattern to filter authors.
+
+        Returns
+        -------
+        SourceCollection
+            A new SourceCollection with filtered sources.
+
+        """
+        filtered_sources = self.sources
+
+        if title is not None:
+            pattern_title = re.compile(title)
+            filtered_sources = [
+                s for s in filtered_sources if pattern_title.search(s.title)
+            ]
+
+        if authors is not None:
+            pattern_authors = re.compile(authors)
+            filtered_sources = [
+                s for s in filtered_sources if pattern_authors.search(s.authors)
+            ]
+
+        return SourceCollection(sources=filtered_sources)
 
     def __len__(self) -> int:
         """
