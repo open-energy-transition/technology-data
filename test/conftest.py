@@ -80,7 +80,9 @@ def example_source(request: pytest.FixtureRequest) -> technologydata.Source:
 
 
 @pytest.fixture(scope="function")  # type: ignore
-def example_source_collection(request: pytest.FixtureRequest) -> technologydata.SourceCollection:
+def example_source_collection(
+    request: pytest.FixtureRequest,
+) -> technologydata.SourceCollection:
     """
     Fixture to create an example SourceCollection from a list of parameter dicts.
 

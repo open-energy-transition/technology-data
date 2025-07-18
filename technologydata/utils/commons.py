@@ -4,17 +4,17 @@
 
 """Classes for Commons methods."""
 
+import enum
 import logging
 import re
-from enum import Enum
-from typing import Any
+import typing
 
-from dateutil import parser
+import dateutil
 
 logger = logging.getLogger(__name__)
 
 
-class DateFormatEnum(str, Enum):
+class DateFormatEnum(str, enum.Enum):
     """
     Enum for date formats used in different sources.
 
@@ -34,7 +34,7 @@ class DateFormatEnum(str, Enum):
     NONE = ""
 
 
-class FileExtensionEnum(Enum):
+class FileExtensionEnum(enum.Enum):
     """
     An enumeration that maps various file extensions to their corresponding MIME types.
 
@@ -186,7 +186,7 @@ class Commons:
     def change_datetime_format(
         input_datetime_string: str,
         output_datetime_format: DateFormatEnum,
-    ) -> str | Any:
+    ) -> str | typing.Any:
         """
         Change the format of a given datetime string to a specified output format.
 
@@ -219,7 +219,7 @@ class Commons:
         """
         try:
             # Automatically detect the format of the input datetime string
-            dt = parser.parse(input_datetime_string)
+            dt = dateutil.parser.parse(input_datetime_string)
             logger.debug(f"The datetime string has been parsed successfully: {dt}")
             output_datetime_string = dt.strftime(output_datetime_format.value)
             logger.debug(f"The format is now changed to {output_datetime_format.value}")

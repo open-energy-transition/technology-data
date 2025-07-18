@@ -2,34 +2,19 @@
 #
 # SPDX-License-Identifier: MIT
 
-"""
-#TODO replaceholder
-Technology class for representing a technology with parameters and transformation methods.
 
-Examples
---------
->>> from technologydata.parameter import Parameter
->>> from technologydata.unit_value import UnitValue
->>> from technologydata.source import Source
->>> src = Source(name="Example Source", url="http://example.com")
->>> param = Parameter(quantity=UnitValue(value=1000, unit="EUR_2020/kW"), sources=[src])
->>> tech = Technology(
-...     name="Electrolyzer",
-...     region="EU",
-...     year=2025,
-...     parameters={"specific_investment": param}
-... )
+# TODO replaceholder
 
-"""
+"""Technology class for representing a technology with parameters and transformation methods."""
 
-from typing import Any
+import typing
 
-from pydantic import BaseModel, Field
+import pydantic
 
-from technologydata.parameter import Parameter
+import technologydata
 
 
-class Technology(BaseModel):  # type: ignore
+class Technology(pydantic.BaseModel):  # type: ignore
     """
     Represent a technology with region, year, and a flexible set of parameters.
 
@@ -65,18 +50,18 @@ class Technology(BaseModel):  # type: ignore
 
     """
 
-    name: str = Field(..., description="Name of the technology.")
-    region: str = Field(..., description="Region identifier.")
-    year: int | None = Field(None, description="Year of the data.")
-    parameters: dict[str, Parameter] = Field(
+    name: str = pydantic.Field(..., description="Name of the technology.")
+    region: str = pydantic.Field(..., description="Region identifier.")
+    year: int | None = pydantic.Field(None, description="Year of the data.")
+    parameters: dict[str, technologydata.Parameter] = pydantic.Field(
         default_factory=dict, description="Parameters."
     )
-    case: str | None = Field(None, description="Case or scenario identifier.")
-    detailed_technology: str | None = Field(
+    case: str | None = pydantic.Field(None, description="Case or scenario identifier.")
+    detailed_technology: str | None = pydantic.Field(
         None, description="Detailed technology name."
     )
 
-    def __getitem__(self, key: str) -> Parameter:
+    def __getitem__(self, key: str) -> technologydata.Parameter:
         """
         Access a parameter by name.
 
@@ -93,7 +78,7 @@ class Technology(BaseModel):  # type: ignore
         """
         return self.parameters[key]
 
-    def __setitem__(self, key: str, value: Parameter) -> None:
+    def __setitem__(self, key: str, value: technologydata.Parameter) -> None:
         """
         Set a parameter by name.
 
@@ -122,7 +107,9 @@ class Technology(BaseModel):  # type: ignore
         missing = [p for p in required if p not in self.parameters]
         return len(missing) == 0
 
-    def calculate_parameters(self, parameters: Any | None = None) -> "Technology":
+    def calculate_parameters(
+        self, parameters: typing.Any | None = None
+    ) -> "Technology":
         """
         Calculate missing or derived parameters.
 

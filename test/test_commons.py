@@ -4,11 +4,11 @@
 
 """Test the utility methods."""
 
-from typing import Any
+import typing
 
 import pytest
 
-import technologydata as td
+import technologydata
 
 
 @pytest.mark.parametrize(
@@ -16,32 +16,40 @@ import technologydata as td
     [
         (
             "2025-05-20 14:45:00",
-            td.DateFormatEnum.SOURCES_CSV,
+            technologydata.DateFormatEnum.SOURCES_CSV,
             "2025-05-20 14:45:00",
         ),
         (
             "20250520144500",
-            td.DateFormatEnum.SOURCES_CSV,
+            technologydata.DateFormatEnum.SOURCES_CSV,
             "2025-05-20 14:45:00",
         ),
-        ("2025-05-20 14:45:00", td.DateFormatEnum.WAYBACK, "20250520144500"),
-        ("20250520144500", td.DateFormatEnum.WAYBACK, "20250520144500"),
-        ("2025-05-20 14:45:00", td.DateFormatEnum.NONE, ""),
-        ("invalid-date-string", td.DateFormatEnum.SOURCES_CSV, ValueError),
-        ("2025/13/01", td.DateFormatEnum.SOURCES_CSV, ValueError),
+        (
+            "2025-05-20 14:45:00",
+            technologydata.DateFormatEnum.WAYBACK,
+            "20250520144500",
+        ),
+        ("20250520144500", technologydata.DateFormatEnum.WAYBACK, "20250520144500"),
+        ("2025-05-20 14:45:00", technologydata.DateFormatEnum.NONE, ""),
+        ("invalid-date-string", technologydata.DateFormatEnum.SOURCES_CSV, ValueError),
+        ("2025/13/01", technologydata.DateFormatEnum.SOURCES_CSV, ValueError),
     ],
 )  # type: ignore
 def test_change_datetime_format(
     input_datetime_string: str,
-    date_format: td.DateFormatEnum,
-    expected_date: str | Any,
+    date_format: technologydata.DateFormatEnum,
+    expected_date: str | typing.Any,
 ) -> None:
     """Check if the datetime is correctly transformed to a new format."""
     if expected_date is ValueError:
         with pytest.raises(ValueError, match="Error during datetime formatting"):
-            td.Commons.change_datetime_format(input_datetime_string, date_format)
+            technologydata.Commons.change_datetime_format(
+                input_datetime_string, date_format
+            )
     else:
-        result = td.Commons.change_datetime_format(input_datetime_string, date_format)
+        result = technologydata.Commons.change_datetime_format(
+            input_datetime_string, date_format
+        )
         assert result == expected_date
 
 
@@ -67,7 +75,10 @@ def test_replace_special_characters(
     expected_string: str,
 ) -> None:
     """Check if the special characters are removed from a string and the string is lowercased."""
-    assert td.Commons.replace_special_characters(input_string) == expected_string
+    assert (
+        technologydata.Commons.replace_special_characters(input_string)
+        == expected_string
+    )
 
 
 @pytest.mark.parametrize(
@@ -96,7 +107,9 @@ def test_get_extension(
     expected_string: str,
 ) -> None:
     """Check if the correct file extension is associated to a given MIME type."""
-    assert td.FileExtensionEnum.get_extension(input_string) == expected_string
+    assert (
+        technologydata.FileExtensionEnum.get_extension(input_string) == expected_string
+    )
 
 
 @pytest.mark.parametrize(
@@ -123,6 +136,6 @@ def test_search_file_extension_in_url(
 ) -> None:
     """Check if the correct file extension is found in a given url."""
     assert (
-        td.FileExtensionEnum.search_file_extension_in_url(input_string)
+        technologydata.FileExtensionEnum.search_file_extension_in_url(input_string)
         == expected_string
     )

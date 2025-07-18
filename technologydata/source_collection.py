@@ -2,16 +2,16 @@
 #
 # SPDX-License-Identifier: MIT
 
+"""SourceCollection class for representing an iterable of Source Objects."""
 
 import csv
 import json
 import pathlib
-import collections.abc
 
 import pandas
 import pydantic
 
-import technologydata
+from technologydata.source import Source
 
 
 class SourceCollection(pydantic.BaseModel):  # type: ignore
@@ -30,19 +30,9 @@ class SourceCollection(pydantic.BaseModel):  # type: ignore
 
     """
 
-    sources: list[technologydata.Source] = pydantic.Field(..., description="List of Source objects.")
-
-    def __iter__(self) -> collections.abc.Iterator[technologydata.Source]:
-        """
-        Iterate over the sources in this collection.
-
-        Returns
-        -------
-        Iterator[Source]
-            An iterator that yields Source objects from the sources list.
-
-        """
-        return iter(self.sources)
+    sources: list[Source] = pydantic.Field(
+        ..., description="List of Source objects."
+    )
 
     def __len__(self) -> int:
         """

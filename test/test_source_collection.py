@@ -6,10 +6,10 @@
 
 import pathlib
 
-import pandas as pd
+import pandas
 import pytest
 
-import technologydata as td
+import technologydata
 
 path_cwd = pathlib.Path.cwd()
 
@@ -31,11 +31,11 @@ path_cwd = pathlib.Path.cwd()
     indirect=True,
 )  # type: ignore
 def test_example_source_collection(
-    example_source_collection: td.SourceCollection,
+    example_source_collection: technologydata.SourceCollection,
 ) -> None:
     """Check if the example source collection is instantiated correctly."""
     # Check that the returned object is a SourceCollection
-    assert isinstance(example_source_collection, td.SourceCollection)
+    assert isinstance(example_source_collection, technologydata.SourceCollection)
 
     # Check the number of sources
     assert len(example_source_collection.sources) == 2
@@ -71,7 +71,9 @@ def test_example_source_collection(
     ],
     indirect=True,
 )  # type: ignore
-def test_retrieve_all_archives(example_source_collection: td.SourceCollection) -> None:
+def test_retrieve_all_archives(
+    example_source_collection: technologydata.SourceCollection,
+) -> None:
     """Check if the example source collection is downloaded from the Internet Archive Wayback Machine."""
     storage_paths = example_source_collection.retrieve_all_archives(path_cwd)
 
@@ -118,7 +120,7 @@ def test_retrieve_all_archives(example_source_collection: td.SourceCollection) -
     ],
     indirect=True,
 )  # type: ignore
-def test_to_csv(example_source_collection: td.SourceCollection) -> None:
+def test_to_csv(example_source_collection: technologydata.SourceCollection) -> None:
     """Check if the example source collection is exported to CSV."""
     output_file = pathlib.Path(path_cwd, "export.csv")
     example_source_collection.to_csv(pathlib.Path(output_file))
@@ -150,7 +152,7 @@ def test_to_csv(example_source_collection: td.SourceCollection) -> None:
     ],
     indirect=True,
 )  # type: ignore
-def test_to_json(example_source_collection: td.SourceCollection) -> None:
+def test_to_json(example_source_collection: technologydata.SourceCollection) -> None:
     """Check if the example source collection is exported to JSON."""
     output_file = pathlib.Path(path_cwd, "sources.json")
     schema_file = pathlib.Path(path_cwd, "source_collection_schema.json")
@@ -185,9 +187,11 @@ def test_to_json(example_source_collection: td.SourceCollection) -> None:
     ],
     indirect=True,
 )  # type: ignore
-def test_to_dataframe(example_source_collection: td.SourceCollection) -> None:
+def test_to_dataframe(
+    example_source_collection: technologydata.SourceCollection,
+) -> None:
     """Check if the example source collection is exported to pandas dataframe."""
-    assert isinstance(example_source_collection.to_dataframe(), pd.DataFrame)
+    assert isinstance(example_source_collection.to_dataframe(), pandas.DataFrame)
 
 
 def test_from_json() -> None:
@@ -195,6 +199,6 @@ def test_from_json() -> None:
     input_file = pathlib.Path(
         path_cwd, "test", "test_data", "solar_photovoltaics_example_03", "sources.json"
     )
-    source_collection = td.SourceCollection.from_json(input_file)
-    assert isinstance(source_collection, td.SourceCollection)
+    source_collection = technologydata.SourceCollection.from_json(input_file)
+    assert isinstance(source_collection, technologydata.SourceCollection)
     assert len(source_collection) == 2

@@ -17,13 +17,13 @@ Examples
 
 """
 
-from pint import UnitRegistry
-from pydantic import BaseModel, Field
+import pint
+import pydantic
 
-ureg = UnitRegistry()
+ureg = pint.UnitRegistry()
 
 
-class UnitValue(BaseModel):  # type: ignore
+class UnitValue(pydantic.BaseModel):  # type: ignore
     """
     Represent a numerical value with an associated unit of measurement.
 
@@ -43,8 +43,8 @@ class UnitValue(BaseModel):  # type: ignore
 
     """
 
-    value: float = Field(..., description="The numerical value.")
-    unit: str = Field(..., description="The unit of measurement.")
+    value: float = pydantic.Field(..., description="The numerical value.")
+    unit: str = pydantic.Field(..., description="The unit of measurement.")
 
     def to(self, new_unit: str) -> "UnitValue":
         """

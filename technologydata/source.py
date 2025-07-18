@@ -15,18 +15,18 @@ Examples
 
 import logging
 import pathlib
-from typing import Any
+import typing
 
+import pydantic
 import requests
 import savepagenow
-from pydantic import BaseModel, Field
 
 import technologydata
 
 logger = logging.getLogger(__name__)
 
 
-class Source(BaseModel):  # type: ignore
+class Source(pydantic.BaseModel):  # type: ignore
     """
     Represent a data source, including bibliographic and web information.
 
@@ -62,12 +62,16 @@ class Source(BaseModel):  # type: ignore
 
     """
 
-    title: str = Field(..., description="Title of the source.")
-    authors: str = Field(..., description="Authors of the source.")
-    url: str | None = Field(None, description="URL of the source.")
-    url_archive: str | None = Field(None, description="Archived URL.")
-    url_date: str | None = Field(None, description="Date the URL was accessed.")
-    url_date_archive: str | None = Field(None, description="Date the URL was archived.")
+    title: str = pydantic.Field(..., description="Title of the source.")
+    authors: str = pydantic.Field(..., description="Authors of the source.")
+    url: str | None = pydantic.Field(None, description="URL of the source.")
+    url_archive: str | None = pydantic.Field(None, description="Archived URL.")
+    url_date: str | None = pydantic.Field(
+        None, description="Date the URL was accessed."
+    )
+    url_date_archive: str | None = pydantic.Field(
+        None, description="Date the URL was archived."
+    )
 
     def ensure_in_wayback(self) -> None:
         """
@@ -126,7 +130,7 @@ class Source(BaseModel):  # type: ignore
     @staticmethod
     def store_in_wayback(
         url_to_archive: str,
-    ) -> tuple[Any, bool | None, str | None] | None:
+    ) -> tuple[typing.Any, bool | None, str | None] | None:
         """
         Store a snapshot of the given URL on the Wayback Machine and extract the timestamp.
 
@@ -290,7 +294,7 @@ class Source(BaseModel):  # type: ignore
             return None
 
     @staticmethod
-    def _get_content_type(url_archived: str) -> Any:
+    def _get_content_type(url_archived: str) -> typing.Any:
         """
         Fetch the content type of the archived URL.
 

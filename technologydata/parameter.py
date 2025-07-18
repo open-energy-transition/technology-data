@@ -15,14 +15,14 @@ Examples
 
 """
 
-from pydantic import BaseModel, Field
+import pydantic
 
 from technologydata.source_collection import SourceCollection
 from technologydata.unit_value import UnitValue
 
 
 # TODO rework class logic
-class Parameter(BaseModel):  # type: ignore
+class Parameter(pydantic.BaseModel):  # type: ignore
     """
     Encapsulate a value with its unit, provenance, notes, and sources.
 
@@ -50,10 +50,14 @@ class Parameter(BaseModel):  # type: ignore
 
     """
 
-    quantity: UnitValue = Field(..., description="The value and its unit.")
-    provenance: str | None = Field(None, description="Data provenance.")
-    note: str | None = Field(None, description="Additional notes.")
-    sources: SourceCollection = Field(..., description="Collection of Sources.")
+    quantity: UnitValue = pydantic.Field(
+        ..., description="The value and its unit."
+    )
+    provenance: str | None = pydantic.Field(None, description="Data provenance.")
+    note: str | None = pydantic.Field(None, description="Additional notes.")
+    sources: SourceCollection = pydantic.Field(
+        ..., description="Collection of Sources."
+    )
 
     @property
     def value(self) -> float:
