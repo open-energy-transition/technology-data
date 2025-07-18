@@ -7,7 +7,6 @@
 import csv
 import json
 import pathlib
-import typing
 
 import pandas
 import pydantic
@@ -78,9 +77,7 @@ class SourceCollection(pydantic.BaseModel):  # type: ignore
         """
         return pandas.DataFrame([source.model_dump() for source in self.sources])
 
-    import csv
-
-    def to_csv(self, **kwargs: dict[typing.Any, typing.Any]) -> None:
+    def to_csv(self, **kwargs: pathlib.Path | str | bool) -> None:
         """
         Export the SourceCollection to a CSV file.
 
