@@ -4,7 +4,7 @@ SPDX-PackageSupplier = "The technology-data authors"
 SPDX-PackageDownloadLocation = "https://github.com/pypsa/technology-data"
 
 [[annotations]]
-path = "uv.lock"
+path = ["uv.lock"]
 SPDX-FileCopyrightText = "The technology-data authors"
 SPDX-License-Identifier = "MIT"
 
