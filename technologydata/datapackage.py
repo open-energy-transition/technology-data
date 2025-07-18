@@ -22,6 +22,7 @@ from technologydata.source_collection import SourceCollection
 # from technologydata.technology_collection import TechnologyCollection
 
 
+# TODO complete class
 class DataPackage(BaseModel):  # type: ignore
     """
     Container for a collection of Technology objects and/or Source objects, with batch operations and loading utilities.
