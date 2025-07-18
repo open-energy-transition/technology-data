@@ -44,7 +44,7 @@ class SourceCollection(pydantic.BaseModel):  # type: ignore
         """
         return len(self.sources)
 
-    def retrieve_all_archives(
+    def retrieve_all_from_wayback(
         self, download_directory: pathlib.Path
     ) -> list[pathlib.Path | None]:
         """
