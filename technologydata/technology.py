@@ -37,7 +37,7 @@ class Technology(BaseModel):  # type: ignore
     ----------
     name : str
         Name of the technology.
-    region : Optional[str]
+    region : str
         Region identifier.
     year : Optional[int]
         Year of the data.
@@ -52,7 +52,7 @@ class Technology(BaseModel):  # type: ignore
     ----------
     name : str
         Name of the technology.
-    region : Optional[str]
+    region : str
         Region identifier.
     year : Optional[int]
         Year of the data.
@@ -66,7 +66,7 @@ class Technology(BaseModel):  # type: ignore
     """
 
     name: str = Field(..., description="Name of the technology.")
-    region: str | None = Field(None, description="Region identifier.")
+    region: str = Field(..., description="Region identifier.")
     year: int | None = Field(None, description="Year of the data.")
     parameters: dict[str, Parameter] = Field(
         default_factory=dict, description="Parameters."
