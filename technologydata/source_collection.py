@@ -3,10 +3,10 @@
 # SPDX-License-Identifier: MIT
 
 
+import collections.abc
 import csv
 import json
 import pathlib
-import collections.abc
 
 import pandas
 import pydantic
@@ -30,7 +30,9 @@ class SourceCollection(pydantic.BaseModel):  # type: ignore
 
     """
 
-    sources: list[technologydata.Source] = pydantic.Field(..., description="List of Source objects.")
+    sources: list[technologydata.Source] = pydantic.Field(
+        ..., description="List of Source objects."
+    )
 
     def __iter__(self) -> collections.abc.Iterator[technologydata.Source]:
         """

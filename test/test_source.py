@@ -4,8 +4,8 @@
 
 """Test the initialization and methods of the Source class."""
 
-import pathlib
 import datetime
+import pathlib
 
 import pytest
 
@@ -68,7 +68,9 @@ def test_store_in_wayback() -> None:
 
     assert output_timestamp is not None, "output_timestamp should not be None"
     try:
-        datetime.datetime.strptime(output_timestamp, technologydata.DateFormatEnum.SOURCES_CSV)
+        datetime.datetime.strptime(
+            output_timestamp, technologydata.DateFormatEnum.SOURCES_CSV
+        )
     except ValueError:
         pytest.fail("Valid date-time string did not match the format")
 
