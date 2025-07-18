@@ -117,7 +117,9 @@ class SourceCollection(pydantic.BaseModel):  # type: ignore
         output_dataframe = self.to_dataframe()
         output_dataframe.to_csv(**merged_kwargs)
 
-    def to_json(self, file_path: pathlib.Path) -> None:
+    def to_json(
+        self, file_path: pathlib.Path, schema_path: pathlib.Path | None = None
+    ) -> None:
         """
         Export the SourceCollection to a JSON file, together with a data schema.
 
@@ -125,9 +127,12 @@ class SourceCollection(pydantic.BaseModel):  # type: ignore
         ----------
         file_path : pathlib.Path
             The path to the JSON file to be created.
+        schema_path : pathlib.Path
+            The path to the JSON schema file to be created.
 
         """
-        schema_path = pathlib.Path(file_path.parent, "source_collection_schema.json")
+        if schema_path is None:
+            schema_path = file_path.with_suffix(".schema.json")
 
         # Export the model's schema with descriptions to a dict
         schema = self.model_json_schema()
