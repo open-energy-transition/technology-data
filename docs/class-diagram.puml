@@ -23,7 +23,7 @@ class Source {
   - urldate: str
   - urldate_archive: str
 
-  + snapshot_url()
+  + ensure_in_wayback()
   + store_in_wayback()
   + retrieve_from_wayback()
 }

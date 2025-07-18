@@ -19,13 +19,13 @@ import sys
 
 import pytest
 
-import technologydata as td
+import technologydata
 
 sys.path.append("./technology-data")
 path_cwd = pathlib.Path.cwd()
 
 
-def create_source_from_params(params: dict[str, str]) -> td.Source:
+def create_source_from_params(params: dict[str, str]) -> technologydata.Source:
     """
     Create a Source object from a parameter dictionary with validation.
 
@@ -63,7 +63,7 @@ def create_source_from_params(params: dict[str, str]) -> td.Source:
     >>> source = create_source_from_params(params_dict)
 
     """
-    return td.Source(
+    return technologydata.Source(
         title=params["source_title"],
         authors=params["source_authors"],
         url=params.get("source_url"),
@@ -74,13 +74,13 @@ def create_source_from_params(params: dict[str, str]) -> td.Source:
 
 
 @pytest.fixture(scope="function")  # type: ignore
-def example_source(request: pytest.FixtureRequest) -> td.Source:
+def example_source(request: pytest.FixtureRequest) -> technologydata.Source:
     """Fixture to create an example source."""
     return create_source_from_params(request.param)
 
 
 @pytest.fixture(scope="function")  # type: ignore
-def example_source_collection(request: pytest.FixtureRequest) -> td.SourceCollection:
+def example_source_collection(request: pytest.FixtureRequest) -> technologydata.SourceCollection:
     """
     Fixture to create an example SourceCollection from a list of parameter dicts.
 
@@ -92,4 +92,4 @@ def example_source_collection(request: pytest.FixtureRequest) -> td.SourceCollec
     """
     sources_params: list[dict[str, str]] = request.param
     sources = [create_source_from_params(params) for params in sources_params]
-    return td.SourceCollection(sources=sources)
+    return technologydata.SourceCollection(sources=sources)

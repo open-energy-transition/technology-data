@@ -6,15 +6,15 @@
 import csv
 import json
 import pathlib
-from collections.abc import Iterator
+import collections.abc
 
-import pandas as pd
-from pydantic import BaseModel, Field
+import pandas
+import pydantic
 
-from technologydata.source import Source
+import technologydata
 
 
-class SourceCollection(BaseModel):  # type: ignore
+class SourceCollection(pydantic.BaseModel):  # type: ignore
     """
     Represent a collection of sources.
 
@@ -30,9 +30,9 @@ class SourceCollection(BaseModel):  # type: ignore
 
     """
 
-    sources: list[Source] = Field(..., description="List of Source objects.")
+    sources: list[technologydata.Source] = pydantic.Field(..., description="List of Source objects.")
 
-    def __iter__(self) -> Iterator[Source]:
+    def __iter__(self) -> collections.abc.Iterator[technologydata.Source]:
         """
         Iterate over the sources in this collection.
 
@@ -77,7 +77,7 @@ class SourceCollection(BaseModel):  # type: ignore
             source.retrieve_from_wayback(download_directory) for source in self.sources
         ]
 
-    def to_dataframe(self) -> pd.DataFrame:
+    def to_dataframe(self) -> pandas.DataFrame:
         """
         Convert the SourceCollection to a pandas DataFrame.
 
@@ -87,7 +87,7 @@ class SourceCollection(BaseModel):  # type: ignore
             A DataFrame containing the source data.
 
         """
-        return pd.DataFrame([source.model_dump() for source in self.sources])
+        return pandas.DataFrame([source.model_dump() for source in self.sources])
 
     def to_csv(self, file_path: pathlib.Path) -> None:
         """

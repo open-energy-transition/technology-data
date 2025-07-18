@@ -21,7 +21,7 @@ import requests
 import savepagenow
 from pydantic import BaseModel, Field
 
-import technologydata as td
+import technologydata
 
 logger = logging.getLogger(__name__)
 
@@ -69,7 +69,7 @@ class Source(BaseModel):  # type: ignore
     url_date: str | None = Field(None, description="Date the URL was accessed.")
     url_date_archive: str | None = Field(None, description="Date the URL was archived.")
 
-    def snapshot_url(self) -> None:
+    def ensure_in_wayback(self) -> None:
         """
         Ensure that the source URL is archived in the Wayback Machine.
 
@@ -95,7 +95,7 @@ class Source(BaseModel):  # type: ignore
         --------
         >>> from technologydata import Source
         >>> source = Source(url="http://example.com", title="Example Site", authors="The Authors")
-        >>> source.snapshot_url()
+        >>> source.ensure_in_wayback()
         A new snapshot has been stored for the url http://example.com with timestamp 2023-10-01T12:00:00Z and Archive.org url http://web.archive.org/web/20231001120000/http://example.com.
         >>> source.url_archive
         'http://web.archive.org/web/20231001120000/http://example.com'
@@ -164,9 +164,9 @@ class Source(BaseModel):  # type: ignore
             end_index = archive_url[0].index("/", start_index)
             # Extract the timestamp substring
             timestamp = archive_url[0][start_index:end_index]
-            output_timestamp = td.Commons.change_datetime_format(
+            output_timestamp = technologydata.Commons.change_datetime_format(
                 timestamp,
-                td.DateFormatEnum.SOURCES_CSV,
+                technologydata.DateFormatEnum.SOURCES_CSV,
             )
             return archive_url[0], archive_url[1], output_timestamp
         except ValueError:
@@ -220,7 +220,7 @@ class Source(BaseModel):  # type: ignore
             logger.error(f"The base path of the source {self.title} is not set.")
             return None
 
-        source_title = td.Commons.replace_special_characters(self.title)
+        source_title = technologydata.Commons.replace_special_characters(self.title)
         save_path = self._get_save_path(
             self.url_archive, download_directory, source_title
         )
@@ -276,9 +276,9 @@ class Source(BaseModel):  # type: ignore
         if content_type is None:
             return None
 
-        extension = td.FileExtensionEnum.get_extension(
+        extension = technologydata.FileExtensionEnum.get_extension(
             content_type
-        ) or td.FileExtensionEnum.search_file_extension_in_url(url_archived)
+        ) or technologydata.FileExtensionEnum.search_file_extension_in_url(url_archived)
         if extension is None:
             raise ValueError(
                 f"Unable to infer file extension from content type: {content_type} or URL: {url_archived}"

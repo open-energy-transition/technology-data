@@ -5,11 +5,11 @@
 """Test the initialization and methods of the Source class."""
 
 import pathlib
-from datetime import datetime
+import datetime
 
 import pytest
 
-import technologydata as td
+import technologydata
 
 path_cwd = pathlib.Path.cwd()
 
@@ -36,7 +36,7 @@ path_cwd = pathlib.Path.cwd()
     ],
     indirect=True,
 )  # type: ignore
-def test_retrieve_from_wayback(example_source: td.Source) -> None:
+def test_retrieve_from_wayback(example_source: technologydata.Source) -> None:
     """Check if the example source is downloaded from the Internet Archive Wayback Machine."""
     storage_path = example_source.retrieve_from_wayback(path_cwd)
     # Check if storage_paths is not None and is a list
@@ -55,7 +55,7 @@ def test_retrieve_from_wayback(example_source: td.Source) -> None:
 def test_store_in_wayback() -> None:
     """Check if a given url is correctly stored as a snapshot on Internet Archive Wayback Machine."""
     url_to_archive = "https://openenergytransition.org/outputs.html"
-    archived_info = td.Source.store_in_wayback(url_to_archive)
+    archived_info = technologydata.Source.store_in_wayback(url_to_archive)
 
     # Check if archived_info is None
     assert archived_info is not None, "archived_info should not be None"
@@ -68,7 +68,7 @@ def test_store_in_wayback() -> None:
 
     assert output_timestamp is not None, "output_timestamp should not be None"
     try:
-        datetime.strptime(output_timestamp, td.DateFormatEnum.SOURCES_CSV)
+        datetime.datetime.strptime(output_timestamp, technologydata.DateFormatEnum.SOURCES_CSV)
     except ValueError:
         pytest.fail("Valid date-time string did not match the format")
 
@@ -84,10 +84,10 @@ def test_store_in_wayback() -> None:
     ],
     indirect=["example_source"],
 )  # type: ignore
-def test_snapshot_url(example_source: td.Source) -> None:
+def test_ensure_in_wayback(example_source: technologydata.Source) -> None:
     """Check if the snapshot URL is created correctly."""
     # Ensure the snapshot is created
-    example_source.snapshot_url()
+    example_source.ensure_in_wayback()
     assert example_source.url_date_archive is not None
     assert example_source.url_archive is not None
 
@@ -117,6 +117,6 @@ def test_get_save_path(
 ) -> None:
     """Check if the path where to store the file to download follows the requested pattern."""
     assert (
-        td.Source._get_save_path(url_archived, source_path, source_title)
+        technologydata.Source._get_save_path(url_archived, source_path, source_title)
         == expected_path
     )
