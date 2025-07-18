@@ -7,6 +7,7 @@
 import csv
 import json
 import pathlib
+import typing
 
 import pandas
 import pydantic
@@ -77,19 +78,47 @@ class SourceCollection(pydantic.BaseModel):  # type: ignore
         """
         return pandas.DataFrame([source.model_dump() for source in self.sources])
 
-    def to_csv(self, **kwargs) -> None:
-    """kwargs = all that pd.DataFrame.to_csv(...) accepts
+    import csv
+
+    def to_csv(self, **kwargs: dict[typing.Any, typing.Any]) -> None:
         """
         Export the SourceCollection to a CSV file.
 
         Parameters
         ----------
-        file_path : pathlib.Path
-            The path to the CSV file to be created.
+        **kwargs : dict
+            Additional keyword arguments passed to pandas.DataFrame.to_csv().
+            Common options include:
+            - path_or_buf : str or pathlib.Path or file-like object, optional
+                File path or object, if None, the result is returned as a string.
+                Default is None.
+            - sep : str
+                String of length 1. Field delimiter for the output file.
+                Default is ','.
+            - index : bool
+                Write row names (index). Default is True.
+            - encoding : str
+                String representing the encoding to use in the output file.
+                Default is 'utf-8'.
+
+        Notes
+        -----
+        The method converts the collection to a pandas DataFrame using
+        `self.to_dataframe()` and then writes it to a CSV file using the provided
+        kwargs.
 
         """
+        default_kwargs = {
+            "sep": ",",
+            "index": False,
+            "encoding": "utf-8",
+            "quoting": csv.QUOTE_ALL,
+        }
+
+        # Merge default_kwargs with user-provided kwargs, giving precedence to user kwargs
+        merged_kwargs = {**default_kwargs, **kwargs}
         output_dataframe = self.to_dataframe()
-        output_dataframe.to_csv(file_path, index=False, quoting=csv.QUOTE_NONNUMERIC)
+        output_dataframe.to_csv(**merged_kwargs)
 
     def to_json(self, file_path: pathlib.Path) -> None:
         """

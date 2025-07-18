@@ -123,7 +123,7 @@ def test_retrieve_all_from_wayback(
 def test_to_csv(example_source_collection: technologydata.SourceCollection) -> None:
     """Check if the example source collection is exported to CSV."""
     output_file = pathlib.Path(path_cwd, "export.csv")
-    example_source_collection.to_csv(pathlib.Path(output_file))
+    example_source_collection.to_csv(path_or_buf=output_file)
     assert output_file.is_file()
     output_file.unlink(missing_ok=True)
 
