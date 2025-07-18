@@ -3,7 +3,7 @@
 # SPDX-License-Identifier: MIT
 
 ci:
-  autoupdate_schedule: monthly
+  autoupdate_schedule: quarterly
 
 repos:
   # Basic pre-commit hooks for whitespace, merge conflicts, etc.
