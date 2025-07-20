@@ -53,13 +53,13 @@ class SourceCollection(pydantic.BaseModel):  # type: ignore
         filtered_sources = self.sources
 
         if title is not None:
-            pattern_title = re.compile(title)
+            pattern_title = re.compile(title, re.IGNORECASE)
             filtered_sources = [
                 s for s in filtered_sources if pattern_title.search(s.title)
             ]
 
         if authors is not None:
-            pattern_authors = re.compile(authors)
+            pattern_authors = re.compile(authors, re.IGNORECASE)
             filtered_sources = [
                 s for s in filtered_sources if pattern_authors.search(s.authors)
             ]
