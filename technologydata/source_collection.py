@@ -162,7 +162,7 @@ class SourceCollection(pydantic.BaseModel):  # type: ignore
         file_path : pathlib.Path
             The path to the JSON file to be created.
         schema_path : pathlib.Path
-            The path to the JSON schema file to be created.
+            The path to the JSON schema file to be created. By default created with a `schema` suffix next to `file_path`.
 
         """
         if schema_path is None:
