@@ -31,7 +31,9 @@ class TechnologyCollection(pydantic.BaseModel):  # type: ignore
 
     """
 
-    technologies: list[Technology] = pydantic.Field(..., description="List of Technology objects.")
+    technologies: list[Technology] = pydantic.Field(
+        ..., description="List of Technology objects."
+    )
 
     def get(self, title: str, authors: str) -> "TechnologyCollection":
         """
@@ -88,7 +90,9 @@ class TechnologyCollection(pydantic.BaseModel):  # type: ignore
             A DataFrame containing the technology data.
 
         """
-        return pandas.DataFrame([technology.model_dump() for technology in self.technologies])
+        return pandas.DataFrame(
+            [technology.model_dump() for technology in self.technologies]
+        )
 
     def to_csv(self, **kwargs: pathlib.Path | str | bool) -> None:
         """
