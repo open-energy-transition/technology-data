@@ -10,7 +10,7 @@ class UnitValue {
 }
 
 note left of UnitValue::unit
-  Unit should be able to accomodate any unit of measurement,
+  Unit should be able to accommodate any unit of measurement,
   currencies+years, LHVs and different energy carriers.
   e.g. EUR_2020, kWh_electricity, kWh_hydrogen_LHV
 end note
@@ -20,8 +20,8 @@ class Source {
   - authors: str
   - url: str
   - url_archive: str
-  - urldate: str
-  - urldate_archive: str
+  - url_date: str
+  - url_date_archive: str
 
   + ensure_in_wayback()
   + store_in_wayback()
@@ -149,12 +149,12 @@ note left of SourceCollection::retrieve_all_from_wayback
   and stores the files locally.
 end note
 
-note left of SourceCollection::to_csv
-  Export the source collection into a csv file.
-end note
-
 note left of SourceCollection::to_json
   Export the source collection into a json file.
+end note
+
+note left of SourceCollection::to_csv
+  Export the source collection into a csv file.
 end note
 
 note left of SourceCollection::to_dataframe
