@@ -2,7 +2,7 @@
 #
 # SPDX-License-Identifier: MIT
 
-"""SourceCollection class for representing an iterable of Source Objects."""
+"""TechnologyCollection class for representing an iterable of Technology Objects."""
 
 import csv
 import json
@@ -12,30 +12,30 @@ import re
 import pandas
 import pydantic
 
-from technologydata.source import Source
+from technologydata.technology import Technology
 
 
-class SourceCollection(pydantic.BaseModel):  # type: ignore
+class TechnologyCollection(pydantic.BaseModel):  # type: ignore
     """
-    Represent a collection of sources.
+    Represent a collection of technologies.
 
     Parameters
     ----------
-    sources : List[Source]
-        List of Source objects.
+    technologies : List[Technology]
+        List of Technology objects.
 
     Attributes
     ----------
-    sources : List[Source]
-        List of Source objects.
+    technologies : List[Technology]
+        List of Technology objects.
 
     """
 
-    sources: list[Source] = pydantic.Field(..., description="List of Source objects.")
+    technologies: list[Technology] = pydantic.Field(..., description="List of Technology objects.")
 
-    def get(self, title: str, authors: str) -> "SourceCollection":
+    def get(self, title: str, authors: str) -> "TechnologyCollection":
         """
-        Filter sources based on regex patterns for non-optional attributes.
+        Filter technologies based on regex patterns for non-optional attributes.
 
         Parameters
         ----------
@@ -46,74 +46,53 @@ class SourceCollection(pydantic.BaseModel):  # type: ignore
 
         Returns
         -------
-        SourceCollection
-            A new SourceCollection with filtered sources.
+        TechnologyCollection
+            A new TechnologyCollection with filtered technologies.
 
         """
-        filtered_sources = self.sources
+        filtered_technologies = self.technologies
 
         if title is not None:
             pattern_title = re.compile(title, re.IGNORECASE)
-            filtered_sources = [
-                s for s in filtered_sources if pattern_title.search(s.title)
+            filtered_technologies = [
+                s for s in filtered_technologies if pattern_title.search(s.title)
             ]
 
         if authors is not None:
             pattern_authors = re.compile(authors, re.IGNORECASE)
-            filtered_sources = [
-                s for s in filtered_sources if pattern_authors.search(s.authors)
+            filtered_technologies = [
+                s for s in filtered_technologies if pattern_authors.search(s.authors)
             ]
 
-        return SourceCollection(sources=filtered_sources)
+        return TechnologyCollection(technologies=filtered_technologies)
 
     def __len__(self) -> int:
         """
-        Return the number of sources in this collection.
+        Return the number of technologies in this collection.
 
         Returns
         -------
         int
-            The number of Source objects in the sources list.
+            The number of Technology objects in the technologies list.
 
         """
-        return len(self.sources)
-
-    def retrieve_all_from_wayback(
-        self, download_directory: pathlib.Path
-    ) -> list[pathlib.Path | None]:
-        """
-        Download archived files for all sources in the collection using retrieve_from_wayback.
-
-        Parameters
-        ----------
-        download_directory : pathlib.Path
-            The base directory where all files will be saved.
-
-        Returns
-        -------
-        list[pathlib.Path | None]
-            List of paths where each file was stored, or None if download failed for a source.
-
-        """
-        return [
-            source.retrieve_from_wayback(download_directory) for source in self.sources
-        ]
+        return len(self.technologies)
 
     def to_dataframe(self) -> pandas.DataFrame:
         """
-        Convert the SourceCollection to a pandas DataFrame.
+        Convert the TechnologyCollection to a pandas DataFrame.
 
         Returns
         -------
         pd.DataFrame
-            A DataFrame containing the source data.
+            A DataFrame containing the technology data.
 
         """
-        return pandas.DataFrame([source.model_dump() for source in self.sources])
+        return pandas.DataFrame([technology.model_dump() for technology in self.technologies])
 
     def to_csv(self, **kwargs: pathlib.Path | str | bool) -> None:
         """
-        Export the SourceCollection to a CSV file.
+        Export the TechnologyCollection to a CSV file.
 
         Parameters
         ----------
@@ -155,7 +134,7 @@ class SourceCollection(pydantic.BaseModel):  # type: ignore
         self, file_path: pathlib.Path, schema_path: pathlib.Path | None = None
     ) -> None:
         """
-        Export the SourceCollection to a JSON file, together with a data schema.
+        Export the TechnologyCollection to a JSON file, together with a data schema.
 
         Parameters
         ----------
@@ -180,9 +159,9 @@ class SourceCollection(pydantic.BaseModel):  # type: ignore
             jsonfile.write(json_data)
 
     @classmethod
-    def from_json(cls, file_path: pathlib.Path | str) -> "SourceCollection":
+    def from_json(cls, file_path: pathlib.Path | str) -> "TechnologyCollection":
         """
-        Import the SourceCollection from a JSON file.
+        Import the TechnologyCollection from a JSON file.
 
         Parameters
         ----------
