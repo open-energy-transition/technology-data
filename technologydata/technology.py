@@ -24,13 +24,13 @@ class Technology(pydantic.BaseModel):  # type: ignore
         Name of the technology.
     region : str
         Region identifier.
-    year : Optional[int]
+    year : int
         Year of the data.
     parameters : Dict[str, Parameter]
         Dictionary of parameter names to Parameter objects.
-    case : Optional[str]
+    case : str
         Case or scenario identifier.
-    detailed_technology : Optional[str]
+    detailed_technology : str
         More detailed technology name.
 
     Attributes
@@ -39,26 +39,26 @@ class Technology(pydantic.BaseModel):  # type: ignore
         Name of the technology.
     region : str
         Region identifier.
-    year : Optional[int]
+    year : int
         Year of the data.
     parameters : Dict[str, Parameter]
         Dictionary of parameter names to Parameter objects.
-    case : Optional[str]
+    case : str
         Case or scenario identifier.
-    detailed_technology : Optional[str]
+    detailed_technology : str
         More detailed technology name.
 
     """
 
     name: str = pydantic.Field(..., description="Name of the technology.")
     region: str = pydantic.Field(..., description="Region identifier.")
-    year: int | None = pydantic.Field(None, description="Year of the data.")
+    year: int = pydantic.Field(..., description="Year of the data.")
     parameters: dict[str, technologydata.Parameter] = pydantic.Field(
         default_factory=dict, description="Parameters."
     )
-    case: str | None = pydantic.Field(None, description="Case or scenario identifier.")
-    detailed_technology: str | None = pydantic.Field(
-        None, description="Detailed technology name."
+    case: str = pydantic.Field(..., description="Case or scenario identifier.")
+    detailed_technology: str = pydantic.Field(
+        ..., description="Detailed technology name."
     )
 
     def __getitem__(self, key: str) -> technologydata.Parameter:

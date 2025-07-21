@@ -31,18 +31,28 @@ class TechnologyCollection(pydantic.BaseModel):  # type: ignore
 
     """
 
-    technologies: list[Technology] = pydantic.Field(..., description="List of Technology objects.")
+    technologies: list[Technology] = pydantic.Field(
+        ..., description="List of Technology objects."
+    )
 
-    def get(self, title: str, authors: str) -> "TechnologyCollection":
+    def get(
+        self, name: str, region: str, year: int, case: str, detailed_technology: str
+    ) -> "TechnologyCollection":
         """
         Filter technologies based on regex patterns for non-optional attributes.
 
         Parameters
         ----------
-        title : str
-            Regex pattern to filter titles.
-        authors : str
-            Regex pattern to filter authors.
+        name : str
+            Regex pattern to filter technology names.
+        region : str
+            Regex pattern to filter region identifiers.
+        year : int
+            Regex pattern to filter the year of the data.
+        case : str
+            Regex pattern to filter case or scenario identifiers.
+        detailed_technology : str
+            Regex pattern to filter detailed technology names.
 
         Returns
         -------
@@ -52,16 +62,36 @@ class TechnologyCollection(pydantic.BaseModel):  # type: ignore
         """
         filtered_technologies = self.technologies
 
-        if title is not None:
-            pattern_title = re.compile(title, re.IGNORECASE)
+        if name is not None:
+            pattern_name = re.compile(name, re.IGNORECASE)
             filtered_technologies = [
-                s for s in filtered_technologies if pattern_title.search(s.title)
+                t for t in filtered_technologies if pattern_name.search(t.name)
             ]
 
-        if authors is not None:
-            pattern_authors = re.compile(authors, re.IGNORECASE)
+        if region is not None:
+            pattern_region = re.compile(region, re.IGNORECASE)
             filtered_technologies = [
-                s for s in filtered_technologies if pattern_authors.search(s.authors)
+                t for t in filtered_technologies if pattern_region.search(t.region)
+            ]
+
+        if year is not None:
+            pattern_year = re.compile(str(year), re.IGNORECASE)
+            filtered_technologies = [
+                t for t in filtered_technologies if pattern_year.search(str(t.year))
+            ]
+
+        if case is not None:
+            pattern_case = re.compile(case, re.IGNORECASE)
+            filtered_technologies = [
+                t for t in filtered_technologies if pattern_case.search(t.case)
+            ]
+
+        if detailed_technology is not None:
+            pattern_detailed_technology = re.compile(detailed_technology, re.IGNORECASE)
+            filtered_technologies = [
+                t
+                for t in filtered_technologies
+                if pattern_detailed_technology.search(t.detailed_technology)
             ]
 
         return TechnologyCollection(technologies=filtered_technologies)
@@ -88,7 +118,9 @@ class TechnologyCollection(pydantic.BaseModel):  # type: ignore
             A DataFrame containing the technology data.
 
         """
-        return pandas.DataFrame([technology.model_dump() for technology in self.technologies])
+        return pandas.DataFrame(
+            [technology.model_dump() for technology in self.technologies]
+        )
 
     def to_csv(self, **kwargs: pathlib.Path | str | bool) -> None:
         """
