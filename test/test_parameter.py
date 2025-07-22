@@ -81,7 +81,6 @@ def test_parameter_to_conversion() -> None:
         heating_value="LHV",
         provenance="literature",
         note="Estimated",
-        sources=None,
     )
     converted = param.to("EUR_2025 / kilowatt")
     assert isinstance(converted, Parameter)
@@ -100,7 +99,6 @@ def test_pint_attributes_update() -> None:
         heating_value="LHV",
         provenance="literature",
         note="Estimated",
-        sources=None,
     )
     # Change magnitude and units
     param.magnitude = 2000

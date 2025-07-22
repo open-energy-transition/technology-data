@@ -85,9 +85,9 @@ class Parameter(BaseModel):  # type: ignore
     )
     note: Annotated[str | None, Field(description="Additional notes.")] = None
     sources: Annotated[
-        SourceCollection | None,
+        SourceCollection,
         Field(description="List of sources for this parameter."),
-    ] = None
+    ] = SourceCollection(sources=[])
 
     # Private attributes for derived pint objects
     _pint_quantity: pint.Quantity = PrivateAttr(None)
