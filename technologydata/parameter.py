@@ -71,21 +71,23 @@ class Parameter(BaseModel):  # type: ignore
     magnitude: Annotated[
         float, Field(description="The numerical value of the parameter.")
     ]
-    units: Annotated[str | None, Field(description="The unit of the parameter.")]
+    units: Annotated[str | None, Field(description="The unit of the parameter.")] = None
     carrier: Annotated[
         str | None,
         Field(description="Carriers of the units, e.g. 'H2', 'el', 'H2O'."),
-    ]
+    ] = None
     heating_value: Annotated[
         str | None,
         Field(description="Heating value type for energy carriers ('LHV' or 'HHV')."),
-    ]
-    provenance: Annotated[str | None, Field(description="The data's provenance.")]
-    note: Annotated[str | None, Field(description="Additional notes.")]
+    ] = None
+    provenance: Annotated[str | None, Field(description="The data's provenance.")] = (
+        None
+    )
+    note: Annotated[str | None, Field(description="Additional notes.")] = None
     sources: Annotated[
         SourceCollection | None,
         Field(description="List of sources for this parameter."),
-    ]
+    ] = None
 
     # Private attributes for derived pint objects
     _pint_quantity: pint.Quantity = PrivateAttr(None)
