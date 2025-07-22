@@ -145,4 +145,102 @@ class Parameter(BaseModel):  # type: ignore
             "Currency conversion is not implemented yet. This is a stub."
         )
 
+    def _check_parameter_compatability(self, other: "Parameter") -> None:
+        """Check if the parameter's units, carrier, and heating value are compatible."""
+        if self._pint_carrier != other._pint_carrier:
+            raise ValueError(
+                f"Cannot convert between parameters with different carriers: "
+                f"{self._pint_carrier} and {other._pint_carrier}."
+            )
+        if self._pint_heating_value != other._pint_heating_value:
+            raise ValueError(
+                f"Cannot convert between parameters with different heating values: "
+                f"{self._pint_heating_value} and {other._pint_heating_value}."
+            )
+
+    def __add__(self, other: "Parameter") -> "Parameter":
+        """Add two parameters together."""
+        self._check_parameter_compatability(other)
+        new_quantity = self._pint_quantity + other._pint_quantity
+        return Parameter(
+            magnitude=new_quantity.magnitude,
+            units=new_quantity.units,
+            carrier=self.carrier,
+            heating_value=self.heating_value,
+            # TODO implement
+            # provenance=... ,
+            # note=... ,
+            # sources=...,
+        )
+
+    def __sub__(self, other: "Parameter") -> "Parameter":
+        """Subtract two parameters."""
+        self._check_parameter_compatability(other)
+        new_quantity = self._pint_quantity - other._pint_quantity
+        return Parameter(
+            magnitude=new_quantity.magnitude,
+            units=str(new_quantity.units),
+            carrier=self.carrier,
+            heating_value=self.heating_value,
+            # TODO implement
+            # provenance= ... ,
+            # note= ... ,
+            # sources= ...,
+        )
+
+    def __truediv__(self, other: "Parameter") -> "Parameter":
+        """Divide two parameters."""
+        # We don't check general compatibility here, as division is not a common operation for parameters.
+        # Only ensure that the heating values are compatible.
+        if self._pint_heating_value != other._pint_heating_value:
+            raise ValueError(
+                f"Cannot divide parameters with different heating values: "
+                f"{self._pint_heating_value} and {other._pint_heating_value}."
+            )
+
+        new_quantity = self._pint_quantity / other._pint_quantity
+        new_carrier = (
+            self._pint_carrier / other._pint_carrier
+            if self._pint_carrier and other._pint_carrier
+            else None
+        )
+        new_heating_value = self._pint_heating_value / other._pint_heating_value
+        return Parameter(
+            magnitude=new_quantity.magnitude,
+            units=str(new_quantity.units),
+            carrier=str(new_carrier),
+            heating_value=str(new_heating_value),
+            # TODO implement
+            # provenance= ... ,
+            # note= ... ,
+            # sources= ...,
+        )
+
+    def __mul__(self, other: "Parameter") -> "Parameter":
+        """Multiply two parameters."""
+        # We don't check general compatibility here, as multiplication is not a common operation for parameters.
+        # Only ensure that the heating values are compatible.
+        if self._pint_heating_value != other._pint_heating_value:
+            raise ValueError(
+                f"Cannot multiply parameters with different heating values: "
+                f"{self._pint_heating_value} and {other._pint_heating_value}."
+            )
+
+        new_quantity = self._pint_quantity * other._pint_quantity
+        new_carrier = (
+            self._pint_carrier * other._pint_carrier
+            if self._pint_carrier and other._pint_carrier
+            else None
+        )
+        new_heating_value = self._pint_heating_value * other._pint_heating_value
+        return Parameter(
+            magnitude=new_quantity.magnitude,
+            units=str(new_quantity.units),
+            carrier=str(new_carrier),
+            heating_value=str(new_heating_value),
+            # TODO implement
+            # provenance= ... ,
+            # note= ... ,
+            # sources= ...,
+        )
 
