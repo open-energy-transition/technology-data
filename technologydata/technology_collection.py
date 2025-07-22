@@ -192,19 +192,13 @@ class TechnologyCollection(pydantic.BaseModel):  # type: ignore
 
     @classmethod
     def from_json(cls, file_path: pathlib.Path | str) -> "TechnologyCollection":
-        """
-        Import the TechnologyCollection from a JSON file.
-
-        Parameters
-        ----------
-        file_path : pathlib.Path
-            The path to the JSON file to be imported.
-
-        """
         if isinstance(file_path, pathlib.Path | str):
             file_path = pathlib.Path(file_path)
         else:
             raise TypeError("file_path must be a pathlib.Path or str")
         with open(file_path, encoding="utf-8") as jsonfile:
             json_data = json.load(jsonfile)
-        return cls(**json_data)
+        techs = []
+        for item in json_data:
+            techs.append(Technology.from_dict(item))
+        return cls(technologies=techs)

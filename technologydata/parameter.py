@@ -82,3 +82,15 @@ class Parameter(pydantic.BaseModel):  # type: ignore
 
         """
         return self.quantity.unit
+
+    @classmethod
+    def from_dict(cls, data):
+        # Convert sources list into SourceCollection
+        sources_data = data.get("sources", [])
+        sources = SourceCollection.from_json(sources_data)
+        return cls(
+            quantity=UnitValue.parse_obj(data["quantity"]),
+            provenance=data.get("provenance"),
+            note=data.get("note"),
+            sources=sources,
+        )

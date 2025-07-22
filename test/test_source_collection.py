@@ -155,7 +155,7 @@ def test_to_csv(example_source_collection: technologydata.SourceCollection) -> N
 def test_to_json(example_source_collection: technologydata.SourceCollection) -> None:
     """Check if the example source collection is exported to JSON."""
     output_file = pathlib.Path(path_cwd, "sources.json")
-    schema_file = pathlib.Path(path_cwd, "source_collection_schema.json")
+    schema_file = pathlib.Path(path_cwd, "sources.schema.json")
     example_source_collection.to_json(pathlib.Path(output_file))
     assert output_file.is_file()
     assert schema_file.is_file()

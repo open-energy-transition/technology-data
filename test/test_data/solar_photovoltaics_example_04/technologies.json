@@ -3,7 +3,7 @@
     "region": "DEU",
     "case": "example-scenario",
     "year": 2022,
-    "technology": "Solar photovoltaics",
+    "name": "Solar photovoltaics",
     "detailed_technology": "Si-HC",
     "capacity": {
       "quantity": {
@@ -85,7 +85,7 @@
     "region": "DEU",
     "case": "example-project",
     "year": 2022,
-    "technology": "Solar photovoltaics",
+    "name": "Solar photovoltaics",
     "detailed_technology": "Si-HC",
     "capacity": {
       "quantity": {

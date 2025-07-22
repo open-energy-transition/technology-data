@@ -180,3 +180,18 @@ class Technology(pydantic.BaseModel):  # type: ignore
         """
         # Placeholder: implement scaling logic
         return self
+
+    @classmethod
+    def from_dict(cls, data):
+        # Process parameters
+        params = {}
+        for key, param_data in data.get("parameters", {}).items():
+            params[key] = technologydata.Parameter.from_dict(param_data)
+        return cls(
+            region=data["region"],
+            case=data["case"],
+            year=data["year"],
+            name=data["name"],
+            detailed_technology=data["detailed_technology"],
+            parameters=params,
+        )
