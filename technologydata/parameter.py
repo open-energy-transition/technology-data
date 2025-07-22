@@ -99,27 +99,24 @@ class Parameter(BaseModel):  # type: ignore
 
     def _update_pint_attributes(self) -> None:
         """Update all derived pint attributes from current fields."""
-        # Update pint quantity
+        # Create a pint quantity from magnitude and units
         if self.units:
             self._pint_quantity = pint.Quantity(self.magnitude, self.units)
         else:
             self._pint_quantity = pint.Quantity(self.magnitude)
-        # Update carrier
+        # Create the carrier as pint unit
         if self.carrier:
-            try:
-                self._pint_carrier = ureg.Unit(self.carrier)
-            except pint.errors.UndefinedUnitError:
-                ureg.define(f"{self.carrier} = [carrier]")
-                self._pint_carrier = ureg.Unit(self.carrier)
+            self._pint_carrier = ureg.Unit(self.carrier)
         else:
             self._pint_carrier = None
-        # Update heating value
-        if self.heating_value:
-            try:
-                self._pint_heating_value = ureg.Unit(self.heating_value)
-            except pint.errors.UndefinedUnitError:
-                ureg.define(f"{self.heating_value} = [heating_value]")
-                self._pint_heating_value = ureg.Unit(self.heating_value)
+
+        # Create the heating value as pint unit
+        if self.heating_value and self.carrier:
+            self._pint_heating_value = ureg.Unit(self.heating_value)
+        elif self.heating_value and not self.carrier:
+            raise ValueError(
+                "Heating value cannot be set without a carrier. Please provide a valid carrier."
+            )
         else:
             self._pint_heating_value = None
 

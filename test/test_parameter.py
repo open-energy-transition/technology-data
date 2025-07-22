@@ -3,13 +3,14 @@
 # SPDX-License-Identifier: MIT
 
 import pint
+import pytest
 
 from technologydata.parameter import Parameter
 from technologydata.source import Source
 from technologydata.source_collection import SourceCollection
 
 
-def test_parameter_creation():
+def test_parameter_creation() -> None:
     """Test the creation of a Parameter instance with various units."""
     param = Parameter(
         magnitude=1000,
@@ -36,7 +37,43 @@ def test_parameter_creation():
     assert param.sources is not None
 
 
-def test_parameter_to_conversion():
+def test_parameter_invalid_units() -> None:
+    """Test that an error is raised when invalid units are provided."""
+    with pytest.raises(pint.errors.UndefinedUnitError) as excinfo:
+        Parameter(
+            magnitude=1000,
+            units="INVALID_UNIT",
+        )
+    assert "INVALID_UNIT" in str(excinfo.value)
+
+    with pytest.raises(pint.errors.UndefinedUnitError) as excinfo:
+        Parameter(
+            magnitude=1000,
+            units="USD_2020/kW",
+            carrier="H2",
+            heating_value="INVALID_HEATING_VALUE",
+        )
+    assert "INVALID_HEATING_VALUE" in str(excinfo.value)
+
+    with pytest.raises(pint.errors.UndefinedUnitError) as excinfo:
+        Parameter(
+            magnitude=1000,
+            units="USD_2020/kW",
+            carrier="INVALID_CARRIER",
+        )
+    assert "INVALID_CARRIER" in str(excinfo.value)
+
+    with pytest.raises(ValueError) as excinfo:
+        Parameter(
+            magnitude=1000,
+            units="USD_2020/kW",
+            heating_value="LHV",
+        )
+    assert "Heating value cannot be set without a carrier" in str(excinfo.value)
+
+
+def test_parameter_to_conversion() -> None:
+    """Test the conversion of a Parameter instance to different units."""
     param = Parameter(
         magnitude=1000,
         units="USD_2020/kW",
@@ -54,7 +91,8 @@ def test_parameter_to_conversion():
     )
 
 
-def test_pint_attributes_update():
+def test_pint_attributes_update() -> None:
+    """Test that pint attributes are updated correctly when attributes change and a method that uses the pint fields is called."""
     param = Parameter(
         magnitude=1000,
         units="USD_2020/kW",
