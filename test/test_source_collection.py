@@ -225,7 +225,7 @@ def test_to_dataframe(
 
 
 def test_from_json() -> None:
-    """Check if the example source collection is exported to JSON."""
+    """Check if the example source collection is imported from JSON."""
     input_file = pathlib.Path(
         path_cwd, "test", "test_data", "solar_photovoltaics_example_03", "sources.json"
     )
