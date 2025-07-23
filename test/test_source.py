@@ -21,9 +21,12 @@ path_cwd = pathlib.Path.cwd()
             {
                 "source_title": "OET project page",
                 "source_authors": "Open Energy Transition gGmbH",
-                "source_url": "https://openenergytransition.org/outputs.html",
+                "source_url": "https://outputs.html",
+                "source_url_archive": "https:archived.html",
+                "source_url_date": "2025-05-06 16:02:04",
+                "source_url_date_archive": "2025-05-06 16:02:04",
             },
-            "Title: 'OET project page', Authors: 'Open Energy Transition gGmbH', URL: 'https://openenergytransition.org/outputs.html'",
+            "'Open Energy Transition gGmbH': 'OET project page', from url 'https://outputs.html', last accessed on '2025-05-06 16:02:04', archived at 'https:archived.html', on '2025-05-06 16:02:04'.",
         )
     ],
     indirect=["example_source"],

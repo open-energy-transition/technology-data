@@ -83,15 +83,15 @@ class Source(pydantic.BaseModel):  # type: ignore
             A string detailing the source's information.
 
         """
-        parts = [f"Title: '{self.title}'", f"Authors: '{self.authors}'"]
+        parts = [f"'{self.authors}': '{self.title}'"]
         if self.url:
-            parts.append(f"URL: '{self.url}'")
-        if self.url_archive:
-            parts.append(f"Archived URL: '{self.url_archive}'")
+            parts.append(f"from url '{self.url}'")
         if self.url_date:
-            parts.append(f"URL Date: '{self.url_date}'")
+            parts.append(f"last accessed on '{self.url_date}'")
+        if self.url_archive:
+            parts.append(f"archived at '{self.url_archive}'")
         if self.url_date_archive:
-            parts.append(f"URL Date Archive: '{self.url_date_archive}'")
+            parts.append(f"on '{self.url_date_archive}'.")
         return ", ".join(parts)
 
     def ensure_in_wayback(self) -> None:
