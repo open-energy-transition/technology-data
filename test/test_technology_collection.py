@@ -78,7 +78,10 @@ def test_from_json() -> None:
 
 @pytest.mark.parametrize(
     "name, region, year, case, detailed_technology",
-    [["Solar photovoltaics", "DEU", 2022, "example-scenario", "Si-HC"], ["Solar photovoltaics", "DEU", 2022, "example-project", "Si-HC"]],
+    [
+        ["Solar photovoltaics", "DEU", 2022, "example-scenario", "Si-HC"],
+        ["Solar photovoltaics", "DEU", 2022, "example-project", "Si-HC"],
+    ],
 )  # type: ignore
 def test_get(
     name: str, region: str, year: int, case: str, detailed_technology: str
