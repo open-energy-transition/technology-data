@@ -1,3 +1,8 @@
+# SPDX-FileCopyrightText: The technology-data authors
+#
+# SPDX-License-Identifier: MIT
+"""Test the creation of custom units and handling of currencies using Pint."""
+
 import json
 
 import pint
@@ -5,6 +10,7 @@ import pytest
 
 from technologydata.utils.units import (
     CURRENCY_CODES_CACHE,
+    UnitRegistry,
     extract_currency_units,
     get_conversion_rate,
     get_iso3_to_currency_codes,
@@ -280,3 +286,150 @@ class TestGetConversionRate:
 
         # Results should be identical (cached)
         assert rate1 == rate2
+
+
+class TestUnitRegistryGetReferenceCurrency:
+    """Test cases for UnitRegistry.get_reference_currency method."""
+
+    def test_single_reference_currency(self) -> None:
+        """Test that get_reference_currency returns the correct currency when one is defined."""
+        ureg = UnitRegistry()
+        # UnitRegistry already defines USD_2020 as [currency] in __init__
+        reference = ureg.get_reference_currency()
+        assert reference == "USD_2020"
+
+    def test_no_reference_currency_raises_error(self) -> None:
+        """Test that ValueError is raised when no reference currency is defined."""
+        # Use base pint registry without currency definitions
+        ureg = UnitRegistry()
+
+        ureg.define(
+            "USD_2020 = [not_a_currency]"
+        )  # Overwrite the default currency definition to not be a currency
+
+        with pytest.raises(ValueError, match="does not have a unique base currency"):
+            ureg.get_reference_currency()
+
+    def test_multiple_reference_currencies_raises_error(self) -> None:
+        """Test that ValueError is raised when multiple currencies are defined."""
+        ureg = UnitRegistry()
+        ureg.define("EUR_2015 = [currency]")
+
+        with pytest.raises(ValueError, match="does not have a unique base currency"):
+            ureg.get_reference_currency()
+
+
+class TestUnitRegistryEnsureCurrencyIsUnit:
+    """Test cases for UnitRegistry.ensure_currency_is_unit method."""
+
+    def test_no_currency_units_does_nothing(self) -> None:
+        """Test that method does nothing when no currency units are present."""
+        ureg = UnitRegistry()
+        initial_units = set(ureg._units.keys())
+
+        ureg.ensure_currency_is_unit("kW/hour")
+
+        # No new units should be added
+        assert set(ureg._units.keys()) == initial_units
+
+    def test_empty_string_does_nothing(self) -> None:
+        """Test that method does nothing with empty string."""
+        ureg = UnitRegistry()
+        initial_units = set(ureg._units.keys())
+
+        ureg.ensure_currency_is_unit("")
+
+        # No new units should be added
+        assert set(ureg._units.keys()) == initial_units
+
+    def test_already_defined_currency_not_redefined(self) -> None:
+        """Test that already defined currency units are not redefined."""
+        ureg = UnitRegistry()
+        # USD_2020 is already defined in UnitRegistry.__init__
+
+        # Should not raise an error or redefine
+        ureg.ensure_currency_is_unit("USD_2020/kW")
+
+        # Verify USD_2020 is still defined
+        assert "USD_2020" in ureg._units
+
+    def test_new_currency_unit_gets_defined(self) -> None:
+        """Test that new currency units get defined relative to reference currency."""
+        ureg = UnitRegistry()
+
+        # EUR_2015 should not be defined initially
+        assert "EUR_2015" not in ureg._units
+
+        ureg.ensure_currency_is_unit("EUR_2015/kW")
+
+        # EUR_2015 should now be defined
+        assert "EUR_2015" in ureg._units
+
+        # Verify it's defined relative to the reference currency (USD_2020)
+        eur_unit = ureg._units["EUR_2015"]
+        assert "USD_2020" in str(eur_unit)
+
+    def test_multiple_currency_units_get_defined(self) -> None:
+        """Test that multiple new currency units get defined."""
+        ureg = UnitRegistry()
+
+        # Neither should be defined initially
+        assert "EUR_2015" not in ureg._units
+        assert "GBP_2018" not in ureg._units
+
+        ureg.ensure_currency_is_unit("EUR_2015/GBP_2018/kW")
+
+        # Both should now be defined
+        assert "EUR_2015" in ureg._units
+        assert "GBP_2018" in ureg._units
+
+    def test_mix_of_existing_and_new_currencies(self) -> None:
+        """Test handling mix of existing and new currency units."""
+        ureg = UnitRegistry()
+
+        # USD_2020 already exists, CAD_2019 doesn't
+        assert "USD_2020" in ureg._units
+        assert "CAD_2019" not in ureg._units
+
+        ureg.ensure_currency_is_unit("USD_2020/CAD_2019")
+
+        # Both should be defined
+        assert "USD_2020" in ureg._units
+        assert "CAD_2019" in ureg._units
+
+    def test_currency_defined_with_nan_conversion(self) -> None:
+        """Test that new currencies are defined with nan conversion factor."""
+        ureg = UnitRegistry()
+
+        ureg.ensure_currency_is_unit("JPY_2021/kW")
+
+        # Verify JPY_2021 is defined with nan relative to reference currency
+        jpy_unit = ureg._units["JPY_2021"]
+        assert "nan" in str(jpy_unit) or "NaN" in str(jpy_unit).lower()
+
+    def test_complex_unit_string_with_currency(self) -> None:
+        """Test handling of complex unit strings containing currencies."""
+        ureg = UnitRegistry()
+
+        assert "CHF_2022" not in ureg._units
+
+        ureg.ensure_currency_is_unit("CHF_2022/kW/year")
+
+        assert "CHF_2022" in ureg._units
+
+    def test_same_currency_different_years(self) -> None:
+        """Test that same currency with different years creates separate units."""
+        ureg = UnitRegistry()
+
+        ureg.ensure_currency_is_unit("EUR_2015/EUR_2020")
+
+        # Both year variants should be defined
+        assert "EUR_2015" in ureg._units
+        assert "EUR_2020" in ureg._units
+
+    def test_invalid_currency_code_raises_error(self) -> None:
+        """Test that invalid currency codes raise ValueError."""
+        ureg = UnitRegistry()
+
+        with pytest.raises(ValueError, match="invalid 3-letter currency codes"):
+            ureg.ensure_currency_is_unit("XYZ_2020/kW")
