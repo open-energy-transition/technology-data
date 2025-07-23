@@ -33,6 +33,19 @@ class TestExtractCurrencyUnits:
         result = extract_currency_units("")
         assert result == []
 
+    def test_pint_unit(self) -> None:
+        """Test extraction from pint.Unit object."""
+        ureg = pint.UnitRegistry()
+        ureg.define("USD_2020 = [currency]")
+        unit = pint.Unit("USD_2020")
+        result = extract_currency_units(unit)
+        assert result == ["USD_2020"]
+
+        ureg.define("USD_2020 = [currency]")
+        unit = pint.Unit("USD_2020/kW")
+        result = extract_currency_units(unit)
+        assert result == ["USD_2020"]
+
     def test_pint_unit_input(self) -> None:
         """Test that pint.Unit objects are properly converted to strings."""
         ureg = pint.UnitRegistry()
