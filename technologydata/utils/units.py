@@ -24,7 +24,9 @@ CACHE_DIR.mkdir(parents=True, exist_ok=True)
 CURRENCY_CODES_CACHE = CACHE_DIR / "currency_codes.json"
 
 
-def get_iso3_to_currency_codes(refresh=False, ignore_cache=False) -> dict[str, str]:
+def get_iso3_to_currency_codes(
+    refresh: bool = False, ignore_cache: bool = False
+) -> dict[str, str]:
     """
     Get all 3-letter currency codes from official UN data.
 
@@ -41,6 +43,7 @@ def get_iso3_to_currency_codes(refresh=False, ignore_cache=False) -> dict[str, s
     -------
     dict[str, str]
         A dictionary mapping ISO3 country codes to their corresponding 3-letter currency codes.
+
     """
     if refresh:
         logger.debug("Deleting existing currency codes cache to refresh it.")
@@ -58,7 +61,7 @@ def get_iso3_to_currency_codes(refresh=False, ignore_cache=False) -> dict[str, s
             json.dump(currencies, f)
     else:
         logger.debug("Reading currency codes from cache.")
-        with open(CURRENCY_CODES_CACHE, "r") as f:
+        with open(CURRENCY_CODES_CACHE) as f:
             currencies = json.load(f)
 
     return currencies
@@ -86,6 +89,7 @@ def extract_currency_units(units: str | pint.Unit) -> list[str]:
 
     >>> extract_currency_units("EUR_2015/USD_2020")
     ["EUR_2015", "USD_2020"]
+
     """
     # Ensure that the input is a string
     units = str(units)
@@ -120,7 +124,7 @@ def extract_currency_units(units: str | pint.Unit) -> list[str]:
     return matches
 
 
-@lru_cache()
+@lru_cache
 def get_conversion_rate(
     from_currency: str,
     to_currency: str,
@@ -146,6 +150,7 @@ def get_conversion_rate(
         The julian year (YYYY) of the target currency.
     source : str
         The source of the inflation data ('worldbank' or 'international_monetary_fund').
+
     """
     # Choose the deflation function based on the source
     deflation_function = {
@@ -214,7 +219,6 @@ class UnitRegistry(pint.UnitRegistry):
 
     def ensure_currency_is_unit(self, units: str) -> None:
         """Ensure that if the units contain a currency-like string, that this currency is defined in the unit registry such that it can be used."""
-
         currency_units = extract_currency_units(units)
 
         if not currency_units:
