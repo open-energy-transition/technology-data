@@ -192,6 +192,31 @@ class TechnologyCollection(pydantic.BaseModel):  # type: ignore
 
     @classmethod
     def from_json(cls, file_path: pathlib.Path | str) -> "TechnologyCollection":
+        """
+        Load a TechnologyCollection instance from a JSON file.
+
+        Parameters
+        ----------
+        file_path : pathlib.Path or str
+            Path to the JSON file containing the data. Can be a pathlib.Path object or a string path.
+
+        Returns
+        -------
+        TechnologyCollection
+            An instance of TechnologyCollection initialized with the data from the JSON file.
+
+        Raises
+        ------
+        TypeError
+            If `file_path` is not a pathlib.Path or str.
+
+        Notes
+        -----
+        This method reads the JSON data from the specified file, creates `Technology` objects
+        for each item in the JSON list using `Technology.from_dict()`, and returns a new
+        `TechnologyCollection` containing these objects.
+
+        """
         if isinstance(file_path, pathlib.Path | str):
             file_path = pathlib.Path(file_path)
         else:

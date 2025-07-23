@@ -15,6 +15,8 @@ Examples
 
 """
 
+import typing
+
 import pydantic
 
 from technologydata.source_collection import SourceCollection
@@ -84,12 +86,38 @@ class Parameter(pydantic.BaseModel):  # type: ignore
         return self.quantity.unit
 
     @classmethod
-    def from_dict(cls, data):
+    def from_dict(cls, data: dict[str, typing.Any]) -> "Parameter":
+        """
+        Create an instance of the class from a dictionary.
+
+        Parameters
+        ----------
+        cls : type
+            The class to instantiate.
+        data : dict
+            A dictionary containing the data to initialize the class instance.
+            Expected keys include:
+                - "quantity" (dict): A dictionary representing a UnitValue, parsed via `UnitValue.parse_obj()`.
+                - "provenance" (str or None): Optional provenance information.
+                - "note" (str or None): Optional notes.
+                - "sources" (list): A list of source data dictionaries, to be converted into a SourceCollection.
+
+        Returns
+        -------
+        instance : cls
+            An instance of the class initialized with the provided data.
+
+        Notes
+        -----
+        This method converts the "sources" list into a `SourceCollection` using `SourceCollection.from_json()`.
+        The "quantity" field is parsed into a `UnitValue` object using `UnitValue.parse_obj()`.
+
+        """
         # Convert sources list into SourceCollection
         sources_data = data.get("sources", [])
         sources = SourceCollection.from_json(sources_data)
         return cls(
-            quantity=UnitValue.parse_obj(data["quantity"]),
+            quantity=UnitValue.model_validate(data["quantity"]),
             provenance=data.get("provenance"),
             note=data.get("note"),
             sources=sources,

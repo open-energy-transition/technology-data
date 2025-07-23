@@ -15,6 +15,36 @@ path_cwd = pathlib.Path.cwd()
 
 
 @pytest.mark.parametrize(
+    "example_source_collection, expected_string",
+    [
+        (
+            [
+                {
+                    "source_title": "atb_nrel",
+                    "source_authors": "NREL/ATB",
+                    "source_url_date": "2025-05-22 15:08:02",
+                },
+                {
+                    "source_title": "tech_data_generation",
+                    "source_authors": "Danish Energy Agency",
+                    "source_url_date_archive": "2025-05-06 16:02:04",
+                },
+            ],
+            "SourceCollection with 2 sources: "
+            "Title: 'atb_nrel', Authors: 'NREL/ATB', URL Date: '2025-05-22 15:08:02', "
+            "Title: 'tech_data_generation', Authors: 'Danish Energy Agency', URL Date Archive: '2025-05-06 16:02:04'",
+        ),
+    ],
+    indirect=["example_source_collection"],
+)  # type: ignore
+def test_str(
+    example_source_collection: technologydata.SourceCollection, expected_string: str
+) -> None:
+    """Check if the example source collection is cast to string as expected."""
+    assert str(example_source_collection) == expected_string
+
+
+@pytest.mark.parametrize(
     "example_source_collection",
     [
         [

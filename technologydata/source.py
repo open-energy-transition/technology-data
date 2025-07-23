@@ -73,6 +73,27 @@ class Source(pydantic.BaseModel):  # type: ignore
         None, description="Date the URL was archived."
     )
 
+    def __str__(self) -> str:
+        """
+        Return a string representation of the Source, including all available attributes.
+
+        Returns
+        -------
+        str
+            A string detailing the source's information.
+
+        """
+        parts = [f"Title: '{self.title}'", f"Authors: '{self.authors}'"]
+        if self.url:
+            parts.append(f"URL: '{self.url}'")
+        if self.url_archive:
+            parts.append(f"Archived URL: '{self.url_archive}'")
+        if self.url_date:
+            parts.append(f"URL Date: '{self.url_date}'")
+        if self.url_date_archive:
+            parts.append(f"URL Date Archive: '{self.url_date_archive}'")
+        return ", ".join(parts)
+
     def ensure_in_wayback(self) -> None:
         """
         Ensure that the source URL is archived in the Wayback Machine.

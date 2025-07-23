@@ -182,8 +182,37 @@ class Technology(pydantic.BaseModel):  # type: ignore
         return self
 
     @classmethod
-    def from_dict(cls, data):
-        # Process parameters
+    def from_dict(cls, data: dict[str, typing.Any]) -> "Technology":
+        """
+        Create an instance of the class from a dictionary.
+
+        Parameters
+        ----------
+        cls : type
+            The class to instantiate.
+        data : dict
+            A dictionary containing the data to initialize the class instance.
+            Expected keys include:
+                - "region" (str): The region associated with the instance.
+                - "case" (str): The case identifier.
+                - "year" (int): The year value.
+                - "name" (str): The name of the instance.
+                - "detailed_technology" (str): Details about the technology.
+                - "parameters" (dict): A dictionary where each key maps to a parameter data
+                  dictionary, which will be converted to a Parameter object.
+
+        Returns
+        -------
+        instance : cls
+            An instance of the class initialized with the provided data.
+
+        Notes
+        -----
+        This method processes the "parameters" field in the input data by converting each
+        parameter dictionary into a Parameter object using `Parameter.from_dict()`. It then
+        constructs and returns an instance of the class with all the provided attributes.
+
+        """
         params = {}
         for key, param_data in data.get("parameters", {}).items():
             params[key] = technologydata.Parameter.from_dict(param_data)

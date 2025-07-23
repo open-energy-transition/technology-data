@@ -15,6 +15,26 @@ path_cwd = pathlib.Path.cwd()
 
 
 @pytest.mark.parametrize(
+    "example_source, expected_string",
+    [
+        (
+            {
+                "source_title": "OET project page",
+                "source_authors": "Open Energy Transition gGmbH",
+                "source_url": "https://openenergytransition.org/outputs.html",
+            },
+            "Title: 'OET project page', Authors: 'Open Energy Transition gGmbH', URL: 'https://openenergytransition.org/outputs.html'",
+        )
+    ],
+    indirect=["example_source"],
+)  # type: ignore
+def test_str(example_source: technologydata.Source, expected_string: str) -> None:
+    """Check if the override method str works as expected."""
+    # Ensure the snapshot is created
+    assert str(example_source) == expected_string
+
+
+@pytest.mark.parametrize(
     "example_source",
     [
         {

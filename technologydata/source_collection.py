@@ -8,6 +8,7 @@ import csv
 import json
 import pathlib
 import re
+import typing
 
 import pandas
 import pydantic
@@ -32,6 +33,19 @@ class SourceCollection(pydantic.BaseModel):  # type: ignore
     """
 
     sources: list[Source] = pydantic.Field(..., description="List of Source objects.")
+
+    def __str__(self) -> str:
+        """
+        Return a string representation of the SourceCollection.
+
+        Returns
+        -------
+        str
+            A string representation of the SourceCollection, showing the number of sources.
+
+        """
+        sources_str = ", ".join(str(source) for source in self.sources)
+        return f"SourceCollection with {len(self.sources)} sources: {sources_str}"
 
     def get(self, title: str, authors: str) -> "SourceCollection":
         """
@@ -180,13 +194,15 @@ class SourceCollection(pydantic.BaseModel):  # type: ignore
             jsonfile.write(json_data)
 
     @classmethod
-    def from_json(cls, file_path: pathlib.Path | str | list) -> "SourceCollection":
+    def from_json(
+        cls, file_path: pathlib.Path | str | list[dict[str, typing.Any]]
+    ) -> "SourceCollection":
         """
         Import the SourceCollection from a JSON file.
 
         Parameters
         ----------
-        file_path : pathlib.Path
+        file_path : pathlib.Path | str | list
             The path to the JSON file to be imported.
 
         """

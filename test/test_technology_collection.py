@@ -17,13 +17,17 @@ path_cwd = pathlib.Path.cwd()
 def test_to_csv() -> None:
     """Check if the example technology collection is exported to CSV."""
     input_file = pathlib.Path(
-        path_cwd, "test", "test_data", "solar_photovoltaics_example_03", "technologies.json"
+        path_cwd,
+        "test",
+        "test_data",
+        "solar_photovoltaics_example_03",
+        "technologies.json",
     )
     technology_collection = technologydata.TechnologyCollection.from_json(input_file)
-    output_file = pathlib.Path(path_cwd, "export.csv")
+    output_file = pathlib.Path(path_cwd, "technologies.csv")
     technology_collection.to_csv(path_or_buf=output_file)
     assert output_file.is_file()
-    #output_file.unlink(missing_ok=True)
+    output_file.unlink(missing_ok=True)
 
 
 @pytest.mark.parametrize(
