@@ -6,6 +6,7 @@ import pytest
 from technologydata.utils.units import (
     CURRENCY_CODES_CACHE,
     extract_currency_units,
+    get_conversion_rate,
     get_iso3_to_currency_codes,
 )
 
@@ -165,3 +166,117 @@ class TestGetIso3ToCurrencyCodes:
         # Force refresh should overwrite cache
         codes = get_iso3_to_currency_codes(refresh=True)
         assert codes != dummy_data
+
+
+class TestGetConversionRate:
+    """Test cases for get_conversion_rate function."""
+
+    def test_same_currency_same_year(self) -> None:
+        """Test conversion rate when currency and year are the same."""
+        rate = get_conversion_rate(
+            from_currency="USA",
+            to_currency="USA",
+            country_iso3="USA",
+            from_year=2020,
+            to_year=2020,
+        )
+        assert rate == pytest.approx(1.0, rel=1e-6)
+
+    def test_different_years_same_currency(self) -> None:
+        """Test conversion rate with different years but same currency."""
+        rate = get_conversion_rate(
+            from_currency="USA",
+            to_currency="USA",
+            country_iso3="USA",
+            from_year=2015,
+            to_year=2020,
+        )
+        # Rate should not be 1.0 due to inflation adjustment
+        assert rate != 1.0
+        assert isinstance(rate, float)
+        assert rate > 0
+
+    def test_different_currencies_same_year(self) -> None:
+        """Test conversion rate with different currencies but same year."""
+        rate = get_conversion_rate(
+            from_currency="USA",
+            to_currency="DEU",
+            country_iso3="USA",
+            from_year=2020,
+            to_year=2020,
+        )
+        # Rate should not be 1.0 due to currency conversion
+        assert rate != 1.0
+        assert isinstance(rate, float)
+        assert rate > 0
+
+    def test_different_currencies_different_years(self) -> None:
+        """Test conversion rate with different currencies and years."""
+        rate = get_conversion_rate(
+            from_currency="USA",
+            to_currency="DEU",
+            country_iso3="USA",
+            from_year=2015,
+            to_year=2020,
+        )
+        assert isinstance(rate, float)
+        assert rate > 0
+
+    def test_worldbank_source(self) -> None:
+        """Test conversion rate using World Bank data source."""
+        rate = get_conversion_rate(
+            from_currency="USA",
+            to_currency="USA",
+            country_iso3="USA",
+            from_year=2015,
+            to_year=2020,
+            source="worldbank",
+        )
+        assert isinstance(rate, float)
+        assert rate > 0
+
+    def test_imf_source(self) -> None:
+        """Test conversion rate using IMF data source."""
+        rate = get_conversion_rate(
+            from_currency="USA",
+            to_currency="USA",
+            country_iso3="USA",
+            from_year=2015,
+            to_year=2020,
+            source="international_monetary_fund",
+        )
+        assert isinstance(rate, float)
+        assert rate > 0
+
+    def test_invalid_source_raises_keyerror(self) -> None:
+        """Test that invalid source raises KeyError."""
+        with pytest.raises(KeyError):
+            get_conversion_rate(
+                from_currency="USA",
+                to_currency="USA",
+                country_iso3="USA",
+                from_year=2020,
+                to_year=2020,
+                source="invalid_source",
+            )
+
+    def test_caching_behavior(self) -> None:
+        """Test that function results are cached."""
+        # Call function twice with same parameters
+        rate1 = get_conversion_rate(
+            from_currency="USA",
+            to_currency="DEU",
+            country_iso3="USA",
+            from_year=2018,
+            to_year=2019,
+        )
+        rate2 = get_conversion_rate(
+            from_currency="USA",
+            to_currency="DEU",
+            country_iso3="USA",
+            from_year=2018,
+            to_year=2019,
+        )
+
+        # Results should be identical (cached)
+        assert rate1 == rate2
