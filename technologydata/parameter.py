@@ -21,7 +21,6 @@ from typing import Annotated, Any
 import pint
 from pydantic import BaseModel, Field, PrivateAttr
 
-from technologydata.source import Source
 from technologydata.source_collection import SourceCollection
 
 ureg = pint.UnitRegistry()
@@ -243,4 +242,3 @@ class Parameter(BaseModel):  # type: ignore
             # note= ... ,
             # sources= ...,
         )
-
