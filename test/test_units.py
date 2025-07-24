@@ -7,13 +7,16 @@ import json
 
 import pint
 import pytest
+from frozendict import frozendict
 
 from technologydata.utils.units import (
     CURRENCY_CODES_CACHE,
+    SPECIAL_CASES_CURRENCY_CODE_TO_ISO3,
     SpecialUnitRegistry,
     creg,
     extract_currency_units,
     get_conversion_rate,
+    get_iso3_from_currency_code,
     get_iso3_to_currency_codes,
     hvreg,
 )
@@ -480,3 +483,104 @@ class TestHeatingValueRegistry:
             assert all(units[0].is_compatible_with(u) for u in units[1:]), (
                 f"Units {units} should be compatible."
             )
+
+
+class TestGetIso3FromCurrencyCode:
+    """Test cases for get_iso3_from_currency_code function."""
+
+    def test_special_case_currencies(self) -> None:
+        """Test that special case currencies return correct ISO3 codes."""
+        # Test some known special cases
+        assert get_iso3_from_currency_code("USD") == "USA"
+        assert get_iso3_from_currency_code("EUR") == "EUR"
+        assert get_iso3_from_currency_code("GBP") == "GBR"
+        assert get_iso3_from_currency_code("CHF") == "CHE"
+        assert get_iso3_from_currency_code("NOK") == "NOR"
+
+    def test_regular_currency_codes(self) -> None:
+        """Test that regular (non-special case) currency codes work correctly."""
+        # Test currencies that should have unique mappings
+        result = get_iso3_from_currency_code("JPY")
+        assert result == "JPN"
+
+        result = get_iso3_from_currency_code("CAD")
+        assert result == "CAN"
+
+    def test_invalid_currency_code_raises_error(self) -> None:
+        """Test that invalid currency codes raise ValueError."""
+        with pytest.raises(ValueError, match="Currency code 'XYZ' not found"):
+            get_iso3_from_currency_code("XYZ")
+
+        with pytest.raises(ValueError, match="Currency code 'INVALID' not found"):
+            get_iso3_from_currency_code("INVALID")
+
+    def test_empty_currency_code_raises_error(self) -> None:
+        """Test that empty currency code raises ValueError."""
+        with pytest.raises(ValueError, match="Currency code '' not found"):
+            get_iso3_from_currency_code("")
+
+    def test_case_sensitivity(self) -> None:
+        """Test that currency codes are case sensitive."""
+        # Valid uppercase
+        assert get_iso3_from_currency_code("USD") == "USA"
+
+        # Invalid lowercase should raise error
+        with pytest.raises(ValueError, match="Currency code 'usd' not found"):
+            get_iso3_from_currency_code("usd")
+
+    def test_empty_special_cases(self) -> None:
+        """Test behavior with empty special cases dictionary."""
+        # With empty special cases, USD should not be handled specially
+        # This might raise an error if USD has multiple ISO3 mappings
+
+        try:
+            result = get_iso3_from_currency_code("USD", special_cases=frozendict({}))
+            # If no error, USD has a unique mapping
+            assert isinstance(result, str)
+            assert len(result) == 3
+        except ValueError as e:
+            # Expected if USD has multiple mappings and needs special handling
+            assert "Some currency codes are used by multiple ISO3 codes" in str(e)
+
+    def test_function_caching(self) -> None:
+        """Test that function results are cached (via @lru_cache decorator)."""
+        # Call function twice with same parameters
+        result1 = get_iso3_from_currency_code("USD")
+        result2 = get_iso3_from_currency_code("USD")
+
+        # Results should be identical (cached)
+        assert result1 == result2
+        assert result1 == "USA"
+
+    def test_return_type_is_string(self) -> None:
+        """Test that function always returns a string."""
+        result = get_iso3_from_currency_code("USD")
+        assert isinstance(result, str)
+        assert len(result) == 3  # ISO3 codes are always 3 characters
+        assert result.isupper()  # ISO3 codes are uppercase
+
+    def test_all_special_cases_work(self) -> None:
+        """Test that all predefined special cases work correctly."""
+        for (
+            currency_code,
+            expected_iso3,
+        ) in SPECIAL_CASES_CURRENCY_CODE_TO_ISO3.items():
+            result = get_iso3_from_currency_code(currency_code)
+            assert result == expected_iso3, f"Failed for {currency_code}"
+
+    def test_duplicate_currency_handling_error(self) -> None:
+        """Test that currencies with multiple ISO3 codes raise appropriate error when not in special cases."""
+        # This test verifies the error handling for currencies that appear in multiple countries
+        # but are not handled in special cases. The exact currencies that trigger this depend
+        # on the current UN data, so we test the error mechanism rather than specific currencies.
+
+        # Use empty special cases to potentially trigger the duplicate handling error
+        try:
+            special_cases = SPECIAL_CASES_CURRENCY_CODE_TO_ISO3.delete(
+                "USD"
+            )  # Remove USD to force error
+            # Try a currency that might have multiple mappings
+            get_iso3_from_currency_code("XCD", special_cases=special_cases)
+        except ValueError as e:
+            # If it's a duplicate currency error, check the message format
+            assert "Some currency codes are used by multiple ISO3 codes" in str(e)

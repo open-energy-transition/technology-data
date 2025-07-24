@@ -12,6 +12,7 @@ from pathlib import Path
 import pandas as pd
 import pint
 import pydeflate
+from frozendict import frozendict
 from hdx.location.country import Country
 from platformdirs import user_cache_dir
 
@@ -25,7 +26,30 @@ CACHE_DIR.mkdir(parents=True, exist_ok=True)  # TODO move to commons?
 CURRENCY_CODES_CACHE = CACHE_DIR / "iso3_to_currency_codes.json"
 
 
-@lru_cache
+SPECIAL_CASES_CURRENCY_CODE_TO_ISO3 = frozendict(
+    {
+        # Multi-country currencies (return codes directly)
+        "EUR": "EUR",  # Eurozone
+        # Single primary countries
+        "AUD": "AUS",  # Australia
+        "CHF": "CHE",  # Switzerland
+        "DKK": "DNK",  # Denmark
+        "GBP": "GBR",  # United Kingdom (largest GBP economy)
+        "ILS": "ISR",  # Israel
+        "MAD": "MAR",  # Morocco
+        "NOK": "NOR",  # Norway
+        "NZD": "NZL",  # New Zealand
+        "USD": "USA",  # Dollar-ized economies
+        # Special regional cases with proxy selection criteria
+        "ANG": "CUW",  # Curaçao (GDP-weighted proxy)
+        "XAF": "CAF",  # Central African Republic (lowest inflation differential)
+        "XCD": "GRD",  # Grenada (lowest inflation differential)
+        "XOF": "NER",  # Niger (lowest inflation differential 2015-2023)
+        "XPF": "PYF",  # French Polynesia (data availability)
+    }
+)
+
+
 def get_iso3_to_currency_codes(
     refresh: bool = False, ignore_cache: bool = False
 ) -> dict[str, str]:
@@ -183,6 +207,96 @@ def get_conversion_rate(
     )
 
     return conversion_rates.loc[0, "new_value"]
+
+
+@lru_cache
+def get_iso3_from_currency_code(
+    currency_code: str,
+    special_cases: frozendict[str, str] = SPECIAL_CASES_CURRENCY_CODE_TO_ISO3,
+) -> str:
+    """
+    Get the ISO3 country code from a 3-letter currency code using official UN data and opinionated assumptions.
+
+    Parameters
+    ----------
+    currency_code : str
+        The 3-letter currency code (e.g., 'USD', 'EUR').
+    special_cases : dict[str, str], optional
+        A dictionary mapping specific currency codes to their ISO3 country codes for special cases.
+        Defaults to `technologydata.utils.units.SPECIAL_CASES_CURRENCY_CODE_TO_ISO3`.
+
+    Returns
+    -------
+    str
+        The ISO 3166 alpha 3 country code of the `currency_code`.
+
+    Raises
+    ------
+    ValueError
+        If the currency code is not found in the official list of currencies.
+
+    """
+    iso3_to_currency_codes = get_iso3_to_currency_codes()
+
+    # Build reverse mapping: currency code -> list of ISO3 codes
+    iso3_to_currency_codes = (
+        pd.DataFrame.from_dict(
+            iso3_to_currency_codes, orient="index", columns=["currency"]
+        )
+        .reset_index(drop=False)
+        .rename(columns={"index": "iso3"})
+    )
+    currency_codes_to_iso3 = iso3_to_currency_codes.groupby("currency", as_index=False)[
+        "iso3"
+    ].agg(list)
+
+    # Handle special cases for specific currency codes
+
+    # Remove all currencies that are in the special cases from the mapping
+    currency_codes_to_iso3 = currency_codes_to_iso3.loc[
+        ~currency_codes_to_iso3["currency"].isin(special_cases.keys())
+    ]
+
+    # Mapping should now only contain unique currency codes to ISO3 codes mappings, safe to explode
+    currency_codes_to_iso3 = currency_codes_to_iso3.explode("iso3")
+
+    # Add the special cases to the mapping
+    currency_codes_to_iso3 = pd.concat(
+        [
+            currency_codes_to_iso3,
+            pd.DataFrame(
+                list(special_cases.items()),
+                columns=["currency", "iso3"],
+            ),
+        ],
+        ignore_index=False,
+    )
+
+    # Special cases should handle all non-unique currency codes, check to make sure
+    # and return the ones that are not handled in special cases
+
+    if (
+        duplicated_iso3 := currency_codes_to_iso3.explode("iso3")[
+            "currency"
+        ].duplicated()
+    ).any():
+        raise ValueError(
+            "Some currency codes are used by multiple ISO3 codes but are not handled in `special_cases` "
+            "and need to be added to the mapping: "
+            f"{currency_codes_to_iso3[duplicated_iso3]}"
+        )
+
+    currency_codes_to_iso3 = currency_codes_to_iso3.set_index("currency")[
+        "iso3"
+    ].to_dict()
+
+    try:
+        return currency_codes_to_iso3[currency_code]
+    except KeyError as e:
+        raise ValueError(
+            f"Currency code '{currency_code}' not found in the list of currencies. "
+            "Please ensure it is a valid 3-letter currency code."
+        ) from e
 
 
 class SpecialUnitRegistry(pint.UnitRegistry):
