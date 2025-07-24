@@ -58,7 +58,7 @@ def test_str(
             },
         ]
     ],
-    indirect=True,
+    indirect=["example_source_collection"],
 )  # type: ignore
 def test_example_source_collection(
     example_source_collection: technologydata.SourceCollection,
@@ -99,7 +99,7 @@ def test_example_source_collection(
             },
         ],
     ],
-    indirect=True,
+    indirect=["example_source_collection"],
 )  # type: ignore
 def test_retrieve_all_from_wayback(
     example_source_collection: technologydata.SourceCollection,
@@ -148,7 +148,7 @@ def test_retrieve_all_from_wayback(
             },
         ],
     ],
-    indirect=True,
+    indirect=["example_source_collection"],
 )  # type: ignore
 def test_to_csv(example_source_collection: technologydata.SourceCollection) -> None:
     """Check if the example source collection is exported to CSV."""
@@ -180,7 +180,7 @@ def test_to_csv(example_source_collection: technologydata.SourceCollection) -> N
             },
         ],
     ],
-    indirect=True,
+    indirect=["example_source_collection"],
 )  # type: ignore
 def test_to_json(example_source_collection: technologydata.SourceCollection) -> None:
     """Check if the example source collection is exported to JSON."""
@@ -215,7 +215,7 @@ def test_to_json(example_source_collection: technologydata.SourceCollection) -> 
             },
         ],
     ],
-    indirect=True,
+    indirect=["example_source_collection"],
 )  # type: ignore
 def test_to_dataframe(
     example_source_collection: technologydata.SourceCollection,

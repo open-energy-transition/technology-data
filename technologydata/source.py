@@ -73,6 +73,66 @@ class Source(pydantic.BaseModel):  # type: ignore
         None, description="Date the URL was archived."
     )
 
+    def __eq__(self, other: object) -> bool:
+        """
+        Check for equality with another Source object based on non-None attributes.
+
+        Compares all attributes of the current instance with those of the other object.
+        Only compares attributes that are not None in both instances.
+
+        Parameters
+        ----------
+        other : object
+            The object to compare with. Expected to be an instance of Source.
+
+        Returns
+        -------
+        bool
+            True if all non-None attributes are equal between self and other, False otherwise.
+            Returns False if other is not a Source instance.
+
+        Notes
+        -----
+        This method considers only attributes that are not None in both objects.
+        If an attribute is None in either object, it is ignored in the comparison.
+
+        """
+        if not isinstance(other, Source):
+            logger.error("The object is not a Source instance.")
+            return False
+
+        for field in self.__class__.model_fields.keys():
+            value_self = getattr(self, field)
+            value_other = getattr(other, field)
+            if value_self is not None and value_other is not None:
+                if value_self != value_other:
+                    return False
+        return True
+
+    def __hash__(self) -> int:
+        """
+        Return a hash value for the Source instance based on all attributes.
+
+        This method computes a combined hash of the instance's attributes to
+        uniquely identify the object in hash-based collections such as sets and dictionaries.
+
+        Returns
+        -------
+        int
+            The hash value of the Source instance.
+
+        """
+        return hash(
+            (
+                self.title,
+                self.authors,
+                self.url,
+                self.url_archive,
+                self.url_date,
+                self.url_date_archive,
+            )
+        )
+
     def __str__(self) -> str:
         """
         Return a string representation of the Source, including all available attributes.

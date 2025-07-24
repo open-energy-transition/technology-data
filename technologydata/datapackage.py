@@ -75,8 +75,9 @@ class DataPackage(pydantic.BaseModel):  # type: ignore
         if self.sources is None:
             for technology in self.technologies:
                 for parameter in technology.parameters.values():
-                    sources_set.update(parameter.sources)
-        self.sources = sources_set
+                    for source in parameter.sources:
+                        sources_set.add(source)
+        self.sources = SourceCollection(sources=list(sources_set))
 
     # @classmethod
     # def from_json(cls, path: pathlib.Path) -> technologydata.DataPackage:
