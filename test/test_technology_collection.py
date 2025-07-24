@@ -94,7 +94,6 @@ def test_get(
         "solar_photovoltaics_example_03",
         "technologies.json",
     )
-
     technologies_collection = technologydata.TechnologyCollection.from_json(input_file)
     result = technologies_collection.get(
         name=name,
@@ -103,4 +102,5 @@ def test_get(
         case=case,
         detailed_technology=detailed_technology,
     )
+    assert isinstance(result, technologydata.TechnologyCollection)
     assert len(result.technologies) == 1

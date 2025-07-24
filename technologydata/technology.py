@@ -11,7 +11,7 @@ import typing
 
 import pydantic
 
-import technologydata
+from technologydata.parameter import Parameter
 
 
 class Technology(pydantic.BaseModel):  # type: ignore
@@ -53,7 +53,7 @@ class Technology(pydantic.BaseModel):  # type: ignore
     name: str = pydantic.Field(..., description="Name of the technology.")
     region: str = pydantic.Field(..., description="Region identifier.")
     year: int = pydantic.Field(..., description="Year of the data.")
-    parameters: dict[str, technologydata.Parameter] = pydantic.Field(
+    parameters: dict[str, Parameter] = pydantic.Field(
         default_factory=dict, description="Parameters."
     )
     case: str = pydantic.Field(..., description="Case or scenario identifier.")
@@ -61,7 +61,7 @@ class Technology(pydantic.BaseModel):  # type: ignore
         ..., description="Detailed technology name."
     )
 
-    def __getitem__(self, key: str) -> technologydata.Parameter:
+    def __getitem__(self, key: str) -> Parameter:
         """
         Access a parameter by name.
 
@@ -78,7 +78,7 @@ class Technology(pydantic.BaseModel):  # type: ignore
         """
         return self.parameters[key]
 
-    def __setitem__(self, key: str, value: technologydata.Parameter) -> None:
+    def __setitem__(self, key: str, value: Parameter) -> None:
         """
         Set a parameter by name.
 
@@ -215,7 +215,7 @@ class Technology(pydantic.BaseModel):  # type: ignore
         """
         params = {}
         for key, param_data in data.get("parameters", {}).items():
-            params[key] = technologydata.Parameter.from_dict(param_data)
+            params[key] = Parameter.from_dict(param_data)
         return cls(
             region=data["region"],
             case=data["case"],

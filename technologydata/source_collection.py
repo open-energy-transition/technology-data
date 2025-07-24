@@ -34,6 +34,30 @@ class SourceCollection(pydantic.BaseModel):  # type: ignore
 
     sources: list[Source] = pydantic.Field(..., description="List of Source objects.")
 
+    def __iter__(self) -> typing.Iterator["Source"]:
+        """
+        Return an iterator over the list of Source objects.
+
+        Returns
+        -------
+        Iterator[Source]
+            An iterator over the Source objects contained in the collection.
+
+        """
+        return iter(self.sources)
+
+    def __len__(self) -> int:
+        """
+        Return the number of sources in this collection.
+
+        Returns
+        -------
+        int
+            The number of Source objects in the sources list.
+
+        """
+        return len(self.sources)
+
     def __str__(self) -> str:
         """
         Return a string representation of the SourceCollection.
@@ -79,18 +103,6 @@ class SourceCollection(pydantic.BaseModel):  # type: ignore
             ]
 
         return SourceCollection(sources=filtered_sources)
-
-    def __len__(self) -> int:
-        """
-        Return the number of sources in this collection.
-
-        Returns
-        -------
-        int
-            The number of Source objects in the sources list.
-
-        """
-        return len(self.sources)
 
     def retrieve_all_from_wayback(
         self, download_directory: pathlib.Path

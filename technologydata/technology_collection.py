@@ -8,6 +8,7 @@ import csv
 import json
 import pathlib
 import re
+from collections.abc import Iterator
 
 import pandas
 import pydantic
@@ -34,6 +35,18 @@ class TechnologyCollection(pydantic.BaseModel):  # type: ignore
     technologies: list[Technology] = pydantic.Field(
         ..., description="List of Technology objects."
     )
+
+    def __iter__(self) -> Iterator["Technology"]:
+        """
+        Return an iterator over the list of Technology objects.
+
+        Returns
+        -------
+        Iterator[Technology]
+            An iterator over the Technology objects contained in the collection.
+
+        """
+        return iter(self.technologies)
 
     def get(
         self, name: str, region: str, year: int, case: str, detailed_technology: str

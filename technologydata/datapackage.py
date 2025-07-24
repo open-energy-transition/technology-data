@@ -16,8 +16,7 @@ import pathlib
 import pydantic
 
 from technologydata.source_collection import SourceCollection
-
-# from technologydata.technology_collection import TechnologyCollection
+from technologydata.technology_collection import TechnologyCollection
 
 
 # TODO complete class
@@ -28,21 +27,56 @@ class DataPackage(pydantic.BaseModel):  # type: ignore
     Parameters
     ----------
     name : str
-        The short-name code of the source
-    technologies : List[Technology]
+        The short-name code of the data package.
+    path : pathlib.Path
+        The path to the data package.
+    technologies : TechnologyCollection
         List of Technology objects.
+    sources : SourceCollection
+        List of Source objects.
 
     Attributes
     ----------
-    technologies : List[Technology]
+    name : str
+        The short-name code of the data package.
+    path : pathlib.Path
+        The path to the data package.
+    technologies : TechnologyCollection
         List of Technology objects.
+    sources : SourceCollection
+        List of Source objects.
 
     """
 
-    name: str
-    path: pathlib.Path
-    # technologies: TechnologyCollection
-    sources: SourceCollection
+    name: str = pydantic.Field(
+        ..., description="The short-name code of the data package."
+    )
+    path: pathlib.Path = pydantic.Field(
+        ..., description="The path to the data package."
+    )
+    technologies: TechnologyCollection = pydantic.Field(
+        ..., description="List of Technology objects."
+    )
+    sources: SourceCollection | None = pydantic.Field(
+        None, description="List of Source objects."
+    )
+
+    def get_source_collection(self) -> None:
+        """
+        Get the SourceCollection associated with this DataPackage from the TechnologyCollection.
+
+        Returns
+        -------
+        SourceCollection
+            The SourceCollection instance.
+
+        """
+        sources_set = set()
+        if self.sources is None:
+            for technology in self.technologies:
+                for parameter in technology.parameters.values():
+                    sources_set.update(parameter.sources)
+        self.sources = sources_set
 
     # @classmethod
     # def from_json(cls, path: pathlib.Path) -> technologydata.DataPackage:
