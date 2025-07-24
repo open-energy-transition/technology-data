@@ -4,10 +4,7 @@
 
 """Test the initialization and methods of the Datapackage class."""
 
-import datetime
 import pathlib
-
-import pytest
 
 import technologydata
 
@@ -29,4 +26,6 @@ def test_get_source_collection() -> None:
         path=pathlib.Path(path_cwd, "test_package"),
         technologies=technologies_collection,
     )
-    assert isinstance(data_package.get_source_collection(), technologydata.SourceCollection)
+    assert isinstance(
+        data_package.get_source_collection(), technologydata.SourceCollection
+    )
