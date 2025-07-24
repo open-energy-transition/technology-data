@@ -25,6 +25,7 @@ CACHE_DIR.mkdir(parents=True, exist_ok=True)  # TODO move to commons?
 CURRENCY_CODES_CACHE = CACHE_DIR / "iso3_to_currency_codes.json"
 
 
+@lru_cache
 def get_iso3_to_currency_codes(
     refresh: bool = False, ignore_cache: bool = False
 ) -> dict[str, str]:
@@ -68,6 +69,7 @@ def get_iso3_to_currency_codes(
     return currencies
 
 
+@lru_cache
 def extract_currency_units(units: str | pint.Unit) -> list[str]:
     """
     Extract currency-like strings from a string or pint.Unit.
