@@ -48,6 +48,18 @@ class TechnologyCollection(pydantic.BaseModel):  # type: ignore
         """
         return iter(self.technologies)
 
+    def __len__(self) -> int:
+        """
+        Return the number of technologies in this collection.
+
+        Returns
+        -------
+        int
+            The number of Technology objects in the technologies list.
+
+        """
+        return len(self.technologies)
+
     def get(
         self, name: str, region: str, year: int, case: str, detailed_technology: str
     ) -> "TechnologyCollection":
@@ -108,18 +120,6 @@ class TechnologyCollection(pydantic.BaseModel):  # type: ignore
             ]
 
         return TechnologyCollection(technologies=filtered_technologies)
-
-    def __len__(self) -> int:
-        """
-        Return the number of technologies in this collection.
-
-        Returns
-        -------
-        int
-            The number of Technology objects in the technologies list.
-
-        """
-        return len(self.technologies)
 
     def to_dataframe(self) -> pandas.DataFrame:
         """
