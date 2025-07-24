@@ -27,6 +27,7 @@ classifiers=[
 ]
 requires-python = ">=3.12"
 dependencies = [
+    "frozendict>=2.4.6",
     "hdx-python-country>=3.9.6",
     "ipykernel>=6.29.5", # this one can go into optional as "dev"
     "mypy>=1.15.0",
