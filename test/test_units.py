@@ -46,12 +46,12 @@ class TestExtractCurrencyUnits:
         """Test extraction from pint.Unit object."""
         ureg = pint.UnitRegistry()
         ureg.define("USD_2020 = [currency]")
-        unit = pint.Unit("USD_2020")
+        unit = ureg.Unit("USD_2020")
         result = extract_currency_units(unit)
         assert result == ["USD_2020"]
 
         ureg.define("USD_2020 = [currency]")
-        unit = pint.Unit("USD_2020/kW")
+        unit = ureg.Unit("USD_2020/kW")
         result = extract_currency_units(unit)
         assert result == ["USD_2020"]
 
