@@ -42,6 +42,7 @@ class Parameter {
   - provenance: str
   - note: str
   - sources: SourceCollection
+  + from_dict(): Parameter
 }
 
 Parameter --> UnitValue : quantity
@@ -72,6 +73,7 @@ class Technology {
   - output-hydrogen: Parameter
   - output-electricity: Parameter
 
+  + from_dict(): Technology
   + adjust_currency(): Technology               // or inplace
   + adjust_region(): Technology                 // or inplace
   + adjust_scale(): Technology                  // or inplace
@@ -116,6 +118,11 @@ end note
 class TechnologyCollection {
   - technologies: Iterable<Technology>
   + get(**criteria): Technology | TechnologyCollection | None
+  + from_dict(): TechnologyCollection
+  + to_json(): str
+  + to_csv(): str
+  + to_dataframe(): pd.DataFrame
+  + from_json(): TechnologyCollection
   + create_projection(): TechnologyCollection
   ' TODO: Think about more methods here
 }

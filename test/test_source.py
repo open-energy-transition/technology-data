@@ -43,7 +43,7 @@ path_cwd = pathlib.Path.cwd()
     indirect=["example_source"],
 )  # type: ignore
 def test_eq(example_source: technologydata.Source, expected_equal: bool) -> None:
-    """Check if the override method eq works as expected."""
+    """Check if the override method __eq__ works as expected."""
     reference_source = technologydata.Source(
         title="tech_data_generation",
         authors="Danish Energy Agency",
@@ -53,6 +53,31 @@ def test_eq(example_source: technologydata.Source, expected_equal: bool) -> None
         url_date_archive="2025-05-06 16:02:04",
     )
     assert (example_source == reference_source) == expected_equal
+
+
+@pytest.mark.parametrize(
+    "example_source",
+    [
+        {
+            "source_title": "atb_nrel",
+            "source_authors": "NREL/ATB",
+            "source_url_archive": "http:/3273/download",
+            "source_url_date_archive": "2025-05-22 15:08:02",
+        },
+        {
+            "source_title": "tech_data_generation",
+            "source_authors": "Danish Energy Agency",
+            "source_url": "https:download",
+            "source_url_archive": "http:/3273/download",
+            "source_url_date": "2025-05-06 16:02:04",
+            "source_url_date_archive": "2025-05-06 16:02:04",
+        },
+    ],
+    indirect=["example_source"],
+)  # type: ignore
+def test_hash(example_source: technologydata.Source) -> None:
+    """Check if the override method __hash__ works as expected."""
+    assert isinstance(hash(example_source), int)
 
 
 @pytest.mark.parametrize(
@@ -73,7 +98,7 @@ def test_eq(example_source: technologydata.Source, expected_equal: bool) -> None
     indirect=["example_source"],
 )  # type: ignore
 def test_str(example_source: technologydata.Source, expected_string: str) -> None:
-    """Check if the override method str works as expected."""
+    """Check if the override method __str__ works as expected."""
     # Ensure the snapshot is created
     assert str(example_source) == expected_string
 
