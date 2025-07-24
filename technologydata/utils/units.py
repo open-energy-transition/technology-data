@@ -19,9 +19,9 @@ logger = logging.getLogger(__name__)
 CURRENCY_UNIT_PATTERN = re.compile(r"\b([A-Z]{3})_(\d{4})\b")
 
 # Set up cache directory and file for currency codes
-CACHE_DIR = Path(user_cache_dir("technologydata"))
-CACHE_DIR.mkdir(parents=True, exist_ok=True)
-CURRENCY_CODES_CACHE = CACHE_DIR / "currency_codes.json"
+CACHE_DIR = Path(user_cache_dir("technologydata"))  # TODO move to commons?
+CACHE_DIR.mkdir(parents=True, exist_ok=True)  # TODO move to commons?
+CURRENCY_CODES_CACHE = CACHE_DIR / "iso3_to_currency_codes.json"
 
 
 def get_iso3_to_currency_codes(
