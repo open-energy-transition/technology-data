@@ -32,7 +32,7 @@ class DataPackage(pydantic.BaseModel):  # type: ignore
         The path to the data package.
     technologies : TechnologyCollection
         List of Technology objects.
-    sources : SourceCollection
+    sources : Optional[SourceCollection]
         List of Source objects.
 
     Attributes
@@ -43,7 +43,7 @@ class DataPackage(pydantic.BaseModel):  # type: ignore
         The path to the data package.
     technologies : TechnologyCollection
         List of Technology objects.
-    sources : SourceCollection
+    sources : Optional[SourceCollection]
         List of Source objects.
 
     """
