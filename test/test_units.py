@@ -10,10 +10,12 @@ import pytest
 
 from technologydata.utils.units import (
     CURRENCY_CODES_CACHE,
-    UnitRegistry,
+    SpecialUnitRegistry,
+    creg,
     extract_currency_units,
     get_conversion_rate,
     get_iso3_to_currency_codes,
+    hvreg,
 )
 
 
@@ -293,7 +295,7 @@ class TestUnitRegistryGetReferenceCurrency:
 
     def test_single_reference_currency(self) -> None:
         """Test that get_reference_currency returns the correct currency when one is defined."""
-        ureg = UnitRegistry()
+        ureg = SpecialUnitRegistry()
         # UnitRegistry already defines USD_2020 as [currency] in __init__
         reference = ureg.get_reference_currency()
         assert reference == "USD_2020"
@@ -301,7 +303,7 @@ class TestUnitRegistryGetReferenceCurrency:
     def test_no_reference_currency_raises_error(self) -> None:
         """Test that ValueError is raised when no reference currency is defined."""
         # Use base pint registry without currency definitions
-        ureg = UnitRegistry()
+        ureg = SpecialUnitRegistry()
 
         ureg.define(
             "USD_2020 = [not_a_currency]"
@@ -312,7 +314,7 @@ class TestUnitRegistryGetReferenceCurrency:
 
     def test_multiple_reference_currencies_raises_error(self) -> None:
         """Test that ValueError is raised when multiple currencies are defined."""
-        ureg = UnitRegistry()
+        ureg = SpecialUnitRegistry()
         ureg.define("EUR_2015 = [currency]")
 
         with pytest.raises(ValueError, match="does not have a unique base currency"):
@@ -324,7 +326,7 @@ class TestUnitRegistryEnsureCurrencyIsUnit:
 
     def test_no_currency_units_does_nothing(self) -> None:
         """Test that method does nothing when no currency units are present."""
-        ureg = UnitRegistry()
+        ureg = SpecialUnitRegistry()
         initial_units = set(ureg._units.keys())
 
         ureg.ensure_currency_is_unit("kW/hour")
@@ -334,7 +336,7 @@ class TestUnitRegistryEnsureCurrencyIsUnit:
 
     def test_empty_string_does_nothing(self) -> None:
         """Test that method does nothing with empty string."""
-        ureg = UnitRegistry()
+        ureg = SpecialUnitRegistry()
         initial_units = set(ureg._units.keys())
 
         ureg.ensure_currency_is_unit("")
@@ -344,7 +346,7 @@ class TestUnitRegistryEnsureCurrencyIsUnit:
 
     def test_already_defined_currency_not_redefined(self) -> None:
         """Test that already defined currency units are not redefined."""
-        ureg = UnitRegistry()
+        ureg = SpecialUnitRegistry()
         # USD_2020 is already defined in UnitRegistry.__init__
 
         # Should not raise an error or redefine
@@ -355,7 +357,7 @@ class TestUnitRegistryEnsureCurrencyIsUnit:
 
     def test_new_currency_unit_gets_defined(self) -> None:
         """Test that new currency units get defined relative to reference currency."""
-        ureg = UnitRegistry()
+        ureg = SpecialUnitRegistry()
 
         # EUR_2015 should not be defined initially
         assert "EUR_2015" not in ureg._units
@@ -371,7 +373,7 @@ class TestUnitRegistryEnsureCurrencyIsUnit:
 
     def test_multiple_currency_units_get_defined(self) -> None:
         """Test that multiple new currency units get defined."""
-        ureg = UnitRegistry()
+        ureg = SpecialUnitRegistry()
 
         # Neither should be defined initially
         assert "EUR_2015" not in ureg._units
@@ -385,7 +387,7 @@ class TestUnitRegistryEnsureCurrencyIsUnit:
 
     def test_mix_of_existing_and_new_currencies(self) -> None:
         """Test handling mix of existing and new currency units."""
-        ureg = UnitRegistry()
+        ureg = SpecialUnitRegistry()
 
         # USD_2020 already exists, CAD_2019 doesn't
         assert "USD_2020" in ureg._units
@@ -399,7 +401,7 @@ class TestUnitRegistryEnsureCurrencyIsUnit:
 
     def test_currency_defined_with_nan_conversion(self) -> None:
         """Test that new currencies are defined with nan conversion factor."""
-        ureg = UnitRegistry()
+        ureg = SpecialUnitRegistry()
 
         ureg.ensure_currency_is_unit("JPY_2021/kW")
 
@@ -409,7 +411,7 @@ class TestUnitRegistryEnsureCurrencyIsUnit:
 
     def test_complex_unit_string_with_currency(self) -> None:
         """Test handling of complex unit strings containing currencies."""
-        ureg = UnitRegistry()
+        ureg = SpecialUnitRegistry()
 
         assert "CHF_2022" not in ureg._units
 
@@ -419,7 +421,7 @@ class TestUnitRegistryEnsureCurrencyIsUnit:
 
     def test_same_currency_different_years(self) -> None:
         """Test that same currency with different years creates separate units."""
-        ureg = UnitRegistry()
+        ureg = SpecialUnitRegistry()
 
         ureg.ensure_currency_is_unit("EUR_2015/EUR_2020")
 
@@ -429,7 +431,52 @@ class TestUnitRegistryEnsureCurrencyIsUnit:
 
     def test_invalid_currency_code_raises_error(self) -> None:
         """Test that invalid currency codes raise ValueError."""
-        ureg = UnitRegistry()
+        ureg = SpecialUnitRegistry()
 
         with pytest.raises(ValueError, match="invalid 3-letter currency codes"):
             ureg.ensure_currency_is_unit("XYZ_2020/kW")
+
+
+class TestCarrierRegistry:
+    def test_creg_registry_parses_carriers(self) -> None:
+        """Test that the carrier registry (creg) loads carrier units from carriers.txt and can create Quantities."""
+        expected_carriers = [
+            "electricity",
+            "hydrogen",
+            "natural_gas",
+            "coal",
+            "diesel",
+        ]
+        for carrier in expected_carriers:
+            assert carrier in creg, f"Carrier '{carrier}' not found in creg registry."
+            q = creg.Quantity(1, carrier)
+            assert q.units == creg.Unit(carrier)
+
+
+class TestHeatingValueRegistry:
+    def test_hvreg_registry_parses_heating_values(self) -> None:
+        """Test that heating value registry (hvreg) loads heating value units from heating_values.txt and can create Quantities."""
+        expected_hvs = [
+            "LHV",
+            "HHV",
+            "NCV",
+            "GCV",
+        ]
+        for fuel in expected_hvs:
+            assert fuel in hvreg, f"Fuel '{fuel}' not found in hvreg registry."
+            q = hvreg.Quantity(1, fuel)
+            assert q.units == hvreg.Unit(fuel)
+
+    def test_hvreg_units_compatability(self) -> None:
+        """Test that the same heating values are compatible, but different hvs are not."""
+        compatible_hvs = (
+            ["LHV", "NCV", "lower_heating_value"],
+            ["HHV", "GCV", "higher_heating_value"],
+        )
+        for hvs in compatible_hvs:
+            units = [hvreg.Unit(hv) for hv in hvs]
+
+            # Check compatibility
+            assert all(units[0].is_compatible_with(u) for u in units[1:]), (
+                f"Units {units} should be compatible."
+            )

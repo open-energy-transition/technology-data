@@ -21,11 +21,8 @@ from typing import Annotated, Any
 import pint
 from pydantic import BaseModel, Field, PrivateAttr
 
-from technologydata.source import Source
 from technologydata.source_collection import SourceCollection
-
-ureg = pint.UnitRegistry()
-pint.set_application_registry(ureg)
+from technologydata.utils.units import creg, hvreg
 
 
 def refresh_pint_attributes(method: Callable[..., Any]) -> Callable[..., Any]:
@@ -108,13 +105,13 @@ class Parameter(BaseModel):  # type: ignore
             self._pint_quantity = pint.Quantity(self.magnitude)
         # Create the carrier as pint unit
         if self.carrier:
-            self._pint_carrier = ureg.Unit(self.carrier)
+            self._pint_carrier = creg.Unit(self.carrier)
         else:
             self._pint_carrier = None
 
         # Create the heating value as pint unit
         if self.heating_value and self.carrier:
-            self._pint_heating_value = ureg.Unit(self.heating_value)
+            self._pint_heating_value = hvreg.Unit(self.heating_value)
         elif self.heating_value and not self.carrier:
             raise ValueError(
                 "Heating value cannot be set without a carrier. Please provide a valid carrier."
@@ -243,4 +240,3 @@ class Parameter(BaseModel):  # type: ignore
             # note= ... ,
             # sources= ...,
         )
-

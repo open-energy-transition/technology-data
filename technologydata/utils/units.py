@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: The technology-data authors
 #
 # SPDX-License-Identifier: MIT
+"""Submodule containing pint.UnitRegistry subclasses and utility functions for handling units, conversions, and currency units."""
 
 import json
 import logging
@@ -182,26 +183,17 @@ def get_conversion_rate(
     return conversion_rates.loc[0, "new_value"]
 
 
-class UnitRegistry(pint.UnitRegistry):
-    def __init__(self, *args, **kwargs):
+class SpecialUnitRegistry(pint.UnitRegistry):
+    """A special pint.UnitRegistry subclass that includes methods for handling currency units and conversion using pydeflate."""
+
+    def __init__(self, *args, **kwargs) -> None:
+        # Use all defaults definitions from a standard pint.UnitRegistry
         super().__init__(*args, **kwargs)
+
+        # Define the reference currency unit
+        # This is the base currency unit that all other currency units will be defined relative to
+        # We use USD_2020 as the base currency unit because it is a currency that we can relate all other currencies to
         self.define("USD_2020 = [currency]")
-
-        self.define(
-            "LHV = [lower_heating_value] = lower_heating_value = NCV = net_calorific_value"
-        )
-        self.define(
-            "HHV = [higher_heating_value] = higher_heating_value = GCV = gross_calorific_value"
-        )
-
-        self.define("H2 = [hydrogen] = hydrogen")
-        self.define("CH4 = [methane] = methane")
-        self.define("CO2 = [carbon_dioxide] = carbon_dioxide")
-        self.define("CO = [carbon_monoxide] = carbon_monoxide")
-        self.define("O2 = [oxygen] = oxygen")
-        self.define("N2 = [nitrogen] = nitrogen")
-        self.define("H2O = [water] = water")  # TODO avoid warnings for redefinition
-        self.define("C = [carbon] = carbon")  # TODO avoid warnings for redefinition
 
     def get_reference_currency(self) -> str:
         """Get the reference currency from the unit registry."""
@@ -241,3 +233,13 @@ class UnitRegistry(pint.UnitRegistry):
                 f"Defining it without a conversion factor relative to the base currency '{reference_currency}'."
             )
             self.define(f"{currency_unit} = nan {reference_currency}")
+
+
+# Unit registries used throughout the package for different purposes
+ureg = SpecialUnitRegistry()  # For handling units, conversions, and currency units
+creg = pint.UnitRegistry(
+    filename=Path(__file__).parent / "carriers.txt"
+)  # For tracking carriers and ensuring compatibility between them
+hvreg = pint.UnitRegistry(
+    filename=Path(__file__).parent / "heating_values.txt"
+)  # For tracking heating values and ensuring compatibility between them
