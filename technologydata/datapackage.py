@@ -159,6 +159,22 @@ class DataPackage(pydantic.BaseModel):  # type: ignore
     def to_datapackage(
         self, path_to_folder: pathlib.Path, output_format: str = "json"
     ) -> None:
+        """
+        Export the DataPackage to the specified format and save to the given folder.
+
+        Parameters
+        ----------
+        path_to_folder : pathlib.Path
+            The directory path where the data package will be saved.
+        output_format : str, optional
+            The format to export the data package ('json' or 'csv'). Default is 'json'.
+
+        Raises
+        ------
+        ValueError
+            If an unsupported output format is specified.
+
+        """
         if output_format == "json":
             self.to_json(path_to_folder)
         elif output_format == "csv":
