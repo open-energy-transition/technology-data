@@ -31,8 +31,8 @@ path_cwd = pathlib.Path.cwd()
                 },
             ],
             "SourceCollection with 2 sources: "
-            "Title: 'atb_nrel', Authors: 'NREL/ATB', URL Date: '2025-05-22 15:08:02', "
-            "Title: 'tech_data_generation', Authors: 'Danish Energy Agency', URL Date Archive: '2025-05-06 16:02:04'",
+            "'NREL/ATB': 'atb_nrel', last accessed on '2025-05-22 15:08:02', "
+            "'Danish Energy Agency': 'tech_data_generation', on '2025-05-06 16:02:04'.",
         ),
     ],
     indirect=["example_source_collection"],

@@ -162,7 +162,6 @@ note left of SourceCollection::to_dataframe
 end note
 
 class Datapackage {
-  - name: str
   - path: Path
   - technologies: TechnologyCollection
   - sources: SourceCollection
