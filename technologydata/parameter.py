@@ -93,6 +93,16 @@ class Parameter(BaseModel):  # type: ignore
 
     def __init__(self, **data: object) -> None:
         """Initialize Parameter and update pint attributes."""
+        # pint uses canonical names for units, carriers, and heating values
+        # Ensure the Parameter object is always created with these consistent names from pint
+        if "units" in data and data["units"] is not None:
+            ureg.ensure_currency_is_unit(data["units"])
+            data["units"] = str(ureg.Unit(data["units"]))
+        if "carrier" in data and data["carrier"] is not None:
+            data["carrier"] = str(creg.Unit(data["carrier"]))
+        if "heating_value" in data and data["heating_value"] is not None:
+            data["heating_value"] = str(hvreg.Unit(data["heating_value"]))
+
         super().__init__(**data)
         self._update_pint_attributes()
 
