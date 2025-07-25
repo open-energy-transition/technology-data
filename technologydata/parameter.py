@@ -22,7 +22,7 @@ import pint
 from pydantic import BaseModel, Field, PrivateAttr
 
 from technologydata.source_collection import SourceCollection
-from technologydata.utils.units import creg, hvreg
+from technologydata.utils.units import creg, hvreg, ureg
 
 
 def refresh_pint_attributes(method: Callable[..., Any]) -> Callable[..., Any]:
@@ -100,9 +100,12 @@ class Parameter(BaseModel):  # type: ignore
         """Update all derived pint attributes from current fields."""
         # Create a pint quantity from magnitude and units
         if self.units:
-            self._pint_quantity = pint.Quantity(self.magnitude, self.units)
+            # `units` may contain an undefined currency unit - ensure the ureg can handle it
+            ureg.ensure_currency_is_unit(self.units)
+
+            self._pint_quantity = ureg.Quantity(self.magnitude, self.units)
         else:
-            self._pint_quantity = pint.Quantity(self.magnitude)
+            self._pint_quantity = ureg.Quantity(self.magnitude)
         # Create the carrier as pint unit
         if self.carrier:
             self._pint_carrier = creg.Unit(self.carrier)
