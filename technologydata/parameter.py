@@ -215,7 +215,7 @@ class Parameter(BaseModel):  # type: ignore
         # We use a temporary context to avoid polluting the global unit registry
         # with potentially invalid or incomplete conversion rates that do not
         # match the `country` and `source` parameters.
-        context = ureg.context()
+        context = ureg.Context()
 
         # Conversion rates are all relative to the reference currency
         ref_currency = ureg.get_reference_currency()
@@ -242,7 +242,7 @@ class Parameter(BaseModel):  # type: ignore
                 source=source,
             )
 
-            context.define(f"{currency} = {conversion_rate} * {ref_currency}")
+            context.redefine(f"{currency} = 1 / {conversion_rate:.4f} * {ref_currency}")
 
         # Actual conversion using pint
         quantity = self._pint_quantity.to(to_units, context=context)
