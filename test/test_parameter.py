@@ -8,6 +8,7 @@ import pytest
 from technologydata.parameter import Parameter
 from technologydata.source import Source
 from technologydata.source_collection import SourceCollection
+from technologydata.utils.units import ureg
 
 
 def test_parameter_creation() -> None:
@@ -129,7 +130,7 @@ def test_pint_attributes_update() -> None:
     param.units = "USD_2020 / kWh"
     param = param.to("USD_2020 / kWh")
     assert param._pint_quantity.magnitude == 3000
-    assert str(param._pint_quantity.units) == str(pint.Unit("USD_2020 / kWh"))
+    assert str(param._pint_quantity.units) == str(ureg.Unit("USD_2020 / kWh"))
 
 
 def test_parameter_change_currency() -> None:
