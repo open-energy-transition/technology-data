@@ -3,8 +3,6 @@
 
 """technologydata: A package for managing and analyzing technology data used for energy system models."""
 
-import pint
-
 from technologydata.datapackage import DataPackage
 from technologydata.parameter import Parameter
 from technologydata.source import Source
