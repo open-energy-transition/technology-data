@@ -153,9 +153,9 @@ def extract_currency_units(units: str | pint.Unit) -> list[str]:
 
 @lru_cache
 def get_conversion_rate(
-    from_currency: str,
-    to_currency: str,
-    country_iso3: str,
+    from_iso3: str,
+    to_iso3: str,
+    country: str,
     from_year: int,
     to_year: int,
     source: str = "worldbank",
@@ -165,11 +165,11 @@ def get_conversion_rate(
 
     Parameters
     ----------
-    from_currency : str
+    from_iso3 : str
         The ISO3 code of the country of the currency to convert from (e.g., 'USA' if the source currency is USD).
-    to_currency : str
+    to_iso3 : str
         The ISO3 code of the country of the currency to convert to (e.g., 'DEU' if the target currency is EUR).
-    country_iso3 : str
+    country : str
         The ISO3 code of the country to adjust for inflation.
     from_year : int
         The julian year (YYYY) of the source currency.
