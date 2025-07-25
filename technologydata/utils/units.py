@@ -176,13 +176,15 @@ def get_conversion_rate(
     to_year : int
         The julian year (YYYY) of the target currency.
     source : str
-        The source of the inflation data ('worldbank' or 'international_monetary_fund').
+        The source of the inflation data ('worldbank'/'wb' or 'international_monetary_fund'/'imf').
 
     """
     # Choose the deflation function based on the source
     deflation_function = {
         "worldbank": pydeflate.wb_gdp_deflate,
+        "wb": pydeflate.wb_gdp_deflate,
         "international_monetary_fund": pydeflate.imf_gdp_deflate,
+        "imf": pydeflate.imf_gdp_deflate,
     }[source]
 
     # pydeflate only operates on pandas.DataFrame
