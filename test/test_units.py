@@ -185,9 +185,9 @@ class TestGetConversionRate:
     def test_same_currency_same_year(self) -> None:
         """Test conversion rate when currency and year are the same."""
         rate = get_conversion_rate(
-            from_currency="USA",
-            to_currency="USA",
-            country_iso3="USA",
+            from_iso3="USA",
+            to_iso3="USA",
+            country="USA",
             from_year=2020,
             to_year=2020,
         )
@@ -196,9 +196,9 @@ class TestGetConversionRate:
     def test_different_years_same_currency(self) -> None:
         """Test conversion rate with different years but same currency."""
         rate = get_conversion_rate(
-            from_currency="USA",
-            to_currency="USA",
-            country_iso3="USA",
+            from_iso3="USA",
+            to_iso3="USA",
+            country="USA",
             from_year=2015,
             to_year=2020,
         )
@@ -210,9 +210,9 @@ class TestGetConversionRate:
     def test_different_currencies_same_year(self) -> None:
         """Test conversion rate with different currencies but same year."""
         rate = get_conversion_rate(
-            from_currency="USA",
-            to_currency="DEU",
-            country_iso3="USA",
+            from_iso3="USA",
+            to_iso3="DEU",
+            country="USA",
             from_year=2020,
             to_year=2020,
         )
@@ -224,9 +224,9 @@ class TestGetConversionRate:
     def test_different_currencies_different_years(self) -> None:
         """Test conversion rate with different currencies and years."""
         rate = get_conversion_rate(
-            from_currency="USA",
-            to_currency="DEU",
-            country_iso3="USA",
+            from_iso3="USA",
+            to_iso3="DEU",
+            country="USA",
             from_year=2015,
             to_year=2020,
         )
@@ -236,9 +236,9 @@ class TestGetConversionRate:
     def test_worldbank_source(self) -> None:
         """Test conversion rate using World Bank data source."""
         rate = get_conversion_rate(
-            from_currency="USA",
-            to_currency="USA",
-            country_iso3="USA",
+            from_iso3="USA",
+            to_iso3="USA",
+            country="USA",
             from_year=2015,
             to_year=2020,
             source="worldbank",
@@ -249,9 +249,9 @@ class TestGetConversionRate:
     def test_imf_source(self) -> None:
         """Test conversion rate using IMF data source."""
         rate = get_conversion_rate(
-            from_currency="USA",
-            to_currency="USA",
-            country_iso3="USA",
+            from_iso3="USA",
+            to_iso3="USA",
+            country="USA",
             from_year=2015,
             to_year=2020,
             source="international_monetary_fund",
@@ -263,9 +263,9 @@ class TestGetConversionRate:
         """Test that invalid source raises KeyError."""
         with pytest.raises(KeyError):
             get_conversion_rate(
-                from_currency="USA",
-                to_currency="USA",
-                country_iso3="USA",
+                from_iso3="USA",
+                to_iso3="USA",
+                country="USA",
                 from_year=2020,
                 to_year=2020,
                 source="invalid_source",
@@ -275,16 +275,16 @@ class TestGetConversionRate:
         """Test that function results are cached."""
         # Call function twice with same parameters
         rate1 = get_conversion_rate(
-            from_currency="USA",
-            to_currency="DEU",
-            country_iso3="USA",
+            from_iso3="USA",
+            to_iso3="DEU",
+            country="USA",
             from_year=2018,
             to_year=2019,
         )
         rate2 = get_conversion_rate(
-            from_currency="USA",
-            to_currency="DEU",
-            country_iso3="USA",
+            from_iso3="USA",
+            to_iso3="DEU",
+            country="USA",
             from_year=2018,
             to_year=2019,
         )
