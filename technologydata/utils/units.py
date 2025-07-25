@@ -342,6 +342,7 @@ class SpecialUnitRegistry(pint.UnitRegistry):
         --------
         >>> ureg.ensure_currency_is_unit("USD_2020/kW")
         >>> ureg.ensure_currency_is_unit("EUR_2015/USD_2020")
+
         """
         logger.debug(f"Ensuring currency units of '{units}' are defined in `ureg`")
         currency_units = extract_currency_units(units)
