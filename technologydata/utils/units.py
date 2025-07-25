@@ -188,7 +188,7 @@ def get_conversion_rate(
     # pydeflate only operates on pandas.DataFrame
     data = pd.DataFrame(
         {
-            "iso3": [country_iso3],
+            "iso3": [country],
             "from_year": [from_year],
             "value": [1],
         }
