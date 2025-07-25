@@ -18,7 +18,7 @@ from platformdirs import user_cache_dir
 
 logger = logging.getLogger(__name__)
 
-CURRENCY_UNIT_PATTERN = re.compile(r"\b([A-Z]{3})_(\d{4})\b")
+CURRENCY_UNIT_PATTERN = re.compile(r"\b(?P<cu_iso3>[A-Z]{3})_(?P<year>\d{4})\b")
 
 # Set up cache directory and file for currency codes
 CACHE_DIR = Path(user_cache_dir("technologydata"))  # TODO move to commons?
