@@ -173,7 +173,7 @@ class Datapackage {
   - technologies: TechnologyCollection
   - sources: SourceCollection
   - // potentially other Collections in the future
-  + to_datapackage()
+  + to_csv()
   + from_json()
   + to_json()
   + get_source_collection()
