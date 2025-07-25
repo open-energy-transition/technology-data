@@ -135,6 +135,15 @@ class Parameter(BaseModel):  # type: ignore
     @refresh_pint_attributes
     def to(self, units: str) -> "Parameter":
         """Convert the parameter's quantity to new units."""
+        # Do not allow for currency conversion here, as it requires additional information
+        if extract_currency_units(self._pint_quantity.units) != extract_currency_units(
+            units
+        ):
+            raise NotImplementedError(
+                "Currency conversion is not supported in the `to` method. "
+                "Use `change_currency` for currency conversions."
+            )
+
         self._pint_quantity = self._pint_quantity.to(units)
         return Parameter(
             magnitude=self._pint_quantity.magnitude,
@@ -155,7 +164,7 @@ class Parameter(BaseModel):  # type: ignore
             "Currency conversion is not implemented yet. This is a stub."
         )
 
-    def _check_parameter_compatability(self, other: "Parameter") -> None:
+    def _check_parameter_compatibility(self, other: "Parameter") -> None:
         """Check if the parameter's units, carrier, and heating value are compatible."""
         if self._pint_carrier != other._pint_carrier:
             raise ValueError(
@@ -170,7 +179,7 @@ class Parameter(BaseModel):  # type: ignore
 
     def __add__(self, other: "Parameter") -> "Parameter":
         """Add two parameters together."""
-        self._check_parameter_compatability(other)
+        self._check_parameter_compatibility(other)
         new_quantity = self._pint_quantity + other._pint_quantity
         return Parameter(
             magnitude=new_quantity.magnitude,
@@ -185,7 +194,7 @@ class Parameter(BaseModel):  # type: ignore
 
     def __sub__(self, other: "Parameter") -> "Parameter":
         """Subtract two parameters."""
-        self._check_parameter_compatability(other)
+        self._check_parameter_compatibility(other)
         new_quantity = self._pint_quantity - other._pint_quantity
         return Parameter(
             magnitude=new_quantity.magnitude,

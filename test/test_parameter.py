@@ -76,6 +76,17 @@ def test_parameter_invalid_units() -> None:
     assert "Heating value cannot be set without a carrier" in str(excinfo.value)
 
 
+def test_parameter_to_conversion_fail_on_currency_conversion() -> None:
+    """Test the unit conversion of a Parameter instance to fail on currency conversion."""
+    param = Parameter(
+        magnitude=1000,
+        units="USD_2020/kW",
+    )
+    with pytest.raises(NotImplementedError) as excinfo:
+        param.to("EUR_2025 / kilowatt")
+        assert "Currency conversion is not supported" in str(excinfo.value)
+
+
 def test_parameter_to_conversion() -> None:
     """Test the conversion of a Parameter instance to different units."""
     param = Parameter(
