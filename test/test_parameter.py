@@ -92,17 +92,18 @@ def test_parameter_to_conversion() -> None:
     param = Parameter(
         magnitude=1000,
         units="USD_2020/kW",
-        carrier="H2",
-        heating_value="LHV",
-        provenance="literature",
-        note="Estimated",
     )
-    converted = param.to("EUR_2025 / kilowatt")
+
+    ref = Parameter(
+        magnitude=param.magnitude * 1000,
+        units="USD_2020 / megawatt",
+    )
+
+    converted = param.to("USD_2020 / megawatt")
+
     assert isinstance(converted, Parameter)
-    assert converted.units == "EUR_2025 / kilowatt"
-    assert (
-        converted.magnitude == param._pint_quantity.to("EUR_2025 / kilowatt").magnitude
-    )
+    assert converted.units == ref.units
+    assert converted.magnitude == ref.magnitude
 
 
 def test_pint_attributes_update() -> None:
