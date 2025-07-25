@@ -212,7 +212,7 @@ def get_conversion_rate(
         target_value_column="new_value",
     )
 
-    if any(conversion_rates.isna()):
+    if conversion_rates.isna().any().any():
         raise ValueError(
             f"Conversion rate from {from_iso3} ({from_year}) to {to_iso3} ({to_year}) with inflation rate for {country} not found. "
         )
