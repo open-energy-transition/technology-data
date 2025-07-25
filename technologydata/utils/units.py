@@ -93,7 +93,6 @@ def get_iso3_to_currency_codes(
     return currencies
 
 
-@lru_cache
 def extract_currency_units(units: str | pint.Unit) -> list[str]:
     """
     Extract currency-like strings from a string or pint.Unit.
