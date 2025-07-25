@@ -327,13 +327,16 @@ class SpecialUnitRegistry(pint.UnitRegistry):
 
     def ensure_currency_is_unit(self, units: str) -> None:
         """Ensure that if the units contain a currency-like string, that this currency is defined in the unit registry such that it can be used."""
+        logger.debug(f"Ensuring currency units of '{units}' are defined in `ureg`")
         currency_units = extract_currency_units(units)
+        logger.debug(f"Found currency-like strings in the units: {currency_units}")
 
         if not currency_units:
             # Nothing to do
             return
 
         reference_currency = self.get_reference_currency()
+        logger.debug(f"Reference currency is '{reference_currency}'.")
 
         # Check if the currency unit is already defined in the unit registry
         # if not, define it relative to the base currency USD_2015
