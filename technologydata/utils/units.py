@@ -326,7 +326,23 @@ class SpecialUnitRegistry(pint.UnitRegistry):
         return reference_currency[0]
 
     def ensure_currency_is_unit(self, units: str) -> None:
-        """Ensure that if the units contain a currency-like string, that this currency is defined in the unit registry such that it can be used."""
+        """
+        Ensure that all currency units in the given string are valid units in the registry.
+
+        Extracts all currency-like strings from the input and checks if they are defined
+        in the unit registry. If they are not defined, they are added as valid units
+        relative to the reference currency but without a conversion factor.
+
+        Parameters
+        ----------
+        units : str
+            The units string to check for currency units.
+
+        Examples
+        --------
+        >>> ureg.ensure_currency_is_unit("USD_2020/kW")
+        >>> ureg.ensure_currency_is_unit("EUR_2015/USD_2020")
+        """
         logger.debug(f"Ensuring currency units of '{units}' are defined in `ureg`")
         currency_units = extract_currency_units(units)
         logger.debug(f"Found currency-like strings in the units: {currency_units}")
