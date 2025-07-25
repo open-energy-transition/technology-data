@@ -130,3 +130,152 @@ def test_pint_attributes_update() -> None:
     param = param.to("USD_2020 / kWh")
     assert param._pint_quantity.magnitude == 3000
     assert str(param._pint_quantity.units) == str(pint.Unit("USD_2020 / kWh"))
+
+
+def test_parameter_change_currency() -> None:
+    """Test currency conversion with inflation adjustment."""
+    param = Parameter(
+        magnitude=1,
+        units="USD_2020/kW",
+    )
+
+    # Convert to EUR with inflation adjustment for Germany
+    converted = param.change_currency("EUR_2023", "DEU")
+    assert isinstance(converted, Parameter)
+    assert "EUR_2023" in converted.units
+    assert converted._pint_quantity.is_compatible_with("EUR_2023 / kW")
+
+    # Check that magnitude changed due to currency conversion
+    assert converted.magnitude != param.magnitude
+
+
+def test_parameter_change_currency_explicit_source() -> None:
+    """Test currency conversion with explicit inflation data source."""
+    param = Parameter(
+        magnitude=1,
+        units="EUR_2019/MWh",
+    )
+
+    # Convert using IMF data source
+    converted = param.change_currency("USD_2022", "USA", source="worldbank")
+    assert isinstance(converted, Parameter)
+    assert "USD_2022" in converted.units
+    assert converted._pint_quantity.is_compatible_with("USD_2022 / MWh")
+
+
+def test_parameter_change_currency_different_source() -> None:
+    """Test currency conversion with different inflation data source."""
+    param = Parameter(
+        magnitude=1,
+        units="EUR_2019/MWh",
+    )
+
+    # Convert using IMF data source
+    converted = param.change_currency("USD_2022", "USA", source="imf")
+    assert isinstance(converted, Parameter)
+    assert "USD_2022" in converted.units
+    assert converted._pint_quantity.is_compatible_with("USD_2022 / MWh")
+
+
+def test_parameter_change_currency_multiple_currencies() -> None:
+    """Test currency conversion when units contain multiple currencies."""
+    param = Parameter(
+        magnitude=1,
+        units="USD_2020 * EUR_2021 / kW",
+    )
+
+    # Convert all currencies to CNY_2023
+    converted = param.change_currency("CNY_2023", "CHN")
+    assert isinstance(converted, Parameter)
+    # Both USD_2020 and EUR_2021 should be replaced with CNY_2023
+    assert "CNY_2023" in converted.units
+    assert "USD_2020" not in converted.units
+    assert "EUR_2021" not in converted.units
+
+
+def test_parameter_change_currency_same_currency() -> None:
+    """Test currency conversion to the same currency (inflation adjustment only)."""
+    param = Parameter(
+        magnitude=1,
+        units="USD_2019/kW",
+    )
+
+    # Convert to USD but different year (inflation adjustment)
+    converted = param.change_currency("USD_2023", "USA")
+    assert isinstance(converted, Parameter)
+    assert converted.units == "USD_2023 / kilowatt"
+    # Magnitude should change due to inflation adjustment
+    assert converted.magnitude != param.magnitude
+
+
+def test_parameter_no_currency_change() -> None:
+    """Test that no currency change occurs when the target currency is the same as the current one."""
+    param = Parameter(
+        magnitude=1,
+        units="USD_2020/kW",
+    )
+
+    # Convert to the same currency and year
+    converted = param.change_currency("USD_2020", "USA")
+    assert isinstance(converted, Parameter)
+    assert converted._pint_quantity.is_compatible_with("USD_2020 / kW")
+    # Magnitude should remain unchanged
+    assert converted.magnitude == param.magnitude
+
+
+def test_parameter_change_currency_invalid_country() -> None:
+    """Test that invalid country codes raise appropriate errors."""
+    param = Parameter(
+        magnitude=1,
+        units="USD_2020/kW",
+    )
+
+    # Invalid country code should raise an error
+    with pytest.raises((ValueError, KeyError)):
+        param.change_currency("EUR_2023", "USB")
+
+
+def test_parameter_change_currency_invalid_source() -> None:
+    """Test that invalid inflation data sources raise appropriate errors."""
+    param = Parameter(
+        magnitude=1000,
+        units="USD_2020/kW",
+    )
+
+    # Invalid source should raise an error
+    with pytest.raises(ValueError):
+        param.change_currency("EUR_2023", "DEU", source="invalid_source")
+
+
+def test_parameter_change_currency_no_units() -> None:
+    """Test currency conversion with parameter that has no units."""
+    param = Parameter(
+        magnitude=42,
+    )
+
+    # Should handle parameters without currency units gracefully
+    converted = param.change_currency("EUR_2023", "DEU")
+    assert isinstance(converted, Parameter)
+    assert converted.magnitude == 42
+    assert converted.units is None or "EUR_2023" not in str(converted.units)
+
+
+def test_parameter_unchanged_other_attributes() -> None:
+    """Test that other attributes remain unchanged after currency conversion."""
+    param = Parameter(
+        magnitude=1000,
+        units="USD_2020/kW",
+        carrier="H2",
+        heating_value="LHV",
+        provenance="literature",
+        note="Estimated",
+    )
+
+    # Convert to EUR_2023
+    converted = param.change_currency("EUR_2023", "DEU")
+
+    # Check that other attributes remain unchanged
+    assert converted.carrier == param.carrier
+    assert converted.heating_value == param.heating_value
+    assert converted.provenance == param.provenance
+    assert converted.note == param.note

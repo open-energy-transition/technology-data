@@ -22,7 +22,15 @@ import pint
 from pydantic import BaseModel, Field, PrivateAttr
 
 from technologydata.source_collection import SourceCollection
-from technologydata.utils.units import creg, hvreg, ureg
+from technologydata.utils.units import (
+    CURRENCY_UNIT_PATTERN,
+    creg,
+    extract_currency_units,
+    get_conversion_rate,
+    get_iso3_from_currency_code,
+    hvreg,
+    ureg,
+)
 
 
 def refresh_pint_attributes(method: Callable[..., Any]) -> Callable[..., Any]:
@@ -156,12 +164,97 @@ class Parameter(BaseModel):  # type: ignore
         )
 
     @refresh_pint_attributes
-    def convert_currency(
-        self, to: str, region: str = "USA", source: str = "worldbank"
-    ) -> pint.Quantity:
-        """Currency conversion is not implemented yet. This is a stub."""
-        raise NotImplementedError(
-            "Currency conversion is not implemented yet. This is a stub."
+    def change_currency(
+        self, to_currency: str, country: str, source: str = "worldbank"
+    ) -> "Parameter":
+        """
+        Change the currency of the parameter.
+
+        This allows for conversion to a different currency as well as for inflation adjustments.
+        To properly adjust for inflation, the function requires the `country` for which the inflation
+        adjustment should be applied for.
+
+        Note that this wil harmonise all currencies used in the parameter's units,
+        i.e. if the parameter `units` contains multiple different currencies,
+        all of them will be converted to the target currency.
+
+        Parameters
+        ----------
+        to_currency : str
+            The target currency unit to convert to, e.g. "USD_2020", "EUR_2024", "CNY_2022".
+        country : str
+            The country for which the inflation adjustment should be made for.
+            Must be the official ISO 3166-1 alpha-3 country code, e.g. "USA", "DEU", "CHN".
+        source : str, optional
+            The source of the inflation data, either "worldbank" or "imf".
+            Defaults to "worldbank".
+            Depending on the source, different years to adjust for inflation may be available.
+
+        Returns
+        -------
+        Parameter
+            A new Parameter object with the converted currency.
+
+        Examples
+        --------
+        >>> param.change_currency("USD_2024", "USA")
+        >>> param.change_currency("EUR_2020", "DEU", source="imf")
+        >>> param.change_currency("EUR_2023", "USA", source="worldbank")
+
+        """
+        # Ensure the target currency is a valid unit
+        ureg.ensure_currency_is_unit(to_currency)
+
+        # Current unit and currency/currencies
+        from_units = self._pint_quantity.units
+        from_currencies = extract_currency_units(from_units)
+        # Replace all currency units in the from_units with the target currency
+        to_units = CURRENCY_UNIT_PATTERN.sub(to_currency, str(from_units))
+
+        # Create a temporary context to which we add the conversion rates
+        # We use a temporary context to avoid polluting the global unit registry
+        # with potentially invalid or incomplete conversion rates that do not
+        # match the `country` and `source` parameters.
+        context = ureg.context()
+
+        # Conversion rates are all relative to the reference currency
+        ref_currency = ureg.get_reference_currency()
+        ref_currency_p = CURRENCY_UNIT_PATTERN.match(ref_currency)
+        ref_iso3 = get_iso3_from_currency_code(ref_currency_p.group("cu_iso3"))
+        ref_year = ref_currency_p.group("year")
+
+        # Get conversion rates for all involved currencies
+        currencies = set(from_currencies).union({to_currency})
+        # Avoid recursion error in pint definition by re-adding the reference currency
+        currencies = currencies - {ref_currency}
+
+        for currency in currencies:
+            from_currency = CURRENCY_UNIT_PATTERN.match(currency)
+            from_iso3 = get_iso3_from_currency_code(from_currency.group("cu_iso3"))
+            from_year = from_currency.group("year")
+
+            conversion_rate = get_conversion_rate(
+                from_iso3=from_iso3,
+                from_year=from_year,
+                to_iso3=ref_iso3,
+                to_year=ref_year,
+                country=country,
+                source=source,
+            )
+
+            context.define(f"{currency} = {conversion_rate} * {ref_currency}")
+
+        # Actual conversion using pint
+        quantity = self._pint_quantity.to(to_units, context=context)
+
+        return Parameter(
+            magnitude=quantity.magnitude,
+            units=str(quantity.units),
+            carrier=self.carrier,
+            heating_value=self.heating_value,
+            provenance=self.provenance,
+            note=self.note,
+            sources=self.sources,
         )
 
     def _check_parameter_compatibility(self, other: "Parameter") -> None:
