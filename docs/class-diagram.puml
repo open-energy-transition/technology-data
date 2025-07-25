@@ -169,7 +169,6 @@ note left of SourceCollection::to_dataframe
 end note
 
 class Datapackage {
-  - path: Path
   - technologies: TechnologyCollection
   - sources: SourceCollection
   - // potentially other Collections in the future
@@ -188,23 +187,12 @@ note top of Datapackage
   Please note that the "sources" field is built in the background from "technologies"
 end note
 
-note right of Datapackage::name
-  Currently we use "source" as a reference to pre-packaged data and for a column in "technologies.csv".
-  The Datapackage.name would substitute for referencing to pre-packaged data, e.g. "example01" would be
-  a packaged data included with `technologydata`. It is meant to be independent of the "TechnologyCollection" or its members.
-end note
-
 note right of Datapackage::technologies
   Derived from the TechnologyCollection.
 end note
 
 note right of Datapackage::sources
   Built in the background with the get_source_collection() method, which derives it from all Source objects that are related to the TechnologyCollection (i.e., all sources referenced by technologies and their parameters).
-end note
-
-note right of Datapackage::to_datapackage
-  Exports all member Source and TechnologyCollection to a folder following the datapackage
-  specification, including the schema .json files and the .csv files.
 end note
 
 Parameter --> SourceCollection : sources

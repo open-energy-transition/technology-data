@@ -22,7 +22,6 @@ def test_get_source_collection() -> None:
     )
     technologies_collection = technologydata.TechnologyCollection.from_json(input_file)
     data_package = technologydata.DataPackage(
-        path=pathlib.Path(path_cwd, "test_package"),
         technologies=technologies_collection,
     )
     data_package.get_source_collection()

@@ -28,8 +28,6 @@ class DataPackage(pydantic.BaseModel):  # type: ignore
 
     Parameters
     ----------
-    path : pathlib.Path
-        The path to the data package.
     technologies : Optional[TechnologyCollection]
         List of Technology objects.
     sources : Optional[SourceCollection]
@@ -37,8 +35,6 @@ class DataPackage(pydantic.BaseModel):  # type: ignore
 
     Attributes
     ----------
-    path : pathlib.Path
-        The path to the data package.
     technologies : Optional[TechnologyCollection]
         List of Technology objects.
     sources : Optional[SourceCollection]
@@ -46,9 +42,6 @@ class DataPackage(pydantic.BaseModel):  # type: ignore
 
     """
 
-    path: pathlib.Path = pydantic.Field(
-        ..., description="The path to the data package."
-    )
     technologies: TechnologyCollection | None = pydantic.Field(
         None, description="List of Technology objects."
     )
