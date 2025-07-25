@@ -186,7 +186,7 @@ class Parameter(BaseModel):  # type: ignore
             The country for which the inflation adjustment should be made for.
             Must be the official ISO 3166-1 alpha-3 country code, e.g. "USA", "DEU", "CHN".
         source : str, optional
-            The source of the inflation data, either "worldbank" or "imf".
+            The source of the inflation data, either "worldbank"/"wb" or "international_monetary_fund"/"imf".
             Defaults to "worldbank".
             Depending on the source, different years to adjust for inflation may be available.
 
