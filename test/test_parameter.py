@@ -143,7 +143,9 @@ def test_parameter_change_currency() -> None:
     # Convert to EUR with inflation adjustment for Germany
     converted = param.change_currency("EUR_2023", "DEU")
     assert isinstance(converted, Parameter)
+    assert converted.units is not None
     assert "EUR_2023" in converted.units
+    assert converted._pint_quantity is not None
     assert converted._pint_quantity.is_compatible_with("EUR_2023 / kW")
 
     # Check that magnitude changed due to currency conversion
@@ -160,7 +162,9 @@ def test_parameter_change_currency_explicit_source() -> None:
     # Convert using IMF data source
     converted = param.change_currency("USD_2022", "USA", source="worldbank")
     assert isinstance(converted, Parameter)
+    assert converted.units is not None
     assert "USD_2022" in converted.units
+    assert converted._pint_quantity is not None
     assert converted._pint_quantity.is_compatible_with("USD_2022 / MWh")
 
 
@@ -174,6 +178,7 @@ def test_parameter_change_currency_different_source() -> None:
     # Convert using IMF data source
     converted = param.change_currency("USD_2022", "USA", source="imf")
     assert isinstance(converted, Parameter)
+    assert converted.units is not None
     assert "USD_2022" in converted.units
     assert converted._pint_quantity.is_compatible_with("USD_2022 / MWh")
 
@@ -189,6 +194,7 @@ def test_parameter_change_currency_multiple_currencies() -> None:
     converted = param.change_currency("CNY_2023", "CHN")
     assert isinstance(converted, Parameter)
     # Both USD_2020 and EUR_2021 should be replaced with CNY_2023
+    assert converted.units is not None
     assert "CNY_2023" in converted.units
     assert "USD_2020" not in converted.units
     assert "EUR_2021" not in converted.units
@@ -244,7 +250,7 @@ def test_parameter_change_currency_invalid_source() -> None:
     )
 
     # Invalid source should raise an error
-    with pytest.raises(ValueError):
+    with pytest.raises(KeyError):
         param.change_currency("EUR_2023", "DEU", source="invalid_source")
 
 

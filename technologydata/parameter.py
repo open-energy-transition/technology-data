@@ -104,7 +104,7 @@ class Parameter(BaseModel):  # type: ignore
         # pint uses canonical names for units, carriers, and heating values
         # Ensure the Parameter object is always created with these consistent names from pint
         if "units" in data and data["units"] is not None:
-            ureg.ensure_currency_is_unit(data["units"])
+            ureg.ensure_currency_is_unit(str(data["units"]))
             data["units"] = str(ureg.Unit(data["units"]))
         if "carrier" in data and data["carrier"] is not None:
             data["carrier"] = str(creg.Unit(data["carrier"]))
@@ -220,8 +220,13 @@ class Parameter(BaseModel):  # type: ignore
         # Conversion rates are all relative to the reference currency
         ref_currency = ureg.get_reference_currency()
         ref_currency_p = CURRENCY_UNIT_PATTERN.match(ref_currency)
-        ref_iso3 = get_iso3_from_currency_code(ref_currency_p.group("cu_iso3"))
-        ref_year = ref_currency_p.group("year")
+        if ref_currency_p:
+            ref_iso3 = get_iso3_from_currency_code(ref_currency_p.group("cu_iso3"))
+            ref_year = ref_currency_p.group("year")
+        else:
+            raise ValueError(
+                f"Reference currency '{ref_currency}' does not match expected pattern."
+            )
 
         # Get conversion rates for all involved currencies
         currencies = set(from_currencies).union({to_currency})
@@ -229,9 +234,16 @@ class Parameter(BaseModel):  # type: ignore
         currencies = currencies - {ref_currency}
 
         for currency in currencies:
-            from_currency = CURRENCY_UNIT_PATTERN.match(currency)
-            from_iso3 = get_iso3_from_currency_code(from_currency.group("cu_iso3"))
-            from_year = from_currency.group("year")
+            from_currency_p = CURRENCY_UNIT_PATTERN.match(currency)
+            if from_currency_p:
+                from_iso3 = get_iso3_from_currency_code(
+                    from_currency_p.group("cu_iso3")
+                )
+                from_year = from_currency_p.group("year")
+            else:
+                raise ValueError(
+                    f"Currency '{currency}' does not match expected pattern."
+                )
 
             conversion_rate = get_conversion_rate(
                 from_iso3=from_iso3,

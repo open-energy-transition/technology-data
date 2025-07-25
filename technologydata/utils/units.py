@@ -216,7 +216,7 @@ def get_conversion_rate(
             f"Conversion rate from {from_iso3} ({from_year}) to {to_iso3} ({to_year}) with inflation rate for {country} not found. "
         )
 
-    return conversion_rates.loc[0, "new_value"]
+    return float(conversion_rates.loc[0, "new_value"])
 
 
 @lru_cache
@@ -246,15 +246,12 @@ def get_iso3_from_currency_code(
         If the currency code is not found in the official list of currencies.
 
     """
-    iso3_to_currency_codes = get_iso3_to_currency_codes()
-
     # Build reverse mapping: currency code -> list of ISO3 codes
-    iso3_to_currency_codes = (
-        pd.DataFrame.from_dict(
-            iso3_to_currency_codes, orient="index", columns=["currency"]
-        )
-        .reset_index(drop=False)
-        .rename(columns={"index": "iso3"})
+    iso3_to_currency_codes = pd.DataFrame.from_dict(
+        get_iso3_to_currency_codes(), orient="index", columns=["currency"]
+    )
+    iso3_to_currency_codes = iso3_to_currency_codes.reset_index(drop=False).rename(
+        columns={"index": "iso3"}
     )
     currency_codes_to_iso3 = iso3_to_currency_codes.groupby("currency", as_index=False)[
         "iso3"
@@ -301,7 +298,7 @@ def get_iso3_from_currency_code(
     ].to_dict()
 
     try:
-        return currency_codes_to_iso3[currency_code]
+        return str(currency_codes_to_iso3[currency_code])
     except KeyError as e:
         raise ValueError(
             f"Currency code '{currency_code}' not found in the list of currencies. "
@@ -333,7 +330,7 @@ class SpecialUnitRegistry(pint.UnitRegistry):
                 "The unit registry does not have a unique base currency defined as '[currency]'. Please define a base currency unit to proceed."
             )
 
-        return reference_currency[0]
+        return str(reference_currency[0])
 
     def ensure_currency_is_unit(self, units: str) -> None:
         """
