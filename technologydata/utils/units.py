@@ -197,8 +197,8 @@ def get_conversion_rate(
     # Deflate values include currency conversion
     conversion_rates = deflation_function(
         data,
-        source_currency=from_currency,
-        target_currency=to_currency,
+        source_currency=from_iso3,
+        target_currency=to_iso3,
         id_column="iso3",
         year_column="from_year",
         base_year=to_year,
