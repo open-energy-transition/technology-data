@@ -187,6 +187,10 @@ def get_conversion_rate(
         "imf": pydeflate.imf_gdp_deflate,
     }[source]
 
+    # Ensure that `country` is a valid ISO3 code; to_iso3 and from_iso3 should already have been parsed before the function was called
+    if country not in get_iso3_to_currency_codes().keys():
+        raise ValueError(f"Unknown ISO3 code for `country`: {country}.")
+
     # pydeflate only operates on pandas.DataFrame
     data = pd.DataFrame(
         {
@@ -207,6 +211,11 @@ def get_conversion_rate(
         value_column="value",
         target_value_column="new_value",
     )
+
+    if any(conversion_rates.isna()):
+        raise ValueError(
+            f"Conversion rate from {from_iso3} ({from_year}) to {to_iso3} ({to_year}) with inflation rate for {country} not found. "
+        )
 
     return conversion_rates.loc[0, "new_value"]
 
