@@ -441,6 +441,8 @@ class TestUnitRegistryEnsureCurrencyIsUnit:
 
 
 class TestCarrierRegistry:
+    """Test cases for creg (carrier registry) functionality."""
+
     def test_creg_registry_parses_carriers(self) -> None:
         """Test that the carrier registry (creg) loads carrier units from carriers.txt and can create Quantities."""
         expected_carriers = [
@@ -457,6 +459,8 @@ class TestCarrierRegistry:
 
 
 class TestHeatingValueRegistry:
+    """Test cases for hvreg (heating value registry) functionality."""
+
     def test_hvreg_registry_parses_heating_values(self) -> None:
         """Test that heating value registry (hvreg) loads heating value units from heating_values.txt and can create Quantities."""
         expected_hvs = [
