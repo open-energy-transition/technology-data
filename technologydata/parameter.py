@@ -237,7 +237,7 @@ class Parameter(BaseModel):  # type: ignore
                 from_iso3=from_iso3,
                 from_year=from_year,
                 to_iso3=ref_iso3,
-                to_year=ref_year,
+                to_year=int(ref_year),
                 country=country,
                 source=source,
             )
