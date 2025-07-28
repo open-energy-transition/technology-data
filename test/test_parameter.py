@@ -361,3 +361,219 @@ def test_parameter_carrier_compatibility() -> None:
     assert (
         param_h2 / param_ch4
     ).carrier == param_h2._pint_carrier / param_ch4._pint_carrier
+
+
+def test_parameter_equality() -> None:
+    """Test equality comparison of Parameter objects."""
+    # Create two identical parameters
+    param1 = Parameter(
+        magnitude=1000,
+        units="USD_2020/kW",
+        carrier="H2",
+        heating_value="LHV",
+        provenance="literature",
+        note="Estimated",
+        sources=SourceCollection(
+            sources=[
+                Source(
+                    name="Example Source", authors="some authors", title="Example Title"
+                )
+            ]
+        ),
+    )
+    param2 = Parameter(
+        magnitude=1000,
+        units="USD_2020/kW",
+        carrier="H2",
+        heating_value="LHV",
+        provenance="literature",
+        note="Estimated",
+        sources=SourceCollection(
+            sources=[
+                Source(
+                    name="Example Source", authors="some authors", title="Example Title"
+                )
+            ]
+        ),
+    )
+
+    # Should be equal
+    assert param1 == param2
+    assert param2 == param1
+
+
+def test_parameter_equality_different_magnitude() -> None:
+    """Test that parameters with different magnitudes are not equal."""
+    param1 = Parameter(magnitude=1000, units="USD_2020/kW")
+    param2 = Parameter(magnitude=2000, units="USD_2020/kW")
+
+    assert param1 != param2
+    assert param2 != param1
+
+
+def test_parameter_equality_different_units() -> None:
+    """Test that parameters with different units are not equal."""
+    param1 = Parameter(magnitude=1000, units="USD_2020/kW")
+    param2 = Parameter(magnitude=1000, units="EUR_2020/kW")
+
+    assert param1 != param2
+    assert param2 != param1
+
+
+def test_parameter_equality_different_carrier() -> None:
+    """Test that parameters with different carriers are not equal."""
+    param1 = Parameter(magnitude=1000, carrier="H2")
+    param2 = Parameter(magnitude=1000, carrier="CH4")
+
+    assert param1 != param2
+    assert param2 != param1
+
+
+def test_parameter_equality_different_heating_value() -> None:
+    """Test that parameters with different heating values are not equal."""
+    param1 = Parameter(magnitude=1000, carrier="H2", heating_value="LHV")
+    param2 = Parameter(magnitude=1000, carrier="H2", heating_value="HHV")
+
+    assert param1 != param2
+    assert param2 != param1
+
+
+def test_parameter_equality_different_provenance() -> None:
+    """Test that parameters with different provenance are not equal."""
+    param1 = Parameter(magnitude=1000, provenance="literature")
+    param2 = Parameter(magnitude=1000, provenance="expert_estimate")
+
+    assert param1 != param2
+    assert param2 != param1
+
+
+def test_parameter_equality_different_note() -> None:
+    """Test that parameters with different notes are not equal."""
+    param1 = Parameter(magnitude=1000, note="Estimated")
+    param2 = Parameter(magnitude=1000, note="Measured")
+
+    assert param1 != param2
+    assert param2 != param1
+
+
+def test_parameter_equality_different_sources() -> None:
+    """Test that parameters with different sources are not equal."""
+    source1 = Source(name="Source 1", authors="Author A", title="Title A")
+    source2 = Source(name="Source 2", authors="Author B", title="Title B")
+
+    param1 = Parameter(magnitude=1000, sources=SourceCollection(sources=[source1]))
+    param2 = Parameter(magnitude=1000, sources=SourceCollection(sources=[source2]))
+
+    assert param1 != param2
+    assert param2 != param1
+
+
+def test_parameter_equality_none_values() -> None:
+    """Test equality with None values for optional fields."""
+    param1 = Parameter(magnitude=1000)
+    param2 = Parameter(magnitude=1000)
+
+    # Both have None for optional fields, should be equal
+    assert param1 == param2
+
+    # One has None, the other has a value
+    param3 = Parameter(magnitude=1000, units="USD_2020/kW")
+    assert param1 != param3
+    assert param3 != param1
+
+
+def test_parameter_equality_with_non_parameter() -> None:
+    """Test equality comparison with non-Parameter objects."""
+    param = Parameter(magnitude=1000)
+
+    # Should return NotImplemented for non-Parameter objects
+    assert param.__eq__("not a parameter") == NotImplemented
+    assert param.__eq__(42) == NotImplemented
+    assert param.__eq__(None) == NotImplemented
+
+
+def test_parameter_equality_canonical_units() -> None:
+    """Test that parameters with equivalent but differently formatted units are equal."""
+    # Units should be canonicalized during initialization
+    param1 = Parameter(magnitude=1000, units="USD_2020/kW")
+    param2 = Parameter(magnitude=1000, units="USD_2020/kilowatt")
+
+    # Should be equal because units are canonicalized
+    assert param1 == param2
+    assert param2 == param1
+
+
+def test_parameter_equality_self_reference() -> None:
+    """Test that a parameter is equal to itself."""
+    param = Parameter(
+        magnitude=1000,
+        units="USD_2020/kW",
+        carrier="H2",
+        heating_value="LHV",
+        provenance="literature",
+        note="Estimated",
+    )
+
+    assert param == param
+
+
+def test_parameter_pow_basic() -> None:
+    """Test integer exponentiation."""
+    param = Parameter(magnitude=2, units="kW")
+    result = param**3
+    assert isinstance(result, Parameter)
+    assert result.magnitude == 8
+    assert result.units == "kilowatt ** 3"
+
+
+def test_parameter_pow_fractional() -> None:
+    """Test fractional exponentiation."""
+    param = Parameter(magnitude=9, units="m**2")
+    result = param**0.5
+    assert pytest.approx(result.magnitude) == 3
+    assert result.units == "meter"
+
+
+def test_parameter_pow_zero() -> None:
+    """Test zero exponent returns dimensionless."""
+    param = Parameter(magnitude=5, units="J")
+    result = param**0
+    assert result.magnitude == 1
+    assert result.units == "dimensionless"
+
+
+def test_parameter_pow_negative() -> None:
+    """Test negative exponentiation and unit handling."""
+    param = Parameter(magnitude=2, units="W")
+    result = param**-2
+    assert pytest.approx(result.magnitude) == 0.25
+    # Compare units using pint, not string equality
+    assert ureg.Unit(result.units) == ureg.Unit("watt ** -2")
+
+
+def test_parameter_pow_carrier():
+    """Test that the carrier attribute is also affected."""
+    param = Parameter(
+        magnitude=3,
+        units="kg",
+        carrier="H2",
+    )
+    result = param**2
+    assert result.carrier == f"{param.carrier} ** 2"
+
+
+def test_parameter_pow_preserves_metadata() -> None:
+    """Test that metadata is preserved after exponentiation."""
+    param = Parameter(
+        magnitude=3,
+        units="kg",
+        carrier="H2",
+        heating_value="LHV",
+        provenance="test",
+        note="note",
+    )
+    result = param**2
+    assert result.carrier == f"{param.carrier} ** 2"
+    assert result.heating_value == param.heating_value
+    assert result.provenance == param.provenance
+    assert result.note == param.note

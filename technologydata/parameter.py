@@ -408,3 +408,36 @@ class Parameter(BaseModel):  # type: ignore
             # note= ... ,
             # sources= ...,
         )
+
+    def __eq__(self, other: "Parameter") -> bool:
+        """Check equality of two Parameter objects."""
+        if not isinstance(other, Parameter):
+            return NotImplemented
+
+        self._update_pint_attributes()
+        other._update_pint_attributes()
+
+        return (
+            self.magnitude == other.magnitude
+            and self.units == other.units
+            and self.carrier == other.carrier
+            and self.heating_value == other.heating_value
+            and self.provenance == other.provenance
+            and self.note == other.note
+            and self.sources == other.sources
+        )
+
+    def __pow__(self, exponent: float | int) -> "Parameter":
+        """Raise the parameter's value to a power."""
+        self._update_pint_attributes()
+
+        new_quantity = self._pint_quantity**exponent
+        return Parameter(
+            magnitude=new_quantity.magnitude,
+            units=str(new_quantity.units),
+            carrier=self._pint_carrier**exponent if self._pint_carrier else None,
+            heating_value=self.heating_value,
+            provenance=self.provenance,
+            note=self.note,
+            sources=self.sources,
+        )
