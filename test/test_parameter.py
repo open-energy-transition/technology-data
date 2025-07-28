@@ -288,7 +288,7 @@ def test_parameter_unchanged_other_attributes() -> None:
     assert converted.note == param.note
 
 
-def test_parameter_incompatible_heating_values() -> None:
+def test_parameter_heating_value_compatibility() -> None:
     """Test that we do not permit operations on mixed heating values."""
     param_lhv = Parameter(
         magnitude=1,
@@ -327,3 +327,37 @@ def test_parameter_incompatible_heating_values() -> None:
         assert "Cannot divide parameters with different heating values" in str(
             excinfo.value
         )
+
+
+def test_parameter_carrier_compatibility() -> None:
+    """Test that we do only permit certain operations on mixed carriers."""
+    param_h2 = Parameter(
+        magnitude=1,
+        carrier="H2",
+        heating_value="LHV",
+    )
+    param_ch4 = Parameter(
+        magnitude=1,
+        carrier="CH4",
+        heating_value="LHV",
+    )
+
+    # Different error messages for + and -
+    with pytest.raises(ValueError) as excinfo:
+        param_h2 + param_ch4
+        assert "Operation not permitted on parameters with different carriers" in str(
+            excinfo.value
+        )
+    with pytest.raises(ValueError) as excinfo:
+        param_h2 - param_ch4
+        assert "Operation not permitted on parameters with different carriers" in str(
+            excinfo.value
+        )
+
+    # * and / are permitted with different carriers and should yield mixed carriers
+    assert (
+        param_h2 * param_ch4
+    ).carrier == param_h2._pint_carrier * param_ch4._pint_carrier
+    assert (
+        param_h2 / param_ch4
+    ).carrier == param_h2._pint_carrier / param_ch4._pint_carrier
