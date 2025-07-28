@@ -286,3 +286,44 @@ def test_parameter_unchanged_other_attributes() -> None:
     assert converted.heating_value == param.heating_value
     assert converted.provenance == param.provenance
     assert converted.note == param.note
+
+
+def test_parameter_incompatible_heating_values() -> None:
+    """Test that we do not permit operations on mixed heating values."""
+    param_lhv = Parameter(
+        magnitude=1,
+        carrier="H2",
+        heating_value="LHV",
+    )
+    param_hhv = Parameter(
+        magnitude=1,
+        carrier="H2",
+        heating_value="HHV",
+    )
+
+    # Different error messages for + and -
+    with pytest.raises(ValueError) as excinfo:
+        param_lhv + param_hhv
+        assert (
+            "Operation not permitted on parameters with different heating values"
+            in str(excinfo.value)
+        )
+    with pytest.raises(ValueError) as excinfo:
+        param_lhv - param_hhv
+        assert (
+            "Operation not permitted on parameters with different heating values"
+            in str(excinfo.value)
+        )
+
+    # Different error messages for * and /
+    with pytest.raises(ValueError) as excinfo:
+        param_lhv * param_hhv
+        assert "Cannot multiply parameters with different heating values" in str(
+            excinfo.value
+        )
+
+    with pytest.raises(ValueError) as excinfo:
+        param_lhv / param_hhv
+        assert "Cannot divide parameters with different heating values" in str(
+            excinfo.value
+        )
