@@ -204,26 +204,45 @@ class SourceCollection(pydantic.BaseModel):  # type: ignore
 
     @classmethod
     def from_json(
-        cls, file_path: pathlib.Path | str | list[dict[str, typing.Any]]
+        cls,
+        file_path: pathlib.Path | str | None = None,
+        from_str: list[dict[str, typing.Any]] | None = None,
     ) -> "SourceCollection":
         """
         Import the SourceCollection from a JSON file.
 
         Parameters
         ----------
-        file_path : pathlib.Path | str | list
+        file_path : Optional[pathlib.Path | str]
             The path to the JSON file to be imported.
+        from_str : Optional[list]
+            The list of dictionaries with Source fields.
 
         """
-        if isinstance(file_path, pathlib.Path | str):
-            file_path = pathlib.Path(file_path)
-            with open(file_path, encoding="utf-8") as jsonfile:
-                json_data = json.load(jsonfile)
-        elif isinstance(file_path, list):
-            # If a list is provided, assume it contains dictionaries representing sources
-            json_data = {"sources": [Source(**source) for source in file_path]}
-        else:
-            raise TypeError(
-                f"file_path must be a pathlib.Path or str. Got instead {type(file_path)}"
+        if file_path is None and from_str is None:
+            raise ValueError(
+                "Both file_path and from_str are None. One must be provided."
             )
+
+        json_data = None
+
+        # Load data from file if file_path is provided
+        if file_path is not None:
+            if not isinstance(file_path, (pathlib.Path | str)):
+                raise TypeError(
+                    f"file_path must be a pathlib.Path or str, but got {type(file_path)}"
+                )
+            path = pathlib.Path(file_path)
+            with path.open(encoding="utf-8") as jsonfile:
+                json_data = json.load(jsonfile)
+
+        # Override json_data if from_str is provided
+        if from_str is not None:
+            if not isinstance(from_str, list):
+                raise TypeError(f"from_str must be a list, but got {type(from_str)}")
+            json_data = {"sources": [Source(**source) for source in from_str]}
+
+        if json_data is None:
+            raise ValueError("No data to load. Provide either a file_path or from_str.")
+
         return cls(**json_data)

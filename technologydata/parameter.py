@@ -110,7 +110,7 @@ class Parameter(pydantic.BaseModel):  # type: ignore
         """
         # Convert sources list into SourceCollection
         sources_data = data.get("sources", [])
-        sources = SourceCollection.from_json(sources_data)
+        sources = SourceCollection.from_json(from_str=sources_data)
         return cls(
             quantity=UnitValue.model_validate(data["quantity"]),
             provenance=data.get("provenance"),

@@ -229,7 +229,7 @@ def test_from_json() -> None:
     input_file = pathlib.Path(
         path_cwd, "test", "test_data", "solar_photovoltaics_example_03", "sources.json"
     )
-    source_collection = technologydata.SourceCollection.from_json(input_file)
+    source_collection = technologydata.SourceCollection.from_json(file_path=input_file)
     assert isinstance(source_collection, technologydata.SourceCollection)
     assert len(source_collection) == 2
 
@@ -244,6 +244,6 @@ def test_get(title_pattern: str, authors_pattern: str) -> None:
         path_cwd, "test", "test_data", "solar_photovoltaics_example_03", "sources.json"
     )
 
-    source_collection = technologydata.SourceCollection.from_json(input_file)
+    source_collection = technologydata.SourceCollection.from_json(file_path=input_file)
     result = source_collection.get(title=title_pattern, authors=authors_pattern)
     assert len(result.sources) == 1
