@@ -390,12 +390,17 @@ class Parameter(BaseModel):  # type: ignore
             if self._pint_carrier and other._pint_carrier
             else None
         )
-        new_heating_value = self._pint_heating_value / other._pint_heating_value
+        new_heating_value = (
+            self._pint_heating_value / other._pint_heating_value
+            if self._pint_heating_value and other._pint_heating_value
+            else None
+        )
+
         return Parameter(
             magnitude=new_quantity.magnitude,
             units=str(new_quantity.units),
-            carrier=str(new_carrier),
-            heating_value=str(new_heating_value),
+            carrier=new_carrier,
+            heating_value=new_heating_value,
             # TODO implement
             # provenance= ... ,
             # note= ... ,
