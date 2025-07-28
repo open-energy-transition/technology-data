@@ -273,13 +273,13 @@ class Parameter(BaseModel):  # type: ignore
         """Check if the parameter's units, carrier, and heating value are compatible."""
         if self._pint_carrier != other._pint_carrier:
             raise ValueError(
-                f"Cannot convert between parameters with different carriers: "
-                f"{self._pint_carrier} and {other._pint_carrier}."
+                f"Operation not permitted on parameters with different carriers: "
+                f"'{self._pint_carrier}' and '{other._pint_carrier}'."
             )
         if self._pint_heating_value != other._pint_heating_value:
             raise ValueError(
-                f"Cannot convert between parameters with different heating values: "
-                f"{self._pint_heating_value} and {other._pint_heating_value}."
+                f"Operation not permitted on parameters with different heating values: "
+                f"'{self._pint_heating_value}' and '{other._pint_heating_value}'."
             )
 
     def __add__(self, other: "Parameter") -> "Parameter":
