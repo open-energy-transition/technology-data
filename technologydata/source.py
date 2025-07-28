@@ -110,16 +110,11 @@ class Source(pydantic.BaseModel):  # type: ignore
             The hash value of the Source instance.
 
         """
-        return hash(
-            (
-                self.title,
-                self.authors,
-                self.url,
-                self.url_archive,
-                self.url_date,
-                self.url_date_archive,
-            )
+        # Retrieve all attribute values dynamically
+        attribute_values = tuple(
+            getattr(self, field) for field in self.__class__.model_fields.keys()
         )
+        return hash(attribute_values)
 
     def __str__(self) -> str:
         """
