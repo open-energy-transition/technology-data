@@ -18,21 +18,6 @@ class Technology(pydantic.BaseModel):  # type: ignore
     """
     Represent a technology with region, year, and a flexible set of parameters.
 
-    Parameters
-    ----------
-    name : str
-        Name of the technology.
-    region : str
-        Region identifier.
-    year : int
-        Year of the data.
-    parameters : Dict[str, Parameter]
-        Dictionary of parameter names to Parameter objects.
-    case : str
-        Case or scenario identifier.
-    detailed_technology : str
-        More detailed technology name.
-
     Attributes
     ----------
     name : str
@@ -50,16 +35,19 @@ class Technology(pydantic.BaseModel):  # type: ignore
 
     """
 
-    name: str = pydantic.Field(..., description="Name of the technology.")
-    region: str = pydantic.Field(..., description="Region identifier.")
-    year: int = pydantic.Field(..., description="Year of the data.")
-    parameters: dict[str, Parameter] = pydantic.Field(
-        default_factory=dict, description="Parameters."
-    )
-    case: str = pydantic.Field(..., description="Case or scenario identifier.")
-    detailed_technology: str = pydantic.Field(
-        ..., description="Detailed technology name."
-    )
+    name: typing.Annotated[str, pydantic.Field(description="Name of the technology.")]
+    region: typing.Annotated[str, pydantic.Field(description="Region identifier.")]
+    year: typing.Annotated[int, pydantic.Field(description="Year of the data.")]
+    parameters: typing.Annotated[
+        dict[str, Parameter],
+        pydantic.Field(default_factory=dict, description="Parameters."),
+    ]
+    case: typing.Annotated[
+        str, pydantic.Field(description="Case or scenario identifier.")
+    ]
+    detailed_technology: typing.Annotated[
+        str, pydantic.Field(description="Detailed technology name.")
+    ]
 
     def __getitem__(self, key: str) -> Parameter:
         """

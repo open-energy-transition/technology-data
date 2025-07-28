@@ -20,11 +20,6 @@ class SourceCollection(pydantic.BaseModel):  # type: ignore
     """
     Represent a collection of sources.
 
-    Parameters
-    ----------
-    sources : List[Source]
-        List of Source objects.
-
     Attributes
     ----------
     sources : List[Source]
@@ -32,7 +27,9 @@ class SourceCollection(pydantic.BaseModel):  # type: ignore
 
     """
 
-    sources: list[Source] = pydantic.Field(..., description="List of Source objects.")
+    sources: typing.Annotated[
+        list[Source], pydantic.Field(description="List of Source objects.")
+    ]
 
     def __iter__(self) -> typing.Iterator["Source"]:
         """

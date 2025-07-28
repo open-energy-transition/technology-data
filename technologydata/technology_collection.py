@@ -8,6 +8,7 @@ import csv
 import json
 import pathlib
 import re
+import typing
 from collections.abc import Iterator
 
 import pandas
@@ -20,11 +21,6 @@ class TechnologyCollection(pydantic.BaseModel):  # type: ignore
     """
     Represent a collection of technologies.
 
-    Parameters
-    ----------
-    technologies : List[Technology]
-        List of Technology objects.
-
     Attributes
     ----------
     technologies : List[Technology]
@@ -32,9 +28,9 @@ class TechnologyCollection(pydantic.BaseModel):  # type: ignore
 
     """
 
-    technologies: list[Technology] = pydantic.Field(
-        ..., description="List of Technology objects."
-    )
+    technologies: typing.Annotated[
+        list[Technology], pydantic.Field(description="List of Technology objects.")
+    ]
 
     def __iter__(self) -> Iterator["Technology"]:
         """

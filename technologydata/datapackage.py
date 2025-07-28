@@ -13,6 +13,7 @@ Examples
 
 import logging
 import pathlib
+import typing
 
 import pydantic
 
@@ -26,13 +27,6 @@ class DataPackage(pydantic.BaseModel):  # type: ignore
     """
     Container for a collection of Technology objects and/or Source objects, with batch operations and loading utilities.
 
-    Parameters
-    ----------
-    technologies : Optional[TechnologyCollection]
-        List of Technology objects.
-    sources : Optional[SourceCollection]
-        List of Source objects.
-
     Attributes
     ----------
     technologies : Optional[TechnologyCollection]
@@ -42,12 +36,13 @@ class DataPackage(pydantic.BaseModel):  # type: ignore
 
     """
 
-    technologies: TechnologyCollection | None = pydantic.Field(
-        None, description="List of Technology objects."
-    )
-    sources: SourceCollection | None = pydantic.Field(
-        None, description="List of Source objects."
-    )
+    technologies: typing.Annotated[
+        TechnologyCollection | None,
+        pydantic.Field(description="List of Technology objects."),
+    ] = None
+    sources: typing.Annotated[
+        SourceCollection | None, pydantic.Field(description="List of Source objects.")
+    ] = None
 
     def get_source_collection(self) -> None:
         """

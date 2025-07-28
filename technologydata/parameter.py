@@ -28,17 +28,6 @@ class Parameter(pydantic.BaseModel):  # type: ignore
     """
     Encapsulate a value with its unit, provenance, notes, and sources.
 
-    Parameters
-    ----------
-    quantity : UnitValue
-        The value and its unit.
-    provenance : Optional[str]
-        Description of the data's provenance.
-    note : Optional[str]
-        Additional notes about the parameter.
-    sources : SourceCollection
-        One or more sources for the parameter.
-
     Attributes
     ----------
     quantity : UnitValue
@@ -52,12 +41,18 @@ class Parameter(pydantic.BaseModel):  # type: ignore
 
     """
 
-    quantity: UnitValue = pydantic.Field(..., description="The value and its unit.")
-    provenance: str | None = pydantic.Field(None, description="Data provenance.")
-    note: str | None = pydantic.Field(None, description="Additional notes.")
-    sources: SourceCollection = pydantic.Field(
-        ..., description="Collection of Sources."
-    )
+    quantity: typing.Annotated[
+        UnitValue, pydantic.Field(description="The value and its unit.")
+    ]
+    provenance: typing.Annotated[
+        str | None, pydantic.Field(description="Data provenance.")
+    ] = None
+    note: typing.Annotated[
+        str | None, pydantic.Field(description="Additional notes.")
+    ] = None
+    sources: typing.Annotated[
+        SourceCollection, pydantic.Field(description="Collection of Sources.")
+    ]
 
     @property
     def value(self) -> float:

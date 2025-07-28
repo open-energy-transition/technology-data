@@ -30,21 +30,6 @@ class Source(pydantic.BaseModel):  # type: ignore
     """
     Represent a data source, including bibliographic and web information.
 
-    Parameters
-    ----------
-    title : str
-        Title of the source.
-    authors : str
-        Authors of the source.
-    url : Optional[str]
-        URL of the source.
-    url_archive : Optional[str]
-        Archived URL (e.g., from the Wayback Machine).
-    url_date : Optional[str]
-        Date the URL was accessed.
-    url_date_archive : Optional[str]
-        Date the URL was archived.
-
     Attributes
     ----------
     title : str
@@ -62,16 +47,20 @@ class Source(pydantic.BaseModel):  # type: ignore
 
     """
 
-    title: str = pydantic.Field(..., description="Title of the source.")
-    authors: str = pydantic.Field(..., description="Authors of the source.")
-    url: str | None = pydantic.Field(None, description="URL of the source.")
-    url_archive: str | None = pydantic.Field(None, description="Archived URL.")
-    url_date: str | None = pydantic.Field(
-        None, description="Date the URL was accessed."
-    )
-    url_date_archive: str | None = pydantic.Field(
-        None, description="Date the URL was archived."
-    )
+    title: typing.Annotated[str, pydantic.Field(description="Title of the source.")]
+    authors: typing.Annotated[str, pydantic.Field(description="Authors of the source.")]
+    url: typing.Annotated[
+        str | None, pydantic.Field(description="URL of the source.")
+    ] = None
+    url_archive: typing.Annotated[
+        str | None, pydantic.Field(description="Archived URL.")
+    ] = None
+    url_date: typing.Annotated[
+        str | None, pydantic.Field(description="Date the URL was accessed.")
+    ] = None
+    url_date_archive: typing.Annotated[
+        str | None, pydantic.Field(description="Date the URL was archived.")
+    ] = None
 
     def __eq__(self, other: object) -> bool:
         """
