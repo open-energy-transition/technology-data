@@ -81,6 +81,47 @@ param + param_hhv
 - **Data availability**: Since we use World Bank or IMF data, the availability of currency conversion data may vary by year and currency, depending on the most recent publication. World Bank data is based on the [World Bank DataBank](https://databank.worldbank.org/home.aspx) and IMF data is based on the [World Economic Outlook](https://www.imf.org/en/Publications/WEO). If IMF data is used, this means that also short-term projections can be accessed, usually e.g. GDP deflators for up to 2 years into the future.
 - **Updating Data**: If `pydeflate` notices that data is older than 50 days, it will display a warning. It will also periodically try to update the data automatically. More information on how to configure the update behaviour and caching locations for `pydeflate` are available in their [documentation](https://github.com/jm-rivera/pydeflate).
 
+## Handling different heating values
+
+Each `Parameter` can have a `heating_value` attribute, which can be either `LHV` (or allowed aliases like `lower_heating_value`, 'NCV', 'net_calorific_value') or `HHV` (or allowed aliases like `higher_heating_value`, 'GCV', 'gross_calorific_value').
+This attribute indicates the basis on which the energy content of the parameter is defined.
+In operations between `Parameter` objects, the heating value is checked.
+Only parameters with the same heating value can be used in arithmetic operations.
+
+The heating value can be changed using the `change_heating_value` method, which uses the `carrier` attribute of the `Parameter` to determine the conversion factor between LHV and HHV based on their energy densities.
+
+- **Supported Carriers:** The method currently supports conversion for common carriers such as hydrogen and methane. For any other carrier that is not implemented, a ratio of 1 is assumed.
+- **Changing Heating Value
+- **Adding Carriers:** New carriers can be added programmatically by extending the `EnergyDensityLHV` and `EnergyDensityHHV` dictionaries in the `technologydata.constants`. The LHV/HHV ratio is calculated based on these two dictionaries, so any new carrier must have both LHV and HHV energy densities defined. In addition the carrier name must be a valid dimensionality defined in `technologydata.utils.units.creg`.
+
+### Example: Converting Between LHV and HHV
+
+```python
+from technologydata.parameter import Parameter
+
+# Create a parameter on LHV basis
+param_lhv = Parameter(magnitude=33.33, units="kWh/kg", carrier="hydrogen", heating_value="LHV")
+>>> print(param_lhv.magnitude, param_lhv.units, param_lhv.heating_value)
+33.33 kWh/kg lower_heating_value
+
+# Convert to HHV basis
+param_hhv = param_lhv.change_heating_value("HHV")
+>>> print(param_hhv.magnitude, param_hhv.units, param_hhv.heating_value)
+39.51 kWh/kg higher_heating_value
+
+# Convert back to LHV
+param_lhv2 = param_hhv.change_heating_value("LHV")
+>>> print(param_lhv2.magnitude, param_lhv2.units, param_lhv2.heating_value)
+33.33 kWh/kg lower_heating_value
+
+# On mixed carriers
+param_mixed = Parameter(magnitude=1/9, units="kWh/kg", carrier="hydrogen / water", heating_value="LHV")
+param_mixed_hhv = param_mixed.change_heating_value("HHV")
+>>> print(param_mixed_hhv.magnitude, param_mixed_hhv.units, param_mixed_hhv.heating_value)
+0.13 kWh/kg higher_heating_value
+```
+
+
 ## Limitations & Missing Features
 
 - **Provenance/Note/Sources in Arithmetic**: When performing arithmetic operations, the handling and merging of `provenance`, `note`, and `sources` is not yet implemented (see `TODO` comments in the code).
