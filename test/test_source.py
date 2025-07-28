@@ -39,6 +39,13 @@ path_cwd = pathlib.Path.cwd()
             },
             True,  # Expect equal
         ),
+        (
+            {
+                "source_title": "tech_data_generation",
+                "source_authors": "Danish Energy Agency",
+            },
+            False,  # Expect not equal
+        ),
     ],
     indirect=["example_source"],
 )  # type: ignore

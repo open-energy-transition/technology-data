@@ -93,9 +93,8 @@ class Source(pydantic.BaseModel):  # type: ignore
         for field in self.__class__.model_fields.keys():
             value_self = getattr(self, field)
             value_other = getattr(other, field)
-            if value_self is not None and value_other is not None:
-                if value_self != value_other:
-                    return False
+            if value_self != value_other:
+                return False
         return True
 
     def __hash__(self) -> int:
