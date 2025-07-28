@@ -551,7 +551,7 @@ def test_parameter_pow_negative() -> None:
     assert ureg.Unit(result.units) == ureg.Unit("watt ** -2")
 
 
-def test_parameter_pow_carrier():
+def test_parameter_pow_carrier() -> None:
     """Test that the carrier attribute is also affected."""
     param = Parameter(
         magnitude=3,
@@ -577,3 +577,103 @@ def test_parameter_pow_preserves_metadata() -> None:
     assert result.heating_value == param.heating_value
     assert result.provenance == param.provenance
     assert result.note == param.note
+
+
+def test_change_heating_value_h2_lhv_to_hhv() -> None:
+    """Test LHV to HHV conversion for H2."""
+    p = Parameter(
+        magnitude=2,
+        units="kilowatt_hour",
+        carrier="hydrogen",
+        heating_value="lower_heating_value",
+    )
+    p2 = p.change_heating_value("higher_heating_value")
+    assert pytest.approx(p2.magnitude) == 3.0
+    assert p2.heating_value == "higher_heating_value"
+    assert p2.carrier == "hydrogen"
+    assert p2.units == "kilowatt_hour"
+
+
+def test_change_heating_value_h2_hhv_to_lhv() -> None:
+    """Test HHV to LHV conversion for H2."""
+    p = Parameter(
+        magnitude=3,
+        units="kilowatt_hour",
+        carrier="hydrogen",
+        heating_value="higher_heating_value",
+    )
+    p2 = p.change_heating_value("lower_heating_value")
+    assert pytest.approx(p2.magnitude) == 2.0
+    assert p2.heating_value == "lower_heating_value"
+    assert p2.carrier == "hydrogen"
+    assert p2.units == "kilowatt_hour"
+
+
+def test_change_heating_value_ch4_lhv_to_hhv() -> None:
+    """Test LHV to HHV conversion for CH4."""
+    p = Parameter(
+        magnitude=10,
+        units="kilowatt_hour",
+        carrier="methane",
+        heating_value="lower_heating_value",
+    )
+    p2 = p.change_heating_value("higher_heating_value")
+    assert pytest.approx(p2.magnitude) == 11.1
+    assert p2.heating_value == "higher_heating_value"
+    assert p2.carrier == "methane"
+    assert p2.units == "kilowatt_hour"
+
+
+def test_change_heating_value_ch4_hhv_to_lhv() -> None:
+    """Test HHV to LHV conversion for CH4."""
+    p = Parameter(
+        magnitude=11.1,
+        units="kilowatt_hour",
+        carrier="methane",
+        heating_value="higher_heating_value",
+    )
+    p2 = p.change_heating_value("lower_heating_value")
+    assert pytest.approx(p2.magnitude) == 10.0
+    assert p2.heating_value == "lower_heating_value"
+    assert p2.carrier == "methane"
+    assert p2.units == "kilowatt_hour"
+
+
+def test_change_heating_value_no_carrier_in_units() -> None:
+    """Test conversion when carrier does not appear in units (should treat as 1 appearance)."""
+    p = Parameter(
+        magnitude=1,
+        units="kilowatt_hour",
+        carrier="hydrogen",
+        heating_value="lower_heating_value",
+    )
+    p2 = p.change_heating_value("higher_heating_value")
+    assert pytest.approx(p2.magnitude) == 1.5
+    assert p2.heating_value == "higher_heating_value"
+    assert p2.carrier == "hydrogen"
+    assert p2.units == "kilowatt_hour"
+
+
+def test_change_heating_value_unsupported_carrier() -> None:
+    """Test that NotImplementedError is raised for unsupported carrier."""
+    p = Parameter(
+        magnitude=1,
+        units="kilowatt_hour",
+        carrier="oxygen",
+        heating_value="lower_heating_value",
+    )
+    with pytest.raises(NotImplementedError):
+        p.change_heating_value("higher_heating_value")
+
+
+def test_change_heating_value_same_hv() -> None:
+    """Test that no conversion occurs if heating value is unchanged."""
+    p = Parameter(
+        magnitude=1,
+        units="kilowatt_hour",
+        carrier="hydrogen",
+        heating_value="lower_heating_value",
+    )
+    p2 = p.change_heating_value("lower_heating_value")
+    assert p2.magnitude == 1
+    assert p2.heating_value == "lower_heating_value"

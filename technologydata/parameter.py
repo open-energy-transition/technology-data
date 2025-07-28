@@ -289,9 +289,47 @@ class Parameter(BaseModel):  # type: ignore
                 "Cannot change heating value without a current heating value. "
                 "Please provide a valid heating value."
             )
+        if to_heating_value == self.heating_value:
+            # No change needed, return the same parameter
+            return self
+
         self._update_pint_attributes()
 
-        raise NotImplementedError("Heating value conversion is not implemented yet.")
+        # TODO move these into a file or so
+        hv_ratios = {
+            "hydrogen": 1.5,
+            "electricity": 1,
+            "CH4": 1.11,
+        }
+        # Align the keys of the dict with the dimension names used by the creg
+        hv_ratios = {str(creg.get_dimensionality(k)): v for k, v in hv_ratios.items()}
+
+        # When converting from HHV -> LHV, we need to multiply by the ratios
+        # When converting from LHV -> HHV, we need to divide by the ratios
+        # We modify the hv_ratios dictionary to match the conversion direction
+        if hvreg.Unit(to_heating_value).is_compatible_with("HHV"):
+            hv_ratios = hv_ratios
+        elif hvreg.Unit(to_heating_value).is_compatible_with("LHV"):
+            hv_ratios = {k: 1 / v for k, v in hv_ratios.items()}
+
+        multiplier = 1
+        for dim, exponent in self._pint_carrier.dimensionality.items():
+            if dim not in hv_ratios:
+                raise NotImplementedError(
+                    f"Heating value conversion not implemented for carrier dimension '{dim}'."
+                )
+            # Adjust the hv_ratios for the exponent of the carrier
+            multiplier *= hv_ratios[dim] ** exponent
+
+        return Parameter(
+            magnitude=self.magnitude * multiplier,
+            units=self.units,
+            carrier=self.carrier,
+            heating_value=to_heating_value,
+            provenance=self.provenance,  # TODO implement for this function
+            note=self.note,
+            sources=self.sources,
+        )
 
     def _check_parameter_compatibility(self, other: "Parameter") -> None:
         """Check if the parameter's units, carrier, and heating value are compatible."""
