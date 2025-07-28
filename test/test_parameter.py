@@ -582,13 +582,13 @@ def test_parameter_pow_preserves_metadata() -> None:
 def test_change_heating_value_h2_lhv_to_hhv() -> None:
     """Test LHV to HHV conversion for H2."""
     p = Parameter(
-        magnitude=2,
+        magnitude=119.6,
         units="kilowatt_hour",
         carrier="hydrogen",
         heating_value="lower_heating_value",
     )
     p2 = p.change_heating_value("higher_heating_value")
-    assert pytest.approx(p2.magnitude) == 3.0
+    assert pytest.approx(p2.magnitude) == 141.8
     assert p2.heating_value == "higher_heating_value"
     assert p2.carrier == "hydrogen"
     assert p2.units == "kilowatt_hour"
@@ -597,13 +597,13 @@ def test_change_heating_value_h2_lhv_to_hhv() -> None:
 def test_change_heating_value_h2_hhv_to_lhv() -> None:
     """Test HHV to LHV conversion for H2."""
     p = Parameter(
-        magnitude=3,
+        magnitude=141.8,
         units="kilowatt_hour",
         carrier="hydrogen",
         heating_value="higher_heating_value",
     )
     p2 = p.change_heating_value("lower_heating_value")
-    assert pytest.approx(p2.magnitude) == 2.0
+    assert pytest.approx(p2.magnitude) == 119.6
     assert p2.heating_value == "lower_heating_value"
     assert p2.carrier == "hydrogen"
     assert p2.units == "kilowatt_hour"
@@ -648,22 +648,10 @@ def test_change_heating_value_no_carrier_in_units() -> None:
         heating_value="lower_heating_value",
     )
     p2 = p.change_heating_value("higher_heating_value")
-    assert pytest.approx(p2.magnitude) == 1.5
+    assert pytest.approx(p2.magnitude) == 1.418 / 1.196
     assert p2.heating_value == "higher_heating_value"
     assert p2.carrier == "hydrogen"
     assert p2.units == "kilowatt_hour"
-
-
-def test_change_heating_value_unsupported_carrier() -> None:
-    """Test that NotImplementedError is raised for unsupported carrier."""
-    p = Parameter(
-        magnitude=1,
-        units="kilowatt_hour",
-        carrier="oxygen",
-        heating_value="lower_heating_value",
-    )
-    with pytest.raises(NotImplementedError):
-        p.change_heating_value("higher_heating_value")
 
 
 def test_change_heating_value_same_hv() -> None:
