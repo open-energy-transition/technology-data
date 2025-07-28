@@ -365,10 +365,12 @@ class Parameter(BaseModel):  # type: ignore
             units=new_quantity.units,
             carrier=self.carrier,
             heating_value=self.heating_value,
-            # TODO implement
-            # provenance=... ,
-            # note=... ,
-            # sources=...,
+            provenance=(self.provenance or "")
+            + (other.provenance or ""),  # TODO make nicer
+            note=(self.note or "") + (other.note or ""),  # TODO make nicer
+            sources=SourceCollection(
+                sources=(self.sources.sources + other.sources.sources)
+            ),
         )
 
     def __sub__(self, other: "Parameter") -> "Parameter":
@@ -380,10 +382,12 @@ class Parameter(BaseModel):  # type: ignore
             units=str(new_quantity.units),
             carrier=self.carrier,
             heating_value=self.heating_value,
-            # TODO implement
-            # provenance= ... ,
-            # note= ... ,
-            # sources= ...,
+            provenance=(self.provenance or "")
+            + (other.provenance or ""),  # TODO make nicer
+            note=(self.note or "") + (other.note or ""),  # TODO make nicer
+            sources=SourceCollection(
+                sources=(self.sources.sources + other.sources.sources)
+            ),
         )
 
     def __truediv__(self, other: "Parameter") -> "Parameter":
@@ -413,10 +417,12 @@ class Parameter(BaseModel):  # type: ignore
             units=str(new_quantity.units),
             carrier=new_carrier,
             heating_value=new_heating_value,
-            # TODO implement
-            # provenance= ... ,
-            # note= ... ,
-            # sources= ...,
+            provenance=(self.provenance or "")
+            + (other.provenance or ""),  # TODO make nicer
+            note=(self.note or "") + (other.note or ""),  # TODO make nicer
+            sources=SourceCollection(
+                sources=(self.sources.sources + other.sources.sources)
+            ),
         )
 
     def __mul__(self, other: "Parameter") -> "Parameter":
@@ -435,16 +441,19 @@ class Parameter(BaseModel):  # type: ignore
             if self._pint_carrier and other._pint_carrier
             else None
         )
+
         new_heating_value = self._pint_heating_value * other._pint_heating_value
         return Parameter(
             magnitude=new_quantity.magnitude,
             units=str(new_quantity.units),
             carrier=str(new_carrier),
             heating_value=str(new_heating_value),
-            # TODO implement
-            # provenance= ... ,
-            # note= ... ,
-            # sources= ...,
+            provenance=(self.provenance or "")
+            + (other.provenance or ""),  # TODO make nicer
+            note=(self.note or "") + (other.note or ""),  # TODO make nicer
+            sources=SourceCollection(
+                sources=(self.sources.sources + other.sources.sources)
+            ),
         )
 
     def __eq__(self, other: "Parameter") -> bool:
