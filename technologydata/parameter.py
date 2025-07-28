@@ -269,6 +269,47 @@ class Parameter(BaseModel):  # type: ignore
             sources=self.sources,
         )
 
+    @refresh_pint_attributes
+    def change_heating_value(self, to_heating_value: str) -> "Parameter":
+        """
+        Change the heating value of the parameter.
+
+        This converts the parameter's heating value to another heating value,
+        e.g. from "LHV" to "HHV", by taking into account the parameter's carrier.
+
+        Parameters
+        ----------
+        to_heating_value : str
+            The target heating value to convert to, e.g. "LHV", "HHV".
+
+        Returns
+        -------
+        Parameter
+            A new Parameter object with the converted heating value.
+
+        Raises
+        ------
+        ValueError
+            If the current parameter does not have a carrier or a heating value set,
+
+        Examples
+        --------
+        >>> Parameter(magnitude=1, units="kWh", carrier="H2", heating_value="LHV").change_heating_value("HHV")
+        <Parameter magnitude=1.5, units='kWh', carrier='H2', heating_value='HHV'>
+
+        """
+        if not self.carrier:
+            raise ValueError(
+                "Cannot change heating value without a carrier. Please provide a valid carrier."
+            )
+        if not self.heating_value:
+            raise ValueError(
+                "Cannot change heating value without a current heating value. "
+                "Please provide a valid heating value."
+            )
+
+        raise NotImplementedError("Heating value conversion is not implemented yet.")
+
     def _check_parameter_compatibility(self, other: "Parameter") -> None:
         """Check if the parameter's units, carrier, and heating value are compatible."""
         if self._pint_carrier != other._pint_carrier:
