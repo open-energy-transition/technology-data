@@ -14,9 +14,7 @@ Examples
 
 """
 
-from collections.abc import Callable
-from functools import wraps
-from typing import Annotated, Any
+from typing import Annotated
 
 import pint
 from pydantic import BaseModel, Field, PrivateAttr
@@ -31,23 +29,6 @@ from technologydata.utils.units import (
     hvreg,
     ureg,
 )
-
-
-def refresh_pint_attributes(method: Callable[..., Any]) -> Callable[..., Any]:
-    """
-    Return a decorator to refresh the pint attributes before a method's execution.
-
-    Use this with methods from the `Parameter` class that utilise
-    the pint attributes to ensure they are up-to-date before they are used.
-    """
-
-    @wraps(method)
-    def wrapper(self: Any, *args: Any, **kwargs: Any) -> Any:
-        self._update_pint_attributes()
-        result = method(self, *args, **kwargs)
-        return result
-
-    return wrapper
 
 
 class Parameter(BaseModel):  # type: ignore
@@ -140,9 +121,10 @@ class Parameter(BaseModel):  # type: ignore
         else:
             self._pint_heating_value = None
 
-    @refresh_pint_attributes
     def to(self, units: str) -> "Parameter":
         """Convert the parameter's quantity to new units."""
+        self._update_pint_attributes()
+
         # Do not allow for currency conversion here, as it requires additional information
         if extract_currency_units(self._pint_quantity.units) != extract_currency_units(
             units
@@ -163,7 +145,6 @@ class Parameter(BaseModel):  # type: ignore
             sources=self.sources,
         )
 
-    @refresh_pint_attributes
     def change_currency(
         self, to_currency: str, country: str, source: str = "worldbank"
     ) -> "Parameter":
@@ -202,6 +183,8 @@ class Parameter(BaseModel):  # type: ignore
         >>> param.change_currency("EUR_2023", "USA", source="worldbank")
 
         """
+        self._update_pint_attributes()
+
         # Ensure the target currency is a valid unit
         ureg.ensure_currency_is_unit(to_currency)
 
@@ -269,7 +252,6 @@ class Parameter(BaseModel):  # type: ignore
             sources=self.sources,
         )
 
-    @refresh_pint_attributes
     def change_heating_value(self, to_heating_value: str) -> "Parameter":
         """
         Change the heating value of the parameter.
@@ -307,6 +289,7 @@ class Parameter(BaseModel):  # type: ignore
                 "Cannot change heating value without a current heating value. "
                 "Please provide a valid heating value."
             )
+        self._update_pint_attributes()
 
         raise NotImplementedError("Heating value conversion is not implemented yet.")
 
