@@ -4,17 +4,6 @@ SPDX-License-Identifier: MIT
 '/
 
 @startuml Class Diagram
-class UnitValue {
-  - value: float
-  - unit: str
-}
-
-note left of UnitValue::unit
-  Unit should be able to accomodate any unit of measurement,
-  currencies+years, LHVs and different energy carriers.
-  e.g. EUR_2020, kWh_electricity, kWh_hydrogen_LHV
-end note
-
 class Source {
   - name: str
   - authors: str
@@ -39,16 +28,47 @@ end note
 
 class Parameter {
   - quantity: UnitValue
+  - magnitude: float
+  - units: str
+  - carrier: str
+  - heating_value: str
   - provenance: str
   - note: str
   - sources: SourceCollection
+  - _pint_quantity: pint.Quantity
+  - _pint_carrier: pint.Unit
+  - _pint_heating_value: pint.Unit
+
+  + change_currency()
+  + change_heating_value()
+  + to()
+  + __add__(other: Parameter)
+  + __sub__(other: Parameter)
+  + __mul__(other: Parameter)
+  + __truediv__(other: Parameter)
+  + __pow__(other: Parameter)
+  + __eq__(other: Parameter)
 }
 
-Parameter --> UnitValue : quantity
+note left of Parameter
+  Encapsulates a value, its unit, carrier, heating value,
+  data provenance and sources.
+  The unit can accommodate any unit of measurement,
+  currencies+years, e.g. EUR_2020.
+  Heating values and energy carriers are tracked separately
+  to check for compatibility in operations.
+end note
 
-note right of Parameter
-  Encapsulates a value, its unit (via UnitValue, as quantity),
-  data provenance (via sources).
+note right of Parameter::change_currency()
+    Currency conversion using pydeflate.
+end note
+
+note right of Parameter::change_heating_value()
+    Change the heating value between LHV and HHV.
+end note
+
+note right of Parameter::to()
+    Changes the units of the parameter.
 end note
 
 class Technology {
