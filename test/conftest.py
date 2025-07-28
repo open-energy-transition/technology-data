@@ -81,5 +81,5 @@ def example_source_collection(
     This fixture is compatible with pytest parametrize.
     """
     sources_params: list[dict[str, str]] = request.param
-    sources = [create_source_from_params(params) for params in sources_params]
+    sources = {create_source_from_params(params) for params in sources_params}
     return technologydata.SourceCollection(sources=sources)

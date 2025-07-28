@@ -24,6 +24,7 @@ def test_to_csv() -> None:
         "technologies.json",
     )
     technology_collection = technologydata.TechnologyCollection.from_json(input_file)
+    print("technology collection created")
     output_file = pathlib.Path(path_cwd, "technologies.csv")
     technology_collection.to_csv(path_or_buf=output_file)
     assert output_file.is_file()

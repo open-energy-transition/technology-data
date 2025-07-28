@@ -23,18 +23,18 @@ class TechnologyCollection(pydantic.BaseModel):  # type: ignore
 
     Attributes
     ----------
-    technologies : List[Technology]
-        List of Technology objects.
+    technologies : Set[Technology]
+        Set of Technology objects.
 
     """
 
     technologies: typing.Annotated[
-        list[Technology], pydantic.Field(description="List of Technology objects.")
+        set[Technology], pydantic.Field(description="Set of Technology objects.")
     ]
 
     def __iter__(self) -> Iterator["Technology"]:
         """
-        Return an iterator over the list of Technology objects.
+        Return an iterator over the set of Technology objects.
 
         Returns
         -------
@@ -51,7 +51,7 @@ class TechnologyCollection(pydantic.BaseModel):  # type: ignore
         Returns
         -------
         int
-            The number of Technology objects in the technologies list.
+            The number of Technology objects in the technologies set.
 
         """
         return len(self.technologies)
@@ -85,35 +85,35 @@ class TechnologyCollection(pydantic.BaseModel):  # type: ignore
 
         if name is not None:
             pattern_name = re.compile(name, re.IGNORECASE)
-            filtered_technologies = [
+            filtered_technologies = {
                 t for t in filtered_technologies if pattern_name.search(t.name)
-            ]
+            }
 
         if region is not None:
             pattern_region = re.compile(region, re.IGNORECASE)
-            filtered_technologies = [
+            filtered_technologies = {
                 t for t in filtered_technologies if pattern_region.search(t.region)
-            ]
+            }
 
         if year is not None:
             pattern_year = re.compile(str(year), re.IGNORECASE)
-            filtered_technologies = [
+            filtered_technologies = {
                 t for t in filtered_technologies if pattern_year.search(str(t.year))
-            ]
+            }
 
         if case is not None:
             pattern_case = re.compile(case, re.IGNORECASE)
-            filtered_technologies = [
+            filtered_technologies = {
                 t for t in filtered_technologies if pattern_case.search(t.case)
-            ]
+            }
 
         if detailed_technology is not None:
             pattern_detailed_technology = re.compile(detailed_technology, re.IGNORECASE)
-            filtered_technologies = [
+            filtered_technologies = {
                 t
                 for t in filtered_technologies
                 if pattern_detailed_technology.search(t.detailed_technology)
-            ]
+            }
 
         return TechnologyCollection(technologies=filtered_technologies)
 
@@ -232,7 +232,7 @@ class TechnologyCollection(pydantic.BaseModel):  # type: ignore
             raise TypeError("file_path must be a pathlib.Path or str")
         with open(file_path, encoding="utf-8") as jsonfile:
             json_data = json.load(jsonfile)
-        techs = []
+        techs = set()
         for item in json_data:
-            techs.append(Technology.from_dict(item))
+            techs.add(Technology.from_dict(item))
         return cls(technologies=techs)

@@ -37,7 +37,7 @@ class Parameter(pydantic.BaseModel):  # type: ignore
     note : Optional[str]
         Additional notes about the parameter.
     sources : SourceCollection
-        List of sources for the parameter.
+        Collection of sources for the parameter.
 
     """
 
@@ -95,7 +95,7 @@ class Parameter(pydantic.BaseModel):  # type: ignore
                 - "quantity" (dict): A dictionary representing a UnitValue, parsed via `UnitValue.parse_obj()`.
                 - "provenance" (str or None): Optional provenance information.
                 - "note" (str or None): Optional notes.
-                - "sources" (list): A list of source data dictionaries, to be converted into a SourceCollection.
+                - "sources" (set): A list of source data dictionaries, to be converted into a SourceCollection.
 
         Returns
         -------
@@ -104,7 +104,7 @@ class Parameter(pydantic.BaseModel):  # type: ignore
 
         Notes
         -----
-        This method converts the "sources" list into a `SourceCollection` using `SourceCollection.from_json()`.
+        This method converts the "sources" set into a `SourceCollection` using `SourceCollection.from_json()`.
         The "quantity" field is parsed into a `UnitValue` object using `UnitValue.parse_obj()`.
 
         """

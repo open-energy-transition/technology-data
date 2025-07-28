@@ -71,10 +71,16 @@ def test_example_source_collection(
     assert len(example_source_collection.sources) == 2
 
     # Check the titles of the sources
-    assert example_source_collection.sources[0].title == "Source 1"
-    assert example_source_collection.sources[1].title == "Source 2"
-    assert example_source_collection.sources[0].authors == "Author 1"
-    assert example_source_collection.sources[1].authors == "Author 2"
+    source_list_title = list(
+        source.title for source in example_source_collection.sources
+    )
+    source_list_authors = list(
+        source.authors for source in example_source_collection.sources
+    )
+    assert "Source 1" in source_list_title
+    assert "Source 2" in source_list_title
+    assert "Author 1" in source_list_authors
+    assert "Author 2" in source_list_authors
 
 
 @pytest.mark.parametrize(

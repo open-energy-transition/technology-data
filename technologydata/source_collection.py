@@ -22,18 +22,18 @@ class SourceCollection(pydantic.BaseModel):  # type: ignore
 
     Attributes
     ----------
-    sources : List[Source]
-        List of Source objects.
+    sources : Set[Source]
+        Set of Source objects.
 
     """
 
     sources: typing.Annotated[
-        list[Source], pydantic.Field(description="List of Source objects.")
+        set[Source], pydantic.Field(description="Set of Source objects.")
     ]
 
     def __iter__(self) -> typing.Iterator["Source"]:
         """
-        Return an iterator over the list of Source objects.
+        Return an iterator over the set of Source objects.
 
         Returns
         -------
@@ -50,7 +50,7 @@ class SourceCollection(pydantic.BaseModel):  # type: ignore
         Returns
         -------
         int
-            The number of Source objects in the sources list.
+            The number of Source objects in the sources set.
 
         """
         return len(self.sources)
@@ -89,15 +89,15 @@ class SourceCollection(pydantic.BaseModel):  # type: ignore
 
         if title is not None:
             pattern_title = re.compile(title, re.IGNORECASE)
-            filtered_sources = [
+            filtered_sources = {
                 s for s in filtered_sources if pattern_title.search(s.title)
-            ]
+            }
 
         if authors is not None:
             pattern_authors = re.compile(authors, re.IGNORECASE)
-            filtered_sources = [
+            filtered_sources = {
                 s for s in filtered_sources if pattern_authors.search(s.authors)
-            ]
+            }
 
         return SourceCollection(sources=filtered_sources)
 

@@ -30,18 +30,18 @@ class DataPackage(pydantic.BaseModel):  # type: ignore
     Attributes
     ----------
     technologies : Optional[TechnologyCollection]
-        List of Technology objects.
+        Set of Technology objects.
     sources : Optional[SourceCollection]
-        List of Source objects.
+        Set of Source objects.
 
     """
 
     technologies: typing.Annotated[
         TechnologyCollection | None,
-        pydantic.Field(description="List of Technology objects."),
+        pydantic.Field(description="Set of Technology objects."),
     ] = None
     sources: typing.Annotated[
-        SourceCollection | None, pydantic.Field(description="List of Source objects.")
+        SourceCollection | None, pydantic.Field(description="Set of Source objects.")
     ] = None
 
     def get_source_collection(self) -> None:
@@ -67,7 +67,7 @@ class DataPackage(pydantic.BaseModel):  # type: ignore
                 )
         else:
             logger.info("The data package already has a sources collection.")
-        self.sources = SourceCollection(sources=list(sources_set))
+        self.sources = SourceCollection(sources=sources_set)
 
     @classmethod
     def from_json(cls, path_to_folder: pathlib.Path | str) -> "DataPackage":
