@@ -14,6 +14,7 @@ Examples
 
 """
 
+import logging
 from typing import Annotated
 
 import pint
@@ -29,6 +30,8 @@ from technologydata.utils.units import (
     hvreg,
     ureg,
 )
+
+logger = logging.getLogger(__name__)
 
 
 class Parameter(BaseModel):  # type: ignore
@@ -155,7 +158,7 @@ class Parameter(BaseModel):  # type: ignore
         To properly adjust for inflation, the function requires the `country` for which the inflation
         adjustment should be applied for.
 
-        Note that this wil harmonise all currencies used in the parameter's units,
+        Note that this will harmonise all currencies used in the parameter's units,
         i.e. if the parameter `units` contains multiple different currencies,
         all of them will be converted to the target currency.
 
@@ -295,14 +298,23 @@ class Parameter(BaseModel):  # type: ignore
 
         self._update_pint_attributes()
 
-        # TODO move these into a file or so
-        hv_ratios = {
-            "hydrogen": 1.5,
-            "electricity": 1,
-            "CH4": 1.11,
-        }
-        # Align the keys of the dict with the dimension names used by the creg
-        hv_ratios = {str(creg.get_dimensionality(k)): v for k, v in hv_ratios.items()}
+        from technologydata.constants import EnergyDensityHHV, EnergyDensityLHV
+
+        # Create a dictionary of heating value ratios based on energy densities
+        hv_ratios = dict()
+        lhvs = {str(creg.get_dimensionality(k)): v for k, v in EnergyDensityLHV.items()}
+        hhvs = {str(creg.get_dimensionality(k)): v for k, v in EnergyDensityHHV.items()}
+        for dimension in self._pint_carrier.dimensionality.keys():
+            if dimension in lhvs and dimension in hhvs:
+                hv_ratios[dimension] = (
+                    hhvs[dimension].magnitude / lhvs[dimension].magnitude
+                )
+            else:
+                logger.error(
+                    f"No heating values found for '{dimension}' in EnergyDensityLHV or EnergyDensityHHV. "
+                    f"Assuming a ratio of 1."
+                )
+                hv_ratios[dimension] = 1.0
 
         # When converting from HHV -> LHV, we need to multiply by the ratios
         # When converting from LHV -> HHV, we need to divide by the ratios
