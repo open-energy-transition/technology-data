@@ -15,12 +15,15 @@ Examples
 
 """
 
+import logging
 import typing
 
 import pydantic
 
 from technologydata.source_collection import SourceCollection
 from technologydata.unit_value import UnitValue
+
+logger = logging.getLogger(__name__)
 
 
 # TODO rework class logic
@@ -53,6 +56,60 @@ class Parameter(pydantic.BaseModel):  # type: ignore
     sources: typing.Annotated[
         SourceCollection, pydantic.Field(description="Collection of Sources.")
     ]
+
+    def __eq__(self, other: object) -> bool:
+        """
+        Check for equality with another Parameter object based on non-None attributes.
+
+        Compares all attributes of the current instance with those of the other object.
+        Only compares attributes that are not None in both instances.
+
+        Parameters
+        ----------
+        other : object
+            The object to compare with. Expected to be an instance of Parameter.
+
+        Returns
+        -------
+        bool
+            True if all non-None attributes are equal between self and other, False otherwise.
+            Returns False if other is not a Parameter instance.
+
+        Notes
+        -----
+        This method considers only attributes that are not None in both objects.
+        If an attribute is None in either object, it is ignored in the comparison.
+
+        """
+        if not isinstance(other, Parameter):
+            logger.error("The object is not a Parameter instance.")
+            return False
+
+        for field in self.__class__.model_fields.keys():
+            value_self = getattr(self, field)
+            value_other = getattr(other, field)
+            if value_self != value_other:
+                return False
+        return True
+
+    def __hash__(self) -> int:
+        """
+        Return a hash value for the Parameter instance based on all attributes.
+
+        This method computes a combined hash of the instance's attributes to
+        uniquely identify the object in hash-based collections such as sets and dictionaries.
+
+        Returns
+        -------
+        int
+            The hash value of the Parameter instance.
+
+        """
+        # Retrieve all attribute values dynamically
+        attribute_values = tuple(
+            getattr(self, field) for field in self.__class__.model_fields.keys()
+        )
+        return hash(attribute_values)
 
     @property
     def value(self) -> float:

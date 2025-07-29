@@ -127,9 +127,11 @@ class TechnologyCollection(pydantic.BaseModel):  # type: ignore
             A DataFrame containing the technology data.
 
         """
-        return pandas.DataFrame(
-            [technology.model_dump() for technology in self.technologies]
-        )
+        data = [
+            frozenset(sorted(technology.model_dump().items()))
+            for technology in self.technologies
+        ]
+        return pandas.DataFrame(data)
 
     def to_csv(self, **kwargs: pathlib.Path | str | bool) -> None:
         """

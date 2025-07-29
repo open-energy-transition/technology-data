@@ -6,6 +6,7 @@
 
 import csv
 import json
+import logging
 import pathlib
 import re
 import typing
@@ -14,6 +15,8 @@ import pandas
 import pydantic
 
 from technologydata.source import Source
+
+logger = logging.getLogger(__name__)
 
 
 class SourceCollection(pydantic.BaseModel):  # type: ignore
@@ -30,6 +33,51 @@ class SourceCollection(pydantic.BaseModel):  # type: ignore
     sources: typing.Annotated[
         set[Source], pydantic.Field(description="Set of Source objects.")
     ]
+
+    def __eq__(self, other: object) -> bool:
+        """
+        Check for equality with another SourceCollection object based on non-None attributes.
+
+        Compares all attributes of the current instance with those of the other object.
+        Only compares attributes that are not None in both instances.
+
+        Parameters
+        ----------
+        other : object
+            The object to compare with. Expected to be an instance of SourceCollection.
+
+        Returns
+        -------
+        bool
+            True if all non-None attributes are equal between self and other, False otherwise.
+            Returns False if other is not a Source instance.
+
+        Notes
+        -----
+        This method considers only attributes that are not None in both objects.
+        If an attribute is None in either object, it is ignored in the comparison.
+
+        """
+        if not isinstance(other, SourceCollection):
+            logger.error("The object is not a SourceCollection instance.")
+            return False
+
+        return self.sources == other.sources
+
+    def __hash__(self) -> int:
+        """
+        Return a hash value for the Source instance based on all attributes.
+
+        This method computes a combined hash of the instance's attributes to
+        uniquely identify the object in hash-based collections such as sets and dictionaries.
+
+        Returns
+        -------
+        int
+            The hash value of the SourceCollection instance.
+
+        """
+        return hash(frozenset(self.sources))
 
     def __iter__(self) -> typing.Iterator["Source"]:
         """
