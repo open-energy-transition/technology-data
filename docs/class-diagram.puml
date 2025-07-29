@@ -124,7 +124,7 @@ class TechnologyCollection {
   + to_dataframe(): pd.DataFrame
   + from_json(): TechnologyCollection
   + create_projection(method: GrowthModel): TechnologyCollection
-  ' TODO: Think about more methods here
+  + learn(method: LearningModel): TechnologyCollection
 }
 
 note right of TechnologyCollection::get
@@ -236,10 +236,37 @@ Technology --> "*" Parameter : uses for its members
 TechnologyCollection --> "*" Technology : consists of
 SourceCollection --> "*" Source : consists of
 Datapackage --> "1" TechnologyCollection : contains
-TechnologyCollection --> GrowthModel : uses for\ncreate_projection()
+TechnologyCollection --> GrowthModel : used for learn(...)
 GrowthModel <|-- LinearGrowth
 GrowthModel <|-- ExponentialGrowth
 GrowthModel <|-- LogisticGrowth
 GrowthModel <|-- GompertzGrowth
 GrowthModel <|-- GeneralLogisticGrowth
+
+abstract class LearningModel {
+  + project_costs(collection: TechnologyCollection): TechnologyCollection
+}
+
+class ExperienceLearning {
+  Implements cost change via experience curve \n(cumulative experience).
+}
+
+class ProductionLearning {
+  Implements cost change via production-based \nlearning (cumulative production).
+}
+
+class TimebasedLearning {
+  Implements cost change via time-based learning \n(improvement over time).
+}
+
+note right of LearningModel
+  Abstract base for learning models used in cost projections.
+  Subclasses implement specific learning logic.
+  `project_costs()` returns a new TechnologyCollection with cost projections.
+end note
+
+TechnologyCollection --> LearningModel : uses for learn(...) \n (cost modifications)
+LearningModel <|-- ExperienceLearning
+LearningModel <|-- ProductionLearning
+LearningModel <|-- TimebasedLearning
 @enduml
