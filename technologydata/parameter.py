@@ -16,6 +16,7 @@ Examples
 """
 
 import logging
+import typing
 from typing import Annotated
 
 import pint
@@ -457,7 +458,7 @@ class Parameter(BaseModel):  # type: ignore
             ),
         )
 
-    def __eq__(self, other: "Parameter") -> bool:
+    def __eq__(self, other: object) -> bool:
         """Check equality of two Parameter objects."""
         if not isinstance(other, Parameter):
             return NotImplemented

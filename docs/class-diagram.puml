@@ -62,25 +62,11 @@ class Parameter {
   + __eq__(other: Parameter)
 }
 
-note left of Parameter
-  Encapsulates a value, its unit, carrier, heating value,
-  data provenance and sources.
-  The unit can accommodate any unit of measurement,
-  currencies+years, e.g. EUR_2020.
-  Heating values and energy carriers are tracked separately
-  to check for compatibility in operations.
-end note
+Parameter --> UnitValue : quantity
 
-note right of Parameter::change_currency()
-    Currency conversion using pydeflate.
-end note
-
-note right of Parameter::change_heating_value()
-    Change the heating value between LHV and HHV.
-end note
-
-note right of Parameter::to()
-    Changes the units of the parameter.
+note right of Parameter
+  Encapsulates a value, its unit (via UnitValue, as quantity),
+  data provenance (via sources).
 end note
 
 class Technology {

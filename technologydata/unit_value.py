@@ -34,7 +34,7 @@ class UnitValue(pydantic.BaseModel):  # type: ignore
     value : float
         The numerical value.
     unit : str
-        The unit of measurement.
+        The unit of measurement (e.g., 'EUR_2020', 'kWh_electricity', 'kWh_hydrogen_LHV').
 
     """
 
