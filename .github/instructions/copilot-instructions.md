@@ -1,3 +1,9 @@
+<!--
+SPDX-FileCopyrightText: The technology-data authors
+
+SPDX-License-Identifier: MIT
+-->
+
 # Copilot Coding Agent Instructions for `technologydata`
 
 ## Project Overview
@@ -12,7 +18,7 @@
 - **Linting/formatting:** Use `ruff` (`ruff check .` and `ruff format .`).
 - **Type checking:** Use `mypy`.
 - **Testing:** Use `pytest` (tests in `test/`). Fixtures in `test/conftest.py`. Run: `pytest`.
-- **Pre-commit hooks:** Set up with `pre-commit` using `.pre-commit-config.yaml`, use this preferrably over using `mypy` and `ruff` manually.
+- **Pre-commit hooks:** Set up with `pre-commit` using `.pre-commit-config.yaml`, use this preferably over using `mypy` and `ruff` manually.
 - **Docs:** Built with `mkdocs` (see `docs/`).
 
 ## Project-Specific Patterns

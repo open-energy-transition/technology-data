@@ -309,7 +309,23 @@ def get_iso3_from_currency_code(
 class SpecialUnitRegistry(pint.UnitRegistry):
     """A special pint.UnitRegistry subclass that includes methods for handling currency units and conversion using pydeflate."""
 
-    def __init__(self, *args, **kwargs) -> None:
+    def __init__(self, *args: tuple, **kwargs: dict) -> None:
+        """
+        Initialize a SpecialUnitRegistry instance.
+
+        This constructor creates a new `SpecialUnitRegistry` object,
+        inheriting all default behaviors from `pint.UnitRegistry`.
+        It also defines a reference currency unit (`USD_2020`) for
+        handling currency conversions and related operations.
+
+        Parameters
+        ----------
+        *args : tuple
+            Positional arguments passed to the base `pint.UnitRegistry` constructor.
+        **kwargs : dict
+            Keyword arguments passed to the base `pint.UnitRegistry` constructor.
+
+        """
         # Use all defaults definitions from a standard pint.UnitRegistry
         super().__init__(*args, **kwargs)
 

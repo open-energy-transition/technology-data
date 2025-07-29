@@ -1,3 +1,9 @@
+<!--
+SPDX-FileCopyrightText: The technology-data authors
+
+SPDX-License-Identifier: MIT
+-->
+
 # `Parameter` Class Documentation
 
 ## Overview
