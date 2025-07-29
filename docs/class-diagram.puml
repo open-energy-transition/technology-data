@@ -123,7 +123,7 @@ class TechnologyCollection {
   + to_csv(): str
   + to_dataframe(): pd.DataFrame
   + from_json(): TechnologyCollection
-  + create_projection(): TechnologyCollection
+  + create_projection(method: GrowthModel): TechnologyCollection
   ' TODO: Think about more methods here
 }
 
@@ -140,6 +140,42 @@ note right of TechnologyCollection::create_projection
   based on the Technology objects in the collection.
   Either returns a new TechnologyCollection or adds the
   Technology objects to the current collection.
+  Uses a GrowthModel (see below) to project values.
+end note
+
+abstract class GrowthModel {
+  + project(collection: TechnologyCollection): TechnologyCollection
+}
+
+class LinearGrowth {
+  Project with linear growth model.
+}
+
+class ExponentialGrowth {
+  Project with exponential growth model.
+}
+
+class LogisticGrowth {
+  Project with logistic growth model.
+}
+
+class GompertzGrowth {
+  Project with Gompertz growth model.
+}
+
+class GeneralLogisticGrowth {
+  Project with a general logistic growth model,
+}
+
+note right of GrowthModel
+  Abstract base for growth models used in projections.
+  Subclasses implement specific growth curve logic.
+  Each subclass should support two approaches: fitting around
+  data from the TechnologyCollection, and extrapolating using a
+  single value as support with parameters for the GrowthModels specified
+  by the user.
+  `project()` returns a new `TechnologyCollection` with
+  the original Technology objects and new objects for the projection.
 end note
 
 class SourceCollection {
@@ -164,7 +200,7 @@ note left of SourceCollection::to_csv
   Export the source collection into a csv file.
 end note
 
-note left of SourceCollection::to_dataframe
+note right of SourceCollection::to_dataframe
   Export the source collection into a Pandas dataframe.
 end note
 
@@ -200,4 +236,10 @@ Technology --> "*" Parameter : uses for its members
 TechnologyCollection --> "*" Technology : consists of
 SourceCollection --> "*" Source : consists of
 Datapackage --> "1" TechnologyCollection : contains
+TechnologyCollection --> GrowthModel : uses for\ncreate_projection()
+GrowthModel <|-- LinearGrowth
+GrowthModel <|-- ExponentialGrowth
+GrowthModel <|-- LogisticGrowth
+GrowthModel <|-- GompertzGrowth
+GrowthModel <|-- GeneralLogisticGrowth
 @enduml
