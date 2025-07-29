@@ -7,6 +7,7 @@ Parameter class for encapsulating a value, its unit, provenance, notes, and sour
 
 Examples
 --------
+>>> from technologydata.unit_value import UnitValue
 >>> from technologydata.source import Source
 >>> uv = pint.Quantity(1000, "EUR_2020/kW")
 >>> src = Source(name="Example Source", authors="some authors", url="http://example.com")
@@ -487,4 +488,42 @@ class Parameter(BaseModel):  # type: ignore
             provenance=self.provenance,
             note=self.note,
             sources=self.sources,
+        )
+
+    @classmethod
+    def from_dict(cls, data: dict[str, typing.Any]) -> "Parameter":
+        """
+        Create an instance of the class from a dictionary.
+
+        Parameters
+        ----------
+        cls : type
+            The class to instantiate.
+        data : dict
+            A dictionary containing the data to initialize the class instance.
+            Expected keys include:
+                - "quantity" (dict): A dictionary representing a UnitValue, parsed via `UnitValue.parse_obj()`.
+                - "provenance" (str or None): Optional provenance information.
+                - "note" (str or None): Optional notes.
+                - "sources" (list): A list of source data dictionaries, to be converted into a SourceCollection.
+
+        Returns
+        -------
+        instance : cls
+            An instance of the class initialized with the provided data.
+
+        Notes
+        -----
+        This method converts the "sources" list into a `SourceCollection` using `SourceCollection.from_json()`.
+        The "quantity" field is parsed into a `UnitValue` object using `UnitValue.parse_obj()`.
+
+        """
+        # Convert sources list into SourceCollection
+        sources_data = data.get("sources", [])
+        sources = SourceCollection.from_json(from_str=sources_data)
+        return cls(
+            quantity=UnitValue.model_validate(data["quantity"]),
+            provenance=data.get("provenance"),
+            note=data.get("note"),
+            sources=sources,
         )
