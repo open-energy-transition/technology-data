@@ -72,6 +72,8 @@ def get_iso3_to_currency_codes(
         A dictionary mapping ISO3 country codes to their corresponding 3-letter currency codes.
 
     """
+    currencies: dict[str, str] = {}
+
     if refresh:
         logger.debug("Deleting existing currency codes cache to refresh it.")
         CURRENCY_CODES_CACHE.unlink(missing_ok=True)
@@ -88,8 +90,8 @@ def get_iso3_to_currency_codes(
             json.dump(currencies, f)
     else:
         logger.debug("Reading currency codes from cache.")
-    #        with open(CURRENCY_CODES_CACHE) as f:
-    #            currencies = json.load(f)
+        with open(CURRENCY_CODES_CACHE) as f:
+            currencies = json.load(f)
 
     return currencies
 
