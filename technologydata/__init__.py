@@ -9,7 +9,6 @@ from technologydata.source import Source
 from technologydata.source_collection import SourceCollection
 from technologydata.technology import Technology
 from technologydata.technology_collection import TechnologyCollection
-from technologydata.unit_value import UnitValue
 from technologydata.utils.commons import Commons, DateFormatEnum, FileExtensionEnum
 
 __all__ = [
@@ -22,5 +21,4 @@ __all__ = [
     "SourceCollection",
     "Technology",
     "TechnologyCollection",
-    "UnitValue",
 ]

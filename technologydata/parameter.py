@@ -523,7 +523,10 @@ class Parameter(BaseModel):  # type: ignore
         sources_data = data.get("sources", [])
         sources = SourceCollection.from_json(from_str=sources_data)
         return cls(
-            quantity=UnitValue.model_validate(data["quantity"]),
+            magnitude=data.get("magnitude"),
+            units=data.get("units"),
+            carrier=data.get("carrier"),
+            heating_value=data.get("heating_value"),
             provenance=data.get("provenance"),
             note=data.get("note"),
             sources=sources,
