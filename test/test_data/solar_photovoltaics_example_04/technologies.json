@@ -7,10 +7,8 @@
     "detailed_technology": "Si-HC",
     "parameters": {
       "capacity": {
-        "quantity": {
-          "value": 1,
-          "unit": "MW"
-        },
+        "magnitude": 1,
+        "units": "MW",
         "provenance": "Model calculation",
         "note": "Average capacity factor of 22% assumed",
         "sources": [
