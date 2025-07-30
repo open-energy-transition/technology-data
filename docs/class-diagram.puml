@@ -4,16 +4,6 @@ SPDX-License-Identifier: MIT
 '/
 
 @startuml Class Diagram
-class UnitValue {
-  - value: float
-  - unit: str
-}
-
-note left of UnitValue::unit
-  Unit should be able to accommodate any unit of measurement,
-  currencies+years, LHVs and different energy carriers.
-  e.g. EUR_2020, kWh_electricity, kWh_hydrogen_LHV
-end note
 
 class Source {
   - name: str
@@ -38,7 +28,6 @@ note right of Source::retrieve_from_wayback
 end note
 
 class Parameter {
-  - quantity: UnitValue
   - magnitude: float
   - units: str
   - carrier: str
@@ -46,7 +35,6 @@ class Parameter {
   - provenance: str
   - note: str
   - sources: SourceCollection
-  + from_dict(): Parameter
   - _pint_quantity: pint.Quantity
   - _pint_carrier: pint.Unit
   - _pint_heating_value: pint.Unit
@@ -54,6 +42,7 @@ class Parameter {
   + change_currency()
   + change_heating_value()
   + to()
+  + from_dict(): Parameter
   + __add__(other: Parameter)
   + __sub__(other: Parameter)
   + __mul__(other: Parameter)
@@ -61,8 +50,6 @@ class Parameter {
   + __pow__(other: Parameter)
   + __eq__(other: Parameter)
 }
-
-Parameter --> UnitValue : quantity
 
 note right of Parameter
   Encapsulates a value, its unit (via UnitValue, as quantity),

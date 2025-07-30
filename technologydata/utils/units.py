@@ -87,8 +87,8 @@ def get_iso3_to_currency_codes(
             json.dump(currencies, f)
     else:
         logger.debug("Reading currency codes from cache.")
-        with open(CURRENCY_CODES_CACHE) as f:
-            currencies = json.load(f)
+    #        with open(CURRENCY_CODES_CACHE) as f:
+    #            currencies = json.load(f)
 
     return currencies
 
