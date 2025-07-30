@@ -6,6 +6,7 @@
 import json
 import logging
 import re
+import typing
 from functools import lru_cache
 from pathlib import Path
 
@@ -306,10 +307,12 @@ def get_iso3_from_currency_code(
         ) from e
 
 
-class SpecialUnitRegistry(pint.UnitRegistry):
+class SpecialUnitRegistry(pint.UnitRegistry):  # type: ignore
     """A special pint.UnitRegistry subclass that includes methods for handling currency units and conversion using pydeflate."""
 
-    def __init__(self, *args: tuple, **kwargs: dict) -> None:
+    def __init__(
+        self, *args: tuple[typing.Any, ...], **kwargs: dict[str, typing.Any]
+    ) -> None:
         """
         Initialize a SpecialUnitRegistry instance.
 
