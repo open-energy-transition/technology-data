@@ -458,22 +458,35 @@ class Parameter(BaseModel):  # type: ignore
         )
 
     def __eq__(self, other: object) -> bool:
-        """Check equality of two Parameter objects."""
+        """
+        Check for equality with another Parameter object.
+
+        Compares all attributes of the current instance with those of the other object.
+
+        Parameters
+        ----------
+        other : object
+            The object to compare with. Expected to be an instance of Parameter.
+
+        Returns
+        -------
+        bool
+            True if all attributes are equal between self and other, False otherwise.
+            Returns False if other is not a Parameter instance.
+
+        """
         if not isinstance(other, Parameter):
             return NotImplemented
 
         self._update_pint_attributes()
         other._update_pint_attributes()
 
-        return (
-            self.magnitude == other.magnitude
-            and self.units == other.units
-            and self.carrier == other.carrier
-            and self.heating_value == other.heating_value
-            and self.provenance == other.provenance
-            and self.note == other.note
-            and self.sources == other.sources
-        )
+        for field in self.__class__.model_fields.keys():
+            value_self = getattr(self, field)
+            value_other = getattr(other, field)
+            if value_self != value_other:
+                return False
+        return True
 
     def __pow__(self, exponent: float | int) -> "Parameter":
         """Raise the parameter's value to a power."""
