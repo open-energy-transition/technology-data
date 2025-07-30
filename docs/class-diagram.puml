@@ -52,7 +52,7 @@ class Parameter {
 }
 
 note right of Parameter
-  Encapsulates a value, its unit (via UnitValue, as quantity),
+  Encapsulates a value, its unit,
   data provenance (via sources).
 end note
 

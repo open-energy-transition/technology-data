@@ -7,7 +7,6 @@ Parameter class for encapsulating a value, its unit, provenance, notes, and sour
 
 Examples
 --------
->>> from technologydata.unit_value import UnitValue
 >>> from technologydata.source import Source
 >>> uv = pint.Quantity(1000, "EUR_2020/kW")
 >>> src = Source(name="Example Source", authors="some authors", url="http://example.com")
@@ -501,22 +500,23 @@ class Parameter(BaseModel):  # type: ignore
         cls : type
             The class to instantiate.
         data : dict
-            A dictionary containing the data to initialize the class instance.
-            Expected keys include:
-                - "quantity" (dict): A dictionary representing a UnitValue, parsed via `UnitValue.parse_obj()`.
-                - "provenance" (str or None): Optional provenance information.
-                - "note" (str or None): Optional notes.
+            A dictionary containing the data to initialize the class instance. Expected keys include:
+                - "magnitude"
+                - "units"
+                - "carrier"
+                - "heating_value"
+                - "provenance"
+                - "note"
                 - "sources" (list): A list of source data dictionaries, to be converted into a SourceCollection.
 
         Returns
         -------
-        instance : cls
+        Parameter
             An instance of the class initialized with the provided data.
 
         Notes
         -----
         This method converts the "sources" list into a `SourceCollection` using `SourceCollection.from_json()`.
-        The "quantity" field is parsed into a `UnitValue` object using `UnitValue.parse_obj()`.
 
         """
         # Convert sources list into SourceCollection
