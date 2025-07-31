@@ -28,7 +28,6 @@ class TestParameter:
             sources=SourceCollection(
                 sources=[
                     Source(
-                        name="Example Source",
                         authors="some authors",
                         title="Example Title",
                     )
@@ -368,7 +367,6 @@ class TestParameter:
             sources=SourceCollection(
                 sources=[
                     Source(
-                        name="Example Source",
                         authors="some authors",
                         title="Example Title",
                     )
@@ -385,7 +383,6 @@ class TestParameter:
             sources=SourceCollection(
                 sources=[
                     Source(
-                        name="Example Source",
                         authors="some authors",
                         title="Example Title",
                     )
@@ -447,8 +444,8 @@ class TestParameter:
 
     def test_parameter_equality_different_sources(self) -> None:
         """Test that parameters with different sources are not equal."""
-        source1 = Source(name="Source 1", authors="Author A", title="Title A")
-        source2 = Source(name="Source 2", authors="Author B", title="Title B")
+        source1 = Source(authors="Author A", title="Title A")
+        source2 = Source(authors="Author B", title="Title B")
 
         param1 = Parameter(magnitude=1000, sources=SourceCollection(sources=[source1]))
         param2 = Parameter(magnitude=1000, sources=SourceCollection(sources=[source2]))
@@ -500,6 +497,25 @@ class TestParameter:
         )
 
         assert param == param
+
+    @pytest.mark.parametrize(
+        "example_parameter",
+        [
+            {
+                "parameter_magnitude": 1000,
+                "parameter_units": "USD_2020/kW",
+                "parameter_carrier": "H2",
+                "parameter_heating_value": "LHV",
+                "parameter_provenance": "literature",
+                "parameter_note": "Estimated",
+                "parameter_sources": [Source(title="title", authors="authors")],
+            }
+        ],
+        indirect=["example_parameter"],
+    )  # type: ignore
+    def test_example_parameter(self, example_parameter: Parameter) -> None:
+        """Test that the fixture example_parameter yields a parameter object."""
+        assert isinstance(example_parameter, Parameter)
 
     def test_parameter_pow_basic(self) -> None:
         """Test integer exponentiation."""

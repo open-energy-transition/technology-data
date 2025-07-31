@@ -100,7 +100,19 @@ class Parameter(BaseModel):  # type: ignore
         self._update_pint_attributes()
 
     def _update_pint_attributes(self) -> None:
-        """Update all derived pint attributes from current fields."""
+        """
+        Update internal pint attributes based on current object fields.
+
+        This method initializes or updates the following attributes:
+        - `_pint_quantity`: a pint Quantity created from `magnitude` and `units`.
+        - `_pint_carrier`: a pint Unit created from `carrier`.
+        - `_pint_heating_value`: a pint Unit created from `heating_value`, if applicable.
+
+        Notes
+        -----
+        - Ensures that `units` are valid, especially for currency units.
+        - Raises a ValueError if `heating_value` is set without a valid `carrier`.
+        """
         # Create a pint quantity from magnitude and units
         if self.units:
             # `units` may contain an undefined currency unit - ensure the ureg can handle it
@@ -345,7 +357,20 @@ class Parameter(BaseModel):  # type: ignore
         )
 
     def _check_parameter_compatibility(self, other: "Parameter") -> None:
-        """Check if the parameter's units, carrier, and heating value are compatible."""
+        """
+        Check if two parameters are compatible in terms of units, carrier, and heating value.
+
+        Parameters
+        ----------
+        other : Parameter
+            The other Parameter instance to compare against.
+
+        Raises
+        ------
+        ValueError
+            If the carriers or heating values of the two parameters are not compatible.
+            The error message specifies which attribute differs.
+        """
         if self._pint_carrier != other._pint_carrier:
             raise ValueError(
                 f"Operation not permitted on parameters with different carriers: "
@@ -358,7 +383,26 @@ class Parameter(BaseModel):  # type: ignore
             )
 
     def __add__(self, other: "Parameter") -> "Parameter":
-        """Add two parameters together."""
+        """
+        Add this Parameter to another Parameter.
+
+        Parameters
+        ----------
+        other : Parameter
+            The Parameter instance to add.
+
+        Returns
+        -------
+        Parameter
+            A new Parameter instance representing the sum of the two parameters.
+
+        Notes
+        -----
+        This method checks for parameter compatibility before performing the addition.
+        The resulting Parameter retains the carrier, heating value, and combines provenance,
+        notes, and sources from both operands.
+
+        """
         self._check_parameter_compatibility(other)
         new_quantity = self._pint_quantity + other._pint_quantity
         return Parameter(
@@ -375,7 +419,25 @@ class Parameter(BaseModel):  # type: ignore
         )
 
     def __sub__(self, other: "Parameter") -> "Parameter":
-        """Subtract two parameters."""
+        """
+        Subtract another Parameter from this Parameter.
+
+        Parameters
+        ----------
+        other : Parameter
+            The Parameter instance to subtract.
+
+        Returns
+        -------
+        Parameter
+            A new Parameter instance representing the result of the subtraction.
+
+        Notes
+        -----
+        This method checks for parameter compatibility before performing the subtraction.
+        The resulting Parameter retains the carrier, heating value, and combines provenance, notes, and sources.
+
+        """
         self._check_parameter_compatibility(other)
         new_quantity = self._pint_quantity - other._pint_quantity
         return Parameter(
@@ -392,7 +454,30 @@ class Parameter(BaseModel):  # type: ignore
         )
 
     def __truediv__(self, other: "Parameter") -> "Parameter":
-        """Divide two parameters."""
+        """
+        Divide this Parameter by another Parameter.
+
+        Parameters
+        ----------
+        other : Parameter
+            The Parameter instance to divide by.
+
+        Returns
+        -------
+        Parameter
+            A new Parameter instance representing the division result.
+
+        Raises
+        ------
+        ValueError
+            If the heating values of the two parameters are different.
+
+        Notes
+        -----
+        The method divides the quantities of the parameters and constructs a new Parameter.
+        It also handles the division of carriers and heating values if present.
+
+        """
         # We don't check general compatibility here, as division is not a common operation for parameters.
         # Only ensure that the heating values are compatible.
         if self._pint_heating_value != other._pint_heating_value:
@@ -427,7 +512,33 @@ class Parameter(BaseModel):  # type: ignore
         )
 
     def __mul__(self, other: "Parameter") -> "Parameter":
-        """Multiply two parameters."""
+        """
+        Multiply two Parameter instances.
+
+        Parameters
+        ----------
+        other : Parameter
+            The other Parameter instance to multiply with.
+
+        Returns
+        -------
+        Parameter
+            A new Parameter instance representing the product of the two parameters.
+
+        Raises
+        ------
+        ValueError
+            If the heating values of the two parameters are not compatible (i.e., not equal).
+
+        Notes
+        -----
+        - Multiplication is only performed if the heating values are compatible.
+        - The method multiplies the underlying quantities and carriers (if present).
+        - The heating value of the resulting parameter is the product of the input heating values.
+        - Provenance, notes, and sources are combined from both parameters.
+        - Compatibility checks beyond heating values are not performed.
+
+        """
         # We don't check general compatibility here, as multiplication is not a common operation for parameters.
         # Only ensure that the heating values are compatible.
         if self._pint_heating_value != other._pint_heating_value:
@@ -489,7 +600,25 @@ class Parameter(BaseModel):  # type: ignore
         return True
 
     def __pow__(self, exponent: float | int) -> "Parameter":
-        """Raise the parameter's value to a power."""
+        """
+        Raise the parameter's value to a specified power.
+
+        Parameters
+        ----------
+        exponent : float or int
+            The exponent to raise the parameter's value to.
+
+        Returns
+        -------
+        Parameter
+            A new Parameter instance with the value raised to the specified power.
+
+        Notes
+        -----
+        This method updates the internal pint attributes before applying the power operation.
+        If the parameter has a carrier, it is also raised to the specified power.
+
+        """
         self._update_pint_attributes()
 
         new_quantity = self._pint_quantity**exponent
