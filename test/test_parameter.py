@@ -6,6 +6,7 @@
 
 import pathlib
 
+import numpy as np
 import pandas as pd
 import pint
 import pytest
@@ -155,6 +156,7 @@ class TestParameter:
         assert converted._pint_quantity.is_compatible_with("EUR_2023 / kW")
 
         # Check that magnitude changed due to currency conversion
+        assert not np.isnan(converted.magnitude)
         assert converted.magnitude != param.magnitude
 
     def test_parameter_change_currency_explicit_source(self) -> None:
@@ -170,6 +172,7 @@ class TestParameter:
         assert converted.units is not None
         assert "USD_2022" in converted.units
         assert converted._pint_quantity is not None
+        assert not np.isnan(converted.magnitude)
         assert converted._pint_quantity.is_compatible_with("USD_2022 / MWh")
 
     def test_parameter_change_currency_different_source(self) -> None:
@@ -214,6 +217,7 @@ class TestParameter:
         assert isinstance(converted, Parameter)
         assert converted.units == "USD_2023 / kilowatt"
         # Magnitude should change due to inflation adjustment
+        assert not np.isnan(converted.magnitude)
         assert converted.magnitude != param.magnitude
 
     def test_parameter_no_currency_change(self) -> None:
@@ -228,6 +232,7 @@ class TestParameter:
         assert isinstance(converted, Parameter)
         assert converted._pint_quantity.is_compatible_with("USD_2020 / kW")
         # Magnitude should remain unchanged
+        assert not np.isnan(converted.magnitude)
         assert converted.magnitude == param.magnitude
 
     def test_parameter_change_currency_invalid_country(self) -> None:
@@ -660,14 +665,18 @@ class TestParameter:
         assert p2.magnitude == 1
         assert p2.heating_value == "lower_heating_value"
 
-    def test_change_currency(self) -> None:
+    @pytest.mark.parametrize(
+        "folder_id",
+        ["WB_CNY_2020", "WB_EUR_2020", "WB_USD_2020"],
+    )  # type: ignore
+    def test_change_currency(self, folder_id: str) -> None:
         """Validate the currency conversion rates."""
         input_path = pathlib.Path(
             path_cwd,
             "test",
             "test_data",
             "currency_conversion",
-            "input",
+            folder_id,
             "parameters.csv",
         )
         input_df = pd.read_csv(input_path).reset_index()
