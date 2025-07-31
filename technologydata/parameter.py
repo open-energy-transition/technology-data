@@ -112,6 +112,7 @@ class Parameter(BaseModel):  # type: ignore
         -----
         - Ensures that `units` are valid, especially for currency units.
         - Raises a ValueError if `heating_value` is set without a valid `carrier`.
+
         """
         # Create a pint quantity from magnitude and units
         if self.units:
@@ -370,6 +371,7 @@ class Parameter(BaseModel):  # type: ignore
         ValueError
             If the carriers or heating values of the two parameters are not compatible.
             The error message specifies which attribute differs.
+
         """
         if self._pint_carrier != other._pint_carrier:
             raise ValueError(
