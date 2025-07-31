@@ -4,13 +4,18 @@
 
 """Test the initialization and methods of the Parameter class."""
 
+import pathlib
+
+import pandas as pd
 import pint
 import pytest
 
 from technologydata.parameter import Parameter
 from technologydata.source import Source
 from technologydata.source_collection import SourceCollection
-from technologydata.utils.units import ureg
+from technologydata.utils.units import extract_currency_units, ureg
+
+path_cwd = pathlib.Path.cwd()
 
 
 class TestParameter:
@@ -654,3 +659,30 @@ class TestParameter:
         p2 = p.change_heating_value("lower_heating_value")
         assert p2.magnitude == 1
         assert p2.heating_value == "lower_heating_value"
+
+    def test_change_currency(self) -> None:
+        """Validate the currency conversion rates."""
+        input_path = pathlib.Path(
+            path_cwd,
+            "test",
+            "test_data",
+            "currency_conversion",
+            "input",
+            "parameters.csv",
+        )
+        input_df = pd.read_csv(input_path).reset_index()
+        for _, row in input_df.iterrows():
+            output_param = Parameter(
+                magnitude=row["output_magnitude"],
+                units=row["output_units"],
+            )
+
+            input_param = Parameter(
+                magnitude=row["input_magnitude"],
+                units=row["input_units"],
+            )
+            assert output_param == input_param.change_currency(
+                to_currency=extract_currency_units(row["output_units"])[0],
+                country=row["country"],
+                source=row["source"],
+            )
