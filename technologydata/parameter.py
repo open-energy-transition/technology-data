@@ -254,10 +254,10 @@ class Parameter(BaseModel):  # type: ignore
                 source=source,
             )
 
-            context.redefine(f"{currency} = 1 / {conversion_rate:.4f} * {ref_currency}")
+            context.redefine(f"{currency} = {conversion_rate} * {ref_currency}")
 
         # Actual conversion using pint
-        quantity = self._pint_quantity.to(to_units, context=context)
+        quantity = self._pint_quantity.to(to_units, context)
 
         return Parameter(
             magnitude=quantity.magnitude,
