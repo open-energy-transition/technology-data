@@ -11,10 +11,9 @@ import pandas as pd
 import pint
 import pytest
 
-from technologydata.parameter import Parameter
-from technologydata.source import Source
-from technologydata.source_collection import SourceCollection
-from technologydata.utils.units import extract_currency_units, ureg
+import technologydata
+
+# from technologydata.utils.units import extract_currency_units, ureg
 
 path_cwd = pathlib.Path.cwd()
 
@@ -24,16 +23,16 @@ class TestParameter:
 
     def test_parameter_creation(self) -> None:
         """Test the creation of a Parameter instance with various units."""
-        param = Parameter(
+        param = technologydata.Parameter(
             magnitude=1000,
             units="USD_2020/kW",
             carrier="H2",
             heating_value="LHV",
             provenance="literature",
             note="Estimated",
-            sources=SourceCollection(
+            sources=technologydata.SourceCollection(
                 sources=[
-                    Source(
+                    technologydata.Source(
                         authors="some authors",
                         title="Example Title",
                     )
@@ -56,14 +55,14 @@ class TestParameter:
     def test_parameter_invalid_units(self) -> None:
         """Test that an error is raised when invalid units are provided."""
         with pytest.raises(pint.errors.UndefinedUnitError) as excinfo:
-            Parameter(
+            technologydata.Parameter(
                 magnitude=1000,
                 units="INVALID_UNIT",
             )
         assert "INVALID_UNIT" in str(excinfo.value)
 
         with pytest.raises(pint.errors.UndefinedUnitError) as excinfo:
-            Parameter(
+            technologydata.Parameter(
                 magnitude=1000,
                 units="USD_2020/kW",
                 carrier="H2",
@@ -72,7 +71,7 @@ class TestParameter:
         assert "INVALID_HEATING_VALUE" in str(excinfo.value)
 
         with pytest.raises(pint.errors.UndefinedUnitError) as excinfo:
-            Parameter(
+            technologydata.Parameter(
                 magnitude=1000,
                 units="USD_2020/kW",
                 carrier="INVALID_CARRIER",
@@ -80,7 +79,7 @@ class TestParameter:
         assert "INVALID_CARRIER" in str(excinfo.value)
 
         with pytest.raises(ValueError) as excinfo:
-            Parameter(
+            technologydata.Parameter(
                 magnitude=1000,
                 units="USD_2020/kW",
                 heating_value="LHV",
@@ -89,7 +88,7 @@ class TestParameter:
 
     def test_parameter_to_conversion_fail_on_currency_conversion(self) -> None:
         """Test the unit conversion of a Parameter instance to fail on currency conversion."""
-        param = Parameter(
+        param = technologydata.Parameter(
             magnitude=1000,
             units="USD_2020/kW",
         )
@@ -99,25 +98,25 @@ class TestParameter:
 
     def test_parameter_to_conversion(self) -> None:
         """Test the conversion of a Parameter instance to different units."""
-        param = Parameter(
+        param = technologydata.Parameter(
             magnitude=1000,
             units="USD_2020/kW",
         )
 
-        ref = Parameter(
+        ref = technologydata.Parameter(
             magnitude=param.magnitude * 1000,
             units="USD_2020 / megawatt",
         )
 
         converted = param.to("USD_2020 / megawatt")
 
-        assert isinstance(converted, Parameter)
+        assert isinstance(converted, technologydata.Parameter)
         assert converted.units == ref.units
         assert converted.magnitude == ref.magnitude
 
     def test_pint_attributes_update(self) -> None:
         """Test that pint attributes are updated correctly when attributes change and a method that uses the pint fields is called."""
-        param = Parameter(
+        param = technologydata.Parameter(
             magnitude=1000,
             units="USD_2020/kW",
             carrier="H2",
@@ -138,18 +137,20 @@ class TestParameter:
         param.units = "USD_2020 / kWh"
         param = param.to("USD_2020 / kWh")
         assert param._pint_quantity.magnitude == 3000
-        assert str(param._pint_quantity.units) == str(ureg.Unit("USD_2020 / kWh"))
+        assert str(param._pint_quantity.units) == str(
+            technologydata.ureg.Unit("USD_2020 / kWh")
+        )
 
     def test_parameter_change_currency(self) -> None:
         """Test currency conversion with inflation adjustment."""
-        param = Parameter(
+        param = technologydata.Parameter(
             magnitude=1,
             units="USD_2020/kW",
         )
 
         # Convert to EUR with inflation adjustment for Germany
         converted = param.change_currency("EUR_2023", "DEU")
-        assert isinstance(converted, Parameter)
+        assert isinstance(converted, technologydata.Parameter)
         assert converted.units is not None
         assert "EUR_2023" in converted.units
         assert converted._pint_quantity is not None
@@ -161,14 +162,14 @@ class TestParameter:
 
     def test_parameter_change_currency_explicit_source(self) -> None:
         """Test currency conversion with explicit inflation data source."""
-        param = Parameter(
+        param = technologydata.Parameter(
             magnitude=1,
             units="EUR_2019/MWh",
         )
 
         # Convert using IMF data source
         converted = param.change_currency("USD_2022", "USA", source="worldbank")
-        assert isinstance(converted, Parameter)
+        assert isinstance(converted, technologydata.Parameter)
         assert converted.units is not None
         assert "USD_2022" in converted.units
         assert converted._pint_quantity is not None
@@ -177,28 +178,28 @@ class TestParameter:
 
     def test_parameter_change_currency_different_source(self) -> None:
         """Test currency conversion with different inflation data source."""
-        param = Parameter(
+        param = technologydata.Parameter(
             magnitude=1,
             units="EUR_2019/MWh",
         )
 
         # Convert using IMF data source
         converted = param.change_currency("USD_2022", "USA", source="imf")
-        assert isinstance(converted, Parameter)
+        assert isinstance(converted, technologydata.Parameter)
         assert converted.units is not None
         assert "USD_2022" in converted.units
         assert converted._pint_quantity.is_compatible_with("USD_2022 / MWh")
 
     def test_parameter_change_currency_multiple_currencies(self) -> None:
         """Test currency conversion when units contain multiple currencies."""
-        param = Parameter(
+        param = technologydata.Parameter(
             magnitude=1,
             units="USD_2020 * EUR_2021 / kW",
         )
 
         # Convert all currencies to CNY_2023
         converted = param.change_currency("CNY_2023", "CHN")
-        assert isinstance(converted, Parameter)
+        assert isinstance(converted, technologydata.Parameter)
         # Both USD_2020 and EUR_2021 should be replaced with CNY_2023
         assert converted.units is not None
         assert "CNY_2023" in converted.units
@@ -207,14 +208,14 @@ class TestParameter:
 
     def test_parameter_change_currency_same_currency(self) -> None:
         """Test currency conversion to the same currency (inflation adjustment only)."""
-        param = Parameter(
+        param = technologydata.Parameter(
             magnitude=1,
             units="USD_2019/kW",
         )
 
         # Convert to USD but different year (inflation adjustment)
         converted = param.change_currency("USD_2023", "USA")
-        assert isinstance(converted, Parameter)
+        assert isinstance(converted, technologydata.Parameter)
         assert converted.units == "USD_2023 / kilowatt"
         # Magnitude should change due to inflation adjustment
         assert not np.isnan(converted.magnitude)
@@ -222,14 +223,14 @@ class TestParameter:
 
     def test_parameter_no_currency_change(self) -> None:
         """Test that no currency change occurs when the target currency is the same as the current one."""
-        param = Parameter(
+        param = technologydata.Parameter(
             magnitude=1,
             units="USD_2020/kW",
         )
 
         # Convert to the same currency and year
         converted = param.change_currency("USD_2020", "USA")
-        assert isinstance(converted, Parameter)
+        assert isinstance(converted, technologydata.Parameter)
         assert converted._pint_quantity.is_compatible_with("USD_2020 / kW")
         # Magnitude should remain unchanged
         assert not np.isnan(converted.magnitude)
@@ -237,7 +238,7 @@ class TestParameter:
 
     def test_parameter_change_currency_invalid_country(self) -> None:
         """Test that invalid country codes raise appropriate errors."""
-        param = Parameter(
+        param = technologydata.Parameter(
             magnitude=1,
             units="USD_2020/kW",
         )
@@ -248,7 +249,7 @@ class TestParameter:
 
     def test_parameter_change_currency_invalid_source(self) -> None:
         """Test that invalid inflation data sources raise appropriate errors."""
-        param = Parameter(
+        param = technologydata.Parameter(
             magnitude=1000,
             units="USD_2020/kW",
         )
@@ -259,19 +260,19 @@ class TestParameter:
 
     def test_parameter_change_currency_no_units(self) -> None:
         """Test currency conversion with parameter that has no units."""
-        param = Parameter(
+        param = technologydata.Parameter(
             magnitude=42,
         )
 
         # Should handle parameters without currency units gracefully
         converted = param.change_currency("EUR_2023", "DEU")
-        assert isinstance(converted, Parameter)
+        assert isinstance(converted, technologydata.Parameter)
         assert converted.magnitude == 42
         assert converted.units is None or "EUR_2023" not in str(converted.units)
 
     def test_parameter_unchanged_other_attributes(self) -> None:
         """Test that other attributes remain unchanged after currency conversion."""
-        param = Parameter(
+        param = technologydata.Parameter(
             magnitude=1000,
             units="USD_2020/kW",
             carrier="H2",
@@ -291,12 +292,12 @@ class TestParameter:
 
     def test_parameter_heating_value_compatibility(self) -> None:
         """Test that we do not permit operations on mixed heating values."""
-        param_lhv = Parameter(
+        param_lhv = technologydata.Parameter(
             magnitude=1,
             carrier="H2",
             heating_value="LHV",
         )
-        param_hhv = Parameter(
+        param_hhv = technologydata.Parameter(
             magnitude=1,
             carrier="H2",
             heating_value="HHV",
@@ -331,12 +332,12 @@ class TestParameter:
 
     def test_parameter_carrier_compatibility(self) -> None:
         """Test that we do only permit certain operations on mixed carriers."""
-        param_h2 = Parameter(
+        param_h2 = technologydata.Parameter(
             magnitude=1,
             carrier="H2",
             heating_value="LHV",
         )
-        param_ch4 = Parameter(
+        param_ch4 = technologydata.Parameter(
             magnitude=1,
             carrier="CH4",
             heating_value="LHV",
@@ -367,32 +368,32 @@ class TestParameter:
     def test_parameter_equality(self) -> None:
         """Test equality comparison of Parameter objects."""
         # Create two identical parameters
-        param1 = Parameter(
+        param1 = technologydata.Parameter(
             magnitude=1000,
             units="USD_2020/kW",
             carrier="H2",
             heating_value="LHV",
             provenance="literature",
             note="Estimated",
-            sources=SourceCollection(
+            sources=technologydata.SourceCollection(
                 sources=[
-                    Source(
+                    technologydata.Source(
                         authors="some authors",
                         title="Example Title",
                     )
                 ]
             ),
         )
-        param2 = Parameter(
+        param2 = technologydata.Parameter(
             magnitude=1000,
             units="USD_2020/kW",
             carrier="H2",
             heating_value="LHV",
             provenance="literature",
             note="Estimated",
-            sources=SourceCollection(
+            sources=technologydata.SourceCollection(
                 sources=[
-                    Source(
+                    technologydata.Source(
                         authors="some authors",
                         title="Example Title",
                     )
@@ -406,79 +407,87 @@ class TestParameter:
 
     def test_parameter_equality_different_magnitude(self) -> None:
         """Test that parameters with different magnitudes are not equal."""
-        param1 = Parameter(magnitude=1000, units="USD_2020/kW")
-        param2 = Parameter(magnitude=2000, units="USD_2020/kW")
+        param1 = technologydata.Parameter(magnitude=1000, units="USD_2020/kW")
+        param2 = technologydata.Parameter(magnitude=2000, units="USD_2020/kW")
 
         assert param1 != param2
         assert param2 != param1
 
     def test_parameter_equality_different_units(self) -> None:
         """Test that parameters with different units are not equal."""
-        param1 = Parameter(magnitude=1000, units="USD_2020/kW")
-        param2 = Parameter(magnitude=1000, units="EUR_2020/kW")
+        param1 = technologydata.Parameter(magnitude=1000, units="USD_2020/kW")
+        param2 = technologydata.Parameter(magnitude=1000, units="EUR_2020/kW")
 
         assert param1 != param2
         assert param2 != param1
 
     def test_parameter_equality_different_carrier(self) -> None:
         """Test that parameters with different carriers are not equal."""
-        param1 = Parameter(magnitude=1000, carrier="H2")
-        param2 = Parameter(magnitude=1000, carrier="CH4")
+        param1 = technologydata.Parameter(magnitude=1000, carrier="H2")
+        param2 = technologydata.Parameter(magnitude=1000, carrier="CH4")
 
         assert param1 != param2
         assert param2 != param1
 
     def test_parameter_equality_different_heating_value(self) -> None:
         """Test that parameters with different heating values are not equal."""
-        param1 = Parameter(magnitude=1000, carrier="H2", heating_value="LHV")
-        param2 = Parameter(magnitude=1000, carrier="H2", heating_value="HHV")
+        param1 = technologydata.Parameter(
+            magnitude=1000, carrier="H2", heating_value="LHV"
+        )
+        param2 = technologydata.Parameter(
+            magnitude=1000, carrier="H2", heating_value="HHV"
+        )
 
         assert param1 != param2
         assert param2 != param1
 
     def test_parameter_equality_different_provenance(self) -> None:
         """Test that parameters with different provenance are not equal."""
-        param1 = Parameter(magnitude=1000, provenance="literature")
-        param2 = Parameter(magnitude=1000, provenance="expert_estimate")
+        param1 = technologydata.Parameter(magnitude=1000, provenance="literature")
+        param2 = technologydata.Parameter(magnitude=1000, provenance="expert_estimate")
 
         assert param1 != param2
         assert param2 != param1
 
     def test_parameter_equality_different_note(self) -> None:
         """Test that parameters with different notes are not equal."""
-        param1 = Parameter(magnitude=1000, note="Estimated")
-        param2 = Parameter(magnitude=1000, note="Measured")
+        param1 = technologydata.Parameter(magnitude=1000, note="Estimated")
+        param2 = technologydata.Parameter(magnitude=1000, note="Measured")
 
         assert param1 != param2
         assert param2 != param1
 
     def test_parameter_equality_different_sources(self) -> None:
         """Test that parameters with different sources are not equal."""
-        source1 = Source(authors="Author A", title="Title A")
-        source2 = Source(authors="Author B", title="Title B")
+        source1 = technologydata.Source(authors="Author A", title="Title A")
+        source2 = technologydata.Source(authors="Author B", title="Title B")
 
-        param1 = Parameter(magnitude=1000, sources=SourceCollection(sources=[source1]))
-        param2 = Parameter(magnitude=1000, sources=SourceCollection(sources=[source2]))
+        param1 = technologydata.Parameter(
+            magnitude=1000, sources=technologydata.SourceCollection(sources=[source1])
+        )
+        param2 = technologydata.Parameter(
+            magnitude=1000, sources=technologydata.SourceCollection(sources=[source2])
+        )
 
         assert param1 != param2
         assert param2 != param1
 
     def test_parameter_equality_none_values(self) -> None:
         """Test equality with None values for optional fields."""
-        param1 = Parameter(magnitude=1000)
-        param2 = Parameter(magnitude=1000)
+        param1 = technologydata.Parameter(magnitude=1000)
+        param2 = technologydata.Parameter(magnitude=1000)
 
         # Both have None for optional fields, should be equal
         assert param1 == param2
 
         # One has None, the other has a value
-        param3 = Parameter(magnitude=1000, units="USD_2020/kW")
+        param3 = technologydata.Parameter(magnitude=1000, units="USD_2020/kW")
         assert param1 != param3
         assert param3 != param1
 
     def test_parameter_equality_with_non_parameter(self) -> None:
         """Test equality comparison with non-Parameter objects."""
-        param = Parameter(magnitude=1000)
+        param = technologydata.Parameter(magnitude=1000)
 
         # Should return NotImplemented for non-Parameter objects
         assert param.__eq__("not a parameter") == NotImplemented
@@ -488,8 +497,8 @@ class TestParameter:
     def test_parameter_equality_canonical_units(self) -> None:
         """Test that parameters with equivalent but differently formatted units are equal."""
         # Units should be canonicalized during initialization
-        param1 = Parameter(magnitude=1000, units="USD_2020/kW")
-        param2 = Parameter(magnitude=1000, units="USD_2020/kilowatt")
+        param1 = technologydata.Parameter(magnitude=1000, units="USD_2020/kW")
+        param2 = technologydata.Parameter(magnitude=1000, units="USD_2020/kilowatt")
 
         # Should be equal because units are canonicalized
         assert param1 == param2
@@ -497,7 +506,7 @@ class TestParameter:
 
     def test_parameter_equality_self_reference(self) -> None:
         """Test that a parameter is equal to itself."""
-        param = Parameter(
+        param = technologydata.Parameter(
             magnitude=1000,
             units="USD_2020/kW",
             carrier="H2",
@@ -518,48 +527,54 @@ class TestParameter:
                 "parameter_heating_value": "LHV",
                 "parameter_provenance": "literature",
                 "parameter_note": "Estimated",
-                "parameter_sources": [Source(title="title", authors="authors")],
+                "parameter_sources": [
+                    technologydata.Source(title="title", authors="authors")
+                ],
             }
         ],
         indirect=["example_parameter"],
     )  # type: ignore
-    def test_example_parameter(self, example_parameter: Parameter) -> None:
+    def test_example_parameter(
+        self, example_parameter: technologydata.Parameter
+    ) -> None:
         """Test that the fixture example_parameter yields a parameter object."""
-        assert isinstance(example_parameter, Parameter)
+        assert isinstance(example_parameter, technologydata.Parameter)
 
     def test_parameter_pow_basic(self) -> None:
         """Test integer exponentiation."""
-        param = Parameter(magnitude=2, units="kW")
+        param = technologydata.Parameter(magnitude=2, units="kW")
         result = param**3
-        assert isinstance(result, Parameter)
+        assert isinstance(result, technologydata.Parameter)
         assert result.magnitude == 8
         assert result.units == "kilowatt ** 3"
 
     def test_parameter_pow_fractional(self) -> None:
         """Test fractional exponentiation."""
-        param = Parameter(magnitude=9, units="m**2")
+        param = technologydata.Parameter(magnitude=9, units="m**2")
         result = param**0.5
         assert pytest.approx(result.magnitude) == 3
         assert result.units == "meter"
 
     def test_parameter_pow_zero(self) -> None:
         """Test zero exponent returns dimensionless."""
-        param = Parameter(magnitude=5, units="J")
+        param = technologydata.Parameter(magnitude=5, units="J")
         result = param**0
         assert result.magnitude == 1
         assert result.units == "dimensionless"
 
     def test_parameter_pow_negative(self) -> None:
         """Test negative exponentiation and unit handling."""
-        param = Parameter(magnitude=2, units="W")
+        param = technologydata.Parameter(magnitude=2, units="W")
         result = param**-2
         assert pytest.approx(result.magnitude) == 0.25
         # Compare units using pint, not string equality
-        assert ureg.Unit(result.units) == ureg.Unit("watt ** -2")
+        assert technologydata.ureg.Unit(result.units) == technologydata.ureg.Unit(
+            "watt ** -2"
+        )
 
     def test_parameter_pow_carrier(self) -> None:
         """Test that the carrier attribute is also affected."""
-        param = Parameter(
+        param = technologydata.Parameter(
             magnitude=3,
             units="kg",
             carrier="H2",
@@ -569,7 +584,7 @@ class TestParameter:
 
     def test_parameter_pow_preserves_metadata(self) -> None:
         """Test that metadata is preserved after exponentiation."""
-        param = Parameter(
+        param = technologydata.Parameter(
             magnitude=3,
             units="kg",
             carrier="H2",
@@ -585,7 +600,7 @@ class TestParameter:
 
     def test_change_heating_value_h2_lhv_to_hhv(self) -> None:
         """Test LHV to HHV conversion for H2."""
-        p = Parameter(
+        p = technologydata.Parameter(
             magnitude=119.6,
             units="kilowatt_hour",
             carrier="hydrogen",
@@ -599,7 +614,7 @@ class TestParameter:
 
     def test_change_heating_value_h2_hhv_to_lhv(self) -> None:
         """Test HHV to LHV conversion for H2."""
-        p = Parameter(
+        p = technologydata.Parameter(
             magnitude=141.8,
             units="kilowatt_hour",
             carrier="hydrogen",
@@ -613,7 +628,7 @@ class TestParameter:
 
     def test_change_heating_value_ch4_lhv_to_hhv(self) -> None:
         """Test LHV to HHV conversion for CH4."""
-        p = Parameter(
+        p = technologydata.Parameter(
             magnitude=10,
             units="kilowatt_hour",
             carrier="methane",
@@ -627,7 +642,7 @@ class TestParameter:
 
     def test_change_heating_value_ch4_hhv_to_lhv(self) -> None:
         """Test HHV to LHV conversion for CH4."""
-        p = Parameter(
+        p = technologydata.Parameter(
             magnitude=11.1,
             units="kilowatt_hour",
             carrier="methane",
@@ -641,7 +656,7 @@ class TestParameter:
 
     def test_change_heating_value_no_carrier_in_units(self) -> None:
         """Test conversion when carrier does not appear in units (should treat as 1 appearance)."""
-        p = Parameter(
+        p = technologydata.Parameter(
             magnitude=1,
             units="kilowatt_hour",
             carrier="hydrogen",
@@ -655,7 +670,7 @@ class TestParameter:
 
     def test_change_heating_value_same_hv(self) -> None:
         """Test that no conversion occurs if heating value is unchanged."""
-        p = Parameter(
+        p = technologydata.Parameter(
             magnitude=1,
             units="kilowatt_hour",
             carrier="hydrogen",
@@ -679,19 +694,24 @@ class TestParameter:
             folder_id,
             "parameters.csv",
         )
-        input_df = pd.read_csv(input_path).reset_index()
-        for _, row in input_df.iterrows():
-            output_param = Parameter(
-                magnitude=row["output_magnitude"],
-                units=row["output_units"],
+        input_dataframe = pd.read_csv(input_path).reset_index()
+        for _, row in input_dataframe.iterrows():
+            reference_param = technologydata.Parameter(
+                magnitude=np.round(row["reference_magnitude"], 2),
+                units=row["reference_units"],
             )
 
-            input_param = Parameter(
+            output_param = technologydata.Parameter(
                 magnitude=row["input_magnitude"],
                 units=row["input_units"],
-            )
-            assert output_param == input_param.change_currency(
-                to_currency=extract_currency_units(row["output_units"])[0],
+            ).change_currency(
+                to_currency=technologydata.extract_currency_units(
+                    row["reference_units"]
+                )[0],
                 country=row["country"],
                 source=row["source"],
             )
+            assert output_param.magnitude == pytest.approx(
+                reference_param.magnitude, rel=1e-2
+            )
+            assert output_param.units == reference_param.units

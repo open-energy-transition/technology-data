@@ -21,16 +21,18 @@ from typing import Annotated
 import pint
 from pydantic import BaseModel, Field, PrivateAttr
 
+import technologydata
 from technologydata.source_collection import SourceCollection
-from technologydata.utils.units import (
-    CURRENCY_UNIT_PATTERN,
-    creg,
-    extract_currency_units,
-    get_conversion_rate,
-    get_iso3_from_currency_code,
-    hvreg,
-    ureg,
-)
+
+# from technologydata.utils.units import (
+#    CURRENCY_UNIT_PATTERN,
+#    creg,
+#    extract_currency_units,
+#    get_conversion_rate,
+#    get_iso3_from_currency_code,
+#    hvreg,
+#    ureg,
+# )
 
 logger = logging.getLogger(__name__)
 
@@ -89,12 +91,14 @@ class Parameter(BaseModel):  # type: ignore
         # pint uses canonical names for units, carriers, and heating values
         # Ensure the Parameter object is always created with these consistent names from pint
         if "units" in data and data["units"] is not None:
-            ureg.ensure_currency_is_unit(str(data["units"]))
-            data["units"] = str(ureg.Unit(data["units"]))
+            technologydata.ureg.ensure_currency_is_unit(str(data["units"]))
+            data["units"] = str(technologydata.ureg.Unit(data["units"]))
         if "carrier" in data and data["carrier"] is not None:
-            data["carrier"] = str(creg.Unit(data["carrier"]))
+            data["carrier"] = str(technologydata.creg.Unit(data["carrier"]))
         if "heating_value" in data and data["heating_value"] is not None:
-            data["heating_value"] = str(hvreg.Unit(data["heating_value"]))
+            data["heating_value"] = str(
+                technologydata.hvreg.Unit(data["heating_value"])
+            )
 
         super().__init__(**data)
         self._update_pint_attributes()
@@ -117,20 +121,22 @@ class Parameter(BaseModel):  # type: ignore
         # Create a pint quantity from magnitude and units
         if self.units:
             # `units` may contain an undefined currency unit - ensure the ureg can handle it
-            ureg.ensure_currency_is_unit(self.units)
+            technologydata.ureg.ensure_currency_is_unit(self.units)
 
-            self._pint_quantity = ureg.Quantity(self.magnitude, self.units)
+            self._pint_quantity = technologydata.ureg.Quantity(
+                self.magnitude, self.units
+            )
         else:
-            self._pint_quantity = ureg.Quantity(self.magnitude)
+            self._pint_quantity = technologydata.ureg.Quantity(self.magnitude)
         # Create the carrier as pint unit
         if self.carrier:
-            self._pint_carrier = creg.Unit(self.carrier)
+            self._pint_carrier = technologydata.creg.Unit(self.carrier)
         else:
             self._pint_carrier = None
 
         # Create the heating value as pint unit
         if self.heating_value and self.carrier:
-            self._pint_heating_value = hvreg.Unit(self.heating_value)
+            self._pint_heating_value = technologydata.hvreg.Unit(self.heating_value)
         elif self.heating_value and not self.carrier:
             raise ValueError(
                 "Heating value cannot be set without a carrier. Please provide a valid carrier."
@@ -143,9 +149,9 @@ class Parameter(BaseModel):  # type: ignore
         self._update_pint_attributes()
 
         # Do not allow for currency conversion here, as it requires additional information
-        if extract_currency_units(self._pint_quantity.units) != extract_currency_units(
-            units
-        ):
+        if technologydata.extract_currency_units(
+            self._pint_quantity.units
+        ) != technologydata.extract_currency_units(units):
             raise NotImplementedError(
                 "Currency conversion is not supported in the `to` method. "
                 "Use `change_currency` for currency conversions."
@@ -203,25 +209,29 @@ class Parameter(BaseModel):  # type: ignore
         self._update_pint_attributes()
 
         # Ensure the target currency is a valid unit
-        ureg.ensure_currency_is_unit(to_currency)
+        technologydata.ureg.ensure_currency_is_unit(to_currency)
 
         # Current unit and currency/currencies
         from_units = self._pint_quantity.units
-        from_currencies = extract_currency_units(from_units)
+        from_currencies = technologydata.extract_currency_units(from_units)
         # Replace all currency units in the from_units with the target currency
-        to_units = CURRENCY_UNIT_PATTERN.sub(to_currency, str(from_units))
+        to_units = technologydata.CURRENCY_UNIT_PATTERN.sub(
+            to_currency, str(from_units)
+        )
 
         # Create a temporary context to which we add the conversion rates
         # We use a temporary context to avoid polluting the global unit registry
         # with potentially invalid or incomplete conversion rates that do not
         # match the `country` and `source` parameters.
-        context = ureg.Context()
+        context = technologydata.ureg.Context()
 
         # Conversion rates are all relative to the reference currency
-        ref_currency = ureg.get_reference_currency()
-        ref_currency_p = CURRENCY_UNIT_PATTERN.match(ref_currency)
+        ref_currency = technologydata.ureg.get_reference_currency()
+        ref_currency_p = technologydata.CURRENCY_UNIT_PATTERN.match(ref_currency)
         if ref_currency_p:
-            ref_iso3 = get_iso3_from_currency_code(ref_currency_p.group("cu_iso3"))
+            ref_iso3 = technologydata.get_iso3_from_currency_code(
+                ref_currency_p.group("cu_iso3")
+            )
             ref_year = ref_currency_p.group("year")
         else:
             raise ValueError(
@@ -234,9 +244,9 @@ class Parameter(BaseModel):  # type: ignore
         currencies = currencies - {ref_currency}
 
         for currency in currencies:
-            from_currency_p = CURRENCY_UNIT_PATTERN.match(currency)
+            from_currency_p = technologydata.CURRENCY_UNIT_PATTERN.match(currency)
             if from_currency_p:
-                from_iso3 = get_iso3_from_currency_code(
+                from_iso3 = technologydata.get_iso3_from_currency_code(
                     from_currency_p.group("cu_iso3")
                 )
                 from_year = from_currency_p.group("year")
@@ -245,7 +255,7 @@ class Parameter(BaseModel):  # type: ignore
                     f"Currency '{currency}' does not match expected pattern."
                 )
 
-            conversion_rate = get_conversion_rate(
+            conversion_rate = technologydata.get_conversion_rate(
                 from_iso3=from_iso3,
                 from_year=from_year,
                 to_iso3=ref_iso3,
@@ -316,8 +326,14 @@ class Parameter(BaseModel):  # type: ignore
 
         # Create a dictionary of heating value ratios based on energy densities
         hv_ratios = dict()
-        lhvs = {str(creg.get_dimensionality(k)): v for k, v in EnergyDensityLHV.items()}
-        hhvs = {str(creg.get_dimensionality(k)): v for k, v in EnergyDensityHHV.items()}
+        lhvs = {
+            str(technologydata.creg.get_dimensionality(k)): v
+            for k, v in EnergyDensityLHV.items()
+        }
+        hhvs = {
+            str(technologydata.creg.get_dimensionality(k)): v
+            for k, v in EnergyDensityHHV.items()
+        }
         for dimension in self._pint_carrier.dimensionality.keys():
             if dimension in lhvs and dimension in hhvs:
                 hv_ratios[dimension] = (
@@ -333,9 +349,9 @@ class Parameter(BaseModel):  # type: ignore
         # When converting from HHV -> LHV, we need to multiply by the ratios
         # When converting from LHV -> HHV, we need to divide by the ratios
         # We modify the hv_ratios dictionary to match the conversion direction
-        if hvreg.Unit(to_heating_value).is_compatible_with("HHV"):
+        if technologydata.hvreg.Unit(to_heating_value).is_compatible_with("HHV"):
             hv_ratios = hv_ratios
-        elif hvreg.Unit(to_heating_value).is_compatible_with("LHV"):
+        elif technologydata.hvreg.Unit(to_heating_value).is_compatible_with("LHV"):
             hv_ratios = {k: 1 / v for k, v in hv_ratios.items()}
 
         multiplier = 1
