@@ -1,4 +1,4 @@
-# SPDX-FileCopyrightText: The technology-data authors
+# SPDX-FileCopyrightText: technologydata contributors
 #
 # SPDX-License-Identifier: MIT
 """Submodule containing pint.UnitRegistry subclasses and utility functions for handling units, conversions, and currency units."""

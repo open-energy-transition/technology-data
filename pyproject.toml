@@ -1,4 +1,4 @@
-# SPDX-FileCopyrightText: The technology-data authors
+# SPDX-FileCopyrightText: technologydata contributors
 #
 # SPDX-License-Identifier: MIT
 
@@ -81,12 +81,6 @@ version_scheme = "no-guess-dev"
 
 [tool.setuptools.packages.find]
 include = ["technologydata"]
-
-# code coverage settings
-[tool.coverage.run]
-source = [
-    "src/technologydata",
-]
 
 # Static type checker settings
 
