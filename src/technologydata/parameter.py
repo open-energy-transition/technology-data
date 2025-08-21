@@ -16,7 +16,7 @@ Examples
 
 import logging
 import typing
-from typing import Annotated
+from typing import Self
 
 import pint
 from pydantic import BaseModel, Field, PrivateAttr
@@ -60,23 +60,25 @@ class Parameter(BaseModel):  # type: ignore
 
     """
 
-    magnitude: Annotated[
+    magnitude: typing.Annotated[
         float, Field(description="The numerical value of the parameter.")
     ]
-    units: Annotated[str | None, Field(description="The unit of the parameter.")] = None
-    carrier: Annotated[
+    units: typing.Annotated[
+        str | None, Field(description="The unit of the parameter.")
+    ] = None
+    carrier: typing.Annotated[
         str | None,
         Field(description="Carriers of the units, e.g. 'H2', 'el', 'H2O'."),
     ] = None
-    heating_value: Annotated[
+    heating_value: typing.Annotated[
         str | None,
         Field(description="Heating value type for energy carriers ('LHV' or 'HHV')."),
     ] = None
-    provenance: Annotated[str | None, Field(description="The data's provenance.")] = (
-        None
-    )
-    note: Annotated[str | None, Field(description="Additional notes.")] = None
-    sources: Annotated[
+    provenance: typing.Annotated[
+        str | None, Field(description="The data's provenance.")
+    ] = None
+    note: typing.Annotated[str | None, Field(description="Additional notes.")] = None
+    sources: typing.Annotated[
         SourceCollection,
         Field(description="List of sources for this parameter."),
     ] = SourceCollection(sources=[])
@@ -471,14 +473,14 @@ class Parameter(BaseModel):  # type: ignore
             ),
         )
 
-    def __truediv__(self, other: "Parameter") -> "Parameter":
+    def __truediv__(self, other: float | Self) -> Self:
         """
         Divide this Parameter by another Parameter.
 
         Parameters
         ----------
-        other : Parameter
-            The Parameter instance to divide by.
+        other : float | Parameter
+            A scalar or a Parameter instance to divide by.
 
         Returns
         -------
@@ -496,6 +498,17 @@ class Parameter(BaseModel):  # type: ignore
         It also handles the division of carriers and heating values if present.
 
         """
+        if isinstance(other, float):
+            return Parameter(
+                magnitude=self.magnitude / other,
+                units=self.units,
+                carrier=self.carrier,
+                heating_value=self.heating_value,
+                provenance=self.provenance,
+                note=self.note,
+                sources=self.sources,
+            )
+
         # We don't check general compatibility here, as division is not a common operation for parameters.
         # Only ensure that the heating values are compatible.
         if self._pint_heating_value != other._pint_heating_value:
@@ -529,14 +542,14 @@ class Parameter(BaseModel):  # type: ignore
             ),
         )
 
-    def __mul__(self, other: "Parameter") -> "Parameter":
+    def __mul__(self, other: float | Self) -> Self:
         """
         Multiply two Parameter instances.
 
         Parameters
         ----------
-        other : Parameter
-            The other Parameter instance to multiply with.
+        other : float | Parameter
+            A scalar or a Parameter instance to multiply with.
 
         Returns
         -------
@@ -557,6 +570,17 @@ class Parameter(BaseModel):  # type: ignore
         - Compatibility checks beyond heating values are not performed.
 
         """
+        if isinstance(other, float):
+            return Parameter(
+                magnitude=self.magnitude * other,
+                units=self.units,
+                carrier=self.carrier,
+                heating_value=self.heating_value,
+                provenance=self.provenance,
+                note=self.note,
+                sources=self.sources,
+            )
+
         # We don't check general compatibility here, as multiplication is not a common operation for parameters.
         # Only ensure that the heating values are compatible.
         if self._pint_heating_value != other._pint_heating_value:

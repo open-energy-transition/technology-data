@@ -540,6 +540,24 @@ class TestParameter:
         """Test that the fixture example_parameter yields a parameter object."""
         assert isinstance(example_parameter, technologydata.Parameter)
 
+    def test_parameter_mul_scalar(self) -> None:
+        """Test multiplication of a Parameter by a scalar."""
+        factor = 3
+        param = technologydata.Parameter(magnitude=2, units="kW")
+        result = param * factor
+        assert isinstance(result, technologydata.Parameter)
+        assert result.magnitude == param.magnitude * factor
+        assert result.units == param.units
+
+    def test_parameter_div_scalar(self) -> None:
+        """Test division of a Parameter by a scalar."""
+        divisor = 3
+        param = technologydata.Parameter(magnitude=6, units="kW")
+        result = param / divisor
+        assert isinstance(result, technologydata.Parameter)
+        assert result.magnitude == param.magnitude / divisor
+        assert result.units == param.units
+
     def test_parameter_pow_basic(self) -> None:
         """Test integer exponentiation."""
         param = technologydata.Parameter(magnitude=2, units="kW")
