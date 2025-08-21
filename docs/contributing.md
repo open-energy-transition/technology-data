@@ -3,14 +3,17 @@
 ## Development dependencies
 
 To contribute to this project, you will need to install the development dependencies.
-These dependencies are not required for the basic functionality of the project but are essential for development, testing, and documentation.
+These dependencies include everything needed for development, testing and building the documentation of the project.
+
 To install the development dependencies, run the following command inside the project directory:
 
 ```bash
-uv sync --extra dev
+uv sync
 ```
 
 The development dependencies include `ipykernel` to support Jupyter notebooks and integration into e.g. VS Code.
+
+To view the full list of development dependencies, you can check the `pyproject.toml` file under the `[dependency-groups]` section as `dev` and `docs`, which are both included in the `default-groups`.
 
 ## Testing
 
