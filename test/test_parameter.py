@@ -542,7 +542,15 @@ class TestParameter:
 
     def test_parameter_mul_scalar(self) -> None:
         """Test multiplication of a Parameter by a scalar."""
-        factor = 3
+        factor = 3.0
+        param = technologydata.Parameter(magnitude=2, units="kW")
+        result = param * factor
+        assert isinstance(result, technologydata.Parameter)
+        assert result.magnitude == param.magnitude * factor
+        assert result.units == param.units
+
+        # Test multiplication by an integer
+        factor = int(3.0)
         param = technologydata.Parameter(magnitude=2, units="kW")
         result = param * factor
         assert isinstance(result, technologydata.Parameter)
@@ -551,7 +559,16 @@ class TestParameter:
 
     def test_parameter_div_scalar(self) -> None:
         """Test division of a Parameter by a scalar."""
-        divisor = 3
+        # Test division by an float
+        divisor = 3.0
+        param = technologydata.Parameter(magnitude=6, units="kW")
+        result = param / divisor
+        assert isinstance(result, technologydata.Parameter)
+        assert result.magnitude == param.magnitude / divisor
+        assert result.units == param.units
+
+        # Test division by an integer
+        divisor = int(3.0)
         param = technologydata.Parameter(magnitude=6, units="kW")
         result = param / divisor
         assert isinstance(result, technologydata.Parameter)

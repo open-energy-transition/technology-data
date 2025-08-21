@@ -42,7 +42,7 @@ class Parameter(BaseModel):  # type: ignore
 
     Attributes
     ----------
-    magnitude : float
+    magnitude : int | float
         The numerical value of the parameter.
     units : Optional[str]
         The unit of the parameter.
@@ -60,7 +60,7 @@ class Parameter(BaseModel):  # type: ignore
     """
 
     magnitude: Annotated[
-        float, Field(description="The numerical value of the parameter.")
+        int | float, Field(description="The numerical value of the parameter.")
     ]
     units: Annotated[str | None, Field(description="The unit of the parameter.")] = None
     carrier: Annotated[
@@ -470,7 +470,7 @@ class Parameter(BaseModel):  # type: ignore
             ),
         )
 
-    def __truediv__(self, other: float | Self) -> Self:
+    def __truediv__(self, other: int | float | Self) -> Self:
         """
         Divide this Parameter by another Parameter.
 
@@ -495,7 +495,7 @@ class Parameter(BaseModel):  # type: ignore
         It also handles the division of carriers and heating values if present.
 
         """
-        if isinstance(other, float):
+        if isinstance(other, (int | float)):
             return Parameter(
                 magnitude=self.magnitude / other,
                 units=self.units,
@@ -539,13 +539,13 @@ class Parameter(BaseModel):  # type: ignore
             ),
         )
 
-    def __mul__(self, other: float | Self) -> Self:
+    def __mul__(self, other: int | float | Self) -> Self:
         """
         Multiply two Parameter instances.
 
         Parameters
         ----------
-        other : float | Parameter
+        other : int | float | Parameter
             A scalar or a Parameter instance to multiply with.
 
         Returns
@@ -567,7 +567,7 @@ class Parameter(BaseModel):  # type: ignore
         - Compatibility checks beyond heating values are not performed.
 
         """
-        if isinstance(other, float):
+        if isinstance(other, int | float):
             return Parameter(
                 magnitude=self.magnitude * other,
                 units=self.units,
