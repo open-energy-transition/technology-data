@@ -15,7 +15,7 @@ Examples
 """
 
 import logging
-from typing import Annotated, Any, Self
+from typing import Any, Self
 
 import pint
 from pydantic import BaseModel, Field, PrivateAttr
