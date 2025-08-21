@@ -15,7 +15,7 @@ Examples
 """
 
 import logging
-from typing import Any, Self
+from typing import Annotated, Any, Self
 
 import pint
 from pydantic import BaseModel, Field, PrivateAttr
@@ -59,25 +59,23 @@ class Parameter(BaseModel):  # type: ignore
 
     """
 
-    magnitude: typing.Annotated[
+    magnitude: Annotated[
         float, Field(description="The numerical value of the parameter.")
     ]
-    units: typing.Annotated[
-        str | None, Field(description="The unit of the parameter.")
-    ] = None
-    carrier: typing.Annotated[
+    units: Annotated[str | None, Field(description="The unit of the parameter.")] = None
+    carrier: Annotated[
         str | None,
         Field(description="Carriers of the units, e.g. 'H2', 'el', 'H2O'."),
     ] = None
-    heating_value: typing.Annotated[
+    heating_value: Annotated[
         str | None,
         Field(description="Heating value type for energy carriers ('LHV' or 'HHV')."),
     ] = None
-    provenance: typing.Annotated[
-        str | None, Field(description="The data's provenance.")
-    ] = None
-    note: typing.Annotated[str | None, Field(description="Additional notes.")] = None
-    sources: typing.Annotated[
+    provenance: Annotated[str | None, Field(description="The data's provenance.")] = (
+        None
+    )
+    note: Annotated[str | None, Field(description="Additional notes.")] = None
+    sources: Annotated[
         SourceCollection,
         Field(description="List of sources for this parameter."),
     ] = SourceCollection(sources=[])
