@@ -44,15 +44,19 @@ Source = "https://github.com/PyPSA/technology-data"
 BugTracker = "https://github.com/PyPSA/technology-data/issues"
 Changelog = "https://github.com/PyPSA/technology-data/releases"
 
-[project.optional-dependencies]
+# https://docs.astral.sh/uv/concepts/projects/dependencies/#dependency-groups
+# editable install of package and non-packaged dependencies
+[dependency-groups]
 dev = [
     "ipykernel>=6.29.5",
     "pre-commit>=4.2.0",
-    "pytest>=8.3.5",
+    "pytest>=8.4.1",
     "pytest-cov>=6.2.1",
     "pytest-xdist>=3.8.0",
     "reuse>=5.0.2",
+    "technologydata",
 ]
+
 docs = [
     "mkdocs-autolinks-plugin>=0.7.1",
     "mkdocs-git-revision-date-localized-plugin>=1.4.7",
@@ -77,11 +81,16 @@ filterwarnings = [
 # Setuptools_scm settings
 [tool.uv]
 package = true
+default-groups = ["dev", "docs"]
+
+[tool.uv.sources]
+technologydata = { workspace = true }
 
 [tool.setuptools_scm]
 version_scheme = "no-guess-dev"
 
 [tool.setuptools.packages.find]
+where = ["src"]
 include = ["technologydata"]
 
 # code coverage settings
