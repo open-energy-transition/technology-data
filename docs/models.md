@@ -77,7 +77,7 @@ linear_growth = LinearGrowth(
 projected_techs = linear_growth.project(tech)
 
 # 3. With an instantiated model, you can also use the same method as in (1)
-# or for convinience, the same method also accepts a model instance:
+# or for convenience, the same method also accepts a model instance:
 project_with_model(
     tech, model=linear_growth
 )
@@ -88,4 +88,3 @@ project_with_model(
 A linear growth model that increases the affected parameters by a fixed annual growth rate.
 For a parameter $P$ at the base year $Y_0$, the projected year $Y$ is calculated with the annual growth rate $r$ as:
 $$P(Y) = P(Y_0) \cdot \left[1 + r \cdot (Y - Y_0)\right]$$
-
