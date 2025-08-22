@@ -38,16 +38,6 @@ class GrowthModel(BaseModel):
 
 
 class LinearGrowth(GrowthModel):
-    affected_parameters: Annotated[
-        list[str],
-        Field(
-            description="Parameters that will be modified by the model. Defaults to 'capacity', 'lifetime', 'installed_capacity'."
-        ),
-    ] = [
-        "capacity",
-        "lifetime",
-        "installed_capacity",
-    ]
     """Project with linear growth model."""
 
     annual_growth_rate: Annotated[
