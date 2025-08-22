@@ -2,17 +2,14 @@
 #
 # SPDX-License-Identifier: MIT
 
+import logging
 from abc import abstractmethod
 from typing import Annotated
 
 from pydantic import BaseModel, Field
 
-import itertools
-from technologydata.parameter import Parameter
 from technologydata.technology import Technology
 from technologydata.technology_collection import TechnologyCollection
-
-import logging
 
 logger = logging.getLogger(__name__)
 
