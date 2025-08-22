@@ -100,6 +100,65 @@ class LinearGrowth(GrowthModel):
     # * make the abstract class inherit from pydantic.BaseModel for validation
 
 
+class ExponentialGrowth(GrowthModel):
+    """Project with exponential growth model."""
+
+    growth_rate: Annotated[
+        float,
+        Field(
+            description="Growth rate (based on an annual time constant) for the projection"
+        ),
+    ]
+
+    def project(
+        self,
+        technologies: Technology,
+    ) -> TechnologyCollection:
+        """
+        Project specified parameters for each group in the TechnologyCollection for the given years.
+
+        Only operates on parameters present in the technology and those that are specified in affected_parameters of the model.
+
+        Parameters
+        ----------
+        technologies : Technology
+            The Technology instance used as the basis for projection.
+
+        Returns
+        -------
+        TechnologyCollection
+            A new TechnologyCollection with the original and projected technologies for the years the model was build for.
+
+        """
+        new_techs = []
+
+        for to_year in self.to_years:
+            # For each year, create a copy of the technology to modify it with the projected values
+            new_tech = technologies.model_copy(deep=True)
+            new_tech.year = to_year
+
+            for affected_parameter in self.affected_parameters:
+                if affected_parameter not in new_tech.parameters:
+                    logger.debug(
+                        f"Parameter {affected_parameter} not in technology. Available parameters: {new_tech.parameters.keys()}. Skipping."
+                    )
+                    continue
+
+                param = new_tech.parameters[affected_parameter]
+                growth_factor = (1 + self.growth_rate) ** (to_year - technologies.year)
+                param.magnitude *= growth_factor  # TODO remove 'magnitude' here when scalar operations on Parameter are supported
+                if param.provenance is None:
+                    param.provenance = ""
+                param.provenance = f" Increased by {self.growth_rate * 100}% per year from {technologies.year} to {to_year} for a total growth factor of {growth_factor}."
+
+                new_tech[affected_parameter] = param
+
+            new_techs.append(new_tech)
+
+        # Return a new TechnologyCollection with the original and projected technologies
+        return TechnologyCollection(technologies=[technologies] + new_techs)
+
+
 def project_with_model(
     tech: Technology,
     model: str | GrowthModel,
@@ -113,6 +172,8 @@ def project_with_model(
     if isinstance(model, str):
         if model in ["LinearGrowth", "linear"]:
             model = LinearGrowth(**kwargs)
+        elif model in ["ExponentialGrowth", "exponential"]:
+            model = ExponentialGrowth(**kwargs)
         else:
             raise ValueError(f"Unknown growth model: {model}")
 
