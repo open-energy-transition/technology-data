@@ -57,10 +57,6 @@ class LinearGrowth(GrowthModel):
             A new TechnologyCollection with the original and projected technologies for the years the model was build for.
 
         """
-        assert isinstance(technologies, Technology), (
-            "`technologies` must be a Technology instance."
-        )
-
         new_techs = []
 
         for to_year in self.to_years:
@@ -79,7 +75,7 @@ class LinearGrowth(GrowthModel):
                 growth_factor = 1 + self.annual_growth_rate * (
                     to_year - technologies.year
                 )
-                param.magnitude *= growth_factor
+                param.magnitude *= growth_factor  # TODO remove 'magnitude' here when scalar operations on Parameter are supported
                 if param.provenance is None:
                     param.provenance = ""
                 param.provenance = f" Increased by {self.annual_growth_rate * 100}% per year from {technologies.year} to {to_year} for a total growth factor of {growth_factor}."
