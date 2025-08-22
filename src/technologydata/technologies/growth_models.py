@@ -24,10 +24,8 @@ class GrowthModel(BaseModel):
     to_years: Annotated[list[int], Field(description="Years to project to.")]
 
     @abstractmethod
-    def project(
-        self, technologies: Technology | TechnologyCollection
-    ) -> TechnologyCollection:
-        """Project values for a Technology or TechnologyCollection using the requested growth model."""
+    def project(self, technologies: Technology) -> TechnologyCollection:
+        """Project values for a Technology using the requested growth model."""
         pass
 
 
@@ -56,6 +54,7 @@ class LinearGrowth(GrowthModel):
         -------
         TechnologyCollection
             A new TechnologyCollection with the original and projected technologies for the years the model was build for.
+
         """
         assert isinstance(technologies, Technology), (
             "`technologies` must be a Technology instance."
@@ -103,7 +102,7 @@ class LinearGrowth(GrowthModel):
 def project_with_model(
     tech: Technology,
     model: str | GrowthModel,
-    **kwargs,
+    **kwargs: dict[str, list[str] | float | list[int]],
 ) -> TechnologyCollection:
     """
     Project a Technology or TechnologyCollection using the specified GrowthModel.
