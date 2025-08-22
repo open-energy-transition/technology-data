@@ -18,10 +18,7 @@ logger = logging.getLogger(__name__)
 
 
 class GrowthModel(BaseModel):
-    """
-    Abstract base for growth models used in projections.
-    Inherits from pydantic.BaseModel for validation.
-    """
+    """Abstract base for growth models used in projections."""
 
     affected_parameters: Annotated[
         list[str],
@@ -46,20 +43,23 @@ class LinearGrowth(GrowthModel):
 
     def project(
         self,
-        technologies: Technology | TechnologyCollection,
+        technologies: Technology,
     ) -> TechnologyCollection:
         """
         Project specified parameters for each group in the TechnologyCollection for the given years.
 
-        Only operates on parameters present in the technology.
-        Groups by name, region, case, detailed_technology.
-        """
-        if isinstance(technologies, TechnologyCollection):
-            raise NotImplementedError(
-                "Projection for TechnologyCollection not yet implemented. "
-                "Only single Technology projection is currently supported."
-            )
+        Only operates on parameters present in the technology and those that are specified in affected_parameters of the model.
 
+        Parameters
+        ----------
+        technologies : Technology
+            The Technology instance used as the basis for projection.
+
+        Returns
+        -------
+        TechnologyCollection
+            A new TechnologyCollection with the original and projected technologies for the years the model was build for.
+        """
         assert isinstance(technologies, Technology), (
             "`technologies` must be a Technology instance."
         )
@@ -104,7 +104,7 @@ class LinearGrowth(GrowthModel):
 
 
 def project_with_model(
-    tech: Technology | TechnologyCollection,
+    tech: Technology,
     model: str | GrowthModel,
     **kwargs,
 ) -> TechnologyCollection:
