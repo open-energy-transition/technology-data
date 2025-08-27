@@ -33,8 +33,8 @@ nav:
 # Theme settings
 theme:
   name: material
-  logo: assets/logo/logo-primary-dark.svg
-  favicon: assets/logo/logo.svg
+  logo: assets/logo/technology_data_logo.png
+  favicon: assets/logo/technology_data_logo.png
   custom_dir: docs/assets/overrides
   font:
     text: Overpass

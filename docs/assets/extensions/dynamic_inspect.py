@@ -15,7 +15,7 @@ class InspectSpecificObjects(griffe.Extension):
     def __init__(self, objects: list[str]) -> None:
         self.objects = objects
 
-    def on_instance(self, *, obj: griffe.Object, **kwargs) -> None:
+    def on_instance(self, *, obj: griffe.Object) -> None:
         if obj.path not in self.objects:
             return
         logger.info("Using InspectSpecificObjects for %s", obj.path)

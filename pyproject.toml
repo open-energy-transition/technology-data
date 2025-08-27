@@ -45,7 +45,7 @@ BugTracker = "https://github.com/PyPSA/technology-data/issues"
 Changelog = "https://github.com/PyPSA/technology-data/releases"
 
 # https://docs.astral.sh/uv/concepts/projects/dependencies/#dependency-groups
-# editable install of package and non-packaged dependencies
+# editable installation of package and non-packaged dependencies
 [dependency-groups]
 dev = [
     "ipykernel>=6.29.5",
@@ -102,7 +102,9 @@ source = [
 # Static type checker settings
 
 [tool.mypy]
-exclude = ['dev/*', 'examples/*', 'doc/*', 'test/*']
+exclude = [
+    "^docs/assets/(overrides/hooks/shortcodes\\.py|extensions/dynamic_inspect\\.py)$"
+]
 ignore_missing_imports = true
 no_implicit_optional = true
 warn_unused_ignores = true
@@ -127,6 +129,7 @@ ignore_missing_imports = true
 
 [tool.ruff]
 extend-include = ['*.ipynb']
+exclude = ["docs/"]
 
 [tool.ruff.lint]
 select = [
