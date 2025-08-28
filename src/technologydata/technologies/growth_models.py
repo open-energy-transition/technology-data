@@ -9,84 +9,207 @@ from typing import Annotated, Self
 
 import numpy as np
 from pydantic import BaseModel, Field, model_validator
+from scipy.optimize import curve_fit
 
 from technologydata.technology import Technology
 from technologydata.technology_collection import TechnologyCollection
 
 logger = logging.getLogger(__name__)
 
+import inspect
+
+
+def kwpartial(f, **fixed_params):
+    """
+    Like functools.partial, but for keyword arguments.
+
+    Enables us to wrap a function in a way that is compatible with scipy.optimize.curve_fit,
+    which does not play nicely with standard functools.partial.
+    For details see: https://stackoverflow.com/questions/79749129/use-curve-fit-with-partial-using-named-parameters-instead-of-positional-para/79749198#79749198
+
+    """
+    f_sig = inspect.signature(f)
+    positional_params = (
+        inspect.Parameter.POSITIONAL_OR_KEYWORD,
+        inspect.Parameter.POSITIONAL_ONLY,
+    )
+    args = [p.name for p in f_sig.parameters.values() if p.kind in positional_params]
+    new_args = [
+        inspect.Parameter(arg, inspect.Parameter.POSITIONAL_OR_KEYWORD)
+        for arg in args
+        if arg not in fixed_params
+    ]
+    new_sig = inspect.Signature(new_args)
+
+    def wrapper(*f_args, **f_kwargs):
+        bound_args = new_sig.bind(*f_args, **f_kwargs)
+        bound_args.apply_defaults()
+        return f(**bound_args.arguments, **fixed_params)
+
+    wrapper.__signature__ = new_sig
+    wrapper.__name__ = f"kwpartial({f.__name__}, {fixed_params})"
+
+    return wrapper
+
 
 class GrowthModel(BaseModel):
-    """Abstract base for growth models used in projections."""
+    """
+    Abstract base for growth models used in projections.
 
-    affected_parameters: Annotated[
-        list[str],
-        Field(description="Parameters that will be modified by the model."),
+    To implement a new growth model that inherits from this class, the following must be provided:
+    1. A mathematical function representing the growth model by implementing the abstract method `function(self, x: float, **parameters) -> float`.
+       The parameters of the function (besides `x`) will be automatically detected and used for fitting and projection.
+    2. The parameters should be defined as attributes of the class, initialized to `None` if they are to be fitted.
+    """
+
+    data_points: Annotated[
+        list[tuple[int, float]],
+        Field(
+            description="Data points (x, y) for fitting the model, where x indicates a year.",
+            default=list(),
+        ),
     ]
-    to_years: Annotated[list[int], Field(description="Years to project to.")]
+
+    class Config:
+        """Pydantic configuration."""
+
+        # Ensure that assignments to model fields are validated
+        validate_assignment = True
 
     @abstractmethod
-    def project(self, technologies: Technology) -> TechnologyCollection:
-        """Project values for a Technology using the requested growth model."""
+    def function(self, x: float, **kwargs: dict[str, float]) -> float:
+        """The mathematical function representing the growth model."""
         pass
+
+    @property
+    def model_parameters(self) -> list[str]:
+        """Return the set of model parameters that have been provided (are not None)."""
+        return [
+            p for p in inspect.signature(self.function).parameters.keys() if p != "x"
+        ]
+
+    @property
+    def provided_parameters(self) -> list[str]:
+        """Return the set of model parameters that have been provided (are not None)."""
+        return list(
+            self.model_dump(include=self.model_parameters, exclude_none=True).keys()
+        )
+
+    @property
+    def missing_parameters(self) -> list[str]:
+        """Return the set of model parameters that are missing (have not been provided)."""
+        return [p for p in self.model_parameters if p not in self.provided_parameters]
+
+    def add_data(self, data_point: tuple[float, float]) -> Self:
+        """Add a data point to the model for fitting."""
+        self.data_points.append(data_point)
+        return self
+
+    def project(
+        self,
+        to_year: int,
+    ) -> float:
+        """
+        Project using the model to the specified year.
+
+        This function uses the parameters that have been provided for the model either directly or through fitting to data points.
+
+        Parameters
+        ----------
+        to_year : int
+            The year to which to project the values.
+
+        Returns
+        -------
+        float
+            The projected value for the specified year.
+
+        """
+        if len(self.missing_parameters) > 0:
+            raise ValueError(
+                f"Cannot project. The following parameters have not been specified yet and are missing: {self.missing_parameters}."
+            )
+
+        return self.function(
+            to_year, **self.model_dump(include=self.provided_parameters)
+        )
+
+    def fit(self, p0: dict[str, float] | None = None) -> Self:
+        """Fit the growth model using the parameters and data points provided to the model."""
+        # if all parameters of the model are already fixed, then we cannot fit anything
+        if len(self.provided_parameters) == len(self.model_parameters):
+            logger.info("All parameters are already fixed, cannot fit anything.")
+            return self
+
+        # The number of data points must be at least equal to the number of parameters to fit
+        if len(self.data_points) < len(self.missing_parameters):
+            raise ValueError(
+                f"Not enough data points to fit the model. Need at least {len(self.missing_parameters)}, got {len(self.data_points)}."
+            )
+
+        # Fit the model to the data points:
+        # build a partial function that includes the already fixed parameters
+        func = kwpartial(
+            self.function,
+            **self.model_dump(include=self.provided_parameters, exclude_none=True),
+        )
+
+        # p0 optionally allows to provide initial guesses for the parameters to fit
+        if p0:
+            # the dict needs to be transformed into a list with the parameters in the correct order
+            p0 = [p0[param] for param in self.missing_parameters]
+        else:
+            p0 = [1.0] * len(self.missing_parameters)  # scipy's defaults
+
+        # fit the function to the data points
+        xdata, ydata = zip(*self.data_points)
+        popt, pcov = curve_fit(f=func, xdata=xdata, ydata=ydata, p0=p0)
+
+        logger.debug(f"Fitted parameters: {popt}")
+        logger.debug(f"Covariance of the parameters: {pcov}")
+
+        # assign the fitted parameters to the model
+        for param, value in zip(self.missing_parameters, popt):
+            logger.debug(f"Setting parameter {param} to fitted value {value}")
+            setattr(self, param, value)
+
+        return self
 
 
 class LinearGrowth(GrowthModel):
     """Project with linear growth model."""
 
-    annual_growth_rate: Annotated[
-        float, Field(description="Annual growth rate for the projection")
+    m: Annotated[
+        float | None,
+        Field(description="Annual growth rate for the projection", default=None),
+    ]
+    c: Annotated[
+        float | None,
+        Field(description="Starting value for the projection.", default=None),
     ]
 
-    def project(
-        self,
-        technologies: Technology,
-    ) -> TechnologyCollection:
+    def function(self, x: float, m: float, c: float) -> float:
         """
-        Project specified parameters for each group in the TechnologyCollection for the given years.
+        Linear function for the growth model.
 
-        Only operates on parameters present in the technology and those that are specified in affected_parameters of the model.
+        f(x) = m * x + c
 
         Parameters
         ----------
-        technologies : Technology
-            The Technology instance used as the basis for projection.
+        x : float
+            The input value on which to evaluate the function, e.g. a year '2025'.
+        m : float, optional
+            The slope of the linear function.
+        c : float, optional
+            The constant offset of the linear function.
 
         Returns
         -------
-        TechnologyCollection
-            A new TechnologyCollection with the original and projected technologies for the years the model was build for.
+        float
+            The result of the linear function evaluation at x.
 
         """
-        new_techs = []
-
-        for to_year in self.to_years:
-            # For each year, create a copy of the technology to modify it with the projected values
-            new_tech = technologies.model_copy(deep=True)
-            new_tech.year = to_year
-
-            for affected_parameter in self.affected_parameters:
-                if affected_parameter not in new_tech.parameters:
-                    logger.debug(
-                        f"Parameter {affected_parameter} not in technology. Available parameters: {new_tech.parameters.keys()}. Skipping."
-                    )
-                    continue
-
-                param = new_tech.parameters[affected_parameter]
-                growth_factor = 1 + self.annual_growth_rate * (
-                    to_year - technologies.year
-                )
-                param.magnitude *= growth_factor  # TODO remove 'magnitude' here when scalar operations on Parameter are supported
-                if param.provenance is None:
-                    param.provenance = ""
-                param.provenance = f" Increased by {self.annual_growth_rate * 100}% per year from {technologies.year} to {to_year} for a total growth factor of {growth_factor}."
-
-                new_tech[affected_parameter] = param
-
-            new_techs.append(new_tech)
-
-        # Return a new TechnologyCollection with the original and projected technologies
-        return TechnologyCollection(technologies=[technologies] + new_techs)
+        return m * x + c
 
     # * Define which parameters this operates on and modifies
     # * Define how it modifies these parameters
