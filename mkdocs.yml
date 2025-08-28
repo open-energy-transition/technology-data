@@ -16,14 +16,14 @@ nav:
     - Users: home/users.md
     - Citing: home/citing.md
     - License: home/license.md
-  - Support:
-    - FAQ: user-guide/faq.md
-    - Troubleshooting: user-guide/troubleshooting.md
-    - Support: user-guide/support.md
-    - Resources: user-guide/resources.md
+#  - Support:
+#    - FAQ: user-guide/faq.md
+#    - Troubleshooting: user-guide/troubleshooting.md
+#    - Support: user-guide/support.md
+#    - Resources: user-guide/resources.md
 
-- Examples:
-  - Overview: examples/examples.md
+#- Examples:
+#  - Overview: examples/examples.md
 
 - Contributing:
   - Instructions: contributing/contributing.md

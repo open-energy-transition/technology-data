@@ -1,1 +1,1 @@
-::: technologydata.technologies
+What a nice empty document!
