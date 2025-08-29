@@ -137,7 +137,22 @@ class GrowthModel(BaseModel):
         return wrapper
 
     def fit(self, p0: dict[str, float] | None = None) -> Self:
-        """Fit the growth model using the parameters and data points provided to the model."""
+        """
+        Fit the growth model using the parameters and data points provided to the model.
+
+        Parameters
+        ----------
+        p0 : dict[str, float], optional
+            Initial guesses for the missing parameters to be fitted.
+            May contain all or a subset of the missing parameters.
+            Any parameter not provided will be initialized with a starting guess of 1.0 (scipy's default).
+
+        Returns
+        -------
+        Self
+            The model instance with the fitted parameters set.
+
+        """
         # if all parameters of the model are already fixed, then we cannot fit anything
         if len(self.provided_parameters) == len(self.model_parameters):
             logger.info("All parameters are already fixed, cannot fit anything.")
@@ -157,11 +172,12 @@ class GrowthModel(BaseModel):
         )
 
         # p0 optionally allows to provide initial guesses for the parameters to fit
-        if p0:
-            # the dict needs to be transformed into a list with the parameters in the correct order
-            p0 = [p0[param] for param in self.missing_parameters]
-        else:
-            p0 = [1.0] * len(self.missing_parameters)  # scipy's defaults
+        if p0 is None:
+            p0 = {}
+
+        # the dict needs to be transformed into a list with the parameters in the correct order
+        # if a parameter is missing from p0, we use 1 as a default initial guess (scipy's default)
+        p0 = [p0.get(param, 1) for param in self.missing_parameters]
 
         # fit the function to the data points
         xdata, ydata = zip(*self.data_points)
