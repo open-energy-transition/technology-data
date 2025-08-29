@@ -13,9 +13,6 @@ import numpy as np
 from pydantic import BaseModel, Field
 from scipy.optimize import curve_fit
 
-from technologydata.technology import Technology
-from technologydata.technology_collection import TechnologyCollection
-
 logger = logging.getLogger(__name__)
 
 
@@ -231,14 +228,6 @@ class LinearGrowth(GrowthModel):
         """
         return m * x + c
 
-    # * Define which parameters this operates on and modifies
-    # * Define how it modifies these parameters
-    # * When LinearGrowth is initialised, provide the parameters it operates on (installed capacity, capacity) and the annual growth rate
-    # * Operate on the parameters if they are present, ignore them if not
-    # * when calling project, specify the years to project to
-    # * group the technologycollection by name, region, year, parameters, case, detailed_technology and project for each group
-    # * make the abstract class inherit from pydantic.BaseModel for validation
-
 
 class ExponentialGrowth(GrowthModel):
     """Project with exponential growth model."""
@@ -336,22 +325,61 @@ class LogisticGrowth(GrowthModel):
         return float(L / (1 + np.exp(-k * (x - x0))))
 
 
-def project_with_model(
-    tech: Technology,
-    model: str | GrowthModel,
-    **kwargs: dict[str, list[str] | float | list[int]],
-) -> TechnologyCollection:
-    """
-    Project a Technology or TechnologyCollection using the specified GrowthModel.
+class GompertzGrowth(GrowthModel):
+    """Project with a Gompertz growth model."""
 
-    Returns a new TechnologyCollection with projected values.
-    """
-    if isinstance(model, str):
-        if model in ["LinearGrowth", "linear"]:
-            model = LinearGrowth(**kwargs)
-        elif model in ["ExponentialGrowth", "exponential"]:
-            model = ExponentialGrowth(**kwargs)
-        else:
-            raise ValueError(f"Unknown growth model: {model}")
+    A: Annotated[
+        float | None,
+        Field(
+            description="The upper asymptote (maximum value) of the Gompertz function.",
+            default=None,
+        ),
+    ]
+    k: Annotated[
+        float | None,
+        Field(
+            description="The growth rate of the Gompertz function.",
+            default=None,
+        ),
+    ]
+    x0: Annotated[
+        float | None,
+        Field(
+            description="The x-value of the inflection point (midpoint year) of the Gompertz function.",
+            default=None,
+        ),
+    ]
+    b: Annotated[
+        float | None,
+        Field(
+            description="The displacement along the x-axis of the Gompertz function.",
+            default=None,
+        ),
+    ]
 
-    return float(model.project(tech))
+    def function(self, x: float, A: float, k: float, x0: float, b: float) -> float:  # type: ignore[override]
+        """
+        Gompertz function for the growth model.
+
+        f(x) = A * exp(-b * exp(-k * (x - x0)))
+
+        Parameters
+        ----------
+        x : float
+            The input value on which to evaluate the function, e.g. a year '2025'.
+        A : float
+            The upper asymptote (maximum value) of the Gompertz function.
+        k : float
+            The growth rate of the Gompertz function.
+        x0 : float
+            The x-value of the inflection point (midpoint year) of the Gompertz function.
+        b : float
+            The displacement along the x-axis of the Gompertz function.
+
+        Returns
+        -------
+        float
+            The result of the Gompertz function evaluation at x.
+
+        """
+        return float(A * np.exp(-b * np.exp(-k * (x - x0))))
