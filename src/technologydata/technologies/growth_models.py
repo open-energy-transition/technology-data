@@ -30,9 +30,9 @@ class GrowthModel(BaseModel):
     """
 
     data_points: Annotated[
-        list[tuple[int, float]],
+        list[tuple[float, float]],
         Field(
-            description="Data points (x, y) for fitting the model, where x indicates a year.",
+            description="Data points (x, y) for fitting the model, where f(x) = y.",
             default=list(),
         ),
     ]
@@ -102,7 +102,9 @@ class GrowthModel(BaseModel):
         )
 
     @classmethod
-    def _kwpartial(cls, f: Callable, **fixed_params: dict[str | float]) -> Callable:
+    def _kwpartial(
+        cls, f: Callable[..., float], **fixed_params: dict[str, float]
+    ) -> Callable[..., float]:
         """
         Like functools.partial, but for keyword arguments.
 
@@ -126,12 +128,12 @@ class GrowthModel(BaseModel):
         ]
         new_sig = inspect.Signature(new_args)
 
-        def wrapper(*f_args: float, **f_kwargs: dict[str, float]) -> Callable:  # noqa: ANN002, ANN003
+        def wrapper(*f_args: float, **f_kwargs: dict[str, float]) -> float:
             bound_args = new_sig.bind(*f_args, **f_kwargs)
             bound_args.apply_defaults()
             return f(**bound_args.arguments, **fixed_params)
 
-        wrapper.__signature__ = new_sig
+        wrapper.__signature__ = new_sig  # type: ignore[attr-defined]
         wrapper.__name__ = f"kwpartial({f.__name__}, {fixed_params})"
 
         return wrapper
@@ -177,11 +179,11 @@ class GrowthModel(BaseModel):
 
         # the dict needs to be transformed into a list with the parameters in the correct order
         # if a parameter is missing from p0, we use 1 as a default initial guess (scipy's default)
-        p0 = [p0.get(param, 1) for param in self.missing_parameters]
+        p0_ = [p0.get(param, 1) for param in self.missing_parameters]
 
         # fit the function to the data points
         xdata, ydata = zip(*self.data_points)
-        popt, pcov = curve_fit(f=func, xdata=xdata, ydata=ydata, p0=p0)
+        popt, pcov = curve_fit(f=func, xdata=xdata, ydata=ydata, p0=p0_)
 
         logger.debug(f"Fitted parameters: {popt}")
         logger.debug(f"Covariance of the parameters: {pcov}")
@@ -199,14 +201,14 @@ class LinearGrowth(GrowthModel):
 
     m: Annotated[
         float | None,
-        Field(description="Annual growth rate for the projection", default=None),
+        Field(description="Annual growth rate for the linear function.", default=None),
     ]
     c: Annotated[
         float | None,
-        Field(description="Starting value for the projection.", default=None),
+        Field(description="Starting value for the linear function.", default=None),
     ]
 
-    def function(self, x: float, m: float, c: float) -> float:
+    def function(self, x: float, m: float, c: float) -> float:  # type: ignore[override]
         """
         Linear function for the growth model.
 
@@ -257,11 +259,11 @@ class ExponentialGrowth(GrowthModel):
         ),
     ]
 
-    def function(self, x: float, A: float, k: float, x0: float) -> float:
+    def function(self, x: float, A: float, k: float, x0: float) -> float:  # type: ignore[override]
         """
         Exponential function for the growth model.
 
-        f(x) = A * exp(k * x)
+        f(x) = A * exp(k * (x - x0))
 
         Parameters
         ----------
@@ -280,7 +282,7 @@ class ExponentialGrowth(GrowthModel):
             The result of the exponential function evaluation at x.
 
         """
-        return A * np.exp(k * (x - x0))
+        return float(A * np.exp(k * (x - x0)))
 
 
 class LogisticGrowth(GrowthModel):
@@ -308,7 +310,7 @@ class LogisticGrowth(GrowthModel):
         ),
     ]
 
-    def function(self, x: float, L: float, k: float, x0: float) -> float:
+    def function(self, x: float, L: float, k: float, x0: float) -> float:  # type: ignore[override]
         """
         Logistic function for the growth model.
 
@@ -331,7 +333,7 @@ class LogisticGrowth(GrowthModel):
             The result of the logistic function evaluation at x.
 
         """
-        return L / (1 + np.exp(-k * (x - x0)))
+        return float(L / (1 + np.exp(-k * (x - x0))))
 
 
 def project_with_model(
@@ -352,4 +354,4 @@ def project_with_model(
         else:
             raise ValueError(f"Unknown growth model: {model}")
 
-    return model.project(tech)
+    return float(model.project(tech))
