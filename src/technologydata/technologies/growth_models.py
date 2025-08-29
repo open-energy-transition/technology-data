@@ -200,16 +200,16 @@ class LinearGrowth(GrowthModel):
         float | None,
         Field(description="Annual growth rate for the linear function.", default=None),
     ]
-    c: Annotated[
+    A: Annotated[
         float | None,
         Field(description="Starting value for the linear function.", default=None),
     ]
 
-    def function(self, x: float, m: float, c: float) -> float:  # type: ignore[override]
+    def function(self, x: float, m: float, A: float) -> float:  # type: ignore[override]
         """
         Linear function for the growth model.
 
-        f(x) = m * x + c
+        f(x) = m * x + A
 
         Parameters
         ----------
@@ -217,7 +217,7 @@ class LinearGrowth(GrowthModel):
             The input value on which to evaluate the function, e.g. a year '2025'.
         m : float, optional
             The slope of the linear function.
-        c : float, optional
+        A : float, optional
             The constant offset of the linear function.
 
         Returns
@@ -226,7 +226,7 @@ class LinearGrowth(GrowthModel):
             The result of the linear function evaluation at x.
 
         """
-        return m * x + c
+        return m * x + A
 
 
 class ExponentialGrowth(GrowthModel):
@@ -235,6 +235,10 @@ class ExponentialGrowth(GrowthModel):
     A: Annotated[
         float | None,
         Field(description="Initial value for the exponential function.", default=None),
+    ]
+    m: Annotated[
+        float | None,
+        Field(description="The multiplier for the exponential function.", default=None),
     ]
     k: Annotated[
         float | None,
@@ -248,17 +252,19 @@ class ExponentialGrowth(GrowthModel):
         ),
     ]
 
-    def function(self, x: float, A: float, k: float, x0: float) -> float:  # type: ignore[override]
+    def function(self, x: float, A: float, m: float, k: float, x0: float) -> float:  # type: ignore[override]
         """
         Exponential function for the growth model.
 
-        f(x) = A * exp(k * (x - x0))
+        f(x) = A + m * exp(k * (x - x0))
 
         Parameters
         ----------
         x : float
             The input value on which to evaluate the function, e.g. a year '2025'.
         A : float
+            The lower horizontal asymptote of the exponential function.
+        m : float
             The initial value of the exponential function.
         k : float
             The growth rate of the exponential function.
@@ -271,12 +277,99 @@ class ExponentialGrowth(GrowthModel):
             The result of the exponential function evaluation at x.
 
         """
-        return float(A * np.exp(k * (x - x0)))
+        return A + m * np.exp(k * (x - x0))
+
+
+class GeneralLogisticGrowth(GrowthModel):
+    """Project with a generalized logistic growth model."""
+
+    A: Annotated[
+        float | None,
+        Field(
+            description="The lower horizontal asymptote of the logistic function.",
+            default=None,
+        ),
+    ]
+    K: Annotated[
+        float | None,
+        Field(
+            description="The upper horizontal asymptote of the logistic function for C=1.",
+            default=None,
+        ),
+    ]
+    B: Annotated[
+        float | None,
+        Field(
+            description="The growth rate of the logistic function.",
+            default=None,
+        ),
+    ]
+    Q: Annotated[
+        float | None,
+        Field(
+            description="Parameter related to the value of f(0).",
+            default=None,
+        ),
+    ]
+    C: Annotated[
+        float | None,
+        Field(
+            description="Parameter related to the upper horizontal asymptote, often set to 1.",
+            default=None,
+        ),
+    ]
+    nu: Annotated[
+        float | None,
+        Field(
+            description="Parameter affecting near which asymptote the maximum growth occurs.",
+            default=None,
+        ),
+    ]
+
+    def function(  # type: ignore[override]
+        self, x: float, A: float, K: float, B: float, Q: float, C: float, nu: float
+    ) -> float:
+        """
+        Generalized logistic function for the growth model.
+
+        f(x) = A + (K - A) / (C + Q * exp(-B * (x - M)))^(1/nu)
+
+        Parameters
+        ----------
+        x : float
+            The input value on which to evaluate the function, e.g. a year '2025'.
+        A : float
+            The lower horizontal asymptote of the logistic function.
+        K : float
+            The upper horizontal asymptote of the logistic function for C=1.
+            If A=0 and C=1, then K is the carrying capacity.
+        B : float
+            The growth rate of the logistic function.
+        Q : float
+            Related to the value of f(0).
+        C : float
+            Parameter related to the upper horizontal asymptote, often set to 1.
+        nu : float
+            Parameter affecting near which asymptote the maximum growth occurs.
+
+        Returns
+        -------
+        float
+            The result of the generalized logistic function evaluation at x.
+
+        """
+        return A + (K - A) / (C + Q * np.exp(-B * (x))) ** (1 / nu)
 
 
 class LogisticGrowth(GrowthModel):
     """Project with a logistic growth model."""
 
+    A: Annotated[
+        float | None,
+        Field(
+            description="The lower horizontal asymptote of the logistic function.",
+        ),
+    ]
     L: Annotated[
         float | None,
         Field(
@@ -299,16 +392,18 @@ class LogisticGrowth(GrowthModel):
         ),
     ]
 
-    def function(self, x: float, L: float, k: float, x0: float) -> float:  # type: ignore[override]
+    def function(self, x: float, A: float, L: float, k: float, x0: float) -> float:  # type: ignore[override]
         """
         Logistic function for the growth model.
 
-        f(x) = L / (1 + exp(-k * (x - x0)))
+        f(x) = A + L / (1 + exp(-k * (x - x0)))
 
         Parameters
         ----------
         x : float
             The input value on which to evaluate the function, e.g. a year '2025'.
+        A : float
+            The lower horizontal asymptote of the logistic function.
         L : float
             The carrying capacity of the logistic function.
         k : float
@@ -322,7 +417,7 @@ class LogisticGrowth(GrowthModel):
             The result of the logistic function evaluation at x.
 
         """
-        return float(L / (1 + np.exp(-k * (x - x0))))
+        return A + L / (1 + np.exp(-k * (x - x0)))
 
 
 class GompertzGrowth(GrowthModel):
@@ -382,4 +477,4 @@ class GompertzGrowth(GrowthModel):
             The result of the Gompertz function evaluation at x.
 
         """
-        return float(A * np.exp(-b * np.exp(-k * (x - x0))))
+        return A * np.exp(-b * np.exp(-k * (x - x0)))
