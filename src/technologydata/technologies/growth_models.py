@@ -3,53 +3,20 @@
 # SPDX-License-Identifier: MIT
 """Growth models for projecting technology parameters over time."""
 
+import inspect
 import logging
 from abc import abstractmethod
+from collections.abc import Callable
 from typing import Annotated, Self
 
 import numpy as np
-from pydantic import BaseModel, Field, model_validator
+from pydantic import BaseModel, Field
 from scipy.optimize import curve_fit
 
 from technologydata.technology import Technology
 from technologydata.technology_collection import TechnologyCollection
 
 logger = logging.getLogger(__name__)
-
-import inspect
-
-
-def kwpartial(f, **fixed_params):
-    """
-    Like functools.partial, but for keyword arguments.
-
-    Enables us to wrap a function in a way that is compatible with scipy.optimize.curve_fit,
-    which does not play nicely with standard functools.partial.
-    For details see: https://stackoverflow.com/questions/79749129/use-curve-fit-with-partial-using-named-parameters-instead-of-positional-para/79749198#79749198
-
-    """
-    f_sig = inspect.signature(f)
-    positional_params = (
-        inspect.Parameter.POSITIONAL_OR_KEYWORD,
-        inspect.Parameter.POSITIONAL_ONLY,
-    )
-    args = [p.name for p in f_sig.parameters.values() if p.kind in positional_params]
-    new_args = [
-        inspect.Parameter(arg, inspect.Parameter.POSITIONAL_OR_KEYWORD)
-        for arg in args
-        if arg not in fixed_params
-    ]
-    new_sig = inspect.Signature(new_args)
-
-    def wrapper(*f_args, **f_kwargs):
-        bound_args = new_sig.bind(*f_args, **f_kwargs)
-        bound_args.apply_defaults()
-        return f(**bound_args.arguments, **fixed_params)
-
-    wrapper.__signature__ = new_sig
-    wrapper.__name__ = f"kwpartial({f.__name__}, {fixed_params})"
-
-    return wrapper
 
 
 class GrowthModel(BaseModel):
@@ -78,7 +45,7 @@ class GrowthModel(BaseModel):
 
     @abstractmethod
     def function(self, x: float, **kwargs: dict[str, float]) -> float:
-        """The mathematical function representing the growth model."""
+        """Function that represents the growth model."""  # noqa: D401
         pass
 
     @property
@@ -134,6 +101,41 @@ class GrowthModel(BaseModel):
             to_year, **self.model_dump(include=self.provided_parameters)
         )
 
+    @classmethod
+    def _kwpartial(cls, f: Callable, **fixed_params: dict[str | float]) -> Callable:
+        """
+        Like functools.partial, but for keyword arguments.
+
+        Enables us to wrap a function in a way that is compatible with scipy.optimize.curve_fit,
+        which does not play nicely with standard functools.partial.
+        For details see: https://stackoverflow.com/questions/79749129/use-curve-fit-with-partial-using-named-parameters-instead-of-positional-para/79749198#79749198
+
+        """
+        f_sig = inspect.signature(f)
+        positional_params = (
+            inspect.Parameter.POSITIONAL_OR_KEYWORD,
+            inspect.Parameter.POSITIONAL_ONLY,
+        )
+        args = [
+            p.name for p in f_sig.parameters.values() if p.kind in positional_params
+        ]
+        new_args = [
+            inspect.Parameter(arg, inspect.Parameter.POSITIONAL_OR_KEYWORD)
+            for arg in args
+            if arg not in fixed_params
+        ]
+        new_sig = inspect.Signature(new_args)
+
+        def wrapper(*f_args: float, **f_kwargs: dict[str, float]) -> Callable:  # noqa: ANN002, ANN003
+            bound_args = new_sig.bind(*f_args, **f_kwargs)
+            bound_args.apply_defaults()
+            return f(**bound_args.arguments, **fixed_params)
+
+        wrapper.__signature__ = new_sig
+        wrapper.__name__ = f"kwpartial({f.__name__}, {fixed_params})"
+
+        return wrapper
+
     def fit(self, p0: dict[str, float] | None = None) -> Self:
         """Fit the growth model using the parameters and data points provided to the model."""
         # if all parameters of the model are already fixed, then we cannot fit anything
@@ -149,7 +151,7 @@ class GrowthModel(BaseModel):
 
         # Fit the model to the data points:
         # build a partial function that includes the already fixed parameters
-        func = kwpartial(
+        func = self._kwpartial(
             self.function,
             **self.model_dump(include=self.provided_parameters, exclude_none=True),
         )
