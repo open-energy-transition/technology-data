@@ -162,27 +162,65 @@ note right of TechnologyCollection::create_projection
 end note
 
 abstract class GrowthModel {
-  + project(collection: TechnologyCollection): TechnologyCollection
+  - data_points: list[tuple[float, float]]
+  - model_parameters: list[str]
+  - provided_parameters: dict[str, float]
+  - missing_parameters: list[str]
+  + add_data(data_points: tuple[float, float]): self
+  + project(to_x: float): float
+  + fit(p0): self
+  + _kwpartial(func: Callable, **fixed_kwargs): Callable
+  + function(x, ...): float // abstract method
 }
 
 class LinearGrowth {
   Project with linear growth model.
+
+  - A
+  - m
+  + function(x, A, m)
 }
 
 class ExponentialGrowth {
   Project with exponential growth model.
+
+  - A
+  - m
+  - k
+  - x0
+  + function(x, A, m, k, x0)
 }
 
 class LogisticGrowth {
   Project with logistic growth model.
+
+  - A
+  - L
+  - k
+  - x0
+  + function(x, A, L, k, x0)
 }
 
 class GompertzGrowth {
   Project with Gompertz growth model.
+
+  - A
+  - k
+  - x0
+  - b
+  + function(x, A, k, x0, b)
 }
 
 class GeneralLogisticGrowth {
   Project with a general logistic growth model,
+
+  - A
+  - K
+  - B
+  - Q
+  - C
+  - nu
+  + function(x, A, K, B, Q, C, nu)
 }
 
 note right of GrowthModel
