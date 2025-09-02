@@ -18,6 +18,7 @@ To use the `Currencies` class, ensure you have the following packages installed:
 #### Getting Country from Currency Code
 
 To retrieve a list of country ISO3 codes associated with a given currency code, use the `get_country_from_currency` method. The method handles special cases (like EUR or USD) and proxies for multi-country currencies according to defined selection criteria based on economic indicators. Namely
+
 ```bibtex
 "EUR": "EUR",  # special code in pydeflate
 "USD": "USD",  # special code in pydeflate

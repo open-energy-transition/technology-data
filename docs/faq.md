@@ -24,4 +24,4 @@ TODO
 ## How is this project different to GENESTE or other projects?
 
 TODO
-and ref. to GENESTE: https://www.sciencedirect.com/science/article/pii/S235234092400636X
+and ref. to GENESTE: <https://www.sciencedirect.com/science/article/pii/S235234092400636X>
