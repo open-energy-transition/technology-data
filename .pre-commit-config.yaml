@@ -53,6 +53,7 @@ repos:
   - id: mypy
     args: [--strict, --ignore-missing-imports, --config-file=pyproject.toml]
     additional_dependencies: [tokenize-rt==3.2.0]
+    exclude: ^docs/
 
   # Pyupgrade: Automatically upgrades Python syntax
 - repo: https://github.com/asottile/pyupgrade

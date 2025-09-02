@@ -113,11 +113,7 @@ source = [
 ]
 
 # Static type checker settings
-
 [tool.mypy]
-exclude = [
-    "^docs/assets/(overrides/hooks/shortcodes\\.py|extensions/dynamic_inspect\\.py)$"
-]
 ignore_missing_imports = true
 no_implicit_optional = true
 warn_unused_ignores = true
