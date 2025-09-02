@@ -66,6 +66,3 @@ pytest
 ```
 
 ## Documentation
-
-
-
