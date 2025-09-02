@@ -11,7 +11,7 @@ build:
     - pip install mkdocs-material
 
 mkdocs:
-  configuration: mkdocs.yml
+  configuration: mkdocs.yaml
   # fail_on_warning: true # TODO: Enable
 
 python:
