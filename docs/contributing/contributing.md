@@ -66,12 +66,10 @@ pytest
 ```
 
 ## Documentation
-The documentation is generated with [MkDocs](https://www.mkdocs.org/). The documentation source files are written in Markdown and are available under the `/docs` sub-folder. The documentation is configured with the `mkdocs.yaml` file. 
+The documentation is generated with [MkDocs](https://www.mkdocs.org/). The documentation source files are written in Markdown and are available under the `/docs` sub-folder. The documentation is configured with the `mkdocs.yaml` file.
 
 MkDocs offers the possibility to start a builtin development server to preview the documentation as you work on it.  To start the development server run:
 
 ```bash
 mkdocs serve
 ```
-
-
