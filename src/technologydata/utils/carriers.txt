@@ -13,6 +13,7 @@
 # Format:
 # <carrier_name> = [<carrier_name>] [= <alias>]
 
+ammonia = [ammonia] = NH3
 carbon = [carbon] = C
 carbon_dioxide = [carbon_dioxide] = CO2
 carbon_monoxide = [carbon_monoxide] = CO

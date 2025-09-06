@@ -63,6 +63,20 @@ EnergyDensityLHV: dict[str, Parameter] = dict(
             ],
         ),
     ),
+    ammonia=Parameter(
+        magnitude=18.6,
+        units="GJ/t",
+        carrier="ammonia",
+        sources=SourceCollection(
+            sources=[
+                Source(
+                    title="Computational Thermodynamics",
+                    authors="Kyle E. Niemeyer. (2020) computational-thermo v0.1.0 [software]. Zenodo. https://doi.org/10.5281/zenodo.4017943",
+                    url="https://github.com/kyleniemeyer/computational-thermo",
+                ),
+            ],
+        ),
+    ),
     # Add more energy densities as needed
 )
 
@@ -91,6 +105,20 @@ EnergyDensityHHV: dict[str, Parameter] = dict(
         magnitude=52.2,
         units="GJ/t",
         carrier="natural_gas",
+        sources=SourceCollection(
+            sources=[
+                Source(
+                    title="The Engineering ToolBox",
+                    authors="The Engineering ToolBox (2003). Higher Calorific Values of Common Fuels: Reference & Data. [online] Available at:https://www.engineeringtoolbox.com/fuels-higher-calorific-values-d_169.html [Accessed 6 September 2025].",
+                    url="https://www.engineeringtoolbox.com/fuels-higher-calorific-values-d_169.html",
+                ),
+            ],
+        ),
+    ),
+    ammonia=Parameter(
+        magnitude=22.5,
+        units="GJ/t",
+        carrier="ammonia",
         sources=SourceCollection(
             sources=[
                 Source(
