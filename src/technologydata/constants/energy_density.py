@@ -26,20 +26,28 @@ EnergyDensityHHV : dict[str, Parameter]
 
 """
 
-from technologydata import Parameter
+from technologydata import Parameter, Source, SourceCollection
 
 EnergyDensityLHV: dict[str, Parameter] = dict(
     hydrogen=Parameter(
         magnitude=119.6,
-        unit="GJ/t",
+        units="GJ/t",
         carrier="hydrogen",
         # source=  # TODO
     ),
     methane=Parameter(
         magnitude=50.0,
-        unit="GJ/t",
+        units="GJ/t",
         carrier="methane",
-        # source=  # TODO
+        sources=SourceCollection(
+            sources=[
+                Source(
+                    title="The Engineering ToolBox",
+                    authors="The Engineering ToolBox (2003). Higher Calorific Values of Common Fuels: Reference & Data. [online] Available at:https://www.engineeringtoolbox.com/fuels-higher-calorific-values-d_169.html [Accessed 6 September 2025].",
+                    url="https://www.engineeringtoolbox.com/fuels-higher-calorific-values-d_169.html",
+                ),
+            ],
+        ),
     ),
     # Add more energy densities as needed
 )
@@ -47,15 +55,23 @@ EnergyDensityLHV: dict[str, Parameter] = dict(
 EnergyDensityHHV: dict[str, Parameter] = dict(
     hydrogen=Parameter(
         magnitude=141.8,
-        unit="GJ/t",
+        units="GJ/t",
         carrier="hydrogen",
         # source=  # TODO
     ),
     methane=Parameter(
         magnitude=55.5,
-        unit="GJ/t",
+        units="GJ/t",
         carrier="methane",
-        # source=  # TODO
+        sources=SourceCollection(
+            sources=[
+                Source(
+                    title="The Engineering ToolBox",
+                    authors="The Engineering ToolBox (2003). Higher Calorific Values of Common Fuels: Reference & Data. [online] Available at:https://www.engineeringtoolbox.com/fuels-higher-calorific-values-d_169.html [Accessed 6 September 2025].",
+                    url="https://www.engineeringtoolbox.com/fuels-higher-calorific-values-d_169.html",
+                ),
+            ],
+        ),
     ),
     # Add more energy densities as needed
 )
