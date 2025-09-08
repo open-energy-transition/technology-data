@@ -113,6 +113,20 @@ EnergyDensityLHV: dict[str, Parameter] = dict(
             ],
         ),
     ),
+    methanol=Parameter(
+        magnitude=19.9,
+        units="GJ/t",
+        carrier="methanol",
+        sources=SourceCollection(
+            sources=[
+                Source(
+                    title="The Engineering ToolBox",
+                    authors="The Engineering ToolBox (2003). Higher Calorific Values of Common Fuels: Reference & Data. [online] Available at:https://www.engineeringtoolbox.com/fuels-higher-calorific-values-d_169.html [Accessed 6 September 2025].",
+                    url="https://www.engineeringtoolbox.com/fuels-higher-calorific-values-d_169.html",
+                ),
+            ],
+        ),
+    ),
     # Add more energy densities as needed
 )
 
@@ -219,6 +233,20 @@ EnergyDensityHHV: dict[str, Parameter] = dict(
         magnitude=32.6,
         units="GJ/t",
         carrier="coal",
+        sources=SourceCollection(
+            sources=[
+                Source(
+                    title="The Engineering ToolBox",
+                    authors="The Engineering ToolBox (2003). Higher Calorific Values of Common Fuels: Reference & Data. [online] Available at:https://www.engineeringtoolbox.com/fuels-higher-calorific-values-d_169.html [Accessed 6 September 2025].",
+                    url="https://www.engineeringtoolbox.com/fuels-higher-calorific-values-d_169.html",
+                ),
+            ],
+        ),
+    ),
+    methanol=Parameter(
+        magnitude=23.0,
+        units="GJ/t",
+        carrier="methanol",
         sources=SourceCollection(
             sources=[
                 Source(
