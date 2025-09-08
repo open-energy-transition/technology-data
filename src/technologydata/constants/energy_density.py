@@ -257,5 +257,19 @@ EnergyDensityHHV: dict[str, Parameter] = dict(
             ],
         ),
     ),
+    jet_fuel_a1=Parameter(
+        magnitude=43.15,
+        units="GJ/t",
+        carrier="jet_fuel_a1",
+        sources=SourceCollection(
+            sources=[
+                Source(
+                    title="Jet fuel",
+                    authors="Jet fuel. Wikipedia, September 7th 2025.",
+                    url="https://en.wikipedia.org/wiki/Jet_fuel",
+                ),
+            ],
+        ),
+    ),
     # Add more energy densities as needed
 )
