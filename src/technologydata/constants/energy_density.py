@@ -91,6 +91,20 @@ EnergyDensityLHV: dict[str, Parameter] = dict(
             ],
         ),
     ),
+    carbon=Parameter(
+        magnitude=32.8,
+        units="GJ/t",
+        carrier="carbon",
+        sources=SourceCollection(
+            sources=[
+                Source(
+                    title="The Engineering ToolBox",
+                    authors="The Engineering ToolBox (2003). Higher Calorific Values of Common Fuels: Reference & Data. [online] Available at:https://www.engineeringtoolbox.com/fuels-higher-calorific-values-d_169.html [Accessed 6 September 2025].",
+                    url="https://www.engineeringtoolbox.com/fuels-higher-calorific-values-d_169.html",
+                ),
+            ],
+        ),
+    ),
     # Add more energy densities as needed
 )
 
@@ -161,6 +175,20 @@ EnergyDensityHHV: dict[str, Parameter] = dict(
         magnitude=32.8,
         units="GJ/t",
         carrier="carbon",
+        sources=SourceCollection(
+            sources=[
+                Source(
+                    title="The Engineering ToolBox",
+                    authors="The Engineering ToolBox (2003). Higher Calorific Values of Common Fuels: Reference & Data. [online] Available at:https://www.engineeringtoolbox.com/fuels-higher-calorific-values-d_169.html [Accessed 6 September 2025].",
+                    url="https://www.engineeringtoolbox.com/fuels-higher-calorific-values-d_169.html",
+                ),
+            ],
+        ),
+    ),
+    lignite=Parameter(
+        magnitude=14.0,
+        units="GJ/t",
+        carrier="lignite",
         sources=SourceCollection(
             sources=[
                 Source(
