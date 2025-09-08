@@ -127,6 +127,20 @@ EnergyDensityLHV: dict[str, Parameter] = dict(
             ],
         ),
     ),
+    gasoline=Parameter(
+        magnitude=43.4,
+        units="GJ/t",
+        carrier="gasoline",
+        sources=SourceCollection(
+            sources=[
+                Source(
+                    title="The Engineering ToolBox",
+                    authors="The Engineering ToolBox (2003). Higher Calorific Values of Common Fuels: Reference & Data. [online] Available at:https://www.engineeringtoolbox.com/fuels-higher-calorific-values-d_169.html [Accessed 6 September 2025].",
+                    url="https://www.engineeringtoolbox.com/fuels-higher-calorific-values-d_169.html",
+                ),
+            ],
+        ),
+    ),
     # Add more energy densities as needed
 )
 
@@ -267,6 +281,20 @@ EnergyDensityHHV: dict[str, Parameter] = dict(
                     title="Jet fuel",
                     authors="Jet fuel. Wikipedia, September 7th 2025.",
                     url="https://en.wikipedia.org/wiki/Jet_fuel",
+                ),
+            ],
+        ),
+    ),
+    gasoline=Parameter(
+        magnitude=46.4,
+        units="GJ/t",
+        carrier="gasoline",
+        sources=SourceCollection(
+            sources=[
+                Source(
+                    title="The Engineering ToolBox",
+                    authors="The Engineering ToolBox (2003). Higher Calorific Values of Common Fuels: Reference & Data. [online] Available at:https://www.engineeringtoolbox.com/fuels-higher-calorific-values-d_169.html [Accessed 6 September 2025].",
+                    url="https://www.engineeringtoolbox.com/fuels-higher-calorific-values-d_169.html",
                 ),
             ],
         ),

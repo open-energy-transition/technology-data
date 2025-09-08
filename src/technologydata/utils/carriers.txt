@@ -19,6 +19,7 @@ carbon_dioxide = [carbon_dioxide] = CO2
 carbon_monoxide = [carbon_monoxide] = CO
 coal = [coal] = anthracite = hard_coal = black_coal
 diesel = [diesel]
+gasoline = [gasoline] = petrol
 jet_fuel_a1 = [jet_fuel_a1] = JETA1
 electricity = [electricity] = e = el
 hydrogen = [hydrogen] = H2
