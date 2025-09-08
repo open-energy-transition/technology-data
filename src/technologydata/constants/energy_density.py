@@ -33,7 +33,15 @@ EnergyDensityLHV: dict[str, Parameter] = dict(
         magnitude=119.6,
         units="GJ/t",
         carrier="hydrogen",
-        # source=  # TODO
+        sources=SourceCollection(
+            sources=[
+                Source(
+                    title="The Engineering ToolBox",
+                    authors="The Engineering ToolBox (2003). Higher Calorific Values of Common Fuels: Reference & Data. [online] Available at:https://www.engineeringtoolbox.com/fuels-higher-calorific-values-d_169.html [Accessed 6 September 2025].",
+                    url="https://www.engineeringtoolbox.com/fuels-higher-calorific-values-d_169.html",
+                ),
+            ],
+        ),
     ),
     methane=Parameter(
         magnitude=50.0,
@@ -113,7 +121,15 @@ EnergyDensityHHV: dict[str, Parameter] = dict(
         magnitude=141.8,
         units="GJ/t",
         carrier="hydrogen",
-        # source=  # TODO
+        sources=SourceCollection(
+            sources=[
+                Source(
+                    title="The Engineering ToolBox",
+                    authors="The Engineering ToolBox (2003). Higher Calorific Values of Common Fuels: Reference & Data. [online] Available at:https://www.engineeringtoolbox.com/fuels-higher-calorific-values-d_169.html [Accessed 6 September 2025].",
+                    url="https://www.engineeringtoolbox.com/fuels-higher-calorific-values-d_169.html",
+                ),
+            ],
+        ),
     ),
     methane=Parameter(
         magnitude=55.5,
@@ -189,6 +205,20 @@ EnergyDensityHHV: dict[str, Parameter] = dict(
         magnitude=14.0,
         units="GJ/t",
         carrier="lignite",
+        sources=SourceCollection(
+            sources=[
+                Source(
+                    title="The Engineering ToolBox",
+                    authors="The Engineering ToolBox (2003). Higher Calorific Values of Common Fuels: Reference & Data. [online] Available at:https://www.engineeringtoolbox.com/fuels-higher-calorific-values-d_169.html [Accessed 6 September 2025].",
+                    url="https://www.engineeringtoolbox.com/fuels-higher-calorific-values-d_169.html",
+                ),
+            ],
+        ),
+    ),
+    coal=Parameter(
+        magnitude=32.6,
+        units="GJ/t",
+        carrier="coal",
         sources=SourceCollection(
             sources=[
                 Source(
