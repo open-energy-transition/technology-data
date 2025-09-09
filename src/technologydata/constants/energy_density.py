@@ -88,7 +88,7 @@ EnergyDensityLHV: dict[str, Parameter] = dict(
     ),
     wood=Parameter(
         magnitude=15.4,
-        units="GJ/t",
+        units="MJ/kg",
         carrier="wood",
         sources=SourceCollection(
             sources=[
