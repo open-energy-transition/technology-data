@@ -163,7 +163,7 @@ EnergyDensityHHV: dict[str, Parameter] = dict(
     ),
     methane=Parameter(
         magnitude=55.5,
-        units="GJ/t",
+        units="MJ/kg",
         carrier="methane",
         sources=SourceCollection(
             sources=[
