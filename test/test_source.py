@@ -151,7 +151,7 @@ class TestSource:
         # Delete the downloaded file
         storage_path.unlink(missing_ok=True)
 
-    @pytest.mark.skip_test
+    @pytest.mark.skip_test  # type: ignore
     def test_store_in_wayback(self) -> None:
         """Check if a given url is correctly stored as a snapshot on Internet Archive Wayback Machine."""
         url_to_archive = (
@@ -176,7 +176,7 @@ class TestSource:
         except ValueError:
             pytest.fail("Valid date-time string did not match the format")
 
-    @pytest.mark.skip_test
+    @pytest.mark.skip_test  # type: ignore
     @pytest.mark.parametrize(
         "example_source",
         [
