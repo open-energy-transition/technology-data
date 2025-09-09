@@ -148,7 +148,7 @@ EnergyDensityLHV: dict[str, Parameter] = dict(
 
 EnergyDensityHHV: dict[str, Parameter] = dict(
     hydrogen=Parameter(
-        magnitude=141.8,
+        magnitude=141.7,
         units="MJ/kg",
         carrier="hydrogen",
         sources=SourceCollection(
