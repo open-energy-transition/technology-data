@@ -295,7 +295,7 @@ EnergyDensityHHV: dict[str, Parameter] = dict(
                     title="Higher Calorific Values of Common Fuels: Reference & Data",
                     authors="The Engineering ToolBox (2003)",
                     url="https://www.engineeringtoolbox.com/fuels-higher-calorific-values-d_169.html",
-                    url_date="2025-09-06"
+                    url_date="2025-09-06",
                 ),
             ],
         ),
