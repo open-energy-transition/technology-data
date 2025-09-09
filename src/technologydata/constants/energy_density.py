@@ -131,7 +131,7 @@ EnergyDensityLHV: dict[str, Parameter] = dict(
     ),
     gasoline=Parameter(
         magnitude=43.4,
-        units="GJ/t",
+        units="MJ/kg",
         carrier="gasoline",
         sources=SourceCollection(
             sources=[
