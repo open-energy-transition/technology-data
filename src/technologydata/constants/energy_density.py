@@ -30,7 +30,7 @@ from technologydata import Parameter, Source, SourceCollection
 
 EnergyDensityLHV: dict[str, Parameter] = dict(
     hydrogen=Parameter(
-        magnitude=119.6,
+        magnitude=120
         units="MJ/kg",
         carrier="hydrogen",
         sources=SourceCollection(
