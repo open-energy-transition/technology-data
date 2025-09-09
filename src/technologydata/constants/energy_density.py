@@ -191,7 +191,7 @@ EnergyDensityHHV: dict[str, Parameter] = dict(
     ),
     ammonia=Parameter(
         magnitude=22.5,
-        units="GJ/t",
+        units="MJ/kg",
         carrier="ammonia",
         sources=SourceCollection(
             sources=[
