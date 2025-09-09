@@ -233,7 +233,7 @@ EnergyDensityHHV: dict[str, Parameter] = dict(
     ),
     lignite=Parameter(
         magnitude=14.0,
-        units="GJ/t",
+        units="MJ/kg",
         carrier="lignite",
         sources=SourceCollection(
             sources=[
