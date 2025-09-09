@@ -30,8 +30,8 @@ from technologydata import Parameter, Source, SourceCollection
 
 EnergyDensityLHV: dict[str, Parameter] = dict(
     hydrogen=Parameter(
-        magnitude=119.6,
-        units="GJ/t",
+        magnitude=120
+        units="MJ/kg",
         carrier="hydrogen",
         sources=SourceCollection(
             sources=[
@@ -45,7 +45,7 @@ EnergyDensityLHV: dict[str, Parameter] = dict(
     ),
     methane=Parameter(
         magnitude=50.0,
-        units="GJ/t",
+        units="MJ/kg",
         carrier="methane",
         sources=SourceCollection(
             sources=[
@@ -59,8 +59,9 @@ EnergyDensityLHV: dict[str, Parameter] = dict(
     ),
     natural_gas=Parameter(
         magnitude=47.1,
-        units="GJ/t",
+        units="MJ/kg",
         carrier="natural_gas",
+        note="Value for natural gas in the US market",
         sources=SourceCollection(
             sources=[
                 Source(
@@ -73,7 +74,7 @@ EnergyDensityLHV: dict[str, Parameter] = dict(
     ),
     ammonia=Parameter(
         magnitude=18.6,
-        units="GJ/t",
+        units="MJ/kg",
         carrier="ammonia",
         sources=SourceCollection(
             sources=[
@@ -87,7 +88,7 @@ EnergyDensityLHV: dict[str, Parameter] = dict(
     ),
     wood=Parameter(
         magnitude=15.4,
-        units="GJ/t",
+        units="MJ/kg",
         carrier="wood",
         sources=SourceCollection(
             sources=[
@@ -101,8 +102,9 @@ EnergyDensityLHV: dict[str, Parameter] = dict(
     ),
     carbon=Parameter(
         magnitude=32.8,
-        units="GJ/t",
+        units="MJ/kg",
         carrier="carbon",
+        note="For pure carbon we assume LHV=HHV",
         sources=SourceCollection(
             sources=[
                 Source(
@@ -115,7 +117,7 @@ EnergyDensityLHV: dict[str, Parameter] = dict(
     ),
     methanol=Parameter(
         magnitude=19.9,
-        units="GJ/t",
+        units="MJ/kg",
         carrier="methanol",
         sources=SourceCollection(
             sources=[
@@ -129,7 +131,7 @@ EnergyDensityLHV: dict[str, Parameter] = dict(
     ),
     gasoline=Parameter(
         magnitude=43.4,
-        units="GJ/t",
+        units="MJ/kg",
         carrier="gasoline",
         sources=SourceCollection(
             sources=[
@@ -146,8 +148,8 @@ EnergyDensityLHV: dict[str, Parameter] = dict(
 
 EnergyDensityHHV: dict[str, Parameter] = dict(
     hydrogen=Parameter(
-        magnitude=141.8,
-        units="GJ/t",
+        magnitude=141.7,
+        units="MJ/kg",
         carrier="hydrogen",
         sources=SourceCollection(
             sources=[
@@ -161,7 +163,7 @@ EnergyDensityHHV: dict[str, Parameter] = dict(
     ),
     methane=Parameter(
         magnitude=55.5,
-        units="GJ/t",
+        units="MJ/kg",
         carrier="methane",
         sources=SourceCollection(
             sources=[
@@ -175,7 +177,7 @@ EnergyDensityHHV: dict[str, Parameter] = dict(
     ),
     natural_gas=Parameter(
         magnitude=52.2,
-        units="GJ/t",
+        units="MJ/kg",
         carrier="natural_gas",
         sources=SourceCollection(
             sources=[
@@ -189,7 +191,7 @@ EnergyDensityHHV: dict[str, Parameter] = dict(
     ),
     ammonia=Parameter(
         magnitude=22.5,
-        units="GJ/t",
+        units="MJ/kg",
         carrier="ammonia",
         sources=SourceCollection(
             sources=[
@@ -203,7 +205,7 @@ EnergyDensityHHV: dict[str, Parameter] = dict(
     ),
     wood=Parameter(
         magnitude=16.2,
-        units="GJ/t",
+        units="MJ/kg",
         carrier="wood",
         sources=SourceCollection(
             sources=[
@@ -217,7 +219,7 @@ EnergyDensityHHV: dict[str, Parameter] = dict(
     ),
     carbon=Parameter(
         magnitude=32.8,
-        units="GJ/t",
+        units="MJ/kg",
         carrier="carbon",
         sources=SourceCollection(
             sources=[
@@ -231,7 +233,7 @@ EnergyDensityHHV: dict[str, Parameter] = dict(
     ),
     lignite=Parameter(
         magnitude=14.0,
-        units="GJ/t",
+        units="MJ/kg",
         carrier="lignite",
         sources=SourceCollection(
             sources=[
@@ -245,7 +247,7 @@ EnergyDensityHHV: dict[str, Parameter] = dict(
     ),
     coal=Parameter(
         magnitude=32.6,
-        units="GJ/t",
+        units="MJ/kg",
         carrier="coal",
         sources=SourceCollection(
             sources=[
@@ -259,7 +261,7 @@ EnergyDensityHHV: dict[str, Parameter] = dict(
     ),
     methanol=Parameter(
         magnitude=23.0,
-        units="GJ/t",
+        units="MJ/kg",
         carrier="methanol",
         sources=SourceCollection(
             sources=[
@@ -279,22 +281,24 @@ EnergyDensityHHV: dict[str, Parameter] = dict(
             sources=[
                 Source(
                     title="Jet fuel",
-                    authors="Jet fuel. Wikipedia, September 7th 2025.",
-                    url="https://en.wikipedia.org/wiki/Jet_fuel",
+                    authors="Wikipedia contributors",
+                    url="https://en.wikipedia.org/w/index.php?title=Jet_fuel&oldid=1310114781",
+                    url_date="2025-09-07",
                 ),
             ],
         ),
     ),
     gasoline=Parameter(
         magnitude=46.4,
-        units="GJ/t",
+        units="MJ/kg",
         carrier="gasoline",
         sources=SourceCollection(
             sources=[
                 Source(
-                    title="The Engineering ToolBox",
-                    authors="The Engineering ToolBox (2003). Higher Calorific Values of Common Fuels: Reference & Data. [online] Available at:https://www.engineeringtoolbox.com/fuels-higher-calorific-values-d_169.html [Accessed 6 September 2025].",
+                    title="Higher Calorific Values of Common Fuels: Reference & Data",
+                    authors="The Engineering ToolBox (2003)",
                     url="https://www.engineeringtoolbox.com/fuels-higher-calorific-values-d_169.html",
+                    url_date="2025-09-06",
                 ),
             ],
         ),
