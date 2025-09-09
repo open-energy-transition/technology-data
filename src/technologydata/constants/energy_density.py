@@ -261,7 +261,7 @@ EnergyDensityHHV: dict[str, Parameter] = dict(
     ),
     methanol=Parameter(
         magnitude=23.0,
-        units="GJ/t",
+        units="MJ/kg",
         carrier="methanol",
         sources=SourceCollection(
             sources=[
