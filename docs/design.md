@@ -1,4 +1,4 @@
-# Title
+# Use cases we have designed `technology-data` for
 
 <!--
 SPDX-FileCopyrightText: The technology-data authors
