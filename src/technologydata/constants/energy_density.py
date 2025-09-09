@@ -247,7 +247,7 @@ EnergyDensityHHV: dict[str, Parameter] = dict(
     ),
     coal=Parameter(
         magnitude=32.6,
-        units="GJ/t",
+        units="MJ/kg",
         carrier="coal",
         sources=SourceCollection(
             sources=[
