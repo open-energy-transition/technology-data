@@ -281,7 +281,7 @@ EnergyDensityHHV: dict[str, Parameter] = dict(
                     title="Jet fuel",
                     authors="Wikipedia contributors",
                     url="https://en.wikipedia.org/w/index.php?title=Jet_fuel&oldid=1310114781",
-                    url_date="2025-09-07"
+                    url_date="2025-09-07",
                 ),
             ],
         ),
