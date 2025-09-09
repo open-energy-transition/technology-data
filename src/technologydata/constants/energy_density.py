@@ -177,7 +177,7 @@ EnergyDensityHHV: dict[str, Parameter] = dict(
     ),
     natural_gas=Parameter(
         magnitude=52.2,
-        units="GJ/t",
+        units="MJ/kg",
         carrier="natural_gas",
         sources=SourceCollection(
             sources=[
