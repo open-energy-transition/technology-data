@@ -59,7 +59,7 @@ EnergyDensityLHV: dict[str, Parameter] = dict(
     ),
     natural_gas=Parameter(
         magnitude=47.1,
-        units="GJ/t",
+        units="MJ/kg",
         carrier="natural_gas",
         note="Value for natural gas in the US market",
         sources=SourceCollection(
