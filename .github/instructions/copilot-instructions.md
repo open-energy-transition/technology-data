@@ -1,4 +1,4 @@
-# Title
+# Copilot Coding Agent Instructions for `technologydata`
 
 <!--
 SPDX-FileCopyrightText: The technology-data authors
@@ -6,8 +6,6 @@ SPDX-FileCopyrightText: The technology-data authors
 SPDX-License-Identifier: MIT
 
 -->
-
-## Copilot Coding Agent Instructions for `technologydata`
 
 ## Project Overview
 - `technologydata` is a Python package for energy system modellers to screen, harmonize, and transform techno-economic input data for energy system models.

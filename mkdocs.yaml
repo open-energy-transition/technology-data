@@ -9,25 +9,24 @@ nav:
 - Home:
   - Home: index.md
   - Overview:
-    - Release Notes: release-notes.md
+    - Release Notes: home/release-notes.md
   - Getting Started:
     - Installation: home/installation.md
   - Reference:
     - Users: home/users.md
     - Citing: home/citing.md
     - License: home/license.md
-#  - Support:
-#    - FAQ: user-guide/faq.md
-#    - Troubleshooting: user-guide/troubleshooting.md
-#    - Support: user-guide/support.md
-#    - Resources: user-guide/resources.md
+  - Support:
+    - FAQ: home/faq.md
+    - Contacts: home/contacts.md
 
-#- Examples:
-#  - Overview: examples/examples.md
+- User Guide:
+  - Use Cases: user_guide/design.md
+  - Parameter: user_guide/parameter.md
 
 - Contributing:
-  - Instructions: contributing/contributing.md
-  - Code of Conduct: CODE_OF_CONDUCT.md
+  - Instructions: contributing/instructions.md
+  - Code of Conduct: contributing/CODE_OF_CONDUCT.md
   - Contributors: contributing/contributors.md
 
 # Theme settings
@@ -180,10 +179,10 @@ plugins:
 # Global redirects
 - redirects:
     redirect_maps:
-      'home/release-notes.md': 'release-notes.md'
-      'changelog.md': 'release-notes.md'
-      'whats-new.md': 'release-notes.md'
-      'code-of-conduct.md': 'CODE_OF_CONDUCT.md'
+      'home/release-notes.md': 'home/release-notes.md'
+      'changelog.md': 'home/release-notes.md'
+      'whats-new.md': 'home/release-notes.md'
+      'code-of-conduct.md': 'contributing/CODE_OF_CONDUCT.md'
 
 hooks:
 - docs/assets/overrides/hooks/shortcodes.py

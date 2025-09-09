@@ -8,15 +8,6 @@ SPDX-License-Identifier: MIT
 
 ## Design
 
-1. [Design](#design)
-  1. [Target audience](#target-audience)
-  2. [Use Cases](#use-cases)
-    1. [🧾 UC-001: Screen techno-economic inputs for validity and completeness](#uc-001-screen-techno-economic-inputs-for-validity-and-completeness)
-    2. [🧾 UC-002: Harmonize multiple input datasets](#uc-002-harmonize-multiple-input-datasets)
-    3. [🧾 UC-003: Transform assumptions into model-ready formats](#uc-003-transform-assumptions-into-model-ready-formats)
-    4. [🧾 UC-004: Compare techno-economic indicators across datasets](#uc-004-compare-techno-economic-indicators-across-datasets)
-    5. [🧾 UC-005: Audit data provenance and transformation trace](#uc-005-audit-data-provenance-and-transformation-trace)
-
 `technologydata` is designed for energy system modellers in mind.
 It intendeds to serve common use cases encountered during the design, development and execution of energy system model experiments, such as:
 
@@ -46,19 +37,25 @@ the transformations that we make available, like inflation adjustments, currency
 - They would like to be able to use the package without having to read too much documentation, but require clear documentation on the transformations that are applied.
 - Data provenance and reproducibility are important to them, so they need to be able to trace data back to its source and understand all individual steps that were applied in the transformation process to the data.
 
-The users differ in their experience with Python and programming in general, we aim to serve three main user types:
+The users differ in their experience with Python and programming in general, we aim to serve three main user types
 
-1. Programmers and Data Engineers:
+### Programmers and Data Engineers
+
+These users are:
 
 - Well familiar with using Python and object-oriented programming languages, data processing and exchange formats.
 - Interacts with the package through Python scripts, Python modules and Jupyter notebooks.
 
-2. Energy System Modeller:
+#### Energy System Modeller
+
+These users are:
 
 - Only basic Python programming skills.
 - Interacts with the package through a Jupyter notebook or a Python script; may want to simply access and inspect the data without writing and executing code.
 
-3. Energy Analyst:
+#### Energy Analyst
+
+These users are:
 
 - No programming skills or only very basic Python skills like using pandas or DataFrames.
 - Interacts with the package either through a Jupyter notebook or wants to be able to use csv / Spreadsheet files for inspection and use of the data.

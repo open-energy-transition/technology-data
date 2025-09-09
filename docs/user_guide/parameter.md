@@ -1,4 +1,4 @@
-# Title
+# `Parameter` Class Documentation
 
 <!--
 SPDX-FileCopyrightText: The technology-data authors
@@ -6,8 +6,6 @@ SPDX-FileCopyrightText: The technology-data authors
 SPDX-License-Identifier: MIT
 
 -->
-
-## `Parameter` Class Documentation
 
 ## Overview
 

@@ -1,4 +1,4 @@
-# technology-data: Techno-economic assumptions for energy models
+# technologydata: Techno-economic assumptions for energy models
 
 !!! note "Under Construction"
 

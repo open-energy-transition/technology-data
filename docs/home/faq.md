@@ -2,7 +2,7 @@
 
 ## How should I cite this package?
 
-See the dedicated page on [Citing](docs/home/citing.md)
+See the dedicated page on [Citing](/docs/home/citing.md).
 
 ## How do I add a new data source?
 
