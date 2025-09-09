@@ -104,6 +104,7 @@ EnergyDensityLHV: dict[str, Parameter] = dict(
         magnitude=32.8,
         units="GJ/t",
         carrier="carbon",
+        note="For pure carbon we assume LHV=HHV",
         sources=SourceCollection(
             sources=[
                 Source(
