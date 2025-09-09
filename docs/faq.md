@@ -2,8 +2,7 @@
 
 ## How should I cite this package?
 
-If you use this package, we appreciate if you also mention it in your work or publications.
-We have a recommended citation format that you can use, please see the [README file](https://github.com/PyPSA/technology-data#Citing).
+See the dedicated page on [Citing](docs/home/citing.md)
 
 ## How do I add a new data source?
 
