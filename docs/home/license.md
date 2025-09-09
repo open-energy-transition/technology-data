@@ -1,6 +1,6 @@
 # License
 
-technology-data is licensed under the open-source [MIT](https://opensource.org/license/mit) license:
+`technology-data` is licensed under the open-source [MIT](https://opensource.org/license/mit) license:
 
 ```text
 MIT License
