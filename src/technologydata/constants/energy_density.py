@@ -30,15 +30,16 @@ from technologydata import Parameter, Source, SourceCollection
 
 EnergyDensityLHV: dict[str, Parameter] = dict(
     hydrogen=Parameter(
-        magnitude=120
+        magnitude=120,
         units="MJ/kg",
         carrier="hydrogen",
         sources=SourceCollection(
             sources=[
                 Source(
-                    title="The Engineering ToolBox",
-                    authors="The Engineering ToolBox (2003). Higher Calorific Values of Common Fuels: Reference & Data. [online] Available at:https://www.engineeringtoolbox.com/fuels-higher-calorific-values-d_169.html [Accessed 6 September 2025].",
+                    title="Higher Calorific Values of Common Fuels: Reference & Data",
+                    authors="The Engineering ToolBox (2003)",
                     url="https://www.engineeringtoolbox.com/fuels-higher-calorific-values-d_169.html",
+                    url_date="2025-09-06",
                 ),
             ],
         ),
@@ -50,9 +51,10 @@ EnergyDensityLHV: dict[str, Parameter] = dict(
         sources=SourceCollection(
             sources=[
                 Source(
-                    title="The Engineering ToolBox",
-                    authors="The Engineering ToolBox (2003). Higher Calorific Values of Common Fuels: Reference & Data. [online] Available at:https://www.engineeringtoolbox.com/fuels-higher-calorific-values-d_169.html [Accessed 6 September 2025].",
+                    title="Higher Calorific Values of Common Fuels: Reference & Data",
+                    authors="The Engineering ToolBox (2003)",
                     url="https://www.engineeringtoolbox.com/fuels-higher-calorific-values-d_169.html",
+                    url_date="2025-09-06",
                 ),
             ],
         ),
@@ -65,23 +67,25 @@ EnergyDensityLHV: dict[str, Parameter] = dict(
         sources=SourceCollection(
             sources=[
                 Source(
-                    title="The Engineering ToolBox",
-                    authors="The Engineering ToolBox (2003). Higher Calorific Values of Common Fuels: Reference & Data. [online] Available at:https://www.engineeringtoolbox.com/fuels-higher-calorific-values-d_169.html [Accessed 6 September 2025].",
+                    title="Higher Calorific Values of Common Fuels: Reference & Data",
+                    authors="The Engineering ToolBox (2003)",
                     url="https://www.engineeringtoolbox.com/fuels-higher-calorific-values-d_169.html",
+                    url_date="2025-09-06",
                 ),
             ],
         ),
     ),
     ammonia=Parameter(
-        magnitude=18.6,
+        magnitude=18.646,
         units="MJ/kg",
         carrier="ammonia",
         sources=SourceCollection(
             sources=[
                 Source(
-                    title="Computational Thermodynamics",
-                    authors="Kyle E. Niemeyer. (2020) computational-thermo v0.1.0 [software]. Zenodo. https://doi.org/10.5281/zenodo.4017943",
-                    url="https://github.com/kyleniemeyer/computational-thermo",
+                    title="Heat of combustion",
+                    authors="Wikipedia contributors",
+                    url="https://en.wikipedia.org/w/index.php?title=Heat_of_combustion&oldid=1307512525",
+                    url_date="2025-09-09",
                 ),
             ],
         ),
@@ -93,9 +97,10 @@ EnergyDensityLHV: dict[str, Parameter] = dict(
         sources=SourceCollection(
             sources=[
                 Source(
-                    title="The Engineering ToolBox",
-                    authors="The Engineering ToolBox (2003). Higher Calorific Values of Common Fuels: Reference & Data. [online] Available at:https://www.engineeringtoolbox.com/fuels-higher-calorific-values-d_169.html [Accessed 6 September 2025].",
+                    title="Higher Calorific Values of Common Fuels: Reference & Data",
+                    authors="The Engineering ToolBox (2003)",
                     url="https://www.engineeringtoolbox.com/fuels-higher-calorific-values-d_169.html",
+                    url_date="2025-09-06",
                 ),
             ],
         ),
@@ -108,9 +113,10 @@ EnergyDensityLHV: dict[str, Parameter] = dict(
         sources=SourceCollection(
             sources=[
                 Source(
-                    title="The Engineering ToolBox",
-                    authors="The Engineering ToolBox (2003). Higher Calorific Values of Common Fuels: Reference & Data. [online] Available at:https://www.engineeringtoolbox.com/fuels-higher-calorific-values-d_169.html [Accessed 6 September 2025].",
+                    title="Higher Calorific Values of Common Fuels: Reference & Data",
+                    authors="The Engineering ToolBox (2003)",
                     url="https://www.engineeringtoolbox.com/fuels-higher-calorific-values-d_169.html",
+                    url_date="2025-09-06",
                 ),
             ],
         ),
@@ -122,9 +128,10 @@ EnergyDensityLHV: dict[str, Parameter] = dict(
         sources=SourceCollection(
             sources=[
                 Source(
-                    title="The Engineering ToolBox",
-                    authors="The Engineering ToolBox (2003). Higher Calorific Values of Common Fuels: Reference & Data. [online] Available at:https://www.engineeringtoolbox.com/fuels-higher-calorific-values-d_169.html [Accessed 6 September 2025].",
+                    title="Higher Calorific Values of Common Fuels: Reference & Data",
+                    authors="The Engineering ToolBox (2003)",
                     url="https://www.engineeringtoolbox.com/fuels-higher-calorific-values-d_169.html",
+                    url_date="2025-09-06",
                 ),
             ],
         ),
@@ -136,9 +143,10 @@ EnergyDensityLHV: dict[str, Parameter] = dict(
         sources=SourceCollection(
             sources=[
                 Source(
-                    title="The Engineering ToolBox",
-                    authors="The Engineering ToolBox (2003). Higher Calorific Values of Common Fuels: Reference & Data. [online] Available at:https://www.engineeringtoolbox.com/fuels-higher-calorific-values-d_169.html [Accessed 6 September 2025].",
+                    title="Higher Calorific Values of Common Fuels: Reference & Data",
+                    authors="The Engineering ToolBox (2003)",
                     url="https://www.engineeringtoolbox.com/fuels-higher-calorific-values-d_169.html",
+                    url_date="2025-09-06",
                 ),
             ],
         ),
@@ -168,9 +176,10 @@ EnergyDensityHHV: dict[str, Parameter] = dict(
         sources=SourceCollection(
             sources=[
                 Source(
-                    title="The Engineering ToolBox",
-                    authors="The Engineering ToolBox (2003). Higher Calorific Values of Common Fuels: Reference & Data. [online] Available at:https://www.engineeringtoolbox.com/fuels-higher-calorific-values-d_169.html [Accessed 6 September 2025].",
+                    title="Higher Calorific Values of Common Fuels: Reference & Data",
+                    authors="The Engineering ToolBox (2003)",
                     url="https://www.engineeringtoolbox.com/fuels-higher-calorific-values-d_169.html",
+                    url_date="2025-09-06",
                 ),
             ],
         ),
@@ -179,12 +188,14 @@ EnergyDensityHHV: dict[str, Parameter] = dict(
         magnitude=52.2,
         units="MJ/kg",
         carrier="natural_gas",
+        note="Value for natural gas in the US market",
         sources=SourceCollection(
             sources=[
                 Source(
-                    title="The Engineering ToolBox",
-                    authors="The Engineering ToolBox (2003). Higher Calorific Values of Common Fuels: Reference & Data. [online] Available at:https://www.engineeringtoolbox.com/fuels-higher-calorific-values-d_169.html [Accessed 6 September 2025].",
+                    title="Higher Calorific Values of Common Fuels: Reference & Data",
+                    authors="The Engineering ToolBox (2003)",
                     url="https://www.engineeringtoolbox.com/fuels-higher-calorific-values-d_169.html",
+                    url_date="2025-09-06",
                 ),
             ],
         ),
@@ -196,9 +207,10 @@ EnergyDensityHHV: dict[str, Parameter] = dict(
         sources=SourceCollection(
             sources=[
                 Source(
-                    title="The Engineering ToolBox",
-                    authors="The Engineering ToolBox (2003). Higher Calorific Values of Common Fuels: Reference & Data. [online] Available at:https://www.engineeringtoolbox.com/fuels-higher-calorific-values-d_169.html [Accessed 6 September 2025].",
+                    title="Higher Calorific Values of Common Fuels: Reference & Data",
+                    authors="The Engineering ToolBox (2003)",
                     url="https://www.engineeringtoolbox.com/fuels-higher-calorific-values-d_169.html",
+                    url_date="2025-09-06",
                 ),
             ],
         ),
@@ -210,9 +222,10 @@ EnergyDensityHHV: dict[str, Parameter] = dict(
         sources=SourceCollection(
             sources=[
                 Source(
-                    title="The Engineering ToolBox",
-                    authors="The Engineering ToolBox (2003). Higher Calorific Values of Common Fuels: Reference & Data. [online] Available at:https://www.engineeringtoolbox.com/fuels-higher-calorific-values-d_169.html [Accessed 6 September 2025].",
+                    title="Higher Calorific Values of Common Fuels: Reference & Data",
+                    authors="The Engineering ToolBox (2003)",
                     url="https://www.engineeringtoolbox.com/fuels-higher-calorific-values-d_169.html",
+                    url_date="2025-09-06",
                 ),
             ],
         ),
@@ -224,9 +237,10 @@ EnergyDensityHHV: dict[str, Parameter] = dict(
         sources=SourceCollection(
             sources=[
                 Source(
-                    title="The Engineering ToolBox",
-                    authors="The Engineering ToolBox (2003). Higher Calorific Values of Common Fuels: Reference & Data. [online] Available at:https://www.engineeringtoolbox.com/fuels-higher-calorific-values-d_169.html [Accessed 6 September 2025].",
+                    title="Higher Calorific Values of Common Fuels: Reference & Data",
+                    authors="The Engineering ToolBox (2003)",
                     url="https://www.engineeringtoolbox.com/fuels-higher-calorific-values-d_169.html",
+                    url_date="2025-09-06",
                 ),
             ],
         ),
@@ -238,9 +252,10 @@ EnergyDensityHHV: dict[str, Parameter] = dict(
         sources=SourceCollection(
             sources=[
                 Source(
-                    title="The Engineering ToolBox",
-                    authors="The Engineering ToolBox (2003). Higher Calorific Values of Common Fuels: Reference & Data. [online] Available at:https://www.engineeringtoolbox.com/fuels-higher-calorific-values-d_169.html [Accessed 6 September 2025].",
+                    title="Higher Calorific Values of Common Fuels: Reference & Data",
+                    authors="The Engineering ToolBox (2003)",
                     url="https://www.engineeringtoolbox.com/fuels-higher-calorific-values-d_169.html",
+                    url_date="2025-09-06",
                 ),
             ],
         ),
@@ -252,9 +267,10 @@ EnergyDensityHHV: dict[str, Parameter] = dict(
         sources=SourceCollection(
             sources=[
                 Source(
-                    title="The Engineering ToolBox",
-                    authors="The Engineering ToolBox (2003). Higher Calorific Values of Common Fuels: Reference & Data. [online] Available at:https://www.engineeringtoolbox.com/fuels-higher-calorific-values-d_169.html [Accessed 6 September 2025].",
+                    title="Higher Calorific Values of Common Fuels: Reference & Data",
+                    authors="The Engineering ToolBox (2003)",
                     url="https://www.engineeringtoolbox.com/fuels-higher-calorific-values-d_169.html",
+                    url_date="2025-09-06",
                 ),
             ],
         ),
@@ -266,9 +282,10 @@ EnergyDensityHHV: dict[str, Parameter] = dict(
         sources=SourceCollection(
             sources=[
                 Source(
-                    title="The Engineering ToolBox",
-                    authors="The Engineering ToolBox (2003). Higher Calorific Values of Common Fuels: Reference & Data. [online] Available at:https://www.engineeringtoolbox.com/fuels-higher-calorific-values-d_169.html [Accessed 6 September 2025].",
+                    title="Higher Calorific Values of Common Fuels: Reference & Data",
+                    authors="The Engineering ToolBox (2003)",
                     url="https://www.engineeringtoolbox.com/fuels-higher-calorific-values-d_169.html",
+                    url_date="2025-09-06",
                 ),
             ],
         ),
