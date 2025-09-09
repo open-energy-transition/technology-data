@@ -1,11 +1,11 @@
 # License
 
-technology-data is licensed under the open-source [MIT](https://opensource.org/license/mit) license:
+`technology-data` is licensed under the open-source [MIT](https://opensource.org/license/mit) license:
 
 ```text
 MIT License
 
-Copyright 2015-2025 PyPSA Developers and Contributors
+Copyright The technology-data authors
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in the
