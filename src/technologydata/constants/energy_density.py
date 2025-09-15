@@ -291,8 +291,8 @@ EnergyDensityHHV: dict[str, Parameter] = dict(
         ),
     ),
     jet_fuel_a1=Parameter(
-        magnitude=43.15,
-        units="GJ/t",
+        magnitude=46.2,
+        units="MJ/kg",
         carrier="jet_fuel_a1",
         sources=SourceCollection(
             sources=[
