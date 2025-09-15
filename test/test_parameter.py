@@ -694,7 +694,7 @@ class TestParameter:
         p = technologydata.Parameter(
             magnitude=1,
             units="kilowatt_hour",
-            carrier="hydrogen",
+            carrier="electricity",
             heating_value="lower_heating_value",
         )
         p2 = p.change_heating_value("higher_heating_value")
