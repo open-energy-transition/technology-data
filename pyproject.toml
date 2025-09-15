@@ -78,7 +78,7 @@ filterwarnings = [
     "ignore:numpy.ndarray size changed*:RuntimeWarning"
 ]
 markers = [
-    "skip_test: marks tests as skip_test (deselect with -m 'not skip_test')",
+    "webarchive: marks tests as webarchive (deselect with -m 'not webarchive')",
 ]
 
 # Setuptools_scm settings
