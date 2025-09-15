@@ -77,9 +77,6 @@ filterwarnings = [
     "ignore::RuntimeWarning",
     "ignore:numpy.ndarray size changed*:RuntimeWarning"
 ]
-markers = [
-    "webarchive: marks tests as webarchive (deselect with -m 'not webarchive')",
-]
 
 # Setuptools_scm settings
 [tool.uv]
