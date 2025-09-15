@@ -23,7 +23,7 @@ gasoline = [gasoline] = petrol
 jet_fuel_a1 = [jet_fuel_a1] = JETA1
 electricity = [electricity] = e = el
 hydrogen = [hydrogen] = H2
-lignite = [lignite] = lignite
+lignite = [lignite]
 methane = [methane] = CH4
 methanol = [methanol] = CH3OH = MeOH
 natural_gas = [natural_gas] = NG
