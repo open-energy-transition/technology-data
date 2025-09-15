@@ -30,4 +30,4 @@ natural_gas = [natural_gas] = NG
 nitrogen = [nitrogen] = N2
 oxygen = [oxygen] = O2
 water = [water] = H2O
-wood = [wood] = wood
+wood = [wood]
