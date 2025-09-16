@@ -68,6 +68,9 @@ def pytest_collection_modifyitems(config: pytest.Config, items: pytest.Item) -> 
 
     This function modifies the collection of test items. If the `--run_webarchive` option is not specified,
     it skips tests marked with the `webarchive` marker.
+    By default, tests marked with `webarchive` will be skipped unless the option `--run_webarchive` is provided.
+    This is because the CI was failing due to rate limits on anonymous capture webarchive requests using savepagenow.
+    For further details, see https://github.com/open-energy-transition/technology-data/pull/41.
 
     Parameters
     ----------
