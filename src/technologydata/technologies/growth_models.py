@@ -151,6 +151,11 @@ class GrowthModel(BaseModel):
         Self
             The model instance with the fitted parameters set.
 
+        Raises
+        ------
+        ValueError
+            If there are not enough data points to fit the model.
+
         """
         # if all parameters of the model are already fixed, then we cannot fit anything
         if len(self.provided_parameters) == len(self.model_parameters):
