@@ -1,7 +1,10 @@
+# Title
+
 <!--
 SPDX-FileCopyrightText: 2025 The technology-data authors
 
 SPDX-License-Identifier: MIT
+
 -->
 
 # Models
@@ -10,9 +13,9 @@ Different models can be used to modify assumptions to fit specific scenarios.
 
 ## Supported Model Types
 
-* **Growth models**: For projecting technology parameters forward in time using mathematical models.
-These are implemented as Python classes and can be used for fitting to data and making projections.
+- **Growth models**: For projecting technology parameters forward in time using mathematical models.
 
+These are implemented as Python classes and can be used for fitting to data and making projections.
 
 ## Growth Models
 
@@ -49,7 +52,6 @@ Each model has its own parameters (e.g., `m`, `c` for linear; `A`, `k`, `x0` for
 
 Currently, growth models are **not directly integrated** with the `Technology` or `TechnologyCollection` classes. You must use the models independently and apply projections manually to technology parameters. Future versions may provide tighter integration and batch projection utilities.
 
-
 ### Example: Fitting and Projecting
 
 ```python
@@ -61,7 +63,6 @@ model = ExponentialGrowth(A=None, k=None, x0=2020, data_points=list(zip(x, y)))
 model.fit()
 print(model.project(2040))
 ```
-
 
 ### Model API
 
