@@ -16,7 +16,7 @@ from scipy.optimize import curve_fit
 logger = logging.getLogger(__name__)
 
 
-class GrowthModel(BaseModel):
+class GrowthModel(BaseModel, validate_assignment=True):
     """
     Abstract base for growth models used in projections.
 
@@ -24,6 +24,11 @@ class GrowthModel(BaseModel):
     1. A mathematical function representing the growth model by implementing the abstract method `function(self, x: float, **parameters) -> float`.
        The parameters of the function (besides `x`) will be automatically detected and used for fitting and projection.
     2. The parameters should be defined as attributes of the class, initialized to `None` if they are to be fitted.
+
+    pydantic configuration:
+    - `validate_assignment = True`: Ensures that any assignment to model attributes is validated,
+      as growth models may be created first with missing parameters (set to None) and then fitted later
+      and data points may be added after creation.
     """
 
     data_points: Annotated[
@@ -33,12 +38,6 @@ class GrowthModel(BaseModel):
             default=list(),
         ),
     ]
-
-    class Config:
-        """Pydantic configuration."""
-
-        # Ensure that assignments to model fields are validated
-        validate_assignment = True
 
     @abstractmethod
     def function(self, x: float, **kwargs: dict[str, float]) -> float:
