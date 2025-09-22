@@ -7,7 +7,7 @@ SPDX-License-Identifier: MIT
 
 -->
 
-# Models
+## Models
 
 Different models can be used to modify assumptions to fit specific scenarios.
 
