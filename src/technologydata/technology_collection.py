@@ -299,19 +299,21 @@ class TechnologyCollection(pydantic.BaseModel):  # type: ignore
     def project(
         self,
         to_years: list[int],
-        parameter: str | None = None,
-        model: GrowthModel | None = None,
-        keep_remaining: bool | str = "closest",
-        *,
-        parameters: dict[str, GrowthModel | str] | None = None,
+        parameters: dict[str, GrowthModel | str],
     ) -> Self:
         """
         Project specified parameters for all technologies in the collection to future years.
 
         This method uses the provided growth models to project the specified parameters
         for each technology in the collection to the given future years.
-        Using the `keep_remaining` argument, the behavior on how to handle parameters
-        without a provided model can be controlled.
+
+        To keep other parameters that should not be projected, add them to the dictionary as well
+        without a growth model. Instead there are other options available:
+        'mean', 'closest' and 'NaN'.
+        'mean' will set the parameter to the mean of all existing values in the collection,
+        while 'NaN' will add the parameter with NaN values as a placeholder.
+        'closest' will set the parameter to the value of the closest year in the original data,
+        with a preference for past years if equidistant. (Not yet implemented.)
 
         The method creates new Technology objects for each combination of original technology
         and future year, applying the appropriate growth model projections.
@@ -320,24 +322,10 @@ class TechnologyCollection(pydantic.BaseModel):  # type: ignore
         ----------
         to_years : list[int]
             List of future years to which the parameters should be projected.
-        keep_remaining : bool or str, default 'closest'
-            Determines how to handle parameters without a provided model:
-            - If False, these parameters are not included in the projected technologies.
-            - If 'NaN', add the parameter with NaN values.
-            - If 'mean', set their values to the mean of existing values in the collection.
-            - If 'closest', set their values to the value of the closest year in the original data with
-              a preference for past years if equidistant.
-        parameter : str, optional
-            The name of a single parameter to project (e.g., "installed capacity").
-            If provided, `model` must also be provided.
-            Cannot be used together with `parameters`.
-        model : GrowthModel, optional
-            An instance of a growth model (e.g., LinearGrowth, ExponentialGrowth) to be used
-            for projecting the specified parameter. Must be provided if `parameter` is given.
-            Cannot be used together with `parameters`.
-        parameters : dict[str, GrowthModel], optional
+        parameters : dict[str, GrowthModel | str]
             A dictionary mapping parameter names to their respective growth models for projection.
             If provided, `parameter` and `model` cannot be used.
+            To keep other parameters without projecting, available options are 'mean', 'closest' and 'NaN'.
 
         Returns
         -------
@@ -349,39 +337,18 @@ class TechnologyCollection(pydantic.BaseModel):  # type: ignore
         ValueError
             If neither `parameter` and `model`, or `parameters` are not or all provided.
 
+        Examples
+        --------
+        >>> tc.project(
+        ...     to_years=[2030, 2040],
+        ...     parameters={
+        ...         "installed capacity": LinearGrowth(m=0.5, A=10),
+        ...         "lifetime": "mean",
+        ...         "efficiency": "NaN"
+        ...     }
+        ... )
+
         """
-        if parameters is None:
-            if not parameter or not model:
-                raise ValueError(
-                    "(`parameters`) and (`parameter` and `model`) are mutually exclusive. At least one must be provided."
-                )
-            else:
-                # Allow to specify a single parameter and model for convenience, but treat as dict internally
-                parameters = {parameter: model}
-
-        if keep_remaining in ["NaN", "mean"]:
-            # find all parameters in the collection
-            all_params: set[str] = set()
-            for tech in self.technologies:
-                all_params.update(tech.parameters.keys())
-
-            remaining_params = all_params - set(parameters.keys())
-
-            if keep_remaining == "mean":
-                # Trick: A linear growth with m=0 should always return the mean of the provided data points
-                parameters.update(
-                    {param: LinearGrowth(m=0) for param in remaining_params}
-                )
-
-            elif keep_remaining == "NaN":
-                # Add "NaN" for parameters without a provided model and handle those later
-                parameters.update({param: "NaN" for param in remaining_params})
-        elif not keep_remaining:
-            # By default the remaining parameters are simply not included in the projected technologies
-            pass
-        elif keep_remaining == "closest":
-            raise NotImplementedError("'closest' option not yet implemented.")  # TODO
-
         logger.debug(f"Projecting parameters as follows: {parameters}")
 
         projected_technologies = []
@@ -398,6 +365,12 @@ class TechnologyCollection(pydantic.BaseModel):  # type: ignore
 
             for param, model in parameters.items():
                 new_param: Parameter
+
+                # Trick: A linear growth with m=0 returns the mean of the provided data points
+                # this way we can reuse the logic already implemented for fitting and projecting below
+                if model == "mean":
+                    model = LinearGrowth(m=0)
+
                 if isinstance(model, GrowthModel):
                     # Fit the model to the parameter data
                     model = self.fit(param, model.model_copy())
@@ -410,18 +383,28 @@ class TechnologyCollection(pydantic.BaseModel):  # type: ignore
                     )
                     # Add the projected parameter to the new technology
                     new_param = (
-                        self.technologies[0].parameters[param].model_copy(deep=True)
+                        self.technologies[0]
+                        .parameters[param]
+                        .model_copy(
+                            deep=True,
+                            update={
+                                "magnitude": param_value,
+                                "provenance": f"Projected to {to_year} using {model}.",
+                                "note": None,  # Clear any existing note
+                                "sources": None,  # Clear any existing sources
+                            },
+                        )
                     )
-                    new_param.magnitude = param_value  # Set the projected value
-                    new_param.provenance = f"Projected to {to_year} using {model}."
-                    new_param.note = None  # Clear any existing note
-                    new_param.sources = None  # Clear any existing sources
 
                 elif model == "NaN":
                     new_param = Parameter(
                         magnitude=float("nan"),
                         note="Placeholder parameters with NaN value.",
                     )
+                elif model == "closest":
+                    raise NotImplementedError(
+                        "'closest' option for '{param}' not yet implemented."
+                    )  # TODO
                 else:
                     raise ValueError(
                         f"Unexpected model type for parameter '{param}': {model}"
