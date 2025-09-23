@@ -191,3 +191,70 @@ def test_general_logistic_growth_fit() -> None:
 # - partial fitting (some parameters fixed)
 # - fitting with noise/without p0
 # - illegal arguments to p0
+
+
+def test_partial_fitting_linear_growth() -> None:
+    """Test fitting LinearGrowth with one parameter fixed and one to fit."""
+    m = 2.0
+    A = 1.0
+    x = np.arange(-10, 30)
+    y = m * x + A
+    # Fix m, fit A
+    model = LinearGrowth(m=m, A=None, data_points=[*zip(x, y)])
+    model.fit()
+    assert model.m == pytest.approx(m, rel=1e-2)
+    assert model.A == pytest.approx(A, rel=1e-2)
+
+
+def test_fit_with_noisy_data() -> None:
+    """Test fitting LinearGrowth with noisy data to check robustness."""
+    rng = np.random.default_rng(42)
+    m = 2.0
+    A = 1.0
+    x = np.arange(-10, 30)
+    noise = rng.normal(0, 0.1, size=x.shape)
+    y = m * x + A + noise
+    model = LinearGrowth(m=None, A=None, data_points=[*zip(x, y)])
+    model.fit()
+    # Should be close to true values despite noise
+    assert model.m == pytest.approx(m, rel=1e-1)
+    assert model.A == pytest.approx(A, rel=1e-1)
+
+
+def test_fit_without_p0() -> None:
+    """Test fitting LinearGrowth without providing p0 (should use defaults)."""
+    m = 2.0
+    A = 1.0
+    x = np.arange(-10, 30)
+    y = m * x + A
+    model = LinearGrowth(m=None, A=None, data_points=[*zip(x, y)])
+    model.fit()  # No p0 provided
+    assert model.m == pytest.approx(m, rel=1e-2)
+    assert model.A == pytest.approx(A, rel=1e-2)
+
+
+def test_illegal_p0_argument() -> None:
+    """Test that fitting works with missing p0 keys (should use defaults, not raise)."""
+    m = 2.0
+    A = 1.0
+    x = np.arange(-10, 30)
+    y = m * x + A
+    model = LinearGrowth(m=None, A=None, data_points=[*zip(x, y)])
+    # Provide p0 missing one parameter (A missing)
+    model.fit(p0={"m": m})
+    # Should still fit correctly
+    assert model.m == pytest.approx(m, rel=1e-2)
+    assert model.A == pytest.approx(A, rel=1e-2)
+
+
+def test_fit_with_p0_far_from_target() -> None:
+    """Test fitting LinearGrowth with p0 far from the true values (should still converge)."""
+    m = 2.0
+    A = 1.0
+    x = np.arange(-10, 30)
+    y = m * x + A
+    model = LinearGrowth(m=None, A=None, data_points=[*zip(x, y)])
+    # Provide p0 far from the actual values
+    model.fit(p0={"m": 100.0, "A": -100.0})
+    assert model.m == pytest.approx(m, rel=1e-2)
+    assert model.A == pytest.approx(A, rel=1e-2)
