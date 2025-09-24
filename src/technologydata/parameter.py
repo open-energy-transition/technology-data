@@ -21,8 +21,8 @@ import pint
 from pydantic import BaseModel, Field, PrivateAttr
 
 import technologydata
-from technologydata.source_collection import SourceCollection
 from technologydata.constants import EnergyDensityHHV, EnergyDensityLHV
+from technologydata.source_collection import SourceCollection
 
 logger = logging.getLogger(__name__)
 
@@ -269,7 +269,9 @@ class Parameter(BaseModel):  # type: ignore
             sources=self.sources,
         )
 
-    def change_heating_value(self, to_heating_value: str, hv_unit: str = "MJ/kg") -> Self:
+    def change_heating_value(
+        self, to_heating_value: str, hv_unit: str = "MJ/kg"
+    ) -> Self:
         """
         Change the heating value of the parameter.
 
