@@ -40,7 +40,7 @@ class GrowthModel(BaseModel, validate_assignment=True):
     ]
 
     @abstractmethod
-    def function(self, x: float, **kwargs: dict[str, float]) -> float:
+    def function(self, x: float, x0: float, **kwargs: dict[str, float]) -> float:
         """Function that represents the growth model."""  # noqa: D401
         pass
 
@@ -200,6 +200,13 @@ class GrowthModel(BaseModel, validate_assignment=True):
 class LinearGrowth(GrowthModel):
     """Project with linear growth model."""
 
+    x0: Annotated[
+        float | None,
+        Field(
+            description="The reference x-value (e.g., starting year) for the linear function.",
+            default=None,
+        ),
+    ]
     m: Annotated[
         float | None,
         Field(description="Annual growth rate for the linear function.", default=None),
@@ -209,16 +216,18 @@ class LinearGrowth(GrowthModel):
         Field(description="Starting value for the linear function.", default=None),
     ]
 
-    def function(self, x: float, m: float, A: float) -> float:  # type: ignore[override]
+    def function(self, x: float, x0: float, m: float, A: float) -> float:  # type: ignore[override]
         """
         Linear function for the growth model.
 
-        f(x) = m * x + A
+        f(x) = m * (x - x0) + A
 
         Parameters
         ----------
         x : float
             The input value on which to evaluate the function, e.g. a year '2025'.
+        x0 : float
+            The reference x-value (e.g., starting year) for the linear function.
         m : float, optional
             The slope of the linear function.
         A : float, optional
@@ -230,12 +239,19 @@ class LinearGrowth(GrowthModel):
             The result of the linear function evaluation at x.
 
         """
-        return m * x + A
+        return m * (x - x0) + A
 
 
 class ExponentialGrowth(GrowthModel):
     """Project with exponential growth model."""
 
+    x0: Annotated[
+        float | None,
+        Field(
+            description="The reference x-value (e.g., starting year) for the exponential function.",
+            default=None,
+        ),
+    ]
     A: Annotated[
         float | None,
         Field(description="Initial value for the exponential function.", default=None),
@@ -248,15 +264,8 @@ class ExponentialGrowth(GrowthModel):
         float | None,
         Field(description="Growth rate for the exponential function.", default=None),
     ]
-    x0: Annotated[
-        float | None,
-        Field(
-            description="The reference x-value (e.g., starting year) for the exponential function.",
-            default=None,
-        ),
-    ]
 
-    def function(self, x: float, A: float, m: float, k: float, x0: float) -> float:  # type: ignore[override]
+    def function(self, x: float, x0: float, A: float, m: float, k: float) -> float:  # type: ignore[override]
         """
         Exponential function for the growth model.
 
@@ -266,14 +275,14 @@ class ExponentialGrowth(GrowthModel):
         ----------
         x : float
             The input value on which to evaluate the function, e.g. a year '2025'.
+        x0 : float
+            The reference x-value (e.g., starting year) for the exponential function.
         A : float
             The lower horizontal asymptote of the exponential function.
         m : float
             The initial value of the exponential function.
         k : float
             The growth rate of the exponential function.
-        x0 : float
-            The reference x-value (e.g., starting year) for the exponential function.
 
         Returns
         -------
@@ -287,6 +296,13 @@ class ExponentialGrowth(GrowthModel):
 class GeneralLogisticGrowth(GrowthModel):
     """Project with a generalized logistic growth model."""
 
+    x0: Annotated[
+        float | None,
+        Field(
+            description="The x-value of the sigmoid's midpoint (inflection point/midpoint year).",
+            default=None,
+        ),
+    ]
     A: Annotated[
         float | None,
         Field(
@@ -331,7 +347,15 @@ class GeneralLogisticGrowth(GrowthModel):
     ]
 
     def function(  # type: ignore[override]
-        self, x: float, A: float, K: float, B: float, Q: float, C: float, nu: float
+        self,
+        x: float,
+        x0: float,
+        A: float,
+        K: float,
+        B: float,
+        Q: float,
+        C: float,
+        nu: float,
     ) -> float:
         """
         Generalized logistic function for the growth model.
@@ -342,6 +366,8 @@ class GeneralLogisticGrowth(GrowthModel):
         ----------
         x : float
             The input value on which to evaluate the function, e.g. a year '2025'.
+        x0 : float
+            The x-value of the sigmoid's midpoint (inflection point).
         A : float
             The lower horizontal asymptote of the logistic function.
         K : float
@@ -362,12 +388,19 @@ class GeneralLogisticGrowth(GrowthModel):
             The result of the generalized logistic function evaluation at x.
 
         """
-        return A + (K - A) / (C + Q * np.exp(-B * (x))) ** (1 / nu)
+        return A + (K - A) / (C + Q * np.exp(-B * (x - x0))) ** (1 / nu)
 
 
 class LogisticGrowth(GrowthModel):
     """Project with a logistic growth model."""
 
+    x0: Annotated[
+        float | None,
+        Field(
+            description="The x-value of the sigmoid's midpoint (inflection point/midpoint year).",
+            default=None,
+        ),
+    ]
     A: Annotated[
         float | None,
         Field(
@@ -388,15 +421,8 @@ class LogisticGrowth(GrowthModel):
             default=None,
         ),
     ]
-    x0: Annotated[
-        float | None,
-        Field(
-            description="The x-value of the sigmoid's midpoint (inflection point/midpoint year).",
-            default=None,
-        ),
-    ]
 
-    def function(self, x: float, A: float, L: float, k: float, x0: float) -> float:  # type: ignore[override]
+    def function(self, x: float, x0: float, A: float, L: float, k: float) -> float:  # type: ignore[override]
         """
         Logistic function for the growth model.
 
@@ -406,14 +432,14 @@ class LogisticGrowth(GrowthModel):
         ----------
         x : float
             The input value on which to evaluate the function, e.g. a year '2025'.
+        x0 : float
+            The x-value of the sigmoid's midpoint (inflection point).
         A : float
             The lower horizontal asymptote of the logistic function.
         L : float
             The carrying capacity of the logistic function.
         k : float
             The growth rate of the logistic function.
-        x0 : float
-            The x-value of the sigmoid's midpoint (inflection point).
 
         Returns
         -------

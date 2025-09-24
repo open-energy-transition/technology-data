@@ -23,9 +23,10 @@ Growth models are mathematical models for projecting technology parameters over 
 
 ### Available Growth Models
 
-- `LinearGrowth`: Linear model, $f(x) = m \cdot x + c$
+- `LinearGrowth`: Linear model, $f(x) = m \cdot (x - x_0) + c$
 - `ExponentialGrowth`: Exponential model, $f(x) = A \cdot \exp(k \cdot (x - x_0))$
 - `LogisticGrowth`: Logistic (sigmoid) model, $f(x) = \frac{L}{1 + \exp(-k \cdot (x - x_0))}$
+- `GeneralLogisticGrowth`: Generalized logistic model, $f(x) = A + \frac{K - A}{(C + Q \cdot \exp(-B \cdot (x - x_0)))^{1/\nu}}$
 - `GompertzGrowth`: Gompertz model, $f(x) = A \cdot \exp(-b \cdot \exp(-k \cdot (x - x_0)))$
 
 Each model exposes:

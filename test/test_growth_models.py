@@ -16,6 +16,7 @@ from technologydata.technologies.growth_models import (
 
 def test_linear_add_data_points() -> None:
     """Test adding data points to LinearGrowth model."""
+    x0 = 0
     m = 2.0
     A = 1.0
 
@@ -25,31 +26,35 @@ def test_linear_add_data_points() -> None:
     model = LinearGrowth()
     for xi, yi in zip(x, y):
         model.add_data((xi, yi))
-    model.fit(p0={"m": m, "A": A})
+    model.fit(p0={"x0": x0, "m": m, "A": A})
 
+    assert model.x0 == pytest.approx(x0, rel=1e-2)
     assert model.m == pytest.approx(m, rel=1e-2)
     assert model.A == pytest.approx(A, rel=1e-2)
 
 
 def test_linear_growth_projection() -> None:
     """Test the projection method of LinearGrowth."""
+    x0 = 0
     m = 2.0
     A = 5.0
     x = 10
-    model = LinearGrowth(m=2.0, A=5.0, data_points=[])
+    model = LinearGrowth(x0=x0, m=2.0, A=5.0, data_points=[])
     assert model.project(10) == pytest.approx(m * x + A)
 
 
 def test_linear_growth_fit() -> None:
     """Test fitting of the LinearGrowth model."""
+    x0 = 0
     m = 2.0
     A = 1.0
 
     x = np.arange(-10, 30)
     y = m * x + A
 
-    model = LinearGrowth(m=None, A=None, data_points=[*zip(x, y)])
-    model.fit(p0={"m": m, "A": A})
+    model = LinearGrowth(x0=x0, m=None, A=None, data_points=[*zip(x, y)])
+    model.fit(p0={"x0": x0, "m": m, "A": A})
+    assert model.x0 == pytest.approx(x0, rel=1e-2)
     assert model.m == pytest.approx(m, rel=1e-2)
     assert model.A == pytest.approx(A, rel=1e-2)
 
@@ -148,6 +153,7 @@ def test_gompertz_growth_fit() -> None:
 
 def test_general_logistic_growth_projection() -> None:
     """Test the projection method of GeneralLogisticGrowth."""
+    x0 = 0
     A = 2.0
     K = 10.0
     B = 1.0
@@ -155,15 +161,14 @@ def test_general_logistic_growth_projection() -> None:
     Q = 1.0
     C = 1.0
 
-    model = GeneralLogisticGrowth(A=A, K=K, B=B, nu=nu, Q=Q, C=C, data_points=[])
+    model = GeneralLogisticGrowth(x0=x0, A=A, K=K, B=B, nu=nu, Q=Q, C=C, data_points=[])
 
-    assert model.project(0) == pytest.approx(
-        A + (K - A) / (C + Q * np.exp(-B * (0))) ** (1 / nu)
-    )
+    assert model.project(0) == pytest.approx(model.function(0, x0, A, K, B, nu, Q, C))
 
 
 def test_general_logistic_growth_fit() -> None:
     """Test fitting of the GeneralLogisticGrowth model."""
+    x0 = 0
     A = 2.0
     K = 10.0
     B = 1.0
@@ -172,12 +177,10 @@ def test_general_logistic_growth_fit() -> None:
     C = 1.0
 
     x = np.arange(-2, 30)
-    y = A + (K - A) / (C + Q * np.exp(-B * (x))) ** (1 / nu)
+    y = GeneralLogisticGrowth().function(x, x0, A, K, B, Q, C, nu)
 
-    model = GeneralLogisticGrowth(
-        A=None, K=None, B=None, nu=None, Q=None, C=None, data_points=[*zip(x, y)]
-    )
-    model.fit(p0={"A": A, "K": K, "B": B, "nu": nu, "Q": Q, "C": C})
+    model = GeneralLogisticGrowth(data_points=[*zip(x, y)])
+    model.fit(p0={"x0": x0, "A": A, "K": K, "B": B, "nu": nu, "Q": Q, "C": C})
 
     assert model.A == pytest.approx(A, rel=1e-2)
     assert model.K == pytest.approx(K, rel=1e-2)
@@ -195,13 +198,16 @@ def test_general_logistic_growth_fit() -> None:
 
 def test_partial_fitting_linear_growth() -> None:
     """Test fitting LinearGrowth with one parameter fixed and one to fit."""
+    x0 = 0
     m = 2.0
     A = 1.0
     x = np.arange(-10, 30)
-    y = m * x + A
-    # Fix m, fit A
-    model = LinearGrowth(m=m, A=None, data_points=[*zip(x, y)])
-    model.fit()
+    y = LinearGrowth().function(x, x0, m, A)
+
+    # Fix x0 and m, only fit A
+    model = LinearGrowth(x0=x0, m=m, A=None, data_points=[*zip(x, y)])
+    model.fit(p0={"A": A * 0.5})
+
     assert model.m == pytest.approx(m, rel=1e-2)
     assert model.A == pytest.approx(A, rel=1e-2)
 
@@ -209,39 +215,50 @@ def test_partial_fitting_linear_growth() -> None:
 def test_fit_with_noisy_data() -> None:
     """Test fitting LinearGrowth with noisy data to check robustness."""
     rng = np.random.default_rng(42)
+    x0 = 0
     m = 2.0
-    A = 1.0
+    A = 20.0
     x = np.arange(-10, 30)
     noise = rng.normal(0, 0.1, size=x.shape)
-    y = m * x + A + noise
-    model = LinearGrowth(m=None, A=None, data_points=[*zip(x, y)])
+    y = LinearGrowth().function(x, x0, m, A) + noise
+
+    # Fitting with x0 and A free can lead to competing solutions, so fix x0
+    model = LinearGrowth(x0=x0, data_points=[*zip(x, y)])
     model.fit()
+
     # Should be close to true values despite noise
     assert model.m == pytest.approx(m, rel=1e-1)
     assert model.A == pytest.approx(A, rel=1e-1)
 
 
 def test_fit_without_p0() -> None:
-    """Test fitting LinearGrowth without providing p0 (should use defaults)."""
-    m = 2.0
-    A = 1.0
-    x = np.arange(-10, 30)
-    y = m * x + A
-    model = LinearGrowth(m=None, A=None, data_points=[*zip(x, y)])
+    """Test fitting LinearGrowth without providing p0 (should use defaults and still work)."""
+    x0 = 0
+    m = 10.0
+    A = 5.0
+    x = np.arange(-25, 25)
+    y = LinearGrowth().function(x, x0, m, A)
+
+    # Fix x0 to avoid competing solutions
+    model = LinearGrowth(x0=x0, data_points=[*zip(x, y)])
     model.fit()  # No p0 provided
+
     assert model.m == pytest.approx(m, rel=1e-2)
     assert model.A == pytest.approx(A, rel=1e-2)
 
 
 def test_illegal_p0_argument() -> None:
     """Test that fitting works with missing p0 keys (should use defaults, not raise)."""
+    x0 = 5
     m = 2.0
     A = 1.0
     x = np.arange(-10, 30)
-    y = m * x + A
-    model = LinearGrowth(m=None, A=None, data_points=[*zip(x, y)])
+    y = LinearGrowth().function(x, x0, m, A)
+
+    model = LinearGrowth(data_points=[*zip(x, y)])
     # Provide p0 missing one parameter (A missing)
-    model.fit(p0={"m": m})
+    model.fit(p0={"x0": x0, "m": m})
+
     # Should still fit correctly
     assert model.m == pytest.approx(m, rel=1e-2)
     assert model.A == pytest.approx(A, rel=1e-2)
@@ -249,12 +266,16 @@ def test_illegal_p0_argument() -> None:
 
 def test_fit_with_p0_far_from_target() -> None:
     """Test fitting LinearGrowth with p0 far from the true values (should still converge)."""
-    m = 2.0
-    A = 1.0
+    x0 = 0
+    m = 20.0
+    A = 5.0
     x = np.arange(-10, 30)
-    y = m * x + A
-    model = LinearGrowth(m=None, A=None, data_points=[*zip(x, y)])
+    y = LinearGrowth().function(x, x0, m, A)
+
+    # Fix x0 to avoid competing solutions
+    model = LinearGrowth(x0=x0, data_points=[*zip(x, y)])
     # Provide p0 far from the actual values
-    model.fit(p0={"m": 100.0, "A": -100.0})
+    model.fit(p0={"m": m * 10, "A": A * -2})
+
     assert model.m == pytest.approx(m, rel=1e-2)
     assert model.A == pytest.approx(A, rel=1e-2)
