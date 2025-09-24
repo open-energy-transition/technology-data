@@ -12,6 +12,7 @@ import pint
 import pytest
 
 import technologydata
+from technologydata.constants import EnergyDensityLHV
 
 # from technologydata.utils.units import extract_currency_units, ureg
 
@@ -692,17 +693,17 @@ class TestParameter:
     def test_change_heating_value_ch4_hhv_to_lhv_adapt_units(self) -> None:
         """Test HHV to LHV conversion for CH4, where HHV has a different unit than LHV."""
         p = technologydata.Parameter(
-            magnitude=11.1,
+            magnitude=10071,
             units="kilowatt_hour",
             carrier="methane",
             heating_value="higher_heating_value",
         )
-        technologydata.constants.EnergyDensityLHV["methane"].units = "MJ/ton"
+        EnergyDensityLHV["methane"].units = "MJ/ton"
         p2 = p.change_heating_value("lower_heating_value")
-        assert pytest.approx(p2.magnitude) == 10.0
+        assert p2.units == "kilowatt_hour"
+        assert pytest.approx(p2.magnitude) == 10.00124073
         assert p2.heating_value == "lower_heating_value"
         assert p2.carrier == "methane"
-        assert p2.units == "kilowatt_hour"
 
     def test_change_heating_value_no_carrier_in_units(self) -> None:
         """Test conversion when carrier does not appear in units (should treat as 1 appearance)."""

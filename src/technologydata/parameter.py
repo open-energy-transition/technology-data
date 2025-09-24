@@ -21,7 +21,6 @@ import pint
 from pydantic import BaseModel, Field, PrivateAttr
 
 import technologydata
-from technologydata.constants import EnergyDensityHHV, EnergyDensityLHV
 from technologydata.source_collection import SourceCollection
 
 logger = logging.getLogger(__name__)
@@ -315,6 +314,8 @@ class Parameter(BaseModel):  # type: ignore
             return self
 
         self._update_pint_attributes()
+
+        from technologydata.constants import EnergyDensityHHV, EnergyDensityLHV
 
         # Create a dictionary of heating value ratios based on energy densities
         # The units of heating values are harmonized to "hv_units".
