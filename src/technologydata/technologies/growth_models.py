@@ -39,6 +39,8 @@ class GrowthModel(BaseModel, validate_assignment=True):
         ),
     ]
 
+    # TODO: should each implementation of the `function` be a classmethod?
+    # TODO: We are not using the same signature for `function` in the subclasses, this is a bit ugly, can we do better? mypy is also complaining (hence the type: ignore[override] in subclasses)
     @abstractmethod
     def function(self, x: float, x0: float, **kwargs: dict[str, float]) -> float:
         """Function that represents the growth model."""  # noqa: D401
