@@ -22,16 +22,7 @@ from pydantic import BaseModel, Field, PrivateAttr
 
 import technologydata
 from technologydata.source_collection import SourceCollection
-
-# from technologydata.utils.units import (
-#    CURRENCY_UNIT_PATTERN,
-#    creg,
-#    extract_currency_units,
-#    get_conversion_rate,
-#    get_iso3_from_currency_code,
-#    hvreg,
-#    ureg,
-# )
+from technologydata.constants import EnergyDensityHHV, EnergyDensityLHV
 
 logger = logging.getLogger(__name__)
 
@@ -278,7 +269,7 @@ class Parameter(BaseModel):  # type: ignore
             sources=self.sources,
         )
 
-    def change_heating_value(self, to_heating_value: str) -> Self:
+    def change_heating_value(self, to_heating_value: str, hv_unit: str = "MJ/kg") -> Self:
         """
         Change the heating value of the parameter.
 
@@ -289,6 +280,8 @@ class Parameter(BaseModel):  # type: ignore
         ----------
         to_heating_value : str
             The target heating value to convert to, e.g. "LHV", "HHV".
+        hv_unit : str, optional
+            The heating value unit. Default is MJ/kg
 
         Returns
         -------
@@ -321,16 +314,15 @@ class Parameter(BaseModel):  # type: ignore
 
         self._update_pint_attributes()
 
-        from technologydata.constants import EnergyDensityHHV, EnergyDensityLHV
-
         # Create a dictionary of heating value ratios based on energy densities
+        # The units of heating values are harmonized to "hv_units".
         hv_ratios = dict()
         lhvs = {
-            str(technologydata.creg.get_dimensionality(k)): v
+            str(technologydata.creg.get_dimensionality(k)): v.to(hv_unit)
             for k, v in EnergyDensityLHV.items()
         }
         hhvs = {
-            str(technologydata.creg.get_dimensionality(k)): v
+            str(technologydata.creg.get_dimensionality(k)): v.to(hv_unit)
             for k, v in EnergyDensityHHV.items()
         }
         for dimension in self._pint_carrier.dimensionality.keys():
