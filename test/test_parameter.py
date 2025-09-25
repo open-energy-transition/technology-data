@@ -698,6 +698,8 @@ class TestParameter:
             carrier="methane",
             heating_value="higher_heating_value",
         )
+        # Note: metric_ton = 1e3 * kilogram = t = tonne
+        # Note: ton = 2e3 * pound = _ = short_ton
         EnergyDensityLHV["methane"].units = "MJ/metric_ton"
         EnergyDensityLHV["methane"].magnitude = 50000
         p2 = p.change_heating_value("lower_heating_value")

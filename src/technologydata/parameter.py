@@ -268,9 +268,7 @@ class Parameter(BaseModel):  # type: ignore
             sources=self.sources,
         )
 
-    def change_heating_value(
-        self, to_heating_value: str, hv_unit: str = "MJ/kg"
-    ) -> Self:
+    def change_heating_value(self, to_heating_value: str) -> Self:
         """
         Change the heating value of the parameter.
 
@@ -281,8 +279,6 @@ class Parameter(BaseModel):  # type: ignore
         ----------
         to_heating_value : str
             The target heating value to convert to, e.g. "LHV", "HHV".
-        hv_unit : str, optional
-            The heating value unit. Default is MJ/kg
 
         Returns
         -------
@@ -319,15 +315,24 @@ class Parameter(BaseModel):  # type: ignore
 
         # Create a dictionary of heating value ratios based on energy densities
         # The units of heating values are harmonized to "hv_units".
+        # hv_units is the units attribute of the first element of EnergyDensityLHV
         hv_ratios = dict()
+
+        # Access the key of the first element of the EnergyDensityLHV dictionary
+        first_pair_key = next(iter(EnergyDensityLHV))
+
+        # Get the units attribute of the first element of the EnergyDensityLHV dictionary
+        hv_units = str(EnergyDensityLHV[first_pair_key].units)
+
         lhvs = {
-            str(technologydata.creg.get_dimensionality(k)): v.to(hv_unit)
+            str(technologydata.creg.get_dimensionality(k)): v.to(hv_units)
             for k, v in EnergyDensityLHV.items()
         }
         hhvs = {
-            str(technologydata.creg.get_dimensionality(k)): v.to(hv_unit)
+            str(technologydata.creg.get_dimensionality(k)): v.to(hv_units)
             for k, v in EnergyDensityHHV.items()
         }
+
         for dimension in self._pint_carrier.dimensionality.keys():
             if dimension in lhvs and dimension in hhvs:
                 hv_ratios[dimension] = (
