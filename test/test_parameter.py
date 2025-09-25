@@ -698,11 +698,11 @@ class TestParameter:
             carrier="methane",
             heating_value="higher_heating_value",
         )
-        EnergyDensityLHV["methane"].units = "MJ/ton"
+        EnergyDensityLHV["methane"].units = "MJ/metric_ton"
         EnergyDensityLHV["methane"].magnitude = 50000
-        p2 = p.change_heating_value("lower_heating_value", hv_unit="MJ/kg")
+        p2 = p.change_heating_value("lower_heating_value")
         assert p2.units == "kilowatt_hour"
-        assert pytest.approx(p2.magnitude) == 11.023113
+        assert pytest.approx(p2.magnitude) == 10.0
         assert p2.heating_value == "lower_heating_value"
         assert p2.carrier == "methane"
 
