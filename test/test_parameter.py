@@ -693,15 +693,16 @@ class TestParameter:
     def test_change_heating_value_ch4_hhv_to_lhv_adapt_units(self) -> None:
         """Test HHV to LHV conversion for CH4, where HHV has a different unit than LHV."""
         p = technologydata.Parameter(
-            magnitude=10071,
+            magnitude=11.1,
             units="kilowatt_hour",
             carrier="methane",
             heating_value="higher_heating_value",
         )
         EnergyDensityLHV["methane"].units = "MJ/ton"
-        p2 = p.change_heating_value("lower_heating_value")
+        EnergyDensityLHV["methane"].magnitude = 50000
+        p2 = p.change_heating_value("lower_heating_value", hv_unit="MJ/kg")
         assert p2.units == "kilowatt_hour"
-        assert pytest.approx(p2.magnitude) == 10.00124073
+        assert pytest.approx(p2.magnitude) == 11.023113
         assert p2.heating_value == "lower_heating_value"
         assert p2.carrier == "methane"
 
