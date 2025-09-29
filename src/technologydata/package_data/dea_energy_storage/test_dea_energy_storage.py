@@ -3,6 +3,7 @@
 # SPDX-License-Identifier: MIT
 
 """Test the functions of the DEA energy storage parser."""
+
 import typing
 
 import pandas
@@ -11,7 +12,8 @@ import pytest
 from technologydata.package_data.dea_energy_storage.dea_energy_storage import (
     clean_parameter_string,
     drop_invalid_rows,
-    extract_year, format_val_number,
+    extract_year,
+    format_val_number,
 )
 
 
@@ -85,10 +87,10 @@ class TestDEAEnergyStorage:
             ("1.3x10-23", 1.3e-23),
         ],
     )  # type: ignore
-    def test_parse_number(self, input_number: str, expected_number: int | None | typing.Any) -> None:
-        """Check if parse_number works as expected, including exception handling."""
+    def test_format_val_number(
+        self, input_number: str, expected_number: int | None | typing.Any
+    ) -> None:
+        """Check if format_val_number works as expected, including exception handling."""
         result = format_val_number(input_number)
         assert isinstance(result, float)
         assert result == expected_number
-
-
