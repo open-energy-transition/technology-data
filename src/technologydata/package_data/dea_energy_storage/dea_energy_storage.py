@@ -221,23 +221,23 @@ if __name__ == "__main__":
     cleaned_df = drop_invalid_rows(dea_energy_storage_df)
 
     # Clean parameter (par) column
-    dea_energy_storage_df["par"] = dea_energy_storage_df["par"].apply(
+    cleaned_df["par"] = cleaned_df["par"].apply(
         clean_parameter_string
     )
 
     # Clean technology (Technology) column
-    dea_energy_storage_df["Technology"] = dea_energy_storage_df["Technology"].apply(
+    cleaned_df["Technology"] = cleaned_df["Technology"].apply(
         clean_technology_string
     )
 
     # Clean year column
-    dea_energy_storage_df["year"] = dea_energy_storage_df["year"].apply(extract_year)
+    cleaned_df["year"] = cleaned_df["year"].apply(extract_year)
 
     # Format value (val) column
-    dea_energy_storage_df["val"] = dea_energy_storage_df["val"].apply(format_val_number)
+    cleaned_df["val"] = cleaned_df["val"].apply(format_val_number)
 
-    print(f"Shape after cleaning: {dea_energy_storage_df.shape}")
-    dea_energy_storage_df.to_csv("file.csv")
+    print(f"Shape after cleaning: {cleaned_df.shape}")
+    cleaned_df.to_csv("file.csv")
 
     # # Get unique values of technology-year pair
     # unique_year = (
