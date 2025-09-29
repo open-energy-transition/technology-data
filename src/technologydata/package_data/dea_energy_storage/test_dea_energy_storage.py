@@ -40,7 +40,7 @@ class TestDEAEnergyStorage:
         """Check if the drop_invalid_rows works as expected."""
         input_dataframe = pandas.DataFrame(
             {
-                "Technology": ["AI", "", "ML", None, "Tech", "Tech_1", "Tech_2"],
+                "Technology": ["AI", "", "ML", "new_tech", "Tech", "Tech_1", "Tech_2"],
                 "par": ["p1", "p2", "", "p4", None, "p5", "p6"],
                 "val": ["<1", "   ", None, "abc", "456", "456,1", "1,1x10^3"],
                 "year": ["almost 2020", "2021", "2020", "2022", "", "2020", "2024"],
@@ -64,20 +64,14 @@ class TestDEAEnergyStorage:
             ("some 1999", 1999),
             ("maybe 1", 1),
             ("1", 1),
-            (12345, None),  # Non-string input
+            (12345, 12345),
         ],
     )  # type: ignore
-    def test_extract_year(self, input_year: str, expected_year: int | None) -> None:
+    def test_extract_year(self, input_year: str, expected_year: int) -> None:
         """Check if extract_year works as expected, including exception handling."""
-        if isinstance(expected_year, int):
-            result = extract_year(input_year)
-            assert result == expected_year
-            assert isinstance(result, int)
-        else:
-            # Expect an exception for invalid input
-            with pytest.raises(Exception) as exc_info:
-                extract_year(input_year)
-            assert str(exc_info.value) == f"{input_year} is not a string"
+        result = extract_year(input_year)
+        assert result == expected_year
+        assert isinstance(result, int)
 
     @pytest.mark.parametrize(
         "input_number, expected_number",

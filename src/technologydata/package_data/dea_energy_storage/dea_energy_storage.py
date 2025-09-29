@@ -169,7 +169,7 @@ def format_val_number(input_value: str) -> float | None | typing.Any:
         raise ValueError(f"Cannot parse number from input: {input_value}")
 
 
-def extract_year(year_str: str) -> int | None:
+def extract_year(year_str: str | int) -> int | None:
     """
     Extract the first year (integer) from a given input.
 
@@ -198,7 +198,7 @@ def extract_year(year_str: str) -> int | None:
         # Convert to integer
         return int(digits[0]) if digits else None
     else:
-        raise Exception(f"{year_str} is not a string")
+        return year_str
 
 
 if __name__ == "__main__":
@@ -215,6 +215,8 @@ if __name__ == "__main__":
         dea_energy_storage_file_path, sheet_name="alldata_flat"
     )
 
+    print(f"Shape before cleaning: {dea_energy_storage_df.shape}")
+
     # Drop unnecessary rows
     cleaned_df = drop_invalid_rows(dea_energy_storage_df)
 
@@ -230,6 +232,12 @@ if __name__ == "__main__":
 
     # Clean year column
     dea_energy_storage_df["year"] = dea_energy_storage_df["year"].apply(extract_year)
+
+    # Format value (val) column
+    dea_energy_storage_df["val"] = dea_energy_storage_df["val"].apply(format_val_number)
+
+    print(f"Shape after cleaning: {dea_energy_storage_df.shape}")
+    dea_energy_storage_df.to_csv("file.csv")
 
     # # Get unique values of technology-year pair
     # unique_year = (
