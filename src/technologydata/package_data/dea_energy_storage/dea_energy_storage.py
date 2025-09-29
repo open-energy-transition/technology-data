@@ -39,8 +39,8 @@ def drop_invalid_rows(dataframe: pandas.DataFrame) -> pandas.DataFrame:
     Remove rows from the DataFrame where certain columns contain invalid data.
 
     This function drops rows where:
-    - The 'Technology' or 'par' columns are None or empty strings (including strings with only whitespace).
-    - The 'year' column does not contain any digits.
+    - The 'Technology', 'par', or 'val' columns are None or empty strings (including strings with only whitespace).
+    - The 'year' or 'val' columns do not contain any digits.
 
     Parameters
     ----------
@@ -51,15 +51,24 @@ def drop_invalid_rows(dataframe: pandas.DataFrame) -> pandas.DataFrame:
     -------
     pandas.DataFrame
         A new DataFrame with rows containing invalid data removed.
-
     """
-    # Drop rows where 'technology' or 'par' are None or empty strings
-    df_cleaned = dataframe.dropna(subset=["Technology", "par"])
+    # Drop rows where 'Technology', 'par', or 'val' are None
+    df_cleaned = dataframe.dropna(subset=["Technology", "par", "val"])
+
+    # Remove rows where 'Technology' is empty or whitespace
     df_cleaned = df_cleaned[~df_cleaned["Technology"].astype(str).str.strip().eq("")]
+
+    # Remove rows where 'par' is empty or whitespace
     df_cleaned = df_cleaned[~df_cleaned["par"].astype(str).str.strip().eq("")]
 
-    # Drop rows where 'year' does not contain any digit
-    df_cleaned = df_cleaned[df_cleaned["year"].astype(str).str.contains(r"\d")]
+    # Remove rows where 'val' is empty or whitespace
+    df_cleaned = df_cleaned[~df_cleaned["val"].astype(str).str.strip().eq("")]
+
+    # Keep only rows where 'year' contains at least four consecutive digits
+    df_cleaned = df_cleaned[df_cleaned["year"].astype(str).str.contains(r"\d{4}")]
+
+    # Remove rows where 'val' does not contain any digit
+    df_cleaned = df_cleaned[df_cleaned["val"].astype(str).str.contains(r"\d")]
 
     return df_cleaned
 
@@ -119,21 +128,19 @@ def clean_technology_string(tech_str: str) -> str:
         return tech_str
 
 
-def safe_extract_year(year_str: str | int | float | None) -> int | None:
+def extract_year(year_str: str) -> str:
     """
-    Safely extract the first year (integer) from a given input.
+    Extract the first year (integer) from a given input.
 
     Parameters
     ----------
-    year_str : str or int or float or None
+    year_str : str
         Input value containing a potential year.
-        Can be a string with embedded year, a numeric value, or None.
 
     Returns
     -------
-    int or None
-        Extracted first year as an integer.
-        Returns None (pandas.NA) if no year is found or input is invalid.
+    str or None
+        Extracted first year.
 
     Raises
     ------
@@ -142,14 +149,10 @@ def safe_extract_year(year_str: str | int | float | None) -> int | None:
 
     Examples
     --------
-    >>> safe_extract_year('uncertainty (2050)')
+    >>> extract_year('uncertainty (2050)')
     2050
-    >>> safe_extract_year('some text 2025 more text')
+    >>> extract_year('some text 2025 more text')
     2025
-    >>> safe_extract_year(None)
-    None
-    >>> safe_extract_year('no year here')
-    None
 
     Notes
     -----
