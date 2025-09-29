@@ -3,9 +3,11 @@
 # SPDX-License-Identifier: MIT
 
 """Data parser for the DEA energy storage data set."""
+
 import logging
 import pathlib
 import re
+import typing
 
 import pandas
 
@@ -51,6 +53,7 @@ def drop_invalid_rows(dataframe: pandas.DataFrame) -> pandas.DataFrame:
     -------
     pandas.DataFrame
         A new DataFrame with rows containing invalid data removed.
+
     """
     # Drop rows where 'Technology', 'par', or 'val' are None
     df_cleaned = dataframe.dropna(subset=["Technology", "par", "val"])
@@ -128,7 +131,45 @@ def clean_technology_string(tech_str: str) -> str:
         return tech_str
 
 
-def extract_year(year_str: str) -> str:
+def format_val_number(input_value: str) -> float | None | typing.Any:
+    """
+    Parse various number formats into a float value.
+
+    Parameters
+    ----------
+    input_value : str
+        The input number in different formats, such as:
+        - Scientific notation with "x10^": e.g., "2.84x10^23"
+        - Numbers with commas as decimal separators: e.g., "1,1"
+
+    Returns
+    -------
+    float
+        The parsed numerical value as a float.
+
+    Raises
+    ------
+    ValueError
+        If the input cannot be parsed into a float.
+
+    """
+    s = str(input_value).strip()
+
+    # Handle scientific notation like "2.84x10^23"
+    match = re.match(r"([+-]?\d*\.?\d+)x10([+-]?\d+)", s)
+    if match:
+        base, exponent = match.groups()
+        return float(base) * (10 ** int(exponent))
+
+    # Replace comma with dot for decimal numbers
+    s = s.replace(",", ".")
+    try:
+        return float(s)
+    except ValueError:
+        raise ValueError(f"Cannot parse number from input: {input_value}")
+
+
+def extract_year(year_str: str) -> int | None:
     """
     Extract the first year (integer) from a given input.
 
@@ -139,13 +180,8 @@ def extract_year(year_str: str) -> str:
 
     Returns
     -------
-    str or None
+    int, None
         Extracted first year.
-
-    Raises
-    ------
-    TypeError
-        If input cannot be converted to string.
 
     Examples
     --------
@@ -154,30 +190,15 @@ def extract_year(year_str: str) -> str:
     >>> extract_year('some text 2025 more text')
     2025
 
-    Notes
-    -----
-    - Handles various input formats
-    - Extracts first set of digits found in the input
-    - Uses regex to find years
-    - Robust against different input types
-
     """
-    try:
-        # Handle various input types
-        if pandas.isna(year_str):
-            return None
-
-        # Convert to string
-        year_str = str(year_str)
-
-        # Extract first set of digits
+    if isinstance(year_str, str):
+        # Extract digits
         digits = re.findall(r"\d+", year_str)
 
         # Convert to integer
         return int(digits[0]) if digits else None
-    except Exception as e:
-        logger.error(f"Error extracting year from '{year_str}': {e}")
-        return None
+    else:
+        raise Exception(f"{year_str} is not a string")
 
 
 if __name__ == "__main__":
@@ -207,42 +228,38 @@ if __name__ == "__main__":
         clean_technology_string
     )
 
+    # Clean year column
+    dea_energy_storage_df["year"] = dea_energy_storage_df["year"].apply(extract_year)
 
-
-
-    dea_energy_storage_df["year"] = dea_energy_storage_df["year"].apply(
-        safe_extract_year
-    )
-
-    # Get unique values of technology-year pair
-    unique_year = (
-        dea_energy_storage_df["year"]
-        .dropna()
-        .astype(str)
-        .str.casefold()
-        .str.strip()
-        .unique()
-    )
-    unique_technology = (
-        dea_energy_storage_df["Technology"]
-        .dropna()
-        .astype(str)
-        .str.casefold()
-        .str.strip()
-        .unique()
-    )
-
-    print(unique_year)
-    print(unique_technology)
-
-    print(dea_energy_storage_df.shape)
-    filtered_df = dea_energy_storage_df.query(
-        "not year.str.contains('uncertainty', case=False, na=False)", engine="python"
-    )
-    print(filtered_df.shape)
-
-    # for year_val in unique_year:
-    #    for tech_val in unique_technology:
-    #        filtered_df = dea_energy_storage_df.query(
-    #            "year.str.casefold() == year_val.casefold() and Technology.str.casefold()==tech_val.casefold()"
-    #        )
+    # # Get unique values of technology-year pair
+    # unique_year = (
+    #     dea_energy_storage_df["year"]
+    #     .dropna()
+    #     .astype(str)
+    #     .str.casefold()
+    #     .str.strip()
+    #     .unique()
+    # )
+    # unique_technology = (
+    #     dea_energy_storage_df["Technology"]
+    #     .dropna()
+    #     .astype(str)
+    #     .str.casefold()
+    #     .str.strip()
+    #     .unique()
+    # )
+    #
+    # print(unique_year)
+    # print(unique_technology)
+    #
+    # print(dea_energy_storage_df.shape)
+    # filtered_df = dea_energy_storage_df.query(
+    #     "not year.str.contains('uncertainty', case=False, na=False)", engine="python"
+    # )
+    # print(filtered_df.shape)
+    #
+    # # for year_val in unique_year:
+    # #    for tech_val in unique_technology:
+    # #        filtered_df = dea_energy_storage_df.query(
+    # #            "year.str.casefold() == year_val.casefold() and Technology.str.casefold()==tech_val.casefold()"
+    # #        )

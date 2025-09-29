@@ -3,6 +3,7 @@
 # SPDX-License-Identifier: MIT
 
 """Test the functions of the DEA energy storage parser."""
+import typing
 
 import pandas
 import pytest
@@ -10,6 +11,7 @@ import pytest
 from technologydata.package_data.dea_energy_storage.dea_energy_storage import (
     clean_parameter_string,
     drop_invalid_rows,
+    extract_year, format_val_number,
 )
 
 
@@ -39,7 +41,7 @@ class TestDEAEnergyStorage:
                 "Technology": ["AI", "", "ML", None, "Tech", "Tech_1", "Tech_2"],
                 "par": ["p1", "p2", "", "p4", None, "p5", "p6"],
                 "val": ["<1", "   ", None, "abc", "456", "456,1", "1,1x10^3"],
-                "year": ["almost 2020", "2021", "2020", "2022", "", "2020", "2024"]
+                "year": ["almost 2020", "2021", "2020", "2022", "", "2020", "2024"],
             }
         )
         expected_dataframe = pandas.DataFrame(
@@ -53,3 +55,40 @@ class TestDEAEnergyStorage:
         output_dataframe = drop_invalid_rows(input_dataframe).reset_index(drop=True)
         comparison_df = output_dataframe.compare(expected_dataframe)
         assert comparison_df.empty
+
+    @pytest.mark.parametrize(
+        "input_year, expected_year",
+        [
+            ("some 1999", 1999),
+            ("maybe 1", 1),
+            ("1", 1),
+            (12345, None),  # Non-string input
+        ],
+    )  # type: ignore
+    def test_extract_year(self, input_year: str, expected_year: int | None) -> None:
+        """Check if extract_year works as expected, including exception handling."""
+        if isinstance(expected_year, int):
+            result = extract_year(input_year)
+            assert result == expected_year
+            assert isinstance(result, int)
+        else:
+            # Expect an exception for invalid input
+            with pytest.raises(Exception) as exc_info:
+                extract_year(input_year)
+            assert str(exc_info.value) == f"{input_year} is not a string"
+
+    @pytest.mark.parametrize(
+        "input_number, expected_number",
+        [
+            ("1,1", 1.1),
+            ("1", 1.0),
+            ("1.3x10-23", 1.3e-23),
+        ],
+    )  # type: ignore
+    def test_parse_number(self, input_number: str, expected_number: int | None | typing.Any) -> None:
+        """Check if parse_number works as expected, including exception handling."""
+        result = format_val_number(input_number)
+        assert isinstance(result, float)
+        assert result == expected_number
+
+
