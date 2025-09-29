@@ -6,7 +6,9 @@
 
 import pytest
 
-from technologydata.package_data.dea_energy_storage.dea_energy_storage import clean_parameter_string
+from technologydata.package_data.dea_energy_storage.dea_energy_storage import (
+    clean_parameter_string,
+)
 
 
 class TestDEAEnergyStorage:

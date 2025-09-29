@@ -47,15 +47,14 @@ def clean_parameter_string(text_string: str) -> str:
         cleaned string with square brackets and leading hyphen or double quotes removed.
 
     """
-
     # Remove leading hyphen
     text_string = text_string.lstrip("-")
 
     # Remove content inside brackets including the brackets themselves
-    result = re.sub(r'\[.*?\]', '', text_string)
+    result = re.sub(r"\[.*?\]", "", text_string)
 
     # Remove extra spaces resulting from the removal
-    result = re.sub(r'\s+', ' ', result).strip()
+    result = re.sub(r"\s+", " ", result).strip()
 
     return result
 
