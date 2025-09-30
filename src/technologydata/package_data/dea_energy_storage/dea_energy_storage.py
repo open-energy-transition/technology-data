@@ -235,7 +235,7 @@ if __name__ == "__main__":
         dea_energy_storage_file_path, sheet_name="alldata_flat"
     )
 
-    print(f"Shape before cleaning: {dea_energy_storage_df.shape}")
+    logger.info(f"Shape before cleaning: {dea_energy_storage_df.shape}")
 
     # Drop unnecessary rows
     cleaned_df = drop_invalid_rows(dea_energy_storage_df)
@@ -256,7 +256,7 @@ if __name__ == "__main__":
     # Format value (val) column
     cleaned_df["val"] = cleaned_df["val"].apply(format_val_number)
 
-    print(f"Shape after cleaning: {cleaned_df.shape}")
+    logger.info(f"Shape after cleaning: {cleaned_df.shape}")
     cleaned_df.to_csv("file.csv")
 
     # # Get unique values of technology-year pair

@@ -33,7 +33,6 @@ class TestDEAEnergyStorage:
         self, input_string: str, expected_string: str
     ) -> None:
         """Check if the clean_parameter_string works as expected."""
-        print(clean_parameter_string(input_string))
         assert clean_parameter_string(input_string) == expected_string
 
     def test_drop_invalid_rows(self) -> None:
