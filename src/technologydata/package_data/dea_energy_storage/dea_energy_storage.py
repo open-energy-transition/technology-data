@@ -4,6 +4,7 @@
 
 """Data parser for the DEA energy storage data set."""
 
+import csv
 import logging
 import pathlib
 import re
@@ -74,7 +75,7 @@ def drop_invalid_rows(dataframe: pandas.DataFrame) -> pandas.DataFrame:
         raise ValueError(f"Missing required columns: {missing_columns}")
 
     # Remove rows with None or NaN values in critical columns
-    df_cleaned.dropna(subset=required_columns, inplace=True)
+    df_cleaned = df_cleaned.dropna(subset=required_columns)
 
     # Remove rows with empty or whitespace-only strings
     for column in ["Technology", "par", "val", "year"]:
@@ -251,7 +252,14 @@ if __name__ == "__main__":
     cleaned_df["val"] = cleaned_df["val"].apply(format_val_number)
 
     print(f"Shape after cleaning: {cleaned_df.shape}")
-    cleaned_df.to_csv("file.csv")
+
+    default_kwargs = {
+        "sep": ",",
+        "index": False,
+        "encoding": "utf-8",
+        "quoting": csv.QUOTE_ALL,
+    }
+    cleaned_df.to_csv("file.csv", **default_kwargs)
 
     # # Get unique values of technology-year pair
     # unique_year = (
