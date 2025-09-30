@@ -38,42 +38,62 @@ def get_conversion_dictionary() -> dict[str, str]:
 
 def drop_invalid_rows(dataframe: pandas.DataFrame) -> pandas.DataFrame:
     """
-    Remove rows from the DataFrame where certain columns contain invalid data.
+    Clean and filter a DataFrame by removing rows with invalid or incomplete data.
 
-    This function drops rows where:
-    - The 'Technology', 'par', or 'val' columns are None or empty strings (including strings with only whitespace).
-    - The 'year' or 'val' columns do not contain any digits.
+    This function performs multiple validation checks to ensure data quality:
+    - Removes rows with None or NaN values in critical columns
+    - Removes rows with empty or whitespace-only strings
+    - Filters rows based on specific data integrity criteria
+    - Discards rows where 'val' column contains comparator symbols or non-numeric values
 
     Parameters
     ----------
-    dataframe : pandas.DataFrame
-        The input DataFrame to be cleaned.
+    dataframe : pd.DataFrame
+        The input DataFrame to be cleaned and validated.
 
     Returns
     -------
-    pandas.DataFrame
-        A new DataFrame with rows containing invalid data removed.
+    pd.DataFrame
+        A new DataFrame with invalid rows removed, maintaining data integrity.
 
+    Notes
+    -----
+    Validation criteria include:
+    - Non-empty 'Technology', 'par', and 'val' columns
+    - 'year' column containing a valid 4-digit year
+    - 'val' column containing only numeric values (no comparator symbols)
     """
-    # Drop rows where 'Technology', 'par', or 'val' are None
-    df_cleaned = dataframe.dropna(subset=["Technology", "par", "val"])
+    # Create a copy to avoid modifying the original DataFrame
+    df_cleaned = dataframe.copy()
 
-    # Remove rows where 'Technology' is empty or whitespace
-    df_cleaned = df_cleaned[~df_cleaned["Technology"].astype(str).str.strip().eq("")]
+    # Validate column existence
+    required_columns = ["Technology", "par", "val", "year"]
+    missing_columns = [col for col in required_columns if col not in df_cleaned.columns]
+    if missing_columns:
+        raise ValueError(f"Missing required columns: {missing_columns}")
 
-    # Remove rows where 'par' is empty or whitespace
-    df_cleaned = df_cleaned[~df_cleaned["par"].astype(str).str.strip().eq("")]
+    # Remove rows with None or NaN values in critical columns
+    df_cleaned.dropna(subset=required_columns, inplace=True)
 
-    # Remove rows where 'val' is empty or whitespace
-    df_cleaned = df_cleaned[~df_cleaned["val"].astype(str).str.strip().eq("")]
+    # Remove rows with empty or whitespace-only strings
+    for column in ["Technology", "par", "val", "year"]:
+        df_cleaned = df_cleaned[
+            df_cleaned[column].astype(str).str.strip() != ""
+        ]
 
-    # Keep only rows where 'year' contains at least four consecutive digits
-    df_cleaned = df_cleaned[df_cleaned["year"].astype(str).str.contains(r"\d{4}")]
+    # Filter rows with valid year (4 consecutive digits)
+    df_cleaned = df_cleaned[
+        df_cleaned["year"].astype(str).str.contains(r"\d{4}", regex=True)
+    ]
 
-    # Remove rows where 'val' does not contain any digit
-    df_cleaned = df_cleaned[df_cleaned["val"].astype(str).str.contains(r"\d")]
+    # Remove rows with comparator symbols or without digits in 'val' column
+    df_cleaned = df_cleaned[
+        (~df_cleaned["val"].astype(str).str.contains(r'[<>≤≥]', regex=True)) &
+        (df_cleaned["val"].astype(str).str.contains(r'\d', regex=True))
+    ]
 
     return df_cleaned
+
 
 
 def clean_parameter_string(text_string: str) -> str:
@@ -156,7 +176,7 @@ def format_val_number(input_value: str) -> float | None | typing.Any:
     s = str(input_value).strip()
 
     # Handle scientific notation like "2.84x10^23"
-    match = re.match(r"([+-]?\d*\.?\d+)x10([+-]?\d+)", s)
+    match = re.match(r"([+-]?\d*\.?\d+)×10([+-]?\d+)", s)
     if match:
         base, exponent = match.groups()
         return float(base) * (10 ** int(exponent))

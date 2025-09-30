@@ -43,15 +43,15 @@ class TestDEAEnergyStorage:
                 "Technology": ["AI", "", "ML", "new_tech", "Tech", "Tech_1", "Tech_2"],
                 "par": ["p1", "p2", "", "p4", None, "p5", "p6"],
                 "val": ["<1", "   ", None, "abc", "456", "456,1", "1,1x10^3"],
-                "year": ["almost 2020", "2021", "2020", "2022", "", "2020", "2024"],
+                "year": ["almost 2020", "2021", "2020", "2022", "", "nearly 2020", "2024"],
             }
         )
         expected_dataframe = pandas.DataFrame(
             {
-                "Technology": ["AI", "Tech_1", "Tech_2"],
-                "par": ["p1", "p5", "p6"],
-                "val": ["<1", "456,1", "1,1x10^3"],
-                "year": ["almost 2020", "2020", "2024"],
+                "Technology": ["Tech_1", "Tech_2"],
+                "par": ["p5", "p6"],
+                "val": ["456,1", "1,1x10^3"],
+                "year": ["nearly 2020", "2024"],
             }
         )
         output_dataframe = drop_invalid_rows(input_dataframe).reset_index(drop=True)
@@ -78,7 +78,7 @@ class TestDEAEnergyStorage:
         [
             ("1,1", 1.1),
             ("1", 1.0),
-            ("1.3x10-23", 1.3e-23),
+            ("1.31×10-23", 1.31e-23),
         ],
     )  # type: ignore
     def test_format_val_number(
