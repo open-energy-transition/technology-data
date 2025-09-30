@@ -62,6 +62,7 @@ def drop_invalid_rows(dataframe: pandas.DataFrame) -> pandas.DataFrame:
     - Non-empty 'Technology', 'par', and 'val' columns
     - 'year' column containing a valid 4-digit year
     - 'val' column containing only numeric values (no comparator symbols)
+
     """
     # Create a copy to avoid modifying the original DataFrame
     df_cleaned = dataframe.copy()
@@ -77,9 +78,7 @@ def drop_invalid_rows(dataframe: pandas.DataFrame) -> pandas.DataFrame:
 
     # Remove rows with empty or whitespace-only strings
     for column in ["Technology", "par", "val", "year"]:
-        df_cleaned = df_cleaned[
-            df_cleaned[column].astype(str).str.strip() != ""
-        ]
+        df_cleaned = df_cleaned[df_cleaned[column].astype(str).str.strip() != ""]
 
     # Filter rows with valid year (4 consecutive digits)
     df_cleaned = df_cleaned[
@@ -88,12 +87,11 @@ def drop_invalid_rows(dataframe: pandas.DataFrame) -> pandas.DataFrame:
 
     # Remove rows with comparator symbols or without digits in 'val' column
     df_cleaned = df_cleaned[
-        (~df_cleaned["val"].astype(str).str.contains(r'[<>≤≥]', regex=True)) &
-        (df_cleaned["val"].astype(str).str.contains(r'\d', regex=True))
+        (~df_cleaned["val"].astype(str).str.contains(r"[<>≤≥]", regex=True))
+        & (df_cleaned["val"].astype(str).str.contains(r"\d", regex=True))
     ]
 
     return df_cleaned
-
 
 
 def clean_parameter_string(text_string: str) -> str:
@@ -232,23 +230,19 @@ if __name__ == "__main__":
         "Technology_datasheet_for_energy_storage.xlsx",
     )
     dea_energy_storage_df = pandas.read_excel(
-        dea_energy_storage_file_path, sheet_name="alldata_flat"
+        dea_energy_storage_file_path, sheet_name="alldata_flat", engine="calamine"
     )
 
-    logger.info(f"Shape before cleaning: {dea_energy_storage_df.shape}")
+    print(f"Shape before cleaning: {dea_energy_storage_df.shape}")
 
     # Drop unnecessary rows
     cleaned_df = drop_invalid_rows(dea_energy_storage_df)
 
     # Clean parameter (par) column
-    cleaned_df["par"] = cleaned_df["par"].apply(
-        clean_parameter_string
-    )
+    cleaned_df["par"] = cleaned_df["par"].apply(clean_parameter_string)
 
     # Clean technology (Technology) column
-    cleaned_df["Technology"] = cleaned_df["Technology"].apply(
-        clean_technology_string
-    )
+    cleaned_df["Technology"] = cleaned_df["Technology"].apply(clean_technology_string)
 
     # Clean year column
     cleaned_df["year"] = cleaned_df["year"].apply(extract_year)
@@ -256,7 +250,7 @@ if __name__ == "__main__":
     # Format value (val) column
     cleaned_df["val"] = cleaned_df["val"].apply(format_val_number)
 
-    logger.info(f"Shape after cleaning: {cleaned_df.shape}")
+    print(f"Shape after cleaning: {cleaned_df.shape}")
     cleaned_df.to_csv("file.csv")
 
     # # Get unique values of technology-year pair

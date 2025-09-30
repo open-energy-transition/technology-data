@@ -42,7 +42,15 @@ class TestDEAEnergyStorage:
                 "Technology": ["AI", "", "ML", "new_tech", "Tech", "Tech_1", "Tech_2"],
                 "par": ["p1", "p2", "", "p4", None, "p5", "p6"],
                 "val": ["<1", "   ", None, "abc", "456", "456,1", "1,1x10^3"],
-                "year": ["almost 2020", "2021", "2020", "2022", "", "nearly 2020", "2024"],
+                "year": [
+                    "almost 2020",
+                    "2021",
+                    "2020",
+                    "2022",
+                    "",
+                    "nearly 2020",
+                    "2024",
+                ],
             }
         )
         expected_dataframe = pandas.DataFrame(
