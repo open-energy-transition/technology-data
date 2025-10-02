@@ -259,7 +259,31 @@ if __name__ == "__main__":
         "encoding": "utf-8",
         "quoting": csv.QUOTE_ALL,
     }
-    cleaned_df.to_csv("file.csv", **default_kwargs)
+
+    cleaned_df.info()
+    cleaned_df.to_csv("file.csv")
+
+    # ======
+    # SCHEMA
+    # ======
+
+    # Technology object (just mandatory fields)
+    # ws -> Technology.name (str) --> need method to Sentence case and remove digits in front
+    # - -> Technology.region (str) --> this is missing
+    # year -> Technology.year (int)
+    # est -> Technology.case (str)
+    # Technology -> Technology.detailed_technology (str)
+
+    # Parameter object (mandatory fields and some more)
+    # par -> key in parameters : Dict[str, Parameter] (str)
+    # unit -> Parameter.units (str)
+    # priceyear -> (str) currency year in the unit of Parameter --> need to write a method that if unit column contains currency, I need to add priceyear
+    # note -> Parameter.note (str) --> need to write a method that links letter to description
+    # val -> Parameter.magnitude
+
+    # Source object
+    # Source.title (str) --> need to extract it from dictionary I need to build
+    # Source.authors (str) --> need to extract it from dictionary I need to build
 
     # # Get unique values of technology-year pair
     # unique_year = (
