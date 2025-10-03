@@ -296,10 +296,21 @@ def complete_missing_units(series: pandas.Series) -> pandas.Series:
 def compute_parameters_dict(dataframe: pandas.DataFrame) -> TechnologyCollection:
     parameters = {}
     list_techs = []
-    for (est, year, ws, technology_name), group in dataframe.groupby(["est", "year", "ws", "Technology"]):
+    for (est, year, ws, technology_name), group in dataframe.groupby(
+        ["est", "year", "ws", "Technology"]
+    ):
         for _, row in group.iterrows():
             parameters[row["par"]] = Parameter(magnitude=row["val"], units=row["unit"])
-        list_techs.append(Technology(name=ws, region="EU", year=year, parameters=parameters, case=est, detailed_technology=technology_name))
+        list_techs.append(
+            Technology(
+                name=ws,
+                region="EU",
+                year=year,
+                parameters=parameters,
+                case=est,
+                detailed_technology=technology_name,
+            )
+        )
     return TechnologyCollection(technologies=list_techs)
 
 
