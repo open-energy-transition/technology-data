@@ -10,10 +10,12 @@ import pandas
 import pytest
 
 from technologydata.package_data.dea_energy_storage.dea_energy_storage import (
+    clean_est_string,
     clean_parameter_string,
+    clean_technology_string,
     drop_invalid_rows,
     extract_year,
-    format_val_number, clean_technology_string,
+    format_val_number,
 )
 
 
@@ -27,12 +29,14 @@ class TestDEAEnergyStorage:
             ("Construction time [years]", "construction time"),
             ("- Another example [with brackets]", "another example"),
             ("No brackets or hyphen here", "no brackets or hyphen here"),
+            ("- Another example [with brackets)", "another example"),
         ],
     )  # type: ignore
     def test_clean_parameter_string(
         self, input_string: str, expected_string: str
     ) -> None:
         """Check if the clean_parameter_string works as expected."""
+        print("result", clean_parameter_string(input_string))
         assert clean_parameter_string(input_string) == expected_string
 
     def test_drop_invalid_rows(self) -> None:
@@ -69,14 +73,17 @@ class TestDEAEnergyStorage:
         "input_string, expected_string",
         [
             ("192 SOME", "some"),
-            (" 1some ", "some"),
             (" SOME 123 ", "some"),
-            (" 123 ", ""),
+            (" 123a yeah ", "yeah"),
+            (" 123a ", ""),
         ],
     )  # type: ignore
-    def test_clean_technology_string(self, input_string: str, expected_string: str) -> None:
+    def test_clean_technology_string(
+        self, input_string: str, expected_string: str
+    ) -> None:
         """Check if clean_technology_string works as expected."""
         result = clean_technology_string(input_string)
+        print("result", result)
         assert result == expected_string
         assert isinstance(result, str)
 
@@ -110,3 +117,17 @@ class TestDEAEnergyStorage:
         result = format_val_number(input_number)
         assert isinstance(result, float)
         assert result == expected_number
+
+    @pytest.mark.parametrize(
+        "input_string, expected_string",
+        [
+            ("ctrl", "control"),
+            ("Upper", "upper"),
+            (" Yeah ", "yeah"),
+        ],
+    )  # type: ignore
+    def test_clean_est_string(self, input_string: str, expected_string: str) -> None:
+        """Check if clean_est_string works as expected."""
+        result = clean_est_string(input_string)
+        assert isinstance(result, str)
+        assert result == expected_string

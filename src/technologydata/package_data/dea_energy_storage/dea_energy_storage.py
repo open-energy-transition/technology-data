@@ -17,26 +17,6 @@ path_cwd = pathlib.Path.cwd()
 logger = logging.getLogger(__name__)
 
 
-def get_conversion_dictionary() -> dict[str, str]:
-    """
-    Provide conversion dictionary between data source column names and TechnologyCollection attribute names.
-
-    Returns
-    -------
-    Dictionary
-        conversion dictionary that renames columns to TechnologyCollection attribute names.
-
-    """
-    return {
-        "Technology": "name",
-        "par": "parameters",
-        "Variable O&M": "VOM",
-        "Fuel": "fuel",
-        "Additional OCC": "investment",
-        "WACC Real": "discount rate",
-    }
-
-
 def drop_invalid_rows(dataframe: pandas.DataFrame) -> pandas.DataFrame:
     """
     Clean and filter a DataFrame by removing rows with invalid or incomplete data.
@@ -113,8 +93,11 @@ def clean_parameter_string(text_string: str) -> str:
     # Remove leading hyphen
     text_string = text_string.lstrip("-")
 
-    # Remove content inside brackets including the brackets themselves
+    # Remove content inside square brackets including the brackets themselves
     result = re.sub(r"\[.*?\]", "", text_string)
+
+    # Remove content inside square bracket and parenthesis including the brackets/parenthesis themselves
+    result = re.sub(r"\[.*?\)", "", result)
 
     # Remove extra spaces resulting from the removal and set all to lower case
     result = re.sub(r"\s+", " ", result).strip().casefold()
@@ -124,27 +107,35 @@ def clean_parameter_string(text_string: str) -> str:
 
 def clean_technology_string(tech_str: str) -> str:
     """
-    Safely clean a technology string by converting it to lowercase and stripping whitespace.
+    Clean a technology string by removing numeric patterns and standardizing case.
 
-    This function attempts to convert the input to a string, apply case folding for
-    case-insensitive comparisons, remove leading/trailing whitespace, and remove leading digits.
-    If an exception occurs during this process, it catches the exception, prints an error message, and
-    returns the original input.
+    This function preprocesses technology-related strings by:
+    - Removing three-digit numeric patterns (with optional letter)
+    - Stripping leading and trailing whitespace
+    - Converting to lowercase for case-insensitive comparison
 
     Parameters
     ----------
-    tech_str : any
-        The input value representing a technology string, which may not be a string.
+    tech_str : str
+        Input technology string to be cleaned.
 
     Returns
     -------
     str
-        The cleaned technology string if conversion is successful; otherwise, returns
-        the original input.
+        Cleaned technology string with:
+        - Numeric patterns (like '123' or '456a') removed
+        - Whitespace stripped
+        - Converted to lowercase
+
+    Raises
+    ------
+    Exception
+        If string conversion or processing fails, logs the error and returns the original input.
 
     """
     try:
-        return str(tech_str).strip('0123456789 \t\n\r').casefold()
+        # Remove three-digit patterns or three digits followed by a letter
+        return re.sub(r"\d{3}[a-zA-Z]?", "", tech_str).strip().casefold()
     except Exception as e:
         logger.error(f"Error cleaning technology '{tech_str}': {e}")
         return tech_str
@@ -178,12 +169,12 @@ def format_val_number(input_value: str) -> float | None | typing.Any:
     match = re.match(r"([+-]?\d*\.?\d+)×10([+-]?\d+)", s)
     if match:
         base, exponent = match.groups()
-        return float(base) * (10 ** int(exponent))
+        return round(float(base), 4) * (10 ** int(exponent))
 
     # Replace comma with dot for decimal numbers
     s = s.replace(",", ".")
     try:
-        return float(s)
+        return round(float(s), 4)
     except ValueError:
         raise ValueError(f"Cannot parse number from input: {input_value}")
 
@@ -220,6 +211,86 @@ def extract_year(year_str: str | int) -> int | None:
         return year_str
 
 
+def update_unit_with_price_year(series: pandas.Series) -> pandas.Series:
+    """
+    Update unit string to include price year for EUR-based units.
+
+    Parameters
+    ----------
+    series : pandas.Series
+        A series containing two elements: [unit, price_year]
+
+    Returns
+    -------
+    pandas.Series
+        Updated series with modified unit
+
+    """
+    unit, price_year = series
+
+    # Check if unit is a string, contains 'EUR', and price_year is not null
+    if isinstance(unit, str) and "EUR" in unit and pandas.notna(price_year):
+        # Replace 'EUR/' with 'EUR_{price_year}/'
+        unit = unit.replace("EUR", f"EUR_{int(price_year)}")
+
+    return pandas.Series([unit, price_year])
+
+
+def clean_est_string(est_str: str) -> str:
+    """
+    Casefold the 'est' string, trim whitespace and replace `ctrl` with `control`.
+
+    Parameters
+    ----------
+    est_str : str
+        The input 'est' string to be cleaned.
+
+    Returns
+    -------
+    str
+        The cleaned 'est' string.
+
+    """
+    if est_str == "ctrl":
+        cleaned_str = "control"
+    else:
+        cleaned_str = est_str.casefold().strip()
+    return cleaned_str
+
+
+def complete_missing_units(series: pandas.Series) -> pandas.Series:
+    """
+    Complete missing units based on parameter names.
+
+    Parameters
+    ----------
+    series : pandas.Series
+        A series containing two elements: [par, unit]
+
+    Returns
+    -------
+    pandas.Series
+        Updated series with completed unit if it was missing.
+
+    """
+    par, unit = series
+
+    # Define a mapping of parameters to their corresponding units
+    param_unit_map = {
+        "energy storage capacity for one unit": "MWh",
+        "typical temperature difference in storage": "hot/cold,K",
+        "fixed o&m": "pct.investement/year",
+        "lifetime in total number of cycles": "cycles",
+        "cycle life": "cycles",
+    }
+
+    # If unit is missing or empty, try to fill it based on the parameter name
+    if (not isinstance(unit, str)) or (unit.strip() == ""):
+        unit = param_unit_map.get(par, unit)
+
+    return pandas.Series([par, unit])
+
+
 if __name__ == "__main__":
     # Read the raw data
     dea_energy_storage_file_path = pathlib.Path(
@@ -242,6 +313,11 @@ if __name__ == "__main__":
     # Clean parameter (par) column
     cleaned_df["par"] = cleaned_df["par"].apply(clean_parameter_string)
 
+    # Complete missing units based on parameter names
+    cleaned_df[["par", "unit"]] = cleaned_df[["par", "unit"]].apply(
+        complete_missing_units, axis=1
+    )
+
     # Clean technology (Technology) column
     cleaned_df["Technology"] = cleaned_df["Technology"].apply(clean_technology_string)
 
@@ -254,6 +330,11 @@ if __name__ == "__main__":
     # Format value (val) column
     cleaned_df["val"] = cleaned_df["val"].apply(format_val_number)
 
+    # Include priceyear in unit if applicable
+    cleaned_df[["unit", "priceyear"]] = cleaned_df[["unit", "priceyear"]].apply(
+        update_unit_with_price_year, axis=1
+    )
+
     print(f"Shape after cleaning: {cleaned_df.shape}")
 
     default_kwargs = {
@@ -262,6 +343,13 @@ if __name__ == "__main__":
         "encoding": "utf-8",
         "quoting": csv.QUOTE_ALL,
     }
+
+    # Clean est column
+    cleaned_df["est"] = cleaned_df["est"].apply(clean_est_string)
+
+    # Drop unnecessary columns
+    columns_to_drop = ["cat", "priceyear", "note", "ref"]
+    cleaned_df = cleaned_df.drop(columns=columns_to_drop, errors="ignore")
 
     cleaned_df.info()
     cleaned_df.to_csv("file.csv")
