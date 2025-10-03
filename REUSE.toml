@@ -13,3 +13,8 @@ SPDX-License-Identifier = "MIT"
 path = ["test/test_data/**",]
 SPDX-FileCopyrightText = "The technology-data authors"
 SPDX-License-Identifier = "CC-BY-4.0"
+
+[[annotations]]
+path = ["src/technologydata/package_data/raw/*",]
+SPDX-FileCopyrightText = "The technology-data authors"
+SPDX-License-Identifier = "CC-BY-4.0"
