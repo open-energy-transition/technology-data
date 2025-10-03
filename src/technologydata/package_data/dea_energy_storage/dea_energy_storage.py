@@ -12,6 +12,8 @@ import typing
 
 import pandas
 
+from technologydata import Parameter, Technology, TechnologyCollection
+
 path_cwd = pathlib.Path.cwd()
 
 logger = logging.getLogger(__name__)
@@ -291,6 +293,16 @@ def complete_missing_units(series: pandas.Series) -> pandas.Series:
     return pandas.Series([par, unit])
 
 
+def compute_parameters_dict(dataframe: pandas.DataFrame) -> TechnologyCollection:
+    parameters = {}
+    list_techs = []
+    for (est, year, ws, technology_name), group in dataframe.groupby(["est", "year", "ws", "Technology"]):
+        for _, row in group.iterrows():
+            parameters[row["par"]] = Parameter(magnitude=row["val"], units=row["unit"])
+        list_techs.append(Technology(name=ws, region="EU", year=year, parameters=parameters, case=est, detailed_technology=technology_name))
+    return TechnologyCollection(technologies=list_techs)
+
+
 if __name__ == "__main__":
     # Read the raw data
     dea_energy_storage_file_path = pathlib.Path(
@@ -335,6 +347,17 @@ if __name__ == "__main__":
         update_unit_with_price_year, axis=1
     )
 
+    # Clean est column
+    cleaned_df["est"] = cleaned_df["est"].apply(clean_est_string)
+
+    # Drop unnecessary columns
+    columns_to_drop = ["cat", "priceyear", "ref"]
+    cleaned_df = cleaned_df.drop(columns=columns_to_drop, errors="ignore")
+
+    # Build TechnologyCollection
+    tech_col = compute_parameters_dict(cleaned_df)
+    tech_col.to_json(pathlib.Path("technologies.json"), pathlib.Path("dea_storage"))
+
     print(f"Shape after cleaning: {cleaned_df.shape}")
 
     default_kwargs = {
@@ -344,15 +367,8 @@ if __name__ == "__main__":
         "quoting": csv.QUOTE_ALL,
     }
 
-    # Clean est column
-    cleaned_df["est"] = cleaned_df["est"].apply(clean_est_string)
-
-    # Drop unnecessary columns
-    columns_to_drop = ["cat", "priceyear", "note", "ref"]
-    cleaned_df = cleaned_df.drop(columns=columns_to_drop, errors="ignore")
-
     cleaned_df.info()
-    cleaned_df.to_csv("file.csv")
+    cleaned_df.to_csv("file.csv", **default_kwargs)
 
     # ======
     # SCHEMA
