@@ -171,12 +171,12 @@ def format_val_number(input_value: str) -> float | None | typing.Any:
     match = re.match(r"([+-]?\d*\.?\d+)×10([+-]?\d+)", s)
     if match:
         base, exponent = match.groups()
-        return round(float(base), 4) * (10 ** int(exponent))
+        return float(base) * (10 ** int(exponent))
 
     # Replace comma with dot for decimal numbers
     s = s.replace(",", ".")
     try:
-        return round(float(s), 4)
+        return float(s)
     except ValueError:
         raise ValueError(f"Cannot parse number from input: {input_value}")
 
@@ -260,9 +260,9 @@ def clean_est_string(est_str: str) -> str:
     return cleaned_str
 
 
-def complete_missing_units(series: pandas.Series) -> pandas.Series:
+def standardize_units(series: pandas.Series) -> pandas.Series:
     """
-    Complete missing units based on parameter names.
+    Complete missing units based on parameter names and replace incorrect units.
 
     Parameters
     ----------
@@ -272,12 +272,12 @@ def complete_missing_units(series: pandas.Series) -> pandas.Series:
     Returns
     -------
     pandas.Series
-        Updated series with completed unit if it was missing.
+        Updated series with completed and corrected unit.
 
     """
     par, unit = series
 
-    # Define a mapping of parameters to their corresponding units
+    # Mapping of parameters to their default units
     param_unit_map = {
         "energy storage capacity for one unit": "MWh",
         "typical temperature difference in storage": "hot/cold,K",
@@ -286,36 +286,20 @@ def complete_missing_units(series: pandas.Series) -> pandas.Series:
         "cycle life": "cycles",
     }
 
-    # If unit is missing or empty, try to fill it based on the parameter name
+    # Mapping of incorrect units to correct units
+    unit_corrections = {"pct./period": "pct.", "⁰C": "C"}
+
+    # Complete missing or empty units based on parameter name
     if (not isinstance(unit, str)) or (unit.strip() == ""):
         unit = param_unit_map.get(par, unit)
+
+    # Replace wrong units if applicable
+    unit = unit_corrections.get(unit, unit)
 
     return pandas.Series([par, unit])
 
 
-def replace_wrong_units(unit_str: str) -> str:
-    """
-    Replace specific incorrect or undesired unit strings with correct ones.
-
-    Parameters
-    ----------
-    unit_str : str
-        The original unit string to be corrected.
-
-    Returns
-    -------
-    str
-        The corrected unit string if a replacement is defined; otherwise, returns the original string.
-
-    """
-    param_unit_map = {"pct./period": "pct."}
-
-    new_unit_str = unit_str.replace(unit_str, param_unit_map.get(unit_str, unit_str))
-
-    return new_unit_str
-
-
-def compute_parameters_dict(dataframe: pandas.DataFrame) -> TechnologyCollection:
+def build_technology_collection(dataframe: pandas.DataFrame) -> TechnologyCollection:
     """
     Compute a collection of technologies from a grouped DataFrame.
 
@@ -390,13 +374,10 @@ if __name__ == "__main__":
     # Clean parameter (par) column
     cleaned_df["par"] = cleaned_df["par"].apply(clean_parameter_string)
 
-    # Complete missing units based on parameter names
+    # Complete missing units based on parameter names and replace incorrect units.
     cleaned_df[["par", "unit"]] = cleaned_df[["par", "unit"]].apply(
-        complete_missing_units, axis=1
+        standardize_units, axis=1
     )
-
-    # Correct wrong units based on parameter names
-    cleaned_df["unit"] = cleaned_df["unit"].apply(replace_wrong_units)
 
     # Clean technology (Technology) column
     cleaned_df["Technology"] = cleaned_df["Technology"].apply(clean_technology_string)
@@ -415,6 +396,23 @@ if __name__ == "__main__":
         update_unit_with_price_year, axis=1
     )
 
+    # Replace "MEUR_2020" with "EUR_2020" and multiply val by 1_000_000
+    mask_meur = cleaned_df["unit"].str.contains("MEUR_2020")
+    cleaned_df.loc[mask_meur, "unit"] = cleaned_df.loc[mask_meur, "unit"].str.replace(
+        "MEUR_2020", "EUR_2020"
+    )
+    cleaned_df.loc[mask_meur, "val"] = cleaned_df.loc[mask_meur, "val"] * 1_000_000.0
+
+    # Replace "kEUR_2020" with "EUR_2020" and multiply val by 1_000
+    mask_keur = cleaned_df["unit"].str.contains("kEUR_2020")
+    cleaned_df.loc[mask_keur, "unit"] = cleaned_df.loc[mask_keur, "unit"].str.replace(
+        "kEUR_2020", "EUR_2020"
+    )
+    cleaned_df.loc[mask_keur, "val"] = cleaned_df.loc[mask_keur, "val"] * 1_000.0
+
+    # Round val
+    cleaned_df.loc[:, "val"] = round(cleaned_df.val.astype(float), 4)
+
     # Clean est column
     cleaned_df["est"] = cleaned_df["est"].apply(clean_est_string)
 
@@ -423,7 +421,7 @@ if __name__ == "__main__":
     cleaned_df = cleaned_df.drop(columns=columns_to_drop, errors="ignore")
 
     # Build TechnologyCollection
-    tech_col = compute_parameters_dict(cleaned_df)
+    tech_col = build_technology_collection(cleaned_df)
     tech_col.to_json(pathlib.Path("technologies.json"), pathlib.Path("dea_storage"))
 
     print(f"Shape after cleaning: {cleaned_df.shape}")
