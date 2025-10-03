@@ -13,7 +13,7 @@ from technologydata.package_data.dea_energy_storage.dea_energy_storage import (
     clean_parameter_string,
     drop_invalid_rows,
     extract_year,
-    format_val_number,
+    format_val_number, clean_technology_string,
 )
 
 
@@ -66,6 +66,21 @@ class TestDEAEnergyStorage:
         assert comparison_df.empty
 
     @pytest.mark.parametrize(
+        "input_string, expected_string",
+        [
+            ("192 SOME", "some"),
+            (" 1some ", "some"),
+            (" SOME 123 ", "some"),
+            (" 123 ", ""),
+        ],
+    )  # type: ignore
+    def test_clean_technology_string(self, input_string: str, expected_string: str) -> None:
+        """Check if clean_technology_string works as expected."""
+        result = clean_technology_string(input_string)
+        assert result == expected_string
+        assert isinstance(result, str)
+
+    @pytest.mark.parametrize(
         "input_year, expected_year",
         [
             ("some 1999", 1999),
@@ -75,7 +90,7 @@ class TestDEAEnergyStorage:
         ],
     )  # type: ignore
     def test_extract_year(self, input_year: str, expected_year: int) -> None:
-        """Check if extract_year works as expected, including exception handling."""
+        """Check if extract_year works as expected."""
         result = extract_year(input_year)
         assert result == expected_year
         assert isinstance(result, int)

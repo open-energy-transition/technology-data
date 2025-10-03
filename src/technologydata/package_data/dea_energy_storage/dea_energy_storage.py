@@ -127,8 +127,8 @@ def clean_technology_string(tech_str: str) -> str:
     Safely clean a technology string by converting it to lowercase and stripping whitespace.
 
     This function attempts to convert the input to a string, apply case folding for
-    case-insensitive comparisons, and remove leading/trailing whitespace. If an exception
-    occurs during this process, it catches the exception, prints an error message, and
+    case-insensitive comparisons, remove leading/trailing whitespace, and remove leading digits.
+    If an exception occurs during this process, it catches the exception, prints an error message, and
     returns the original input.
 
     Parameters
@@ -144,7 +144,7 @@ def clean_technology_string(tech_str: str) -> str:
 
     """
     try:
-        return str(tech_str).casefold().strip()
+        return str(tech_str).strip('0123456789 \t\n\r').casefold()
     except Exception as e:
         logger.error(f"Error cleaning technology '{tech_str}': {e}")
         return tech_str
@@ -245,6 +245,9 @@ if __name__ == "__main__":
     # Clean technology (Technology) column
     cleaned_df["Technology"] = cleaned_df["Technology"].apply(clean_technology_string)
 
+    # Clean ws column
+    cleaned_df["ws"] = cleaned_df["ws"].apply(clean_technology_string)
+
     # Clean year column
     cleaned_df["year"] = cleaned_df["year"].apply(extract_year)
 
@@ -268,7 +271,7 @@ if __name__ == "__main__":
     # ======
 
     # Technology object (just mandatory fields)
-    # ws -> Technology.name (str) --> need method to Sentence case and remove digits in front
+    # ws -> Technology.name (str)
     # - -> Technology.region (str) --> this is missing
     # year -> Technology.year (int)
     # est -> Technology.case (str)
@@ -279,7 +282,7 @@ if __name__ == "__main__":
     # unit -> Parameter.units (str)
     # priceyear -> (str) currency year in the unit of Parameter --> need to write a method that if unit column contains currency, I need to add priceyear
     # note -> Parameter.note (str) --> need to write a method that links letter to description
-    # val -> Parameter.magnitude
+    # val -> Parameter.magnitude (int, float)
 
     # Source object
     # Source.title (str) --> need to extract it from dictionary I need to build
