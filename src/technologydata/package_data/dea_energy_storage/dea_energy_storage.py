@@ -294,12 +294,55 @@ def complete_missing_units(series: pandas.Series) -> pandas.Series:
 
 
 def compute_parameters_dict(dataframe: pandas.DataFrame) -> TechnologyCollection:
+    """
+    Compute a collection of technologies from a grouped DataFrame.
+
+    Processes input DataFrame by grouping technologies and extracting their parameters,
+    creating Technology instances for each unique group.
+
+    Parameters
+    ----------
+    dataframe : pandas.DataFrame
+        Input DataFrame containing technology parameters.
+        Expected columns include:
+        - 'est': Estimation or case identifier
+        - 'year': Year of the technology
+        - 'ws': Workspace or technology identifier
+        - 'Technology': Detailed technology name
+        - 'par': Parameter name
+        - 'val': Parameter value
+        - 'unit': Parameter units
+
+    Returns
+    -------
+    TechnologyCollection
+        A collection of Technology instances, each representing a unique
+        technology group with its associated parameters.
+
+    Notes
+    -----
+    - The function groups the DataFrame by 'est', 'year', 'ws', and 'Technology'
+    - For each group, it creates a dictionary of Parameters
+    - Each Technology is instantiated with group-specific attributes
+
+    """
     parameters = {}
     list_techs = []
-    for (est, year, ws, technology_name), group in dataframe.groupby(["est", "year", "ws", "Technology"]):
+    for (est, year, ws, technology_name), group in dataframe.groupby(
+        ["est", "year", "ws", "Technology"]
+    ):
         for _, row in group.iterrows():
             parameters[row["par"]] = Parameter(magnitude=row["val"], units=row["unit"])
-        list_techs.append(Technology(name=ws, region="EU", year=year, parameters=parameters, case=est, detailed_technology=technology_name))
+        list_techs.append(
+            Technology(
+                name=ws,
+                region="EU",
+                year=year,
+                parameters=parameters,
+                case=est,
+                detailed_technology=technology_name,
+            )
+        )
     return TechnologyCollection(technologies=list_techs)
 
 
