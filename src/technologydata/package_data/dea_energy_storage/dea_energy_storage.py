@@ -137,7 +137,7 @@ def clean_technology_string(tech_str: str) -> str:
     """
     try:
         # Remove three-digit patterns or three digits followed by a letter
-        return re.sub(r"\d{3}[a-zA-Z]?", "", tech_str).strip().casefold()
+        return re.sub(r"^(\d{3}[a-zA-Z]?)", "", tech_str.strip()).strip().casefold()
     except Exception as e:
         logger.error(f"Error cleaning technology '{tech_str}': {e}")
         return tech_str
@@ -293,6 +293,28 @@ def complete_missing_units(series: pandas.Series) -> pandas.Series:
     return pandas.Series([par, unit])
 
 
+def replace_wrong_units(unit_str: str) -> str:
+    """
+    Replace specific incorrect or undesired unit strings with correct ones.
+
+    Parameters
+    ----------
+    unit_str : str
+        The original unit string to be corrected.
+
+    Returns
+    -------
+    str
+        The corrected unit string if a replacement is defined; otherwise, returns the original string.
+
+    """
+    param_unit_map = {"pct./period": "pct."}
+
+    new_unit_str = unit_str.replace(unit_str, param_unit_map.get(unit_str, unit_str))
+
+    return new_unit_str
+
+
 def compute_parameters_dict(dataframe: pandas.DataFrame) -> TechnologyCollection:
     """
     Compute a collection of technologies from a grouped DataFrame.
@@ -373,6 +395,9 @@ if __name__ == "__main__":
         complete_missing_units, axis=1
     )
 
+    # Correct wrong units based on parameter names
+    cleaned_df["unit"] = cleaned_df["unit"].apply(replace_wrong_units)
+
     # Clean technology (Technology) column
     cleaned_df["Technology"] = cleaned_df["Technology"].apply(clean_technology_string)
 
@@ -394,7 +419,7 @@ if __name__ == "__main__":
     cleaned_df["est"] = cleaned_df["est"].apply(clean_est_string)
 
     # Drop unnecessary columns
-    columns_to_drop = ["cat", "priceyear", "ref"]
+    columns_to_drop = ["cat", "priceyear", "ref", "note"]
     cleaned_df = cleaned_df.drop(columns=columns_to_drop, errors="ignore")
 
     # Build TechnologyCollection

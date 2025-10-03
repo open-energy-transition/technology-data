@@ -72,10 +72,11 @@ class TestDEAEnergyStorage:
     @pytest.mark.parametrize(
         "input_string, expected_string",
         [
-            ("192 SOME", "some"),
-            (" SOME 123 ", "some"),
-            (" 123a yeah ", "yeah"),
-            (" 123a ", ""),
+            ("192 string", "string"),
+            (" STRING 123 ", "string 123"),
+            (" string 123a ", "string 123a"),
+            (" 123b string ", "string"),
+            (" 123c ", ""),
         ],
     )  # type: ignore
     def test_clean_technology_string(
