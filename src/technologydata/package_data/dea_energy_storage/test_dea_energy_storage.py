@@ -11,9 +11,10 @@ import pytest
 
 from technologydata.package_data.dea_energy_storage.dea_energy_storage import (
     clean_parameter_string,
+    clean_technology_string,
     drop_invalid_rows,
     extract_year,
-    format_val_number, clean_technology_string,
+    format_val_number,
 )
 
 
@@ -74,7 +75,9 @@ class TestDEAEnergyStorage:
             (" 123 ", ""),
         ],
     )  # type: ignore
-    def test_clean_technology_string(self, input_string: str, expected_string: str) -> None:
+    def test_clean_technology_string(
+        self, input_string: str, expected_string: str
+    ) -> None:
         """Check if clean_technology_string works as expected."""
         result = clean_technology_string(input_string)
         assert result == expected_string

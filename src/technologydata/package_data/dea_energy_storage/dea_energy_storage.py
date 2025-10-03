@@ -144,7 +144,7 @@ def clean_technology_string(tech_str: str) -> str:
 
     """
     try:
-        return str(tech_str).strip('0123456789 \t\n\r').casefold()
+        return str(tech_str).strip("0123456789 \t\n\r").casefold()
     except Exception as e:
         logger.error(f"Error cleaning technology '{tech_str}': {e}")
         return tech_str
