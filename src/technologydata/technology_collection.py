@@ -195,7 +195,6 @@ class TechnologyCollection(pydantic.BaseModel):  # type: ignore
             parameters.
 
         """
-
         # Get the full dump of the technology
         tech_dump = tech.model_dump()
 
@@ -221,7 +220,9 @@ class TechnologyCollection(pydantic.BaseModel):  # type: ignore
         for param_key, param_value in parameters.items():
             if isinstance(param_value, dict):
                 # Ensure sources are directly in the parameter dictionary
-                if "sources" in param_value and isinstance(param_value["sources"], dict):
+                if "sources" in param_value and isinstance(
+                    param_value["sources"], dict
+                ):
                     param_value["sources"] = param_value["sources"].get("sources", [])
 
                 processed_tech["parameters"][param_key] = param_value
@@ -229,7 +230,7 @@ class TechnologyCollection(pydantic.BaseModel):  # type: ignore
         return processed_tech
 
     def to_json(
-            self, file_path: pathlib.Path, schema_path: pathlib.Path | None = None
+        self, file_path: pathlib.Path, schema_path: pathlib.Path | None = None
     ) -> None:
         """
         Export the TechnologyCollection to a JSON file, together with a data schema.
@@ -256,7 +257,7 @@ class TechnologyCollection(pydantic.BaseModel):  # type: ignore
             json.dump(
                 [self.process_tech(tech) for tech in self.technologies],
                 jsonfile,
-                indent=4
+                indent=4,
             )
 
     @classmethod
