@@ -444,7 +444,7 @@ if __name__ == "__main__":
 
     # Build TechnologyCollection
     tech_col = build_technology_collection(cleaned_df)
-    tech_col.to_json(pathlib.Path("technologies.json"), pathlib.Path("dea_storage"))
+    tech_col.to_json(pathlib.Path("technologies.json"))
 
     print(f"Shape after cleaning: {cleaned_df.shape}")
 
