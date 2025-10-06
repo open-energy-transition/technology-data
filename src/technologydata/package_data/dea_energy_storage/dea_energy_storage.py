@@ -280,21 +280,36 @@ def standardize_units(series: pandas.Series) -> pandas.Series:
     # Mapping of parameters to their default units
     param_unit_map = {
         "energy storage capacity for one unit": "MWh",
-        "typical temperature difference in storage": "hot/cold,K",
-        "fixed o&m": "pct.investement/year",
+        "typical temperature difference in storage": "K",
+        "fixed o&m": "pct./year",
         "lifetime in total number of cycles": "cycles",
         "cycle life": "cycles",
     }
 
     # Mapping of incorrect units to correct units
-    unit_corrections = {"pct./period": "pct.", "⁰C": "C"}
+    unit_corrections = {
+        "pct./period": "pct.",
+        "⁰C": "C",
+        "°C": "C",
+        "pct./30sec": "pct.",
+        "m2": "meter**2",
+        "m3": "meter**3",
+        "MWhoutput": "MWh",
+        "hot/cold,K": "K",
+        "pct.investement": "pct.",
+        "pct.investment": "pct.",
+        "tank/": "",
+        "mol/s/m/MPa1/2": "mol/s/m/Pa",  # No need to update the values as val = 0.0
+    }
 
-    # Complete missing or empty units based on parameter name
+    # Complete missing or empty units
     if (not isinstance(unit, str)) or (unit.strip() == ""):
         unit = param_unit_map.get(par, unit)
 
-    # Replace wrong units if applicable
-    unit = unit_corrections.get(unit, unit)
+    # Replace wrong units
+    for incorrect, correct in unit_corrections.items():
+        if incorrect == unit or incorrect in unit:
+            unit = unit.replace(incorrect, correct)
 
     return pandas.Series([par, unit])
 
@@ -407,6 +422,13 @@ if __name__ == "__main__":
     mask_keur = cleaned_df["unit"].str.contains("kEUR_2020")
     cleaned_df.loc[mask_keur, "unit"] = cleaned_df.loc[mask_keur, "unit"].str.replace(
         "kEUR_2020", "EUR_2020"
+    )
+    cleaned_df.loc[mask_keur, "val"] = cleaned_df.loc[mask_keur, "val"] * 1_000.0
+
+    # Replace "KEUR_2020" with "EUR_2020" and multiply val by 1_000
+    mask_keur = cleaned_df["unit"].str.contains("KEUR_2020")
+    cleaned_df.loc[mask_keur, "unit"] = cleaned_df.loc[mask_keur, "unit"].str.replace(
+        "KEUR_2020", "EUR_2020"
     )
     cleaned_df.loc[mask_keur, "val"] = cleaned_df.loc[mask_keur, "val"] * 1_000.0
 

@@ -16,6 +16,7 @@ from technologydata.package_data.dea_energy_storage.dea_energy_storage import (
     drop_invalid_rows,
     extract_year,
     format_val_number,
+    standardize_units,
 )
 
 
@@ -132,3 +133,69 @@ class TestDEAEnergyStorage:
         result = clean_est_string(input_string)
         assert isinstance(result, str)
         assert result == expected_string
+
+    def test_standardize_units(self) -> None:
+        """Check if standardize_units works as expected"""
+        input_dataframe = pandas.DataFrame(
+            {
+                "par": [
+                    "energy storage capacity for one unit",
+                    "typical temperature difference in storage",
+                    "fixed o&m",
+                    "lifetime in total number of cycles",
+                    "cycle life",
+                    "p1",
+                    "p2",
+                    "p3",
+                    "p4",
+                    "p5",
+                ],
+                "unit": [
+                    "",
+                    "",
+                    "",
+                    None,
+                    None,
+                    "unit*pct./period",
+                    "unit/⁰C",
+                    "pct./30sec",
+                    "m3",
+                    "EUR_2020/tank/year",
+                ],
+            }
+        )
+        expected_dataframe = pandas.DataFrame(
+            {
+                "par": [
+                    "energy storage capacity for one unit",
+                    "typical temperature difference in storage",
+                    "fixed o&m",
+                    "lifetime in total number of cycles",
+                    "cycle life",
+                    "p1",
+                    "p2",
+                    "p3",
+                    "p4",
+                    "p5",
+                ],
+                "unit": [
+                    "MWh",
+                    "K",
+                    "pct./year",
+                    "cycles",
+                    "cycles",
+                    "unit*pct.",
+                    "unit/C",
+                    "pct.",
+                    "meter**3",
+                    "EUR_2020/year",
+                ],
+            }
+        )
+        input_dataframe[["par", "unit"]] = (
+            input_dataframe[["par", "unit"]]
+            .apply(standardize_units, axis=1)
+            .reset_index(drop=True)
+        )
+        comparison_df = input_dataframe.compare(expected_dataframe)
+        assert comparison_df.empty
