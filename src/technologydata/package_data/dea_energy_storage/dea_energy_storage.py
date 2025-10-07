@@ -60,7 +60,7 @@ def drop_invalid_rows(dataframe: pandas.DataFrame) -> pandas.DataFrame:
     df_cleaned = df_cleaned.dropna(subset=required_columns)
 
     # Remove rows with empty or whitespace-only strings
-    for column in ["Technology", "par", "val", "year"]:
+    for column in required_columns:
         df_cleaned = df_cleaned[df_cleaned[column].astype(str).str.strip() != ""]
 
     # Filter rows with valid year (4 consecutive digits)
@@ -79,7 +79,7 @@ def drop_invalid_rows(dataframe: pandas.DataFrame) -> pandas.DataFrame:
 
 def clean_parameter_string(text_string: str) -> str:
     """
-    Remove any string between square brackets and any leading hyphen or double quotes from the input string. Lower-case all.
+    Remove any string between [] or [), any leading hyphen or double quotes from the input string. Lower-case all.
 
     Parameters
     ----------
@@ -89,7 +89,14 @@ def clean_parameter_string(text_string: str) -> str:
     Returns
     -------
     str
-        cleaned string with square brackets and leading hyphen or double quotes removed.
+        cleaned string with [] and [) and leading hyphen or double quotes removed.
+
+    Examples
+    --------
+    >>> clean_parameter_string("- Charge efficiency [%]")
+    charge efficiency
+    >>> clean_parameter_string("Energy storage capacity for one unit [MWh)")
+    energy storage capacity for one unit
 
     """
     # Remove leading hyphen
@@ -111,7 +118,7 @@ def clean_technology_string(tech_str: str) -> str:
     """
     Clean a technology string by removing numeric patterns and standardizing case.
 
-    This function preprocesses technology-related strings by:
+    This function pre-processes technology-related strings by:
     - Removing three-digit numeric patterns (with optional letter)
     - Stripping leading and trailing whitespace
     - Converting to lowercase for case-insensitive comparison
@@ -133,6 +140,13 @@ def clean_technology_string(tech_str: str) -> str:
     ------
     Exception
         If string conversion or processing fails, logs the error and returns the original input.
+
+    Examples
+    --------
+    >>> clean_technology_string("143a Rock-based Carnot battery")
+    rock-based carnot battery
+    >>> clean_technology_string("Pit Thermal Energy Storage [PTES]")
+    pit thermal energy storage [ptes]
 
     """
     try:
@@ -164,6 +178,13 @@ def format_val_number(input_value: str) -> float | None | typing.Any:
     ValueError
         If the input cannot be parsed into a float.
 
+    Examples
+    --------
+    >>> format_val_number("1,1")
+    1.1
+    >>> format_val_numer("2.84×10-27")
+    2.84e-27
+
     """
     s = str(input_value).strip()
 
@@ -171,12 +192,12 @@ def format_val_number(input_value: str) -> float | None | typing.Any:
     match = re.match(r"([+-]?\d*\.?\d+)×10([+-]?\d+)", s)
     if match:
         base, exponent = match.groups()
-        return float(base) * (10 ** int(exponent))
+        return round(float(base), 4) * (10 ** int(exponent))
 
     # Replace comma with dot for decimal numbers
     s = s.replace(",", ".")
     try:
-        return float(s)
+        return round(float(s), 4)
     except ValueError:
         raise ValueError(f"Cannot parse number from input: {input_value}")
 
@@ -199,8 +220,6 @@ def extract_year(year_str: str | int) -> int | None:
     --------
     >>> extract_year('uncertainty (2050)')
     2050
-    >>> extract_year('some text 2025 more text')
-    2025
 
     """
     if isinstance(year_str, str):
@@ -227,6 +246,11 @@ def update_unit_with_price_year(series: pandas.Series) -> pandas.Series:
     pandas.Series
         Updated series with modified unit
 
+    Examples
+    --------
+    >>> update_unit_with_price_year(["EUR/Kwh", "2020"])
+    EUR_2020/KwH
+
     """
     unit, price_year = series
 
@@ -251,6 +275,13 @@ def clean_est_string(est_str: str) -> str:
     -------
     str
         The cleaned 'est' string.
+
+    Examples
+    --------
+    >>> clean_est_string("Lower")
+    lower
+    >>> clean_est_string("ctrl")
+    control
 
     """
     if est_str == "ctrl":
@@ -299,7 +330,6 @@ def standardize_units(series: pandas.Series) -> pandas.Series:
         "pct.investement": "pct.",
         "pct.investment": "pct.",
         "tank/": "",
-        "mol/s/m/MPa1/2": "mol/s/m/Pa",  # No need to update the values as val = 0.0
     }
 
     # Complete missing or empty units
@@ -386,14 +416,6 @@ if __name__ == "__main__":
     # Drop unnecessary rows
     cleaned_df = drop_invalid_rows(dea_energy_storage_df)
 
-    # Clean parameter (par) column
-    cleaned_df["par"] = cleaned_df["par"].apply(clean_parameter_string)
-
-    # Complete missing units based on parameter names and replace incorrect units.
-    cleaned_df[["par", "unit"]] = cleaned_df[["par", "unit"]].apply(
-        standardize_units, axis=1
-    )
-
     # Clean technology (Technology) column
     cleaned_df["Technology"] = cleaned_df["Technology"].apply(clean_technology_string)
 
@@ -403,37 +425,55 @@ if __name__ == "__main__":
     # Clean year column
     cleaned_df["year"] = cleaned_df["year"].apply(extract_year)
 
-    # Format value (val) column
-    cleaned_df["val"] = cleaned_df["val"].apply(format_val_number)
+    # Clean parameter (par) column
+    cleaned_df["par"] = cleaned_df["par"].apply(clean_parameter_string)
+
+    # Complete missing units based on parameter names and replace incorrect units.
+    cleaned_df[["par", "unit"]] = cleaned_df[["par", "unit"]].apply(
+        standardize_units, axis=1
+    )
 
     # Include priceyear in unit if applicable
     cleaned_df[["unit", "priceyear"]] = cleaned_df[["unit", "priceyear"]].apply(
         update_unit_with_price_year, axis=1
     )
 
+    # Format value (val) column
+    cleaned_df["val"] = cleaned_df["val"].apply(format_val_number)
+
     # Replace "MEUR_2020" with "EUR_2020" and multiply val by 1_000_000
     mask_meur = cleaned_df["unit"].str.contains("MEUR_2020")
     cleaned_df.loc[mask_meur, "unit"] = cleaned_df.loc[mask_meur, "unit"].str.replace(
         "MEUR_2020", "EUR_2020"
     )
-    cleaned_df.loc[mask_meur, "val"] = cleaned_df.loc[mask_meur, "val"] * 1_000_000.0
+    cleaned_df.loc[mask_meur, "val"] = (
+        cleaned_df.loc[mask_meur, "val"] * 1_000_000.0
+    ).round(4)
 
     # Replace "kEUR_2020" with "EUR_2020" and multiply val by 1_000
-    mask_keur = cleaned_df["unit"].str.contains("kEUR_2020")
-    cleaned_df.loc[mask_keur, "unit"] = cleaned_df.loc[mask_keur, "unit"].str.replace(
-        "kEUR_2020", "EUR_2020"
-    )
-    cleaned_df.loc[mask_keur, "val"] = cleaned_df.loc[mask_keur, "val"] * 1_000.0
+    mask_lower_keur = cleaned_df["unit"].str.contains("kEUR_2020")
+    cleaned_df.loc[mask_lower_keur, "unit"] = cleaned_df.loc[
+        mask_lower_keur, "unit"
+    ].str.replace("kEUR_2020", "EUR_2020")
+    cleaned_df.loc[mask_lower_keur, "val"] = (
+        cleaned_df.loc[mask_lower_keur, "val"] * 1_000.0
+    ).round(4)
 
     # Replace "KEUR_2020" with "EUR_2020" and multiply val by 1_000
-    mask_keur = cleaned_df["unit"].str.contains("KEUR_2020")
-    cleaned_df.loc[mask_keur, "unit"] = cleaned_df.loc[mask_keur, "unit"].str.replace(
-        "KEUR_2020", "EUR_2020"
-    )
-    cleaned_df.loc[mask_keur, "val"] = cleaned_df.loc[mask_keur, "val"] * 1_000.0
+    mask_upper_keur = cleaned_df["unit"].str.contains("KEUR_2020")
+    cleaned_df.loc[mask_upper_keur, "unit"] = cleaned_df.loc[
+        mask_upper_keur, "unit"
+    ].str.replace("KEUR_2020", "EUR_2020")
+    cleaned_df.loc[mask_upper_keur, "val"] = (
+        cleaned_df.loc[mask_upper_keur, "val"] * 1_000.0
+    ).round(4)
 
-    # Round val
-    cleaned_df.loc[:, "val"] = round(cleaned_df.val.astype(float), 4)
+    # Replace "mol/s/m/MPa1/2" with "mol/s/m/Pa" and multiply val by 1_000_000
+    mask_mols = cleaned_df["unit"].str.contains("mol/s/m/MPa1/2")
+    cleaned_df.loc[mask_mols, "unit"] = cleaned_df.loc[mask_mols, "unit"].str.replace(
+        "mol/s/m/MPa1/2", "mol/s/m/Pa"
+    )
+    cleaned_df.loc[mask_mols, "val"] = cleaned_df.loc[mask_mols, "val"] * 1_000_000.0
 
     # Clean est column
     cleaned_df["est"] = cleaned_df["est"].apply(clean_est_string)
@@ -457,58 +497,3 @@ if __name__ == "__main__":
 
     cleaned_df.info()
     cleaned_df.to_csv("file.csv", **default_kwargs)
-
-    # ======
-    # SCHEMA
-    # ======
-
-    # Technology object (just mandatory fields)
-    # ws -> Technology.name (str)
-    # - -> Technology.region (str) --> this is missing
-    # year -> Technology.year (int)
-    # est -> Technology.case (str)
-    # Technology -> Technology.detailed_technology (str)
-
-    # Parameter object (mandatory fields and some more)
-    # par -> key in parameters : Dict[str, Parameter] (str)
-    # unit -> Parameter.units (str)
-    # priceyear -> (str) currency year in the unit of Parameter --> need to write a method that if unit column contains currency, I need to add priceyear
-    # note -> Parameter.note (str) --> need to write a method that links letter to description
-    # val -> Parameter.magnitude (int, float)
-
-    # Source object
-    # Source.title (str) --> need to extract it from dictionary I need to build
-    # Source.authors (str) --> need to extract it from dictionary I need to build
-
-    # # Get unique values of technology-year pair
-    # unique_year = (
-    #     dea_energy_storage_df["year"]
-    #     .dropna()
-    #     .astype(str)
-    #     .str.casefold()
-    #     .str.strip()
-    #     .unique()
-    # )
-    # unique_technology = (
-    #     dea_energy_storage_df["Technology"]
-    #     .dropna()
-    #     .astype(str)
-    #     .str.casefold()
-    #     .str.strip()
-    #     .unique()
-    # )
-    #
-    # print(unique_year)
-    # print(unique_technology)
-    #
-    # print(dea_energy_storage_df.shape)
-    # filtered_df = dea_energy_storage_df.query(
-    #     "not year.str.contains('uncertainty', case=False, na=False)", engine="python"
-    # )
-    # print(filtered_df.shape)
-    #
-    # # for year_val in unique_year:
-    # #    for tech_val in unique_technology:
-    # #        filtered_df = dea_energy_storage_df.query(
-    # #            "year.str.casefold() == year_val.casefold() and Technology.str.casefold()==tech_val.casefold()"
-    # #        )

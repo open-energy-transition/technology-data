@@ -135,7 +135,7 @@ class TestDEAEnergyStorage:
         assert result == expected_string
 
     def test_standardize_units(self) -> None:
-        """Check if standardize_units works as expected"""
+        """Check if standardize_units works as expected."""
         input_dataframe = pandas.DataFrame(
             {
                 "par": [
