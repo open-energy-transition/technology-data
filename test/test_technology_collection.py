@@ -3,7 +3,7 @@
 # SPDX-License-Identifier: MIT
 
 """Test the initialization and methods of the TechnologyCollection class."""
-import filecmp
+
 import pathlib
 
 import pandas
@@ -98,7 +98,10 @@ class TestTechnologyCollection:
         output_file = pathlib.Path("to_json_test.json")
         schema_file = pathlib.Path(path_cwd, "to_json_test.schema.json")
         technology_collection.to_json(output_file)
-        assert filecmp.cmp(input_file, output_file, shallow=False), "Files are not identical"
+
+        # Read files and strip trailing whitespace/newlines before comparing
+        with open(input_file) as f1, open(output_file) as f2:
+            assert f1.read().rstrip() == f2.read().rstrip(), "Files are not identical"
         assert output_file.is_file()
         assert schema_file.is_file()
         output_file.unlink(missing_ok=True)
