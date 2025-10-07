@@ -3,6 +3,7 @@
 # SPDX-License-Identifier: MIT
 
 """Test the initialization and methods of the TechnologyCollection class."""
+
 import filecmp
 import pathlib
 
@@ -98,7 +99,9 @@ class TestTechnologyCollection:
         output_file = pathlib.Path("to_json_test.json")
         schema_file = pathlib.Path(path_cwd, "to_json_test.schema.json")
         technology_collection.to_json(output_file)
-        assert filecmp.cmp(input_file, output_file, shallow=False), "Files are not identical"
+        assert filecmp.cmp(input_file, output_file, shallow=False), (
+            "Files are not identical"
+        )
         assert output_file.is_file()
         assert schema_file.is_file()
         output_file.unlink(missing_ok=True)
