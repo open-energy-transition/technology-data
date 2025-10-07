@@ -4,7 +4,6 @@
 
 """Test the initialization and methods of the SourceCollection class."""
 
-import filecmp
 import pathlib
 
 import pandas
