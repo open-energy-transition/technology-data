@@ -411,8 +411,6 @@ if __name__ == "__main__":
         dea_energy_storage_file_path, sheet_name="alldata_flat", engine="calamine"
     )
 
-    print(f"Shape before cleaning: {dea_energy_storage_df.shape}")
-
     # Drop unnecessary rows
     cleaned_df = drop_invalid_rows(dea_energy_storage_df)
 
@@ -484,9 +482,15 @@ if __name__ == "__main__":
 
     # Build TechnologyCollection
     tech_col = build_technology_collection(cleaned_df)
-    tech_col.to_json(pathlib.Path("technologies.json"))
-
-    print(f"Shape after cleaning: {cleaned_df.shape}")
+    output_path = pathlib.Path(
+        path_cwd,
+        "src",
+        "technologydata",
+        "package_data",
+        "dea_energy_storage",
+        "technologies.json",
+    )
+    tech_col.to_json(output_path)
 
     default_kwargs = {
         "sep": ",",
@@ -495,5 +499,4 @@ if __name__ == "__main__":
         "quoting": csv.QUOTE_ALL,
     }
 
-    cleaned_df.info()
     cleaned_df.to_csv("file.csv", **default_kwargs)
