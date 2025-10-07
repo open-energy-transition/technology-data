@@ -14,6 +14,7 @@ from typing import Annotated, Self
 
 import pandas
 import pydantic
+import pydantic_core
 
 from technologydata.technology import Technology
 
@@ -172,63 +173,6 @@ class TechnologyCollection(pydantic.BaseModel):  # type: ignore
         output_dataframe = self.to_dataframe()
         output_dataframe.to_csv(**merged_kwargs)
 
-    @staticmethod
-    def process_tech(tech: Technology) -> dict[str, typing.Any]:
-        """
-        Process a single technology object to extract relevant information.
-
-        This function takes a technology object, extracts relevant information,
-        and processes the parameters to ensure they are in the correct format.
-
-        Parameters
-        ----------
-        tech : Technology
-            The technology object to process. This object is expected to have a
-            `model_dump` method that returns a dictionary representation of the
-            technology.
-
-        Returns
-        -------
-        Dict[str, Any]
-            A dictionary containing the processed technology information. The
-            dictionary includes base technology information and processed
-            parameters.
-
-        """
-        # Get the full dump of the technology
-        tech_dump = tech.model_dump()
-
-        # Create a dictionary with base technology information
-        processed_tech = {
-            "region": tech_dump.get("region"),
-            "case": tech_dump.get("case"),
-            "year": tech_dump.get("year"),
-            "name": tech_dump.get("name"),
-            "detailed_technology": tech_dump.get("detailed_technology"),
-        }
-
-        # Handle parameters
-        parameters = tech_dump.get("parameters", {})
-        processed_tech["parameters"] = {}
-
-        # Separate out parameters that are not nested
-        for key, value in tech_dump.items():
-            if key not in processed_tech and key != "parameters":
-                processed_tech[key] = value
-
-        # Modify the sources in parameters
-        for param_key, param_value in parameters.items():
-            if isinstance(param_value, dict):
-                # Ensure sources are directly in the parameter dictionary
-                if "sources" in param_value and isinstance(
-                    param_value["sources"], dict
-                ):
-                    param_value["sources"] = param_value["sources"].get("sources", [])
-
-                processed_tech["parameters"][param_key] = param_value
-
-        return processed_tech
-
     def to_json(
         self, file_path: pathlib.Path, schema_path: pathlib.Path | None = None
     ) -> None:
@@ -254,11 +198,8 @@ class TechnologyCollection(pydantic.BaseModel):  # type: ignore
             json.dump(schema, f, indent=4)
 
         with open(file_path, mode="w", encoding="utf-8") as jsonfile:
-            json.dump(
-                [self.process_tech(tech) for tech in self.technologies],
-                jsonfile,
-                indent=4,
-            )
+            json_data = self.model_dump_json(indent=4)  # Convert to JSON string
+            jsonfile.write(json_data)
 
     @classmethod
     def from_json(cls, file_path: pathlib.Path | str) -> Self:
@@ -280,20 +221,18 @@ class TechnologyCollection(pydantic.BaseModel):  # type: ignore
         TypeError
             If `file_path` is not a pathlib.Path or str.
 
-        Notes
-        -----
-        This method reads the JSON data from the specified file, creates `Technology` objects
-        for each item in the JSON list using `Technology.from_dict()`, and returns a new
-        `TechnologyCollection` containing these objects.
-
         """
-        if isinstance(file_path, pathlib.Path | str):
+        if isinstance(file_path, (pathlib.Path | str)):
             file_path = pathlib.Path(file_path)
         else:
             raise TypeError("file_path must be a pathlib.Path or str")
+
         with open(file_path, encoding="utf-8") as jsonfile:
-            json_data = json.load(jsonfile)
-        techs = []
-        for item in json_data:
-            techs.append(Technology.from_dict(item))
-        return cls(technologies=techs)
+            json_data = jsonfile.read()
+
+        # pydantic_core.from_json return Any. Therefore, typing.cast makes sure that
+        # the output is indeed a TechnologyCollection
+        return typing.cast(
+            TechnologyCollection,
+            cls.model_validate(pydantic_core.from_json(json_data, allow_partial=True)),
+        )
