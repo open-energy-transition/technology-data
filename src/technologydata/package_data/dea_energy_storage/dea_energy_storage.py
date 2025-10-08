@@ -311,6 +311,14 @@ def standardize_units(series: pandas.Series) -> pandas.Series:
     pandas.Series
         Updated series with completed and corrected unit.
 
+    Notes
+    -----
+    The following substitutions are driven by the `pint` documentation available
+     at https://github.com/hgrecco/pint/blob/master/pint/default_en.txt:
+    - "pct.": "percent",
+    - "m2": "meter**2",
+    - "m3": "meter**3",
+
     """
     par, unit = series
 
@@ -325,7 +333,7 @@ def standardize_units(series: pandas.Series) -> pandas.Series:
 
     # Mapping of incorrect units to correct units
     unit_corrections = {
-        "pct./period": "pct.",
+        "pct./period": "percent",
         "⁰C": "C",
         "°C": "C",
         "pct./30sec": "pct.",
@@ -333,9 +341,10 @@ def standardize_units(series: pandas.Series) -> pandas.Series:
         "m3": "meter**3",
         "MWhoutput": "MWh",
         "hot/cold,K": "K",
-        "pct.investement": "pct.",
-        "pct.investment": "pct.",
+        "pct.investement": "percent",
+        "pct.investment": "percent",
         "tank/": "",
+        "pct.": "percent",
     }
 
     # Complete missing or empty units
