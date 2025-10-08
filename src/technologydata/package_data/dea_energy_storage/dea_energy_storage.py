@@ -3,8 +3,8 @@
 # SPDX-License-Identifier: MIT
 
 """Data parser for the DEA energy storage data set."""
+
 import argparse
-import csv
 import logging
 import pathlib
 import re
@@ -12,7 +12,13 @@ import typing
 
 import pandas
 
-from technologydata import Parameter, SourceCollection, Source, Technology, TechnologyCollection
+from technologydata import (
+    Parameter,
+    Source,
+    SourceCollection,
+    Technology,
+    TechnologyCollection,
+)
 
 path_cwd = pathlib.Path.cwd()
 
@@ -344,7 +350,11 @@ def standardize_units(series: pandas.Series) -> pandas.Series:
     return pandas.Series([par, unit])
 
 
-def build_technology_collection(dataframe: pandas.DataFrame, sources_path: pathlib.Path | str, store_source: bool = False) -> TechnologyCollection:
+def build_technology_collection(
+    dataframe: pandas.DataFrame,
+    sources_path: pathlib.Path,
+    store_source: bool = False,
+) -> TechnologyCollection:
     """
     Compute a collection of technologies from a grouped DataFrame.
 
@@ -363,7 +373,7 @@ def build_technology_collection(dataframe: pandas.DataFrame, sources_path: pathl
         - 'par': Parameter name
         - 'val': Parameter value
         - 'unit': Parameter units
-    sources_path: pathlib.Path, str
+    sources_path: pathlib.Path
         Output path for storing the SourceCollection object
     store_source: Optional[bool]
         Flag to decide whether to store the source object on the Wayback Machine. Default False.
@@ -385,9 +395,11 @@ def build_technology_collection(dataframe: pandas.DataFrame, sources_path: pathl
     list_techs = []
 
     if store_source:
-        source = Source(title="Technology Data for Energy storage",
-                        authors="Danish Energy Agency, Technology Data for Energy storage (2020), Excel datasheet: alldata_flat",
-                        url="https://ens.dk/media/6589/download")
+        source = Source(
+            title="Technology Data for Energy storage",
+            authors="Danish Energy Agency, Technology Data for Energy storage (2020), Excel datasheet: alldata_flat",
+            url="https://ens.dk/media/6589/download",
+        )
         source.ensure_in_wayback()
         sources = SourceCollection(sources=[source])
         sources.to_json(sources_path)
@@ -398,7 +410,9 @@ def build_technology_collection(dataframe: pandas.DataFrame, sources_path: pathl
         ["est", "year", "ws", "Technology"]
     ):
         for _, row in group.iterrows():
-            parameters[row["par"]] = Parameter(magnitude=row["val"], units=row["unit"], sources=sources)
+            parameters[row["par"]] = Parameter(
+                magnitude=row["val"], units=row["unit"], sources=sources
+            )
         list_techs.append(
             Technology(
                 name=ws,
@@ -424,22 +438,25 @@ def parse_input_arguments() -> argparse.Namespace:
         - Store source flag
 
     """
-
     # Create the parser
     parser = argparse.ArgumentParser(
         description="Parse the DEA technology storage dataset",
-        formatter_class=argparse.RawTextHelpFormatter
+        formatter_class=argparse.RawTextHelpFormatter,
     )
 
     # Define arguments
-    parser.add_argument("--num_digits",
-                        type=int,
-                        default=4,
-                        help="Name of significant digits to round the values. ")
+    parser.add_argument(
+        "--num_digits",
+        type=int,
+        default=4,
+        help="Name of significant digits to round the values. ",
+    )
 
-    parser.add_argument("--store_source",
-                        action="store_true",
-                        help="Store_source, store the source object on the wayback machine. Default: false")
+    parser.add_argument(
+        "--store_source",
+        action="store_true",
+        help="Store_source, store the source object on the wayback machine. Default: false",
+    )
 
     # Parse arguments
     args = parser.parse_args()
@@ -448,7 +465,6 @@ def parse_input_arguments() -> argparse.Namespace:
 
 
 if __name__ == "__main__":
-
     # Parse input arguments
     input_args = parse_input_arguments()
 
@@ -550,5 +566,7 @@ if __name__ == "__main__":
         dea_storage_path,
         "sources.json",
     )
-    tech_col = build_technology_collection(cleaned_df, output_sources_path, store_source=input_args.store_source)
+    tech_col = build_technology_collection(
+        cleaned_df, output_sources_path, store_source=input_args.store_source
+    )
     tech_col.to_json(output_technologies_path)
