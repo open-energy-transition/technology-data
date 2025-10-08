@@ -467,6 +467,7 @@ def parse_input_arguments() -> argparse.Namespace:
 if __name__ == "__main__":
     # Parse input arguments
     input_args = parse_input_arguments()
+    logger.info("Command line arguments parsed.")
 
     # Read the raw data
     dea_energy_storage_file_path = pathlib.Path(
@@ -480,34 +481,42 @@ if __name__ == "__main__":
     dea_energy_storage_df = pandas.read_excel(
         dea_energy_storage_file_path, sheet_name="alldata_flat", engine="calamine"
     )
+    logger.info("Input file read-in.")
 
     # Drop unnecessary rows
     cleaned_df = drop_invalid_rows(dea_energy_storage_df)
+    logger.info("Unnecessary rows dropped.")
 
     # Clean technology (Technology) column
     cleaned_df["Technology"] = cleaned_df["Technology"].apply(clean_technology_string)
 
     # Clean ws column
     cleaned_df["ws"] = cleaned_df["ws"].apply(clean_technology_string)
+    logger.info("`Technology` and `ws` cleaned.")
 
     # Clean year column
     cleaned_df["year"] = cleaned_df["year"].apply(extract_year)
+    logger.info("`year` column cleaned.")
 
     # Clean parameter (par) column
     cleaned_df["par"] = cleaned_df["par"].apply(clean_parameter_string)
+    logger.info("`par` column cleaned.")
 
     # Complete missing units based on parameter names and replace incorrect units.
     cleaned_df[["par", "unit"]] = cleaned_df[["par", "unit"]].apply(
         standardize_units, axis=1
     )
+    logger.info("Missing units added and wrong units replaced.")
 
     # Include priceyear in unit if applicable
     cleaned_df[["unit", "priceyear"]] = cleaned_df[["unit", "priceyear"]].apply(
         update_unit_with_price_year, axis=1
     )
+    logger.info("`priceyear` included in `unit` column.")
 
     # Format value (val) column
     cleaned_df["val"] = cleaned_df["val"].apply(format_val_number)
+    logger.info("`val` column formatted.")
 
     # Replace "MEUR_2020" with "EUR_2020" and multiply val by 1_000_000
     mask_meur = cleaned_df["unit"].str.contains("MEUR_2020")
@@ -545,10 +554,12 @@ if __name__ == "__main__":
 
     # Clean est column
     cleaned_df["est"] = cleaned_df["est"].apply(clean_est_string)
+    logger.info("`est` column cleaned.")
 
     # Drop unnecessary columns
     columns_to_drop = ["cat", "priceyear", "ref", "note"]
     cleaned_df = cleaned_df.drop(columns=columns_to_drop, errors="ignore")
+    logger.info("Unnecessary columns dropped.")
 
     # Build TechnologyCollection
     dea_storage_path = pathlib.Path(
@@ -569,4 +580,6 @@ if __name__ == "__main__":
     tech_col = build_technology_collection(
         cleaned_df, output_sources_path, store_source=input_args.store_source
     )
+    logger.info("TechnologyCollection object instantiated.")
     tech_col.to_json(output_technologies_path)
+    logger.info("TechnologyCollection object exported to json.")
