@@ -3,7 +3,7 @@
 # SPDX-License-Identifier: MIT
 
 """Data parser for the DEA energy storage data set."""
-
+import argparse
 import csv
 import logging
 import pathlib
@@ -12,7 +12,7 @@ import typing
 
 import pandas
 
-from technologydata import Parameter, Technology, TechnologyCollection
+from technologydata import Parameter, SourceCollection, Source, Technology, TechnologyCollection
 
 path_cwd = pathlib.Path.cwd()
 
@@ -192,12 +192,12 @@ def format_val_number(input_value: str) -> float | None | typing.Any:
     match = re.match(r"([+-]?\d*\.?\d+)×10([+-]?\d+)", s)
     if match:
         base, exponent = match.groups()
-        return round(float(base), 4) * (10 ** int(exponent))
+        return round(float(base), input_args.num_digits) * (10 ** int(exponent))
 
     # Replace comma with dot for decimal numbers
     s = s.replace(",", ".")
     try:
-        return round(float(s), 4)
+        return round(float(s), input_args.num_digits)
     except ValueError:
         raise ValueError(f"Cannot parse number from input: {input_value}")
 
@@ -344,7 +344,7 @@ def standardize_units(series: pandas.Series) -> pandas.Series:
     return pandas.Series([par, unit])
 
 
-def build_technology_collection(dataframe: pandas.DataFrame) -> TechnologyCollection:
+def build_technology_collection(dataframe: pandas.DataFrame, sources_path: pathlib.Path | str, store_source: bool = False) -> TechnologyCollection:
     """
     Compute a collection of technologies from a grouped DataFrame.
 
@@ -363,6 +363,10 @@ def build_technology_collection(dataframe: pandas.DataFrame) -> TechnologyCollec
         - 'par': Parameter name
         - 'val': Parameter value
         - 'unit': Parameter units
+    sources_path: pathlib.Path, str
+        Output path for storing the SourceCollection object
+    store_source: Optional[bool]
+        Flag to decide whether to store the source object on the Wayback Machine. Default False.
 
     Returns
     -------
@@ -379,11 +383,22 @@ def build_technology_collection(dataframe: pandas.DataFrame) -> TechnologyCollec
     """
     parameters = {}
     list_techs = []
+
+    if store_source:
+        source = Source(title="Technology Data for Energy storage",
+                        authors="Danish Energy Agency, Technology Data for Energy storage (2020), Excel datasheet: alldata_flat",
+                        url="https://ens.dk/media/6589/download")
+        source.ensure_in_wayback()
+        sources = SourceCollection(sources=[source])
+        sources.to_json(sources_path)
+    else:
+        sources = SourceCollection.from_json(sources_path)
+
     for (est, year, ws, technology_name), group in dataframe.groupby(
         ["est", "year", "ws", "Technology"]
     ):
         for _, row in group.iterrows():
-            parameters[row["par"]] = Parameter(magnitude=row["val"], units=row["unit"])
+            parameters[row["par"]] = Parameter(magnitude=row["val"], units=row["unit"], sources=sources)
         list_techs.append(
             Technology(
                 name=ws,
@@ -397,7 +412,46 @@ def build_technology_collection(dataframe: pandas.DataFrame) -> TechnologyCollec
     return TechnologyCollection(technologies=list_techs)
 
 
+def parse_input_arguments() -> argparse.Namespace:
+    """
+    Parse command line arguments.
+
+    Returns
+    -------
+    argparse.Namespace
+        Parsed command line arguments containing:
+        - Number of significant digits
+        - Store source flag
+
+    """
+
+    # Create the parser
+    parser = argparse.ArgumentParser(
+        description="Parse the DEA technology storage dataset",
+        formatter_class=argparse.RawTextHelpFormatter
+    )
+
+    # Define arguments
+    parser.add_argument("--num_digits",
+                        type=int,
+                        default=4,
+                        help="Name of significant digits to round the values. ")
+
+    parser.add_argument("--store_source",
+                        action="store_true",
+                        help="Store_source, store the source object on the wayback machine. Default: false")
+
+    # Parse arguments
+    args = parser.parse_args()
+
+    return args
+
+
 if __name__ == "__main__":
+
+    # Parse input arguments
+    input_args = parse_input_arguments()
+
     # Read the raw data
     dea_energy_storage_file_path = pathlib.Path(
         path_cwd,
@@ -446,7 +500,7 @@ if __name__ == "__main__":
     )
     cleaned_df.loc[mask_meur, "val"] = (
         cleaned_df.loc[mask_meur, "val"] * 1_000_000.0
-    ).round(4)
+    ).round(input_args.num_digits)
 
     # Replace "kEUR_2020" with "EUR_2020" and multiply val by 1_000
     mask_lower_keur = cleaned_df["unit"].str.contains("kEUR_2020")
@@ -455,7 +509,7 @@ if __name__ == "__main__":
     ].str.replace("kEUR_2020", "EUR_2020")
     cleaned_df.loc[mask_lower_keur, "val"] = (
         cleaned_df.loc[mask_lower_keur, "val"] * 1_000.0
-    ).round(4)
+    ).round(input_args.num_digits)
 
     # Replace "KEUR_2020" with "EUR_2020" and multiply val by 1_000
     mask_upper_keur = cleaned_df["unit"].str.contains("KEUR_2020")
@@ -464,7 +518,7 @@ if __name__ == "__main__":
     ].str.replace("KEUR_2020", "EUR_2020")
     cleaned_df.loc[mask_upper_keur, "val"] = (
         cleaned_df.loc[mask_upper_keur, "val"] * 1_000.0
-    ).round(4)
+    ).round(input_args.num_digits)
 
     # Replace "mol/s/m/MPa1/2" with "mol/s/m/Pa" and multiply val by 1_000_000
     mask_mols = cleaned_df["unit"].str.contains("mol/s/m/MPa1/2")
@@ -481,22 +535,20 @@ if __name__ == "__main__":
     cleaned_df = cleaned_df.drop(columns=columns_to_drop, errors="ignore")
 
     # Build TechnologyCollection
-    tech_col = build_technology_collection(cleaned_df)
-    output_path = pathlib.Path(
+    dea_storage_path = pathlib.Path(
         path_cwd,
         "src",
         "technologydata",
         "package_data",
         "dea_energy_storage",
+    )
+    output_technologies_path = pathlib.Path(
+        dea_storage_path,
         "technologies.json",
     )
-    tech_col.to_json(output_path)
-
-    default_kwargs = {
-        "sep": ",",
-        "index": False,
-        "encoding": "utf-8",
-        "quoting": csv.QUOTE_ALL,
-    }
-
-    cleaned_df.to_csv("file.csv", **default_kwargs)
+    output_sources_path = pathlib.Path(
+        dea_storage_path,
+        "sources.json",
+    )
+    tech_col = build_technology_collection(cleaned_df, output_sources_path, store_source=input_args.store_source)
+    tech_col.to_json(output_technologies_path)

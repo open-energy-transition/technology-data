@@ -1,0 +1,93 @@
+{
+    "$defs": {
+        "Source": {
+            "description": "Represent a data source, including bibliographic and web information.\n\nAttributes\n----------\ntitle : str\n    Title of the source.\nauthors : str\n    Authors of the source.\nurl : Optional[str]\n    URL of the source.\nurl_archive : Optional[str]\n    Archived URL.\nurl_date : Optional[str]\n    Date the URL was accessed.\nurl_date_archive : Optional[str]\n    Date the URL was archived.",
+            "properties": {
+                "title": {
+                    "description": "Title of the source.",
+                    "title": "Title",
+                    "type": "string"
+                },
+                "authors": {
+                    "description": "Authors of the source.",
+                    "title": "Authors",
+                    "type": "string"
+                },
+                "url": {
+                    "anyOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "default": null,
+                    "description": "URL of the source.",
+                    "title": "Url"
+                },
+                "url_archive": {
+                    "anyOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "default": null,
+                    "description": "Archived URL.",
+                    "title": "Url Archive"
+                },
+                "url_date": {
+                    "anyOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "default": null,
+                    "description": "Date the URL was accessed.",
+                    "title": "Url Date"
+                },
+                "url_date_archive": {
+                    "anyOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "default": null,
+                    "description": "Date the URL was archived.",
+                    "title": "Url Date Archive"
+                }
+            },
+            "required": [
+                "title",
+                "authors"
+            ],
+            "title": "Source",
+            "type": "object"
+        }
+    },
+    "description": "Represent a collection of sources.\n\nAttributes\n----------\nsources : List[Source]\n    List of Source objects.",
+    "properties": {
+        "sources": {
+            "description": "List of Source objects.",
+            "items": {
+                "$ref": "#/$defs/Source"
+            },
+            "title": "Sources",
+            "type": "array"
+        }
+    },
+    "required": [
+        "sources"
+    ],
+    "title": "SourceCollection",
+    "type": "object"
+}
