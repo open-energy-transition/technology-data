@@ -11,6 +11,7 @@ import re
 import typing
 
 import pandas
+import pydantic
 
 from technologydata import (
     Parameter,
@@ -83,6 +84,7 @@ def drop_invalid_rows(dataframe: pandas.DataFrame) -> pandas.DataFrame:
     return df_cleaned
 
 
+@pydantic.validate_call  # type: ignore
 def clean_parameter_string(text_string: str) -> str:
     """
     Remove any string between [] or [), any leading hyphen or double quotes from the input string. Lower-case all.
@@ -120,6 +122,7 @@ def clean_parameter_string(text_string: str) -> str:
     return result
 
 
+@pydantic.validate_call  # type: ignore
 def clean_technology_string(tech_str: str) -> str:
     """
     Clean a technology string by removing numeric patterns and standardizing case.
@@ -163,6 +166,7 @@ def clean_technology_string(tech_str: str) -> str:
         return tech_str
 
 
+@pydantic.validate_call  # type: ignore
 def format_val_number(input_value: str) -> float | None | typing.Any:
     """
     Parse various number formats into a float value.
@@ -208,7 +212,8 @@ def format_val_number(input_value: str) -> float | None | typing.Any:
         raise ValueError(f"Cannot parse number from input: {input_value}")
 
 
-def extract_year(year_str: str | int) -> int | None:
+@pydantic.validate_call  # type: ignore
+def extract_year(year_str: str) -> int | None:
     """
     Extract the first year (integer) from a given input.
 
@@ -228,14 +233,11 @@ def extract_year(year_str: str | int) -> int | None:
     2050
 
     """
-    if isinstance(year_str, str):
-        # Extract digits
-        digits = re.findall(r"\d+", year_str)
+    # Extract digits
+    digits = re.findall(r"\d+", year_str)
 
-        # Convert to integer
-        return int(digits[0]) if digits else None
-    else:
-        return year_str
+    # Convert to integer
+    return int(digits[0]) if digits else None
 
 
 def update_unit_with_price_year(series: pandas.Series) -> pandas.Series:
@@ -268,6 +270,7 @@ def update_unit_with_price_year(series: pandas.Series) -> pandas.Series:
     return pandas.Series([unit, price_year])
 
 
+@pydantic.validate_call  # type: ignore
 def clean_est_string(est_str: str) -> str:
     """
     Casefold the 'est' string, trim whitespace and replace `ctrl` with `control`.
@@ -359,6 +362,33 @@ def standardize_units(series: pandas.Series) -> pandas.Series:
     return pandas.Series([par, unit])
 
 
+def filter_parameters(dataframe: pandas.DataFrame) -> pandas.DataFrame:
+    """
+    Filter rows of a DataFrame by allowed technology parameters.
+
+    Parameters
+    ----------
+    dataframe : pandas.DataFrame
+        Input DataFrame containing at least a "Technology" column.
+
+    Returns
+    -------
+    pandas.DataFrame
+        The filtered DataFrame. The returned
+        DataFrame contains only rows where the `par` column is one of:
+        "technical lifetime", "fixed o&m", "specific investment", or
+        "variable o&m".
+
+    """
+    allowed_set = {
+        "technical lifetime",
+        "fixed o&m",
+        "specific investment",
+        "variable o&m",
+    }
+    return dataframe[dataframe["Technology"].isin(allowed_set)].reset_index(drop=True)
+
+
 def build_technology_collection(
     dataframe: pandas.DataFrame,
     sources_path: pathlib.Path,
@@ -435,6 +465,7 @@ def build_technology_collection(
     return TechnologyCollection(technologies=list_techs)
 
 
+@pydantic.validate_call  # type: ignore
 def parse_input_arguments() -> argparse.Namespace:
     """
     Parse command line arguments.
@@ -467,6 +498,12 @@ def parse_input_arguments() -> argparse.Namespace:
         help="Store_source, store the source object on the wayback machine. Default: false",
     )
 
+    parser.add_argument(
+        "--all_params",
+        action="store_true",
+        help="all_params. Store to technologies.json all parameters. Default: false",
+    )
+
     # Parse arguments
     args = parser.parse_args()
 
@@ -487,8 +524,12 @@ if __name__ == "__main__":
         "raw",
         "Technology_datasheet_for_energy_storage.xlsx",
     )
+
     dea_energy_storage_df = pandas.read_excel(
-        dea_energy_storage_file_path, sheet_name="alldata_flat", engine="calamine"
+        dea_energy_storage_file_path,
+        sheet_name="alldata_flat",
+        engine="calamine",
+        dtype=str,
     )
     logger.info("Input file read-in.")
 
@@ -570,6 +611,12 @@ if __name__ == "__main__":
     cleaned_df = cleaned_df.drop(columns=columns_to_drop, errors="ignore")
     logger.info("Unnecessary columns dropped.")
 
+    if input_args.all_params:
+        logger.info("All parameters are outputted to technologies.json")
+    else:
+        # Filter dataframe based on parameter values
+        filtered_df = filter_parameters(cleaned_df)
+
     # Build TechnologyCollection
     dea_storage_path = pathlib.Path(
         path_cwd,
@@ -587,7 +634,7 @@ if __name__ == "__main__":
         "sources.json",
     )
     tech_col = build_technology_collection(
-        cleaned_df, output_sources_path, store_source=input_args.store_source
+        filtered_df, output_sources_path, store_source=input_args.store_source
     )
     logger.info("TechnologyCollection object instantiated.")
     tech_col.to_json(output_technologies_path)
