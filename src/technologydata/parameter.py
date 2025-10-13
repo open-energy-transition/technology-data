@@ -18,7 +18,7 @@ import logging
 from typing import Annotated, Self
 
 import pint
-from pydantic import BaseModel, Field, PrivateAttr
+from pydantic import BaseModel, Field, PrivateAttr, validate_call
 
 import technologydata
 from technologydata.source_collection import SourceCollection
@@ -92,6 +92,7 @@ class Parameter(BaseModel):  # type: ignore
         super().__init__(**data)
         self._update_pint_attributes()
 
+    @validate_call  # type: ignore
     def _update_pint_attributes(self) -> None:
         """
         Update internal pint attributes based on current object fields.

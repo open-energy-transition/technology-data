@@ -44,6 +44,7 @@ class DataPackage(pydantic.BaseModel):  # type: ignore
         SourceCollection | None, pydantic.Field(description="List of Source objects.")
     ] = None
 
+    @pydantic.validate_call  # type: ignore
     def get_source_collection(self) -> None:
         """
         Get the SourceCollection associated with this DataPackage from the TechnologyCollection.
@@ -100,6 +101,7 @@ class DataPackage(pydantic.BaseModel):  # type: ignore
 
         return data_package
 
+    @pydantic.validate_call  # type: ignore
     def to_json(self, folder_path: pathlib.Path) -> None:
         """
         Export the Datapackage to JSON files.
@@ -122,6 +124,7 @@ class DataPackage(pydantic.BaseModel):  # type: ignore
             sources_path = pathlib.Path(folder_path, "sources.json")
             self.sources.to_json(sources_path)
 
+    @pydantic.validate_call  # type: ignore
     def to_csv(self, folder_path: pathlib.Path) -> None:
         """
         Export the Datapackage to CSV files.

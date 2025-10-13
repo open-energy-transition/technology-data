@@ -206,6 +206,7 @@ class SourceCollection(pydantic.BaseModel):  # type: ignore
             jsonfile.write(json_data)
 
     @classmethod
+    @pydantic.validate_call  # type: ignore
     def from_json(
         cls,
         file_path: pathlib.Path | str,
@@ -219,12 +220,7 @@ class SourceCollection(pydantic.BaseModel):  # type: ignore
             The path to the JSON file to be imported.
 
         """
-        if isinstance(file_path, (pathlib.Path | str)):
-            file_path = pathlib.Path(file_path)
-        else:
-            raise TypeError("file_path must be a pathlib.Path or str")
-
-        json_data = None
+        file_path = pathlib.Path(file_path)
 
         # Load data from file if file_path is provided
         with open(file_path, encoding="utf-8") as jsonfile:

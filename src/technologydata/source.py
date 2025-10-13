@@ -92,6 +92,7 @@ class Source(pydantic.BaseModel):  # type: ignore
                 return False
         return True
 
+    @pydantic.validate_call  # type: ignore
     def __hash__(self) -> int:
         """
         Return a hash value for the Source instance based on all attributes.
@@ -111,6 +112,7 @@ class Source(pydantic.BaseModel):  # type: ignore
         )
         return hash(attribute_values)
 
+    @pydantic.validate_call  # type: ignore
     def __str__(self) -> str:
         """
         Return a string representation of the Source, including all available attributes.
@@ -132,6 +134,7 @@ class Source(pydantic.BaseModel):  # type: ignore
             parts.append(f"on '{self.url_date_archive}'.")
         return ", ".join(parts)
 
+    @pydantic.validate_call  # type: ignore
     def ensure_in_wayback(self) -> None:
         """
         Ensure that the source URL is archived in the Wayback Machine.
@@ -187,6 +190,7 @@ class Source(pydantic.BaseModel):  # type: ignore
                 self.url_archive = archived_url
 
     @staticmethod
+    @pydantic.validate_call  # type: ignore
     def _store_in_wayback(
         url_to_archive: str,
     ) -> tuple[Any, bool | None, str | None] | None:
@@ -236,6 +240,7 @@ class Source(pydantic.BaseModel):  # type: ignore
             # If "web/" or next "/" not found, return empty string
             return None
 
+    @pydantic.validate_call  # type: ignore
     def retrieve_from_wayback(
         self, download_directory: pathlib.Path
     ) -> pathlib.Path | None:
@@ -304,6 +309,7 @@ class Source(pydantic.BaseModel):  # type: ignore
         return storage_path
 
     @staticmethod
+    @pydantic.validate_call  # type: ignore
     def _get_save_path(
         url_archived: str, source_path: pathlib.Path, source_title: str
     ) -> pathlib.Path | None:
@@ -353,6 +359,7 @@ class Source(pydantic.BaseModel):  # type: ignore
             return None
 
     @staticmethod
+    @pydantic.validate_call  # type: ignore
     def _get_content_type(url_archived: str) -> Any:
         """
         Fetch the content type of the archived URL.
