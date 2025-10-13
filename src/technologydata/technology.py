@@ -47,6 +47,7 @@ class Technology(pydantic.BaseModel):  # type: ignore
         str, pydantic.Field(description="Detailed technology name.")
     ]
 
+    @pydantic.validate_call  # type: ignore
     def __getitem__(self, key: str) -> Parameter:
         """
         Access a parameter by name.
@@ -64,6 +65,7 @@ class Technology(pydantic.BaseModel):  # type: ignore
         """
         return self.parameters[key]
 
+    @pydantic.validate_call  # type: ignore
     def __setitem__(self, key: str, value: Parameter) -> None:
         """
         Set a parameter by name.
@@ -78,6 +80,7 @@ class Technology(pydantic.BaseModel):  # type: ignore
         """
         self.parameters[key] = value
 
+    @pydantic.validate_call  # type: ignore
     def check_consistency(self) -> bool:
         """
         Check for consistency and completeness of parameters.

@@ -34,6 +34,7 @@ class TechnologyCollection(pydantic.BaseModel):  # type: ignore
         list[Technology], pydantic.Field(description="List of Technology objects.")
     ]
 
+    @pydantic.validate_call  # type: ignore
     def __iter__(self) -> Iterator[Technology]:
         """
         Return an iterator over the list of Technology objects.
@@ -46,6 +47,7 @@ class TechnologyCollection(pydantic.BaseModel):  # type: ignore
         """
         return iter(self.technologies)
 
+    @pydantic.validate_call  # type: ignore
     def __len__(self) -> int:
         """
         Return the number of technologies in this collection.
@@ -119,6 +121,7 @@ class TechnologyCollection(pydantic.BaseModel):  # type: ignore
 
         return TechnologyCollection(technologies=filtered_technologies)
 
+    @pydantic.validate_call  # type: ignore
     def to_dataframe(self) -> pandas.DataFrame:
         """
         Convert the TechnologyCollection to a pandas DataFrame.
@@ -133,6 +136,7 @@ class TechnologyCollection(pydantic.BaseModel):  # type: ignore
             [technology.model_dump() for technology in self.technologies]
         )
 
+    @pydantic.validate_call  # type: ignore
     def to_csv(self, **kwargs: pathlib.Path | str | bool) -> None:
         """
         Export the TechnologyCollection to a CSV file.
@@ -173,6 +177,7 @@ class TechnologyCollection(pydantic.BaseModel):  # type: ignore
         output_dataframe = self.to_dataframe()
         output_dataframe.to_csv(**merged_kwargs)
 
+    @pydantic.validate_call  # type: ignore
     def to_json(
         self, file_path: pathlib.Path, schema_path: pathlib.Path | None = None
     ) -> None:
