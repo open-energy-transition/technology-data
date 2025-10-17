@@ -163,6 +163,15 @@ class TestTechnologyCollection:
                         },
                     },
                 ),
+                tech.model_copy(
+                    deep=True,
+                    update={
+                        "year": 2040,
+                        "parameters": {
+                            "total units": technologydata.Parameter(magnitude=2040),
+                        },
+                    },
+                ),
             ]
         )
 
@@ -170,8 +179,10 @@ class TestTechnologyCollection:
         from technologydata.technologies.growth_models import LinearGrowth
 
         model = LinearGrowth()
-        fitted = tc.fit("total units", model)
+        fitted = tc.fit("total units", model, p0={"x0": 0, "m": 1, "A": 0})
         assert isinstance(fitted, LinearGrowth)
+        print(fitted)
+        assert pytest.approx(fitted.x0) == 0
         assert pytest.approx(fitted.m) == 1
         assert pytest.approx(fitted.A) == 0
 
@@ -181,7 +192,7 @@ class TestTechnologyCollection:
             path_cwd,
             "test",
             "test_data",
-            "solar_photovoltaics_example_03",
+            "solar_photovoltaics_example",
             "technologies.json",
         )
         tc = technologydata.TechnologyCollection.from_json(input_file)
@@ -189,7 +200,7 @@ class TestTechnologyCollection:
 
         projected_tc = tc.project(
             to_years=[2030],
-            parameters={"capacity": LinearGrowth()},
+            parameters={"capacity": LinearGrowth(x0=2020)},
         )
         assert isinstance(projected_tc, technologydata.TechnologyCollection)
         assert projected_tc.technologies[0].year == 2030
