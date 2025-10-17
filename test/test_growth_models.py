@@ -176,8 +176,8 @@ def test_general_logistic_growth_fit() -> None:
     Q = 1.0
     C = 1.0
 
-    x = np.arange(-2, 30)
-    y = GeneralLogisticGrowth().function(x, x0, A, K, B, Q, C, nu)
+    x: np.array = np.arange(-2, 30)
+    y: np.array = GeneralLogisticGrowth().function(x, x0, A, K, B, Q, C, nu)
 
     model = GeneralLogisticGrowth(data_points=[*zip(x, y)])
     model.fit(p0={"x0": x0, "A": A, "K": K, "B": B, "nu": nu, "Q": Q, "C": C})
@@ -201,8 +201,8 @@ def test_partial_fitting_linear_growth() -> None:
     x0 = 0
     m = 2.0
     A = 1.0
-    x = np.arange(-10, 30)
-    y = LinearGrowth().function(x, x0, m, A)
+    x: np.array = np.arange(-10, 30)
+    y: np.array = LinearGrowth().function(x, x0, m, A)
 
     # Fix x0 and m, only fit A
     model = LinearGrowth(x0=x0, m=m, A=None, data_points=[*zip(x, y)])
@@ -218,9 +218,9 @@ def test_fit_with_noisy_data() -> None:
     x0 = 0
     m = 2.0
     A = 20.0
-    x = np.arange(-10, 30)
+    x: np.array = np.arange(-10, 30)
     noise = rng.normal(0, 0.1, size=x.shape)
-    y = LinearGrowth().function(x, x0, m, A) + noise
+    y: np.array = LinearGrowth().function(x, x0, m, A) + noise
 
     # Fitting with x0 and A free can lead to competing solutions, so fix x0
     model = LinearGrowth(x0=x0, data_points=[*zip(x, y)])
@@ -236,8 +236,8 @@ def test_fit_without_p0() -> None:
     x0 = 0
     m = 10.0
     A = 5.0
-    x = np.arange(-25, 25)
-    y = LinearGrowth().function(x, x0, m, A)
+    x: np.array = np.arange(-25, 25)
+    y: np.array = LinearGrowth().function(x, x0, m, A)
 
     # Fix x0 to avoid competing solutions
     model = LinearGrowth(x0=x0, data_points=[*zip(x, y)])
@@ -252,8 +252,8 @@ def test_illegal_p0_argument() -> None:
     x0 = 5
     m = 2.0
     A = 1.0
-    x = np.arange(-10, 30)
-    y = LinearGrowth().function(x, x0, m, A)
+    x: np.array = np.arange(-10, 30)
+    y: np.array = LinearGrowth().function(x, x0, m, A)
 
     model = LinearGrowth(data_points=[*zip(x, y)])
     # Provide p0 missing one parameter (A missing)
@@ -269,8 +269,8 @@ def test_fit_with_p0_far_from_target() -> None:
     x0 = 0
     m = 20.0
     A = 5.0
-    x = np.arange(-10, 30)
-    y = LinearGrowth().function(x, x0, m, A)
+    x: np.array = np.arange(-10, 30)
+    y: np.array = LinearGrowth().function(x, x0, m, A)
 
     # Fix x0 to avoid competing solutions
     model = LinearGrowth(x0=x0, data_points=[*zip(x, y)])

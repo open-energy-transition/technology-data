@@ -10,13 +10,13 @@ from collections.abc import Callable
 from typing import Annotated, Self
 
 import numpy as np
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 from scipy.optimize import curve_fit
 
 logger = logging.getLogger(__name__)
 
 
-class GrowthModel(BaseModel, validate_assignment=True):
+class GrowthModel(BaseModel):
     """
     Abstract base for growth models used in projections.
 
@@ -30,6 +30,8 @@ class GrowthModel(BaseModel, validate_assignment=True):
       as growth models may be created first with missing parameters (set to None) and then fitted later
       and data points may be added after creation.
     """
+
+    model_config = ConfigDict(validate_assignment=True)
 
     data_points: Annotated[
         list[tuple[float, float]],
@@ -57,7 +59,9 @@ class GrowthModel(BaseModel, validate_assignment=True):
     def provided_parameters(self) -> list[str]:
         """Return the set of model parameters that have been provided (are not None)."""
         return list(
-            self.model_dump(include=self.model_parameters, exclude_none=True).keys()
+            self.model_dump(
+                include=set(self.model_parameters), exclude_none=True
+            ).keys()
         )
 
     @property
@@ -96,7 +100,7 @@ class GrowthModel(BaseModel, validate_assignment=True):
             )
 
         return self.function(
-            to_year, **self.model_dump(include=self.provided_parameters)
+            to_year, **self.model_dump(include=set(self.provided_parameters))
         )
 
     @classmethod
@@ -173,7 +177,7 @@ class GrowthModel(BaseModel, validate_assignment=True):
         # build a partial function that includes the already fixed parameters
         func = self._kwpartial(
             self.function,
-            **self.model_dump(include=self.provided_parameters, exclude_none=True),
+            **self.model_dump(include=set(self.provided_parameters), exclude_none=True),
         )
 
         # p0 optionally allows to provide initial guesses for the parameters to fit
@@ -292,7 +296,7 @@ class ExponentialGrowth(GrowthModel):
             The result of the exponential function evaluation at x.
 
         """
-        return A + m * np.exp(k * (x - x0))
+        return float(A + m * np.exp(k * (x - x0)))
 
 
 class GeneralLogisticGrowth(GrowthModel):
@@ -390,7 +394,7 @@ class GeneralLogisticGrowth(GrowthModel):
             The result of the generalized logistic function evaluation at x.
 
         """
-        return A + (K - A) / (C + Q * np.exp(-B * (x - x0))) ** (1 / nu)
+        return float(A + (K - A) / (C + Q * np.exp(-B * (x - x0))) ** (1 / nu))
 
 
 class LogisticGrowth(GrowthModel):
@@ -449,7 +453,7 @@ class LogisticGrowth(GrowthModel):
             The result of the logistic function evaluation at x.
 
         """
-        return A + L / (1 + np.exp(-k * (x - x0)))
+        return float(A + L / (1 + np.exp(-k * (x - x0))))
 
 
 class GompertzGrowth(GrowthModel):
@@ -509,4 +513,4 @@ class GompertzGrowth(GrowthModel):
             The result of the Gompertz function evaluation at x.
 
         """
-        return A * np.exp(-b * np.exp(-k * (x - x0)))
+        return float(A * np.exp(-b * np.exp(-k * (x - x0))))
