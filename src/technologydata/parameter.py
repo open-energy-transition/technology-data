@@ -15,23 +15,13 @@ Examples
 """
 
 import logging
-from typing import Annotated, Any, Self
+from typing import Annotated, Self
 
 import pint
 from pydantic import BaseModel, Field, PrivateAttr
 
 import technologydata
 from technologydata.source_collection import SourceCollection
-
-# from technologydata.utils.units import (
-#    CURRENCY_UNIT_PATTERN,
-#    creg,
-#    extract_currency_units,
-#    get_conversion_rate,
-#    get_iso3_from_currency_code,
-#    hvreg,
-#    ureg,
-# )
 
 logger = logging.getLogger(__name__)
 
@@ -324,15 +314,25 @@ class Parameter(BaseModel):  # type: ignore
         from technologydata.constants import EnergyDensityHHV, EnergyDensityLHV
 
         # Create a dictionary of heating value ratios based on energy densities
+        # The units of heating values are harmonized to "hv_units".
+        # hv_units is the units attribute of the first element of EnergyDensityLHV
         hv_ratios = dict()
+
+        # Access the key of the first element of the EnergyDensityLHV dictionary
+        first_pair_key = next(iter(EnergyDensityLHV))
+
+        # Get the units attribute of the first element of the EnergyDensityLHV dictionary
+        hv_units = str(EnergyDensityLHV[first_pair_key].units)
+
         lhvs = {
-            str(technologydata.creg.get_dimensionality(k)): v
+            str(technologydata.creg.get_dimensionality(k)): v.to(hv_units)
             for k, v in EnergyDensityLHV.items()
         }
         hhvs = {
-            str(technologydata.creg.get_dimensionality(k)): v
+            str(technologydata.creg.get_dimensionality(k)): v.to(hv_units)
             for k, v in EnergyDensityHHV.items()
         }
+
         for dimension in self._pint_carrier.dimensionality.keys():
             if dimension in lhvs and dimension in hhvs:
                 hv_ratios[dimension] = (
@@ -669,46 +669,4 @@ class Parameter(BaseModel):  # type: ignore
             provenance=self.provenance,
             note=self.note,
             sources=self.sources,
-        )
-
-    @classmethod
-    def from_dict(cls, data: dict[str, Any]) -> Self:
-        """
-        Create an instance of the class from a dictionary.
-
-        Parameters
-        ----------
-        cls : type
-            The class to instantiate.
-        data : dict
-            A dictionary containing the data to initialize the class instance. Expected keys include:
-                - "magnitude"
-                - "units"
-                - "carrier"
-                - "heating_value"
-                - "provenance"
-                - "note"
-                - "sources" (list): A list of source data dictionaries, to be converted into a SourceCollection.
-
-        Returns
-        -------
-        Parameter
-            An instance of the class initialized with the provided data.
-
-        Notes
-        -----
-        This method converts the "sources" list into a `SourceCollection` using `SourceCollection.from_json()`.
-
-        """
-        # Convert sources list into SourceCollection
-        sources_data = data.get("sources", [])
-        sources = SourceCollection.from_json(from_str=sources_data)
-        return cls(
-            magnitude=data.get("magnitude"),
-            units=data.get("units"),
-            carrier=data.get("carrier"),
-            heating_value=data.get("heating_value"),
-            provenance=data.get("provenance"),
-            note=data.get("note"),
-            sources=sources,
         )
