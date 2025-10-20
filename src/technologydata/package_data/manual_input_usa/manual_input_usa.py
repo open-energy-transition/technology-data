@@ -3,16 +3,88 @@
 # SPDX-License-Identifier: MIT
 
 """Data parser for the manual_input_usa.csv data set."""
+
 import argparse
 import logging
 import pathlib
+
 import pandas
 
-from technologydata import Source, TechnologyCollection, SourceCollection, Parameter, Technology
+from technologydata import (
+    Parameter,
+    Source,
+    SourceCollection,
+    Technology,
+    TechnologyCollection,
+)
 
 path_cwd = pathlib.Path.cwd()
 
 logger = logging.getLogger(__name__)
+
+
+def update_unit_with_currency_year(series: pandas.Series) -> pandas.Series:
+    """
+    Update unit string to include currency year for USD-based units.
+
+    Parameters
+    ----------
+    series : pandas.Series
+        A series containing two elements: [unit, currency_year]
+
+    Returns
+    -------
+    pandas.Series
+        Updated series with modified unit
+
+    Examples
+    --------
+    >>> update_unit_with_currency_year(["USD/Kwh", "2020"])
+    USD_2020/KwH
+
+    """
+    unit, currency_year = series
+
+    # Check if unit is a string, contains 'EUR', and price_year is not null
+    if isinstance(unit, str) and "USD" in unit and pandas.notna(currency_year):
+        # Replace 'EUR/' with 'EUR_{price_year}/'
+        unit = unit.replace("USD", f"USD_{int(currency_year)}")
+
+    return pandas.Series([unit, currency_year])
+
+
+def standardize_units(unit: str) -> str:
+    """
+    Standardized units.
+
+    Parameters
+    ----------
+    unit : str
+        A string containing the unit to standardize
+
+    Returns
+    -------
+    str
+        Updated unit string.
+
+    """
+    # Mapping of incorrect units to correct units
+    unit_corrections = {
+        "MW_FT": "MW",
+        "MWh_FT": "MWh",
+        "MWh_H2": "MWh",
+        "MWh_el": "MWh",
+        "t_CO2": "tonne",
+        "kWh_H2": "kWh",
+        "MWh_th": "MWh",
+    }
+
+    # Replace wrong units
+    for incorrect, correct in unit_corrections.items():
+        if incorrect == unit or incorrect in unit:
+            unit = unit.replace(incorrect, correct)
+
+    return unit
 
 
 def build_technology_collection(
@@ -66,7 +138,7 @@ def build_technology_collection(
             authors="Contributors to technology-data. Data source: manual_input_usa.csv",
             url="https://github.com/PyPSA/technology-data/blob/master/inputs/US/manual_input_usa.csv",
         )
-        #source.ensure_in_wayback()
+        source.ensure_in_wayback()
         sources = SourceCollection(sources=[source])
         sources.to_json(sources_path)
     else:
@@ -77,7 +149,11 @@ def build_technology_collection(
     ):
         for _, row in group.iterrows():
             parameters[row["parameter"]] = Parameter(
-                magnitude=row["value"], units=row["unit"], note=row["further_description"], provenance=row["financial_case"], sources=sources
+                magnitude=row["value"],
+                units=row["unit"],
+                note=row["further_description"],
+                provenance=row["financial_case"],
+                sources=sources,
             )
         list_techs.append(
             Technology(
@@ -134,3 +210,51 @@ if __name__ == "__main__":
     # Parse input arguments
     input_args = parse_input_arguments()
     logger.info("Command line arguments parsed.")
+
+    manual_input_usa_input_path = pathlib.Path(
+        path_cwd,
+        "src",
+        "technologydata",
+        "package_data",
+        "raw",
+        "manual_input_usa.csv",
+    )
+
+    manual_input_usa_df = pandas.read_csv(manual_input_usa_input_path, dtype=str)
+
+    # Standardize units
+    manual_input_usa_df["unit"] = manual_input_usa_df["unit"].apply(standardize_units)
+    logger.info("Units standardized.")
+
+    # Include currency_year in unit if applicable
+    manual_input_usa_df[["unit", "currency_year"]] = manual_input_usa_df[
+        ["unit", "currency_year"]
+    ].apply(update_unit_with_currency_year, axis=1)
+    logger.info("`currency_year` included in `unit` column.")
+
+    print(manual_input_usa_df["unit"].unique())
+
+    # Build TechnologyCollection
+    manual_input_usa_base_path = pathlib.Path(
+        path_cwd,
+        "src",
+        "technologydata",
+        "package_data",
+        "manual_input_usa",
+    )
+    output_technologies_path = pathlib.Path(
+        manual_input_usa_base_path,
+        "technologies.json",
+    )
+    output_sources_path = pathlib.Path(
+        manual_input_usa_base_path,
+        "sources.json",
+    )
+
+    tech_col = build_technology_collection(
+        manual_input_usa_df, output_sources_path, store_source=input_args.store_source
+    )
+
+    logger.info("TechnologyCollection object instantiated.")
+    tech_col.to_json(output_technologies_path)
+    logger.info("TechnologyCollection object exported to json.")

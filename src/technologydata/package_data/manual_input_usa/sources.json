@@ -1,0 +1,12 @@
+{
+    "sources": [
+        {
+            "title": "Energy system technology data for the US",
+            "authors": "Contributors to technology-data. Data source: manual_input_usa.csv",
+            "url": "https://github.com/PyPSA/technology-data/blob/master/inputs/US/manual_input_usa.csv",
+            "url_archive": null,
+            "url_date": null,
+            "url_date_archive": null
+        }
+    ]
+}
