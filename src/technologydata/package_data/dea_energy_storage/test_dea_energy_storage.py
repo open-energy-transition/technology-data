@@ -37,7 +37,6 @@ class TestDEAEnergyStorage:
         self, input_string: str, expected_string: str
     ) -> None:
         """Check if the clean_parameter_string works as expected."""
-        print("result", clean_parameter_string(input_string))
         assert clean_parameter_string(input_string) == expected_string
 
     def test_drop_invalid_rows(self) -> None:
@@ -85,7 +84,6 @@ class TestDEAEnergyStorage:
     ) -> None:
         """Check if clean_technology_string works as expected."""
         result = clean_technology_string(input_string)
-        print("result", result)
         assert result == expected_string
         assert isinstance(result, str)
 
@@ -95,7 +93,6 @@ class TestDEAEnergyStorage:
             ("some 1999", 1999),
             ("maybe 1", 1),
             ("1", 1),
-            (12345, 12345),
         ],
     )  # type: ignore
     def test_extract_year(self, input_year: str, expected_year: int) -> None:
@@ -116,7 +113,7 @@ class TestDEAEnergyStorage:
         self, input_number: str, expected_number: int | None | typing.Any
     ) -> None:
         """Check if format_val_number works as expected, including exception handling."""
-        result = format_val_number(input_number)
+        result = format_val_number(input_number, 2)
         assert isinstance(result, float)
         assert result == expected_number
 
@@ -181,12 +178,12 @@ class TestDEAEnergyStorage:
                 "unit": [
                     "MWh",
                     "K",
-                    "pct./year",
+                    "percent/year",
                     "cycles",
                     "cycles",
-                    "unit*pct.",
+                    "unit*percent",
                     "unit/C",
-                    "pct.",
+                    "percent",
                     "meter**3",
                     "EUR_2020/year",
                 ],

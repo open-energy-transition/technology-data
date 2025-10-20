@@ -167,7 +167,7 @@ def clean_technology_string(tech_str: str) -> str:
 
 
 @pydantic.validate_call  # type: ignore
-def format_val_number(input_value: str) -> float | None | typing.Any:
+def format_val_number(input_value: str, num_decimals: int) -> float | None | typing.Any:
     """
     Parse various number formats into a float value.
 
@@ -177,6 +177,8 @@ def format_val_number(input_value: str) -> float | None | typing.Any:
         The input number in different formats, such as:
         - Scientific notation with "x10^": e.g., "2.84x10^23"
         - Numbers with commas as decimal separators: e.g., "1,1"
+    num_decimals : int
+        Number of decimals
 
     Returns
     -------
@@ -202,12 +204,12 @@ def format_val_number(input_value: str) -> float | None | typing.Any:
     match = re.match(r"([+-]?\d*\.?\d+)×10([+-]?\d+)", s)
     if match:
         base, exponent = match.groups()
-        return round(float(base), input_args.num_digits) * (10 ** int(exponent))
+        return round(float(base), num_decimals) * (10 ** int(exponent))
 
     # Replace comma with dot for decimal numbers
     s = s.replace(",", ".")
     try:
-        return round(float(s), input_args.num_digits)
+        return round(float(s), num_decimals)
     except ValueError:
         raise ValueError(f"Cannot parse number from input: {input_value}")
 
@@ -362,7 +364,7 @@ def standardize_units(series: pandas.Series) -> pandas.Series:
     return pandas.Series([par, unit])
 
 
-def filter_parameters(dataframe: pandas.DataFrame) -> pandas.DataFrame:
+def filter_parameters(dataframe: pandas.DataFrame, filter_flag: bool) -> pandas.DataFrame:
     """
     Filter rows of a DataFrame by allowed technology parameters.
 
@@ -370,6 +372,8 @@ def filter_parameters(dataframe: pandas.DataFrame) -> pandas.DataFrame:
     ----------
     dataframe : pandas.DataFrame
         Input DataFrame containing at least a "Technology" column.
+    filter_flag : Boolean
+        If true, filter parameter `par` column
 
     Returns
     -------
@@ -386,7 +390,14 @@ def filter_parameters(dataframe: pandas.DataFrame) -> pandas.DataFrame:
         "specific investment",
         "variable o&m",
     }
-    return dataframe[dataframe["Technology"].isin(allowed_set)].reset_index(drop=True)
+    if filter_flag:
+        # Filter the DataFrame based on the allowed set
+        df_filtered = dataframe[dataframe["par"].isin(allowed_set)].reset_index(drop=True)
+    else:
+        # Return the original DataFrame if filter_flag is False
+        df_filtered = dataframe
+        logger.info("All parameters are outputted to technologies.json")
+    return df_filtered
 
 
 def build_technology_collection(
@@ -565,7 +576,7 @@ if __name__ == "__main__":
     logger.info("`priceyear` included in `unit` column.")
 
     # Format value (val) column
-    cleaned_df["val"] = cleaned_df["val"].apply(format_val_number)
+    cleaned_df["val"] = cleaned_df["val"].apply(lambda x: format_val_number(x, input_args.num_digits))
     logger.info("`val` column formatted.")
 
     # Replace "MEUR_2020" with "EUR_2020" and multiply val by 1_000_000
@@ -611,11 +622,7 @@ if __name__ == "__main__":
     cleaned_df = cleaned_df.drop(columns=columns_to_drop, errors="ignore")
     logger.info("Unnecessary columns dropped.")
 
-    if input_args.all_params:
-        logger.info("All parameters are outputted to technologies.json")
-    else:
-        # Filter dataframe based on parameter values
-        filtered_df = filter_parameters(cleaned_df)
+    filtered_df = filter_parameters(cleaned_df, input_args.all_params)
 
     # Build TechnologyCollection
     dea_storage_path = pathlib.Path(
@@ -633,6 +640,7 @@ if __name__ == "__main__":
         dea_storage_path,
         "sources.json",
     )
+
     tech_col = build_technology_collection(
         filtered_df, output_sources_path, store_source=input_args.store_source
     )

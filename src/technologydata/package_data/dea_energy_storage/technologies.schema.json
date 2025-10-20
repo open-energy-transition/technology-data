@@ -186,11 +186,21 @@
             "type": "object"
         },
         "Technology": {
-            "description": "Represent a technology with region, year, and a flexible set of parameters.\n\nAttributes\n----------\nname : str\n    Name of the technology.\nregion : str\n    Region identifier.\nyear : int\n    Year of the data.\nparameters : Dict[str, Parameter]\n    Dictionary of parameter names to Parameter objects.\ncase : str\n    Case or scenario identifier.\ndetailed_technology : str\n    More detailed technology name.",
+            "description": "Represent a technology with region, year, and a flexible set of parameters.\n\nAttributes\n----------\nname : str\n    Name of the technology.\ndetailed_technology : str\n    More detailed technology name.\ncase : str\n    Case or scenario identifier.\nregion : str\n    Region identifier.\nyear : int\n    Year of the data.\nparameters : Dict[str, Parameter]\n    Dictionary of parameter names to Parameter objects.",
             "properties": {
                 "name": {
                     "description": "Name of the technology.",
                     "title": "Name",
+                    "type": "string"
+                },
+                "detailed_technology": {
+                    "description": "Detailed technology name.",
+                    "title": "Detailed Technology",
+                    "type": "string"
+                },
+                "case": {
+                    "description": "Case or scenario identifier.",
+                    "title": "Case",
                     "type": "string"
                 },
                 "region": {
@@ -210,24 +220,14 @@
                     "description": "Parameters.",
                     "title": "Parameters",
                     "type": "object"
-                },
-                "case": {
-                    "description": "Case or scenario identifier.",
-                    "title": "Case",
-                    "type": "string"
-                },
-                "detailed_technology": {
-                    "description": "Detailed technology name.",
-                    "title": "Detailed Technology",
-                    "type": "string"
                 }
             },
             "required": [
                 "name",
-                "region",
-                "year",
+                "detailed_technology",
                 "case",
-                "detailed_technology"
+                "region",
+                "year"
             ],
             "title": "Technology",
             "type": "object"

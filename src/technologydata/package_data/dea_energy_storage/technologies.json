@@ -2,6 +2,8 @@
     "technologies": [
         {
             "name": "caes",
+            "detailed_technology": "compressed air energy storage",
+            "case": "control",
             "region": "EU",
             "year": 2015,
             "parameters": {
@@ -85,12 +87,12 @@
                         ]
                     }
                 }
-            },
-            "case": "control",
-            "detailed_technology": "compressed air energy storage"
+            }
         },
         {
             "name": "hydrogen storage - caverns",
+            "detailed_technology": "hydrogen storage - caverns",
+            "case": "control",
             "region": "EU",
             "year": 2015,
             "parameters": {
@@ -174,12 +176,12 @@
                         ]
                     }
                 }
-            },
-            "case": "control",
-            "detailed_technology": "hydrogen storage - caverns"
+            }
         },
         {
             "name": "hydrogen storage - lohc",
+            "detailed_technology": "hydrogen storage - lohc",
+            "case": "control",
             "region": "EU",
             "year": 2015,
             "parameters": {
@@ -263,12 +265,12 @@
                         ]
                     }
                 }
-            },
-            "case": "control",
-            "detailed_technology": "hydrogen storage - lohc"
+            }
         },
         {
             "name": "large hot water tank",
+            "detailed_technology": "large-scale hot water tanks (steel)",
+            "case": "control",
             "region": "EU",
             "year": 2015,
             "parameters": {
@@ -352,12 +354,12 @@
                         ]
                     }
                 }
-            },
-            "case": "control",
-            "detailed_technology": "large-scale hot water tanks (steel)"
+            }
         },
         {
             "name": "na-nicl2 battery",
+            "detailed_technology": "na-nicl2 battery",
+            "case": "control",
             "region": "EU",
             "year": 2015,
             "parameters": {
@@ -441,12 +443,12 @@
                         ]
                     }
                 }
-            },
-            "case": "control",
-            "detailed_technology": "na-nicl2 battery"
+            }
         },
         {
             "name": "na-s battery",
+            "detailed_technology": "nas battery",
+            "case": "control",
             "region": "EU",
             "year": 2015,
             "parameters": {
@@ -530,12 +532,12 @@
                         ]
                     }
                 }
-            },
-            "case": "control",
-            "detailed_technology": "nas battery"
+            }
         },
         {
             "name": "pumped hydro storage",
+            "detailed_technology": "pumped hydro storage",
+            "case": "control",
             "region": "EU",
             "year": 2015,
             "parameters": {
@@ -619,12 +621,12 @@
                         ]
                     }
                 }
-            },
-            "case": "control",
-            "detailed_technology": "pumped hydro storage"
+            }
         },
         {
             "name": "small scale hot water tank",
+            "detailed_technology": "small-scale hot water tanks (steel)",
+            "case": "control",
             "region": "EU",
             "year": 2015,
             "parameters": {
@@ -708,12 +710,12 @@
                         ]
                     }
                 }
-            },
-            "case": "control",
-            "detailed_technology": "small-scale hot water tanks (steel)"
+            }
         },
         {
             "name": "flywheels",
+            "detailed_technology": "flywheels",
+            "case": "control",
             "region": "EU",
             "year": 2018,
             "parameters": {
@@ -797,12 +799,12 @@
                         ]
                     }
                 }
-            },
-            "case": "control",
-            "detailed_technology": "flywheels"
+            }
         },
         {
             "name": "hydrogen storage - tanks",
+            "detailed_technology": "pressurized hydrogen gas storage system (compressor & type i tanks @ 200bar)",
+            "case": "control",
             "region": "EU",
             "year": 2019,
             "parameters": {
@@ -886,12 +888,12 @@
                         ]
                     }
                 }
-            },
-            "case": "control",
-            "detailed_technology": "pressurized hydrogen gas storage system (compressor & type i tanks @ 200bar)"
+            }
         },
         {
             "name": "caes",
+            "detailed_technology": "compressed air energy storage",
+            "case": "control",
             "region": "EU",
             "year": 2020,
             "parameters": {
@@ -975,12 +977,12 @@
                         ]
                     }
                 }
-            },
-            "case": "control",
-            "detailed_technology": "compressed air energy storage"
+            }
         },
         {
             "name": "flywheels",
+            "detailed_technology": "flywheels",
+            "case": "control",
             "region": "EU",
             "year": 2020,
             "parameters": {
@@ -1064,12 +1066,12 @@
                         ]
                     }
                 }
-            },
-            "case": "control",
-            "detailed_technology": "flywheels"
+            }
         },
         {
             "name": "hydrogen storage - caverns",
+            "detailed_technology": "hydrogen storage - caverns",
+            "case": "control",
             "region": "EU",
             "year": 2020,
             "parameters": {
@@ -1153,12 +1155,12 @@
                         ]
                     }
                 }
-            },
-            "case": "control",
-            "detailed_technology": "hydrogen storage - caverns"
+            }
         },
         {
             "name": "hydrogen storage - lohc",
+            "detailed_technology": "hydrogen storage - lohc",
+            "case": "control",
             "region": "EU",
             "year": 2020,
             "parameters": {
@@ -1242,12 +1244,12 @@
                         ]
                     }
                 }
-            },
-            "case": "control",
-            "detailed_technology": "hydrogen storage - lohc"
+            }
         },
         {
             "name": "hydrogen storage - tanks",
+            "detailed_technology": "pressurized hydrogen gas storage system (compressor & type i tanks @ 200bar)",
+            "case": "control",
             "region": "EU",
             "year": 2020,
             "parameters": {
@@ -1331,12 +1333,12 @@
                         ]
                     }
                 }
-            },
-            "case": "control",
-            "detailed_technology": "pressurized hydrogen gas storage system (compressor & type i tanks @ 200bar)"
+            }
         },
         {
             "name": "large hot water tank",
+            "detailed_technology": "large-scale hot water tanks (steel)",
+            "case": "control",
             "region": "EU",
             "year": 2020,
             "parameters": {
@@ -1420,12 +1422,12 @@
                         ]
                     }
                 }
-            },
-            "case": "control",
-            "detailed_technology": "large-scale hot water tanks (steel)"
+            }
         },
         {
             "name": "na-nicl2 battery",
+            "detailed_technology": "na-nicl2 battery",
+            "case": "control",
             "region": "EU",
             "year": 2020,
             "parameters": {
@@ -1509,12 +1511,12 @@
                         ]
                     }
                 }
-            },
-            "case": "control",
-            "detailed_technology": "na-nicl2 battery"
+            }
         },
         {
             "name": "na-s battery",
+            "detailed_technology": "nas battery",
+            "case": "control",
             "region": "EU",
             "year": 2020,
             "parameters": {
@@ -1598,12 +1600,12 @@
                         ]
                     }
                 }
-            },
-            "case": "control",
-            "detailed_technology": "nas battery"
+            }
         },
         {
             "name": "ptes seasonal",
+            "detailed_technology": "pit thermal energy storage [ptes]",
+            "case": "control",
             "region": "EU",
             "year": 2020,
             "parameters": {
@@ -1687,12 +1689,12 @@
                         ]
                     }
                 }
-            },
-            "case": "control",
-            "detailed_technology": "pit thermal energy storage [ptes]"
+            }
         },
         {
             "name": "pumped hydro storage",
+            "detailed_technology": "pumped hydro storage",
+            "case": "control",
             "region": "EU",
             "year": 2020,
             "parameters": {
@@ -1776,12 +1778,12 @@
                         ]
                     }
                 }
-            },
-            "case": "control",
-            "detailed_technology": "pumped hydro storage"
+            }
         },
         {
             "name": "small scale hot water tank",
+            "detailed_technology": "small-scale hot water tanks (steel)",
+            "case": "control",
             "region": "EU",
             "year": 2020,
             "parameters": {
@@ -1865,12 +1867,12 @@
                         ]
                     }
                 }
-            },
-            "case": "control",
-            "detailed_technology": "small-scale hot water tanks (steel)"
+            }
         },
         {
             "name": "underground storage of gas",
+            "detailed_technology": "natural gas storage underground",
+            "case": "control",
             "region": "EU",
             "year": 2020,
             "parameters": {
@@ -1954,12 +1956,12 @@
                         ]
                     }
                 }
-            },
-            "case": "control",
-            "detailed_technology": "natural gas storage underground"
+            }
         },
         {
             "name": "vanadium redox flow battery",
+            "detailed_technology": "vanadium redox battery (vrb)",
+            "case": "control",
             "region": "EU",
             "year": 2020,
             "parameters": {
@@ -2043,12 +2045,12 @@
                         ]
                     }
                 }
-            },
-            "case": "control",
-            "detailed_technology": "vanadium redox battery (vrb)"
+            }
         },
         {
             "name": "lithium ion battery",
+            "detailed_technology": "lithium-ion battery (utility-scale)",
+            "case": "control",
             "region": "EU",
             "year": 2025,
             "parameters": {
@@ -2132,12 +2134,12 @@
                         ]
                     }
                 }
-            },
-            "case": "control",
-            "detailed_technology": "lithium-ion battery (utility-scale)"
+            }
         },
         {
             "name": "molten salt carnot battery",
+            "detailed_technology": "carnot battery",
+            "case": "control",
             "region": "EU",
             "year": 2025,
             "parameters": {
@@ -2221,12 +2223,12 @@
                         ]
                     }
                 }
-            },
-            "case": "control",
-            "detailed_technology": "carnot battery"
+            }
         },
         {
             "name": "ptes seasonal",
+            "detailed_technology": "pit thermal energy storage [ptes]",
+            "case": "control",
             "region": "EU",
             "year": 2025,
             "parameters": {
@@ -2310,12 +2312,12 @@
                         ]
                     }
                 }
-            },
-            "case": "control",
-            "detailed_technology": "pit thermal energy storage [ptes]"
+            }
         },
         {
             "name": "rock-based carnot battery",
+            "detailed_technology": "carnot battery",
+            "case": "control",
             "region": "EU",
             "year": 2025,
             "parameters": {
@@ -2399,12 +2401,12 @@
                         ]
                     }
                 }
-            },
-            "case": "control",
-            "detailed_technology": "carnot battery"
+            }
         },
         {
             "name": "vanadium redox flow battery",
+            "detailed_technology": "vanadium redox battery (vrb)",
+            "case": "control",
             "region": "EU",
             "year": 2025,
             "parameters": {
@@ -2488,12 +2490,12 @@
                         ]
                     }
                 }
-            },
-            "case": "control",
-            "detailed_technology": "vanadium redox battery (vrb)"
+            }
         },
         {
             "name": "caes",
+            "detailed_technology": "compressed air energy storage",
+            "case": "control",
             "region": "EU",
             "year": 2030,
             "parameters": {
@@ -2577,12 +2579,12 @@
                         ]
                     }
                 }
-            },
-            "case": "control",
-            "detailed_technology": "compressed air energy storage"
+            }
         },
         {
             "name": "flywheels",
+            "detailed_technology": "flywheels",
+            "case": "control",
             "region": "EU",
             "year": 2030,
             "parameters": {
@@ -2666,12 +2668,12 @@
                         ]
                     }
                 }
-            },
-            "case": "control",
-            "detailed_technology": "flywheels"
+            }
         },
         {
             "name": "hydrogen storage - caverns",
+            "detailed_technology": "hydrogen storage - caverns",
+            "case": "control",
             "region": "EU",
             "year": 2030,
             "parameters": {
@@ -2755,12 +2757,12 @@
                         ]
                     }
                 }
-            },
-            "case": "control",
-            "detailed_technology": "hydrogen storage - caverns"
+            }
         },
         {
             "name": "hydrogen storage - lohc",
+            "detailed_technology": "hydrogen storage - lohc",
+            "case": "control",
             "region": "EU",
             "year": 2030,
             "parameters": {
@@ -2844,12 +2846,12 @@
                         ]
                     }
                 }
-            },
-            "case": "control",
-            "detailed_technology": "hydrogen storage - lohc"
+            }
         },
         {
             "name": "hydrogen storage - tanks",
+            "detailed_technology": "pressurized hydrogen gas storage system (compressor & type i tanks @ 200bar)",
+            "case": "control",
             "region": "EU",
             "year": 2030,
             "parameters": {
@@ -2933,12 +2935,12 @@
                         ]
                     }
                 }
-            },
-            "case": "control",
-            "detailed_technology": "pressurized hydrogen gas storage system (compressor & type i tanks @ 200bar)"
+            }
         },
         {
             "name": "large hot water tank",
+            "detailed_technology": "large-scale hot water tanks (steel)",
+            "case": "control",
             "region": "EU",
             "year": 2030,
             "parameters": {
@@ -3022,12 +3024,12 @@
                         ]
                     }
                 }
-            },
-            "case": "control",
-            "detailed_technology": "large-scale hot water tanks (steel)"
+            }
         },
         {
             "name": "lithium ion battery",
+            "detailed_technology": "lithium-ion battery (utility-scale)",
+            "case": "control",
             "region": "EU",
             "year": 2030,
             "parameters": {
@@ -3111,12 +3113,12 @@
                         ]
                     }
                 }
-            },
-            "case": "control",
-            "detailed_technology": "lithium-ion battery (utility-scale)"
+            }
         },
         {
             "name": "molten salt carnot battery",
+            "detailed_technology": "carnot battery",
+            "case": "control",
             "region": "EU",
             "year": 2030,
             "parameters": {
@@ -3200,12 +3202,12 @@
                         ]
                     }
                 }
-            },
-            "case": "control",
-            "detailed_technology": "carnot battery"
+            }
         },
         {
             "name": "na-nicl2 battery",
+            "detailed_technology": "na-nicl2 battery",
+            "case": "control",
             "region": "EU",
             "year": 2030,
             "parameters": {
@@ -3289,12 +3291,12 @@
                         ]
                     }
                 }
-            },
-            "case": "control",
-            "detailed_technology": "na-nicl2 battery"
+            }
         },
         {
             "name": "na-s battery",
+            "detailed_technology": "nas battery",
+            "case": "control",
             "region": "EU",
             "year": 2030,
             "parameters": {
@@ -3378,12 +3380,12 @@
                         ]
                     }
                 }
-            },
-            "case": "control",
-            "detailed_technology": "nas battery"
+            }
         },
         {
             "name": "ptes seasonal",
+            "detailed_technology": "pit thermal energy storage [ptes]",
+            "case": "control",
             "region": "EU",
             "year": 2030,
             "parameters": {
@@ -3467,12 +3469,12 @@
                         ]
                     }
                 }
-            },
-            "case": "control",
-            "detailed_technology": "pit thermal energy storage [ptes]"
+            }
         },
         {
             "name": "pumped hydro storage",
+            "detailed_technology": "pumped hydro storage",
+            "case": "control",
             "region": "EU",
             "year": 2030,
             "parameters": {
@@ -3556,12 +3558,12 @@
                         ]
                     }
                 }
-            },
-            "case": "control",
-            "detailed_technology": "pumped hydro storage"
+            }
         },
         {
             "name": "rock-based carnot battery",
+            "detailed_technology": "carnot battery",
+            "case": "control",
             "region": "EU",
             "year": 2030,
             "parameters": {
@@ -3645,12 +3647,12 @@
                         ]
                     }
                 }
-            },
-            "case": "control",
-            "detailed_technology": "carnot battery"
+            }
         },
         {
             "name": "small scale hot water tank",
+            "detailed_technology": "small-scale hot water tanks (steel)",
+            "case": "control",
             "region": "EU",
             "year": 2030,
             "parameters": {
@@ -3734,12 +3736,12 @@
                         ]
                     }
                 }
-            },
-            "case": "control",
-            "detailed_technology": "small-scale hot water tanks (steel)"
+            }
         },
         {
             "name": "underground storage of gas",
+            "detailed_technology": "natural gas storage underground",
+            "case": "control",
             "region": "EU",
             "year": 2030,
             "parameters": {
@@ -3823,12 +3825,12 @@
                         ]
                     }
                 }
-            },
-            "case": "control",
-            "detailed_technology": "natural gas storage underground"
+            }
         },
         {
             "name": "vanadium redox flow battery",
+            "detailed_technology": "vanadium redox battery (vrb)",
+            "case": "control",
             "region": "EU",
             "year": 2030,
             "parameters": {
@@ -3912,12 +3914,12 @@
                         ]
                     }
                 }
-            },
-            "case": "control",
-            "detailed_technology": "vanadium redox battery (vrb)"
+            }
         },
         {
             "name": "lithium ion battery",
+            "detailed_technology": "lithium-ion battery (utility-scale)",
+            "case": "control",
             "region": "EU",
             "year": 2035,
             "parameters": {
@@ -4001,12 +4003,12 @@
                         ]
                     }
                 }
-            },
-            "case": "control",
-            "detailed_technology": "lithium-ion battery (utility-scale)"
+            }
         },
         {
             "name": "molten salt carnot battery",
+            "detailed_technology": "carnot battery",
+            "case": "control",
             "region": "EU",
             "year": 2035,
             "parameters": {
@@ -4090,12 +4092,12 @@
                         ]
                     }
                 }
-            },
-            "case": "control",
-            "detailed_technology": "carnot battery"
+            }
         },
         {
             "name": "ptes seasonal",
+            "detailed_technology": "pit thermal energy storage [ptes]",
+            "case": "control",
             "region": "EU",
             "year": 2035,
             "parameters": {
@@ -4179,12 +4181,12 @@
                         ]
                     }
                 }
-            },
-            "case": "control",
-            "detailed_technology": "pit thermal energy storage [ptes]"
+            }
         },
         {
             "name": "rock-based carnot battery",
+            "detailed_technology": "carnot battery",
+            "case": "control",
             "region": "EU",
             "year": 2035,
             "parameters": {
@@ -4268,12 +4270,12 @@
                         ]
                     }
                 }
-            },
-            "case": "control",
-            "detailed_technology": "carnot battery"
+            }
         },
         {
             "name": "vanadium redox flow battery",
+            "detailed_technology": "vanadium redox battery (vrb)",
+            "case": "control",
             "region": "EU",
             "year": 2035,
             "parameters": {
@@ -4357,12 +4359,12 @@
                         ]
                     }
                 }
-            },
-            "case": "control",
-            "detailed_technology": "vanadium redox battery (vrb)"
+            }
         },
         {
             "name": "hydrogen storage - caverns",
+            "detailed_technology": "hydrogen storage - caverns",
+            "case": "control",
             "region": "EU",
             "year": 2040,
             "parameters": {
@@ -4446,12 +4448,12 @@
                         ]
                     }
                 }
-            },
-            "case": "control",
-            "detailed_technology": "hydrogen storage - caverns"
+            }
         },
         {
             "name": "hydrogen storage - lohc",
+            "detailed_technology": "hydrogen storage - lohc",
+            "case": "control",
             "region": "EU",
             "year": 2040,
             "parameters": {
@@ -4535,12 +4537,12 @@
                         ]
                     }
                 }
-            },
-            "case": "control",
-            "detailed_technology": "hydrogen storage - lohc"
+            }
         },
         {
             "name": "hydrogen storage - tanks",
+            "detailed_technology": "pressurized hydrogen gas storage system (compressor & type i tanks @ 200bar)",
+            "case": "control",
             "region": "EU",
             "year": 2040,
             "parameters": {
@@ -4624,12 +4626,12 @@
                         ]
                     }
                 }
-            },
-            "case": "control",
-            "detailed_technology": "pressurized hydrogen gas storage system (compressor & type i tanks @ 200bar)"
+            }
         },
         {
             "name": "large hot water tank",
+            "detailed_technology": "large-scale hot water tanks (steel)",
+            "case": "control",
             "region": "EU",
             "year": 2040,
             "parameters": {
@@ -4713,12 +4715,12 @@
                         ]
                     }
                 }
-            },
-            "case": "control",
-            "detailed_technology": "large-scale hot water tanks (steel)"
+            }
         },
         {
             "name": "lithium ion battery",
+            "detailed_technology": "lithium-ion battery (utility-scale)",
+            "case": "control",
             "region": "EU",
             "year": 2040,
             "parameters": {
@@ -4802,12 +4804,12 @@
                         ]
                     }
                 }
-            },
-            "case": "control",
-            "detailed_technology": "lithium-ion battery (utility-scale)"
+            }
         },
         {
             "name": "molten salt carnot battery",
+            "detailed_technology": "carnot battery",
+            "case": "control",
             "region": "EU",
             "year": 2040,
             "parameters": {
@@ -4891,12 +4893,12 @@
                         ]
                     }
                 }
-            },
-            "case": "control",
-            "detailed_technology": "carnot battery"
+            }
         },
         {
             "name": "ptes seasonal",
+            "detailed_technology": "pit thermal energy storage [ptes]",
+            "case": "control",
             "region": "EU",
             "year": 2040,
             "parameters": {
@@ -4980,12 +4982,12 @@
                         ]
                     }
                 }
-            },
-            "case": "control",
-            "detailed_technology": "pit thermal energy storage [ptes]"
+            }
         },
         {
             "name": "rock-based carnot battery",
+            "detailed_technology": "carnot battery",
+            "case": "control",
             "region": "EU",
             "year": 2040,
             "parameters": {
@@ -5069,12 +5071,12 @@
                         ]
                     }
                 }
-            },
-            "case": "control",
-            "detailed_technology": "carnot battery"
+            }
         },
         {
             "name": "small scale hot water tank",
+            "detailed_technology": "small-scale hot water tanks (steel)",
+            "case": "control",
             "region": "EU",
             "year": 2040,
             "parameters": {
@@ -5158,12 +5160,12 @@
                         ]
                     }
                 }
-            },
-            "case": "control",
-            "detailed_technology": "small-scale hot water tanks (steel)"
+            }
         },
         {
             "name": "underground storage of gas",
+            "detailed_technology": "natural gas storage underground",
+            "case": "control",
             "region": "EU",
             "year": 2040,
             "parameters": {
@@ -5247,12 +5249,12 @@
                         ]
                     }
                 }
-            },
-            "case": "control",
-            "detailed_technology": "natural gas storage underground"
+            }
         },
         {
             "name": "vanadium redox flow battery",
+            "detailed_technology": "vanadium redox battery (vrb)",
+            "case": "control",
             "region": "EU",
             "year": 2040,
             "parameters": {
@@ -5336,12 +5338,12 @@
                         ]
                     }
                 }
-            },
-            "case": "control",
-            "detailed_technology": "vanadium redox battery (vrb)"
+            }
         },
         {
             "name": "caes",
+            "detailed_technology": "compressed air energy storage",
+            "case": "control",
             "region": "EU",
             "year": 2050,
             "parameters": {
@@ -5425,12 +5427,12 @@
                         ]
                     }
                 }
-            },
-            "case": "control",
-            "detailed_technology": "compressed air energy storage"
+            }
         },
         {
             "name": "flywheels",
+            "detailed_technology": "flywheels",
+            "case": "control",
             "region": "EU",
             "year": 2050,
             "parameters": {
@@ -5514,12 +5516,12 @@
                         ]
                     }
                 }
-            },
-            "case": "control",
-            "detailed_technology": "flywheels"
+            }
         },
         {
             "name": "hydrogen storage - caverns",
+            "detailed_technology": "hydrogen storage - caverns",
+            "case": "control",
             "region": "EU",
             "year": 2050,
             "parameters": {
@@ -5603,12 +5605,12 @@
                         ]
                     }
                 }
-            },
-            "case": "control",
-            "detailed_technology": "hydrogen storage - caverns"
+            }
         },
         {
             "name": "hydrogen storage - lohc",
+            "detailed_technology": "hydrogen storage - lohc",
+            "case": "control",
             "region": "EU",
             "year": 2050,
             "parameters": {
@@ -5692,12 +5694,12 @@
                         ]
                     }
                 }
-            },
-            "case": "control",
-            "detailed_technology": "hydrogen storage - lohc"
+            }
         },
         {
             "name": "hydrogen storage - tanks",
+            "detailed_technology": "pressurized hydrogen gas storage system (compressor & type i tanks @ 200bar)",
+            "case": "control",
             "region": "EU",
             "year": 2050,
             "parameters": {
@@ -5781,12 +5783,12 @@
                         ]
                     }
                 }
-            },
-            "case": "control",
-            "detailed_technology": "pressurized hydrogen gas storage system (compressor & type i tanks @ 200bar)"
+            }
         },
         {
             "name": "large hot water tank",
+            "detailed_technology": "large-scale hot water tanks (steel)",
+            "case": "control",
             "region": "EU",
             "year": 2050,
             "parameters": {
@@ -5870,12 +5872,12 @@
                         ]
                     }
                 }
-            },
-            "case": "control",
-            "detailed_technology": "large-scale hot water tanks (steel)"
+            }
         },
         {
             "name": "lithium ion battery",
+            "detailed_technology": "lithium-ion battery (utility-scale)",
+            "case": "control",
             "region": "EU",
             "year": 2050,
             "parameters": {
@@ -5959,12 +5961,12 @@
                         ]
                     }
                 }
-            },
-            "case": "control",
-            "detailed_technology": "lithium-ion battery (utility-scale)"
+            }
         },
         {
             "name": "molten salt carnot battery",
+            "detailed_technology": "carnot battery",
+            "case": "control",
             "region": "EU",
             "year": 2050,
             "parameters": {
@@ -6048,12 +6050,12 @@
                         ]
                     }
                 }
-            },
-            "case": "control",
-            "detailed_technology": "carnot battery"
+            }
         },
         {
             "name": "na-nicl2 battery",
+            "detailed_technology": "na-nicl2 battery",
+            "case": "control",
             "region": "EU",
             "year": 2050,
             "parameters": {
@@ -6137,12 +6139,12 @@
                         ]
                     }
                 }
-            },
-            "case": "control",
-            "detailed_technology": "na-nicl2 battery"
+            }
         },
         {
             "name": "na-s battery",
+            "detailed_technology": "nas battery",
+            "case": "control",
             "region": "EU",
             "year": 2050,
             "parameters": {
@@ -6226,12 +6228,12 @@
                         ]
                     }
                 }
-            },
-            "case": "control",
-            "detailed_technology": "nas battery"
+            }
         },
         {
             "name": "ptes seasonal",
+            "detailed_technology": "pit thermal energy storage [ptes]",
+            "case": "control",
             "region": "EU",
             "year": 2050,
             "parameters": {
@@ -6315,12 +6317,12 @@
                         ]
                     }
                 }
-            },
-            "case": "control",
-            "detailed_technology": "pit thermal energy storage [ptes]"
+            }
         },
         {
             "name": "pumped hydro storage",
+            "detailed_technology": "pumped hydro storage",
+            "case": "control",
             "region": "EU",
             "year": 2050,
             "parameters": {
@@ -6404,12 +6406,12 @@
                         ]
                     }
                 }
-            },
-            "case": "control",
-            "detailed_technology": "pumped hydro storage"
+            }
         },
         {
             "name": "rock-based carnot battery",
+            "detailed_technology": "carnot battery",
+            "case": "control",
             "region": "EU",
             "year": 2050,
             "parameters": {
@@ -6493,12 +6495,12 @@
                         ]
                     }
                 }
-            },
-            "case": "control",
-            "detailed_technology": "carnot battery"
+            }
         },
         {
             "name": "small scale hot water tank",
+            "detailed_technology": "small-scale hot water tanks (steel)",
+            "case": "control",
             "region": "EU",
             "year": 2050,
             "parameters": {
@@ -6582,12 +6584,12 @@
                         ]
                     }
                 }
-            },
-            "case": "control",
-            "detailed_technology": "small-scale hot water tanks (steel)"
+            }
         },
         {
             "name": "underground storage of gas",
+            "detailed_technology": "natural gas storage underground",
+            "case": "control",
             "region": "EU",
             "year": 2050,
             "parameters": {
@@ -6671,12 +6673,12 @@
                         ]
                     }
                 }
-            },
-            "case": "control",
-            "detailed_technology": "natural gas storage underground"
+            }
         },
         {
             "name": "vanadium redox flow battery",
+            "detailed_technology": "vanadium redox battery (vrb)",
+            "case": "control",
             "region": "EU",
             "year": 2050,
             "parameters": {
@@ -6760,12 +6762,12 @@
                         ]
                     }
                 }
-            },
-            "case": "control",
-            "detailed_technology": "vanadium redox battery (vrb)"
+            }
         },
         {
             "name": "caes",
+            "detailed_technology": "compressed air energy storage",
+            "case": "lower",
             "region": "EU",
             "year": 2020,
             "parameters": {
@@ -6849,12 +6851,12 @@
                         ]
                     }
                 }
-            },
-            "case": "lower",
-            "detailed_technology": "compressed air energy storage"
+            }
         },
         {
             "name": "flywheels",
+            "detailed_technology": "flywheels",
+            "case": "lower",
             "region": "EU",
             "year": 2020,
             "parameters": {
@@ -6938,12 +6940,12 @@
                         ]
                     }
                 }
-            },
-            "case": "lower",
-            "detailed_technology": "flywheels"
+            }
         },
         {
             "name": "hydrogen storage - caverns",
+            "detailed_technology": "hydrogen storage - caverns",
+            "case": "lower",
             "region": "EU",
             "year": 2020,
             "parameters": {
@@ -7027,12 +7029,12 @@
                         ]
                     }
                 }
-            },
-            "case": "lower",
-            "detailed_technology": "hydrogen storage - caverns"
+            }
         },
         {
             "name": "hydrogen storage - lohc",
+            "detailed_technology": "hydrogen storage - lohc",
+            "case": "lower",
             "region": "EU",
             "year": 2020,
             "parameters": {
@@ -7116,12 +7118,12 @@
                         ]
                     }
                 }
-            },
-            "case": "lower",
-            "detailed_technology": "hydrogen storage - lohc"
+            }
         },
         {
             "name": "hydrogen storage - tanks",
+            "detailed_technology": "pressurized hydrogen gas storage system (compressor & type i tanks @ 200bar)",
+            "case": "lower",
             "region": "EU",
             "year": 2020,
             "parameters": {
@@ -7205,12 +7207,12 @@
                         ]
                     }
                 }
-            },
-            "case": "lower",
-            "detailed_technology": "pressurized hydrogen gas storage system (compressor & type i tanks @ 200bar)"
+            }
         },
         {
             "name": "large hot water tank",
+            "detailed_technology": "large-scale hot water tanks (steel)",
+            "case": "lower",
             "region": "EU",
             "year": 2020,
             "parameters": {
@@ -7294,12 +7296,12 @@
                         ]
                     }
                 }
-            },
-            "case": "lower",
-            "detailed_technology": "large-scale hot water tanks (steel)"
+            }
         },
         {
             "name": "na-nicl2 battery",
+            "detailed_technology": "na-nicl2 battery",
+            "case": "lower",
             "region": "EU",
             "year": 2020,
             "parameters": {
@@ -7383,12 +7385,12 @@
                         ]
                     }
                 }
-            },
-            "case": "lower",
-            "detailed_technology": "na-nicl2 battery"
+            }
         },
         {
             "name": "na-s battery",
+            "detailed_technology": "nas battery",
+            "case": "lower",
             "region": "EU",
             "year": 2020,
             "parameters": {
@@ -7472,12 +7474,12 @@
                         ]
                     }
                 }
-            },
-            "case": "lower",
-            "detailed_technology": "nas battery"
+            }
         },
         {
             "name": "ptes seasonal",
+            "detailed_technology": "pit thermal energy storage [ptes]",
+            "case": "lower",
             "region": "EU",
             "year": 2020,
             "parameters": {
@@ -7561,12 +7563,12 @@
                         ]
                     }
                 }
-            },
-            "case": "lower",
-            "detailed_technology": "pit thermal energy storage [ptes]"
+            }
         },
         {
             "name": "pumped hydro storage",
+            "detailed_technology": "pumped hydro storage",
+            "case": "lower",
             "region": "EU",
             "year": 2020,
             "parameters": {
@@ -7650,12 +7652,12 @@
                         ]
                     }
                 }
-            },
-            "case": "lower",
-            "detailed_technology": "pumped hydro storage"
+            }
         },
         {
             "name": "small scale hot water tank",
+            "detailed_technology": "small-scale hot water tanks (steel)",
+            "case": "lower",
             "region": "EU",
             "year": 2020,
             "parameters": {
@@ -7739,12 +7741,12 @@
                         ]
                     }
                 }
-            },
-            "case": "lower",
-            "detailed_technology": "small-scale hot water tanks (steel)"
+            }
         },
         {
             "name": "molten salt carnot battery",
+            "detailed_technology": "carnot battery",
+            "case": "lower",
             "region": "EU",
             "year": 2025,
             "parameters": {
@@ -7828,12 +7830,12 @@
                         ]
                     }
                 }
-            },
-            "case": "lower",
-            "detailed_technology": "carnot battery"
+            }
         },
         {
             "name": "rock-based carnot battery",
+            "detailed_technology": "carnot battery",
+            "case": "lower",
             "region": "EU",
             "year": 2025,
             "parameters": {
@@ -7917,12 +7919,12 @@
                         ]
                     }
                 }
-            },
-            "case": "lower",
-            "detailed_technology": "carnot battery"
+            }
         },
         {
             "name": "lithium ion battery",
+            "detailed_technology": "lithium-ion battery (utility-scale)",
+            "case": "lower",
             "region": "EU",
             "year": 2030,
             "parameters": {
@@ -8006,12 +8008,12 @@
                         ]
                     }
                 }
-            },
-            "case": "lower",
-            "detailed_technology": "lithium-ion battery (utility-scale)"
+            }
         },
         {
             "name": "vanadium redox flow battery",
+            "detailed_technology": "vanadium redox battery (vrb)",
+            "case": "lower",
             "region": "EU",
             "year": 2030,
             "parameters": {
@@ -8095,12 +8097,12 @@
                         ]
                     }
                 }
-            },
-            "case": "lower",
-            "detailed_technology": "vanadium redox battery (vrb)"
+            }
         },
         {
             "name": "caes",
+            "detailed_technology": "compressed air energy storage",
+            "case": "lower",
             "region": "EU",
             "year": 2050,
             "parameters": {
@@ -8184,12 +8186,12 @@
                         ]
                     }
                 }
-            },
-            "case": "lower",
-            "detailed_technology": "compressed air energy storage"
+            }
         },
         {
             "name": "flywheels",
+            "detailed_technology": "flywheels",
+            "case": "lower",
             "region": "EU",
             "year": 2050,
             "parameters": {
@@ -8273,12 +8275,12 @@
                         ]
                     }
                 }
-            },
-            "case": "lower",
-            "detailed_technology": "flywheels"
+            }
         },
         {
             "name": "hydrogen storage - caverns",
+            "detailed_technology": "hydrogen storage - caverns",
+            "case": "lower",
             "region": "EU",
             "year": 2050,
             "parameters": {
@@ -8362,12 +8364,12 @@
                         ]
                     }
                 }
-            },
-            "case": "lower",
-            "detailed_technology": "hydrogen storage - caverns"
+            }
         },
         {
             "name": "hydrogen storage - lohc",
+            "detailed_technology": "hydrogen storage - lohc",
+            "case": "lower",
             "region": "EU",
             "year": 2050,
             "parameters": {
@@ -8451,12 +8453,12 @@
                         ]
                     }
                 }
-            },
-            "case": "lower",
-            "detailed_technology": "hydrogen storage - lohc"
+            }
         },
         {
             "name": "hydrogen storage - tanks",
+            "detailed_technology": "pressurized hydrogen gas storage system (compressor & type i tanks @ 200bar)",
+            "case": "lower",
             "region": "EU",
             "year": 2050,
             "parameters": {
@@ -8540,12 +8542,12 @@
                         ]
                     }
                 }
-            },
-            "case": "lower",
-            "detailed_technology": "pressurized hydrogen gas storage system (compressor & type i tanks @ 200bar)"
+            }
         },
         {
             "name": "large hot water tank",
+            "detailed_technology": "large-scale hot water tanks (steel)",
+            "case": "lower",
             "region": "EU",
             "year": 2050,
             "parameters": {
@@ -8629,12 +8631,12 @@
                         ]
                     }
                 }
-            },
-            "case": "lower",
-            "detailed_technology": "large-scale hot water tanks (steel)"
+            }
         },
         {
             "name": "lithium ion battery",
+            "detailed_technology": "lithium-ion battery (utility-scale)",
+            "case": "lower",
             "region": "EU",
             "year": 2050,
             "parameters": {
@@ -8718,12 +8720,12 @@
                         ]
                     }
                 }
-            },
-            "case": "lower",
-            "detailed_technology": "lithium-ion battery (utility-scale)"
+            }
         },
         {
             "name": "molten salt carnot battery",
+            "detailed_technology": "carnot battery",
+            "case": "lower",
             "region": "EU",
             "year": 2050,
             "parameters": {
@@ -8807,12 +8809,12 @@
                         ]
                     }
                 }
-            },
-            "case": "lower",
-            "detailed_technology": "carnot battery"
+            }
         },
         {
             "name": "na-nicl2 battery",
+            "detailed_technology": "na-nicl2 battery",
+            "case": "lower",
             "region": "EU",
             "year": 2050,
             "parameters": {
@@ -8896,12 +8898,12 @@
                         ]
                     }
                 }
-            },
-            "case": "lower",
-            "detailed_technology": "na-nicl2 battery"
+            }
         },
         {
             "name": "na-s battery",
+            "detailed_technology": "nas battery",
+            "case": "lower",
             "region": "EU",
             "year": 2050,
             "parameters": {
@@ -8985,12 +8987,12 @@
                         ]
                     }
                 }
-            },
-            "case": "lower",
-            "detailed_technology": "nas battery"
+            }
         },
         {
             "name": "ptes seasonal",
+            "detailed_technology": "pit thermal energy storage [ptes]",
+            "case": "lower",
             "region": "EU",
             "year": 2050,
             "parameters": {
@@ -9074,12 +9076,12 @@
                         ]
                     }
                 }
-            },
-            "case": "lower",
-            "detailed_technology": "pit thermal energy storage [ptes]"
+            }
         },
         {
             "name": "pumped hydro storage",
+            "detailed_technology": "pumped hydro storage",
+            "case": "lower",
             "region": "EU",
             "year": 2050,
             "parameters": {
@@ -9163,12 +9165,12 @@
                         ]
                     }
                 }
-            },
-            "case": "lower",
-            "detailed_technology": "pumped hydro storage"
+            }
         },
         {
             "name": "rock-based carnot battery",
+            "detailed_technology": "carnot battery",
+            "case": "lower",
             "region": "EU",
             "year": 2050,
             "parameters": {
@@ -9252,12 +9254,12 @@
                         ]
                     }
                 }
-            },
-            "case": "lower",
-            "detailed_technology": "carnot battery"
+            }
         },
         {
             "name": "small scale hot water tank",
+            "detailed_technology": "small-scale hot water tanks (steel)",
+            "case": "lower",
             "region": "EU",
             "year": 2050,
             "parameters": {
@@ -9341,12 +9343,12 @@
                         ]
                     }
                 }
-            },
-            "case": "lower",
-            "detailed_technology": "small-scale hot water tanks (steel)"
+            }
         },
         {
             "name": "vanadium redox flow battery",
+            "detailed_technology": "vanadium redox battery (vrb)",
+            "case": "lower",
             "region": "EU",
             "year": 2050,
             "parameters": {
@@ -9430,12 +9432,12 @@
                         ]
                     }
                 }
-            },
-            "case": "lower",
-            "detailed_technology": "vanadium redox battery (vrb)"
+            }
         },
         {
             "name": "caes",
+            "detailed_technology": "compressed air energy storage",
+            "case": "upper",
             "region": "EU",
             "year": 2020,
             "parameters": {
@@ -9519,12 +9521,12 @@
                         ]
                     }
                 }
-            },
-            "case": "upper",
-            "detailed_technology": "compressed air energy storage"
+            }
         },
         {
             "name": "flywheels",
+            "detailed_technology": "flywheels",
+            "case": "upper",
             "region": "EU",
             "year": 2020,
             "parameters": {
@@ -9608,12 +9610,12 @@
                         ]
                     }
                 }
-            },
-            "case": "upper",
-            "detailed_technology": "flywheels"
+            }
         },
         {
             "name": "hydrogen storage - caverns",
+            "detailed_technology": "hydrogen storage - caverns",
+            "case": "upper",
             "region": "EU",
             "year": 2020,
             "parameters": {
@@ -9697,12 +9699,12 @@
                         ]
                     }
                 }
-            },
-            "case": "upper",
-            "detailed_technology": "hydrogen storage - caverns"
+            }
         },
         {
             "name": "hydrogen storage - lohc",
+            "detailed_technology": "hydrogen storage - lohc",
+            "case": "upper",
             "region": "EU",
             "year": 2020,
             "parameters": {
@@ -9786,12 +9788,12 @@
                         ]
                     }
                 }
-            },
-            "case": "upper",
-            "detailed_technology": "hydrogen storage - lohc"
+            }
         },
         {
             "name": "hydrogen storage - tanks",
+            "detailed_technology": "pressurized hydrogen gas storage system (compressor & type i tanks @ 200bar)",
+            "case": "upper",
             "region": "EU",
             "year": 2020,
             "parameters": {
@@ -9875,12 +9877,12 @@
                         ]
                     }
                 }
-            },
-            "case": "upper",
-            "detailed_technology": "pressurized hydrogen gas storage system (compressor & type i tanks @ 200bar)"
+            }
         },
         {
             "name": "large hot water tank",
+            "detailed_technology": "large-scale hot water tanks (steel)",
+            "case": "upper",
             "region": "EU",
             "year": 2020,
             "parameters": {
@@ -9964,12 +9966,12 @@
                         ]
                     }
                 }
-            },
-            "case": "upper",
-            "detailed_technology": "large-scale hot water tanks (steel)"
+            }
         },
         {
             "name": "na-nicl2 battery",
+            "detailed_technology": "na-nicl2 battery",
+            "case": "upper",
             "region": "EU",
             "year": 2020,
             "parameters": {
@@ -10053,12 +10055,12 @@
                         ]
                     }
                 }
-            },
-            "case": "upper",
-            "detailed_technology": "na-nicl2 battery"
+            }
         },
         {
             "name": "na-s battery",
+            "detailed_technology": "nas battery",
+            "case": "upper",
             "region": "EU",
             "year": 2020,
             "parameters": {
@@ -10142,12 +10144,12 @@
                         ]
                     }
                 }
-            },
-            "case": "upper",
-            "detailed_technology": "nas battery"
+            }
         },
         {
             "name": "ptes seasonal",
+            "detailed_technology": "pit thermal energy storage [ptes]",
+            "case": "upper",
             "region": "EU",
             "year": 2020,
             "parameters": {
@@ -10231,12 +10233,12 @@
                         ]
                     }
                 }
-            },
-            "case": "upper",
-            "detailed_technology": "pit thermal energy storage [ptes]"
+            }
         },
         {
             "name": "pumped hydro storage",
+            "detailed_technology": "pumped hydro storage",
+            "case": "upper",
             "region": "EU",
             "year": 2020,
             "parameters": {
@@ -10320,12 +10322,12 @@
                         ]
                     }
                 }
-            },
-            "case": "upper",
-            "detailed_technology": "pumped hydro storage"
+            }
         },
         {
             "name": "small scale hot water tank",
+            "detailed_technology": "small-scale hot water tanks (steel)",
+            "case": "upper",
             "region": "EU",
             "year": 2020,
             "parameters": {
@@ -10409,12 +10411,12 @@
                         ]
                     }
                 }
-            },
-            "case": "upper",
-            "detailed_technology": "small-scale hot water tanks (steel)"
+            }
         },
         {
             "name": "molten salt carnot battery",
+            "detailed_technology": "carnot battery",
+            "case": "upper",
             "region": "EU",
             "year": 2025,
             "parameters": {
@@ -10498,12 +10500,12 @@
                         ]
                     }
                 }
-            },
-            "case": "upper",
-            "detailed_technology": "carnot battery"
+            }
         },
         {
             "name": "rock-based carnot battery",
+            "detailed_technology": "carnot battery",
+            "case": "upper",
             "region": "EU",
             "year": 2025,
             "parameters": {
@@ -10587,12 +10589,12 @@
                         ]
                     }
                 }
-            },
-            "case": "upper",
-            "detailed_technology": "carnot battery"
+            }
         },
         {
             "name": "lithium ion battery",
+            "detailed_technology": "lithium-ion battery (utility-scale)",
+            "case": "upper",
             "region": "EU",
             "year": 2030,
             "parameters": {
@@ -10676,12 +10678,12 @@
                         ]
                     }
                 }
-            },
-            "case": "upper",
-            "detailed_technology": "lithium-ion battery (utility-scale)"
+            }
         },
         {
             "name": "vanadium redox flow battery",
+            "detailed_technology": "vanadium redox battery (vrb)",
+            "case": "upper",
             "region": "EU",
             "year": 2030,
             "parameters": {
@@ -10765,12 +10767,12 @@
                         ]
                     }
                 }
-            },
-            "case": "upper",
-            "detailed_technology": "vanadium redox battery (vrb)"
+            }
         },
         {
             "name": "caes",
+            "detailed_technology": "compressed air energy storage",
+            "case": "upper",
             "region": "EU",
             "year": 2050,
             "parameters": {
@@ -10854,12 +10856,12 @@
                         ]
                     }
                 }
-            },
-            "case": "upper",
-            "detailed_technology": "compressed air energy storage"
+            }
         },
         {
             "name": "flywheels",
+            "detailed_technology": "flywheels",
+            "case": "upper",
             "region": "EU",
             "year": 2050,
             "parameters": {
@@ -10943,12 +10945,12 @@
                         ]
                     }
                 }
-            },
-            "case": "upper",
-            "detailed_technology": "flywheels"
+            }
         },
         {
             "name": "hydrogen storage - caverns",
+            "detailed_technology": "hydrogen storage - caverns",
+            "case": "upper",
             "region": "EU",
             "year": 2050,
             "parameters": {
@@ -11032,12 +11034,12 @@
                         ]
                     }
                 }
-            },
-            "case": "upper",
-            "detailed_technology": "hydrogen storage - caverns"
+            }
         },
         {
             "name": "hydrogen storage - lohc",
+            "detailed_technology": "hydrogen storage - lohc",
+            "case": "upper",
             "region": "EU",
             "year": 2050,
             "parameters": {
@@ -11121,12 +11123,12 @@
                         ]
                     }
                 }
-            },
-            "case": "upper",
-            "detailed_technology": "hydrogen storage - lohc"
+            }
         },
         {
             "name": "hydrogen storage - tanks",
+            "detailed_technology": "pressurized hydrogen gas storage system (compressor & type i tanks @ 200bar)",
+            "case": "upper",
             "region": "EU",
             "year": 2050,
             "parameters": {
@@ -11210,12 +11212,12 @@
                         ]
                     }
                 }
-            },
-            "case": "upper",
-            "detailed_technology": "pressurized hydrogen gas storage system (compressor & type i tanks @ 200bar)"
+            }
         },
         {
             "name": "large hot water tank",
+            "detailed_technology": "large-scale hot water tanks (steel)",
+            "case": "upper",
             "region": "EU",
             "year": 2050,
             "parameters": {
@@ -11299,12 +11301,12 @@
                         ]
                     }
                 }
-            },
-            "case": "upper",
-            "detailed_technology": "large-scale hot water tanks (steel)"
+            }
         },
         {
             "name": "lithium ion battery",
+            "detailed_technology": "lithium-ion battery (utility-scale)",
+            "case": "upper",
             "region": "EU",
             "year": 2050,
             "parameters": {
@@ -11388,12 +11390,12 @@
                         ]
                     }
                 }
-            },
-            "case": "upper",
-            "detailed_technology": "lithium-ion battery (utility-scale)"
+            }
         },
         {
             "name": "molten salt carnot battery",
+            "detailed_technology": "carnot battery",
+            "case": "upper",
             "region": "EU",
             "year": 2050,
             "parameters": {
@@ -11477,12 +11479,12 @@
                         ]
                     }
                 }
-            },
-            "case": "upper",
-            "detailed_technology": "carnot battery"
+            }
         },
         {
             "name": "na-nicl2 battery",
+            "detailed_technology": "na-nicl2 battery",
+            "case": "upper",
             "region": "EU",
             "year": 2050,
             "parameters": {
@@ -11566,12 +11568,12 @@
                         ]
                     }
                 }
-            },
-            "case": "upper",
-            "detailed_technology": "na-nicl2 battery"
+            }
         },
         {
             "name": "na-s battery",
+            "detailed_technology": "nas battery",
+            "case": "upper",
             "region": "EU",
             "year": 2050,
             "parameters": {
@@ -11655,12 +11657,12 @@
                         ]
                     }
                 }
-            },
-            "case": "upper",
-            "detailed_technology": "nas battery"
+            }
         },
         {
             "name": "ptes seasonal",
+            "detailed_technology": "pit thermal energy storage [ptes]",
+            "case": "upper",
             "region": "EU",
             "year": 2050,
             "parameters": {
@@ -11744,12 +11746,12 @@
                         ]
                     }
                 }
-            },
-            "case": "upper",
-            "detailed_technology": "pit thermal energy storage [ptes]"
+            }
         },
         {
             "name": "pumped hydro storage",
+            "detailed_technology": "pumped hydro storage",
+            "case": "upper",
             "region": "EU",
             "year": 2050,
             "parameters": {
@@ -11833,12 +11835,12 @@
                         ]
                     }
                 }
-            },
-            "case": "upper",
-            "detailed_technology": "pumped hydro storage"
+            }
         },
         {
             "name": "rock-based carnot battery",
+            "detailed_technology": "carnot battery",
+            "case": "upper",
             "region": "EU",
             "year": 2050,
             "parameters": {
@@ -11922,12 +11924,12 @@
                         ]
                     }
                 }
-            },
-            "case": "upper",
-            "detailed_technology": "carnot battery"
+            }
         },
         {
             "name": "small scale hot water tank",
+            "detailed_technology": "small-scale hot water tanks (steel)",
+            "case": "upper",
             "region": "EU",
             "year": 2050,
             "parameters": {
@@ -12011,12 +12013,12 @@
                         ]
                     }
                 }
-            },
-            "case": "upper",
-            "detailed_technology": "small-scale hot water tanks (steel)"
+            }
         },
         {
             "name": "vanadium redox flow battery",
+            "detailed_technology": "vanadium redox battery (vrb)",
+            "case": "upper",
             "region": "EU",
             "year": 2050,
             "parameters": {
@@ -12100,9 +12102,7 @@
                         ]
                     }
                 }
-            },
-            "case": "upper",
-            "detailed_technology": "vanadium redox battery (vrb)"
+            }
         }
     ]
 }
