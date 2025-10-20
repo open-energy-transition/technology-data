@@ -364,7 +364,9 @@ def standardize_units(series: pandas.Series) -> pandas.Series:
     return pandas.Series([par, unit])
 
 
-def filter_parameters(dataframe: pandas.DataFrame, filter_flag: bool) -> pandas.DataFrame:
+def filter_parameters(
+    dataframe: pandas.DataFrame, filter_flag: bool
+) -> pandas.DataFrame:
     """
     Filter rows of a DataFrame by allowed technology parameters.
 
@@ -392,7 +394,9 @@ def filter_parameters(dataframe: pandas.DataFrame, filter_flag: bool) -> pandas.
     }
     if filter_flag:
         # Filter the DataFrame based on the allowed set
-        df_filtered = dataframe[dataframe["par"].isin(allowed_set)].reset_index(drop=True)
+        df_filtered = dataframe[dataframe["par"].isin(allowed_set)].reset_index(
+            drop=True
+        )
     else:
         # Return the original DataFrame if filter_flag is False
         df_filtered = dataframe
@@ -576,7 +580,9 @@ if __name__ == "__main__":
     logger.info("`priceyear` included in `unit` column.")
 
     # Format value (val) column
-    cleaned_df["val"] = cleaned_df["val"].apply(lambda x: format_val_number(x, input_args.num_digits))
+    cleaned_df["val"] = cleaned_df["val"].apply(
+        lambda x: format_val_number(x, input_args.num_digits)
+    )
     logger.info("`val` column formatted.")
 
     # Replace "MEUR_2020" with "EUR_2020" and multiply val by 1_000_000
