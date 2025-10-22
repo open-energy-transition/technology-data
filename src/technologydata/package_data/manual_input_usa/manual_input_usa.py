@@ -78,18 +78,17 @@ def extract_units_and_carriers(input_unit: str) -> tuple[str, str | None]:
         If the input unit is not found in the special_patterns dictionary.
 
     """
-
     # Define conversion dictionary
     special_patterns = {
-        'USD/MW_FT': ('USD/MW', '1/FT'),
-        'MWh_H2/MWh_FT': ('per unit', 'H2/FT'),
-        'MWh_el/MWh_FT': ('per unit', 'el/FT'),
-        't_CO2/MWh_FT': ('t/MWh', 'CO2/FT'),
-        'USD/kWh_H2': ('USD/kWh', '1/H2'),
-        'MWh_el/MWh_H2': ('per unit', 'el/H2'),
-        'USD/t_CO2/h': ('USD/t/h', '1/CO2'),
-        'MWh_el/t_CO2': ('MWh/t', 'el/CO2'),
-        'MWh_th/t_CO2': ('MWh/t', 'thermal/CO2')
+        "USD/MW_FT": ("USD/MW", "1/FT"),
+        "MWh_H2/MWh_FT": ("per unit", "H2/FT"),
+        "MWh_el/MWh_FT": ("per unit", "el/FT"),
+        "t_CO2/MWh_FT": ("t/MWh", "CO2/FT"),
+        "USD/kWh_H2": ("USD/kWh", "1/H2"),
+        "MWh_el/MWh_H2": ("per unit", "el/H2"),
+        "USD/t_CO2/h": ("USD/t/h", "1/CO2"),
+        "MWh_el/t_CO2": ("MWh/t", "el/CO2"),
+        "MWh_th/t_CO2": ("MWh/t", "thermal/CO2"),
     }
 
     if input_unit in special_patterns.keys():
