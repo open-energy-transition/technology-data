@@ -81,11 +81,11 @@ def extract_units_and_carriers(input_unit: str) -> tuple[str, str | None]:
     # Define conversion dictionary
     special_patterns = {
         "USD/MW_FT": ("USD/MW", "1/FT"),
-        "MWh_H2/MWh_FT": ("per unit", "H2/FT"),
-        "MWh_el/MWh_FT": ("per unit", "el/FT"),
+        "MWh_H2/MWh_FT": (" ", "H2/FT"),
+        "MWh_el/MWh_FT": (" ", "el/FT"),
         "t_CO2/MWh_FT": ("t/MWh", "CO2/FT"),
         "USD/kWh_H2": ("USD/kWh", "1/H2"),
-        "MWh_el/MWh_H2": ("per unit", "el/H2"),
+        "MWh_el/MWh_H2": (" ", "el/H2"),
         "USD/t_CO2/h": ("USD/t/h", "1/CO2"),
         "MWh_el/t_CO2": ("MWh/t", "el/CO2"),
         "MWh_th/t_CO2": ("MWh/t", "thermal/CO2"),
@@ -134,7 +134,7 @@ def build_technology_collection(
 
     Notes
     -----
-    - The function groups the DataFrame by 'est', 'year', 'ws', and 'Technology'
+    - The function groups the DataFrame by ["scenario", "year", "technology"]
     - For each group, it creates a dictionary of Parameters
     - Each Technology is instantiated with group-specific attributes
 
@@ -155,15 +155,17 @@ def build_technology_collection(
         sources = SourceCollection.from_json(sources_path)
 
     for (scenario, year, technology), group in dataframe.groupby(
-        ["scenario", "year", "technology"]
+            ["scenario", "year", "technology"], dropna=False
     ):
+        parameters = {}  # Reset parameters for each technology group
+        print(group)
         for _, row in group.iterrows():
             parameters[row["parameter"]] = Parameter(
                 magnitude=row["value"],
                 carrier=row["carrier"],
-                units=row["unit"],
-                note=row["further_description"],
-                provenance=row["financial_case"],
+                units=str(row["unit"]),
+                note=str(row["further_description"]),
+                provenance=str(row["financial_case"]),
                 sources=sources,
             )
         list_techs.append(
@@ -172,10 +174,11 @@ def build_technology_collection(
                 region="US",
                 year=year,
                 parameters=parameters,
-                case=scenario,
+                case=str(scenario),
                 detailed_technology=technology,
             )
         )
+
     return TechnologyCollection(technologies=list_techs)
 
 
@@ -193,7 +196,7 @@ def parse_input_arguments() -> argparse.Namespace:
     """
     # Create the parser
     parser = argparse.ArgumentParser(
-        description="Parse the DEA technology storage dataset",
+        description="Parse the technology_data manual_input_usa.csv dataset",
         formatter_class=argparse.RawTextHelpFormatter,
     )
 
@@ -231,7 +234,7 @@ if __name__ == "__main__":
         "manual_input_usa.csv",
     )
 
-    manual_input_usa_df = pandas.read_csv(manual_input_usa_input_path, dtype=str)
+    manual_input_usa_df = pandas.read_csv(manual_input_usa_input_path, dtype=str, na_values="None")
 
     # Extract units and carriers
     manual_input_usa_df[["unit", "carrier"]] = manual_input_usa_df["unit"].apply(
@@ -243,6 +246,8 @@ if __name__ == "__main__":
         ["unit", "currency_year"]
     ].apply(update_unit_with_currency_year, axis=1)
     logger.info("`currency_year` included in `unit` column.")
+
+    manual_input_usa_df.to_csv("random.csv")
 
     # Build TechnologyCollection
     manual_input_usa_base_path = pathlib.Path(
