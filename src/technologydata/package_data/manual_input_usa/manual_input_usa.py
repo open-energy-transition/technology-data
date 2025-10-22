@@ -155,9 +155,8 @@ def build_technology_collection(
         sources = SourceCollection.from_json(sources_path)
 
     for (scenario, year, technology), group in dataframe.groupby(
-            ["scenario", "year", "technology"], dropna=False
+        ["scenario", "year", "technology"], dropna=False
     ):
-        parameters = {}  # Reset parameters for each technology group
         print(group)
         for _, row in group.iterrows():
             parameters[row["parameter"]] = Parameter(
@@ -234,7 +233,9 @@ if __name__ == "__main__":
         "manual_input_usa.csv",
     )
 
-    manual_input_usa_df = pandas.read_csv(manual_input_usa_input_path, dtype=str, na_values="None")
+    manual_input_usa_df = pandas.read_csv(
+        manual_input_usa_input_path, dtype=str, na_values="None"
+    )
 
     # Extract units and carriers
     manual_input_usa_df[["unit", "carrier"]] = manual_input_usa_df["unit"].apply(
