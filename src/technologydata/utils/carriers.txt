@@ -31,3 +31,4 @@ nitrogen = [nitrogen] = N2
 oxygen = [oxygen] = O2
 water = [water] = H2O
 wood = [wood]
+fischer_tropsch = [fischer_tropsch] = FT

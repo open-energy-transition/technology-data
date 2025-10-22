@@ -157,7 +157,7 @@
                 "investment": {
                     "magnitude": 7103597.31,
                     "units": "USD_2023 / hour / metric_ton",
-                    "carrier": null,
+                    "carrier": "1 / carbon_dioxide",
                     "heating_value": null,
                     "provenance": "Market",
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
@@ -1186,7 +1186,7 @@
                 "investment": {
                     "magnitude": 19180739.93,
                     "units": "USD_2023 / hour / metric_ton",
-                    "carrier": null,
+                    "carrier": "1 / carbon_dioxide",
                     "heating_value": null,
                     "provenance": "Market",
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
@@ -2215,7 +2215,7 @@
                 "investment": {
                     "magnitude": 12398844.91,
                     "units": "USD_2023 / hour / metric_ton",
-                    "carrier": null,
+                    "carrier": "1 / carbon_dioxide",
                     "heating_value": null,
                     "provenance": "Market",
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",

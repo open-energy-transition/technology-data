@@ -45,46 +45,57 @@ def update_unit_with_currency_year(series: pandas.Series) -> pandas.Series:
     """
     unit, currency_year = series
 
-    # Check if unit is a string, contains 'EUR', and price_year is not null
+    # Check if unit is a string, contains 'USD', and price_year is not null
     if isinstance(unit, str) and "USD" in unit and pandas.notna(currency_year):
-        # Replace 'EUR/' with 'EUR_{price_year}/'
+        # Replace 'USD/' with 'uSD{price_year}/'
         unit = unit.replace("USD", f"USD_{int(currency_year)}")
 
     return pandas.Series([unit, currency_year])
 
 
-def standardize_units(unit: str) -> str:
+def extract_units_and_carriers(input_unit: str) -> tuple[str, str | None]:
     """
-    Standardized units.
+    Extract standardized units and carriers from an input unit string.
+
+    This function maps complex unit representations to simplified unit and carrier
+    combinations using a predefined dictionary of special patterns.
 
     Parameters
     ----------
-    unit : str
-        A string containing the unit to standardize
+    input_unit : str
+        A specialized unit string to be converted.
 
     Returns
     -------
-    str
-        Updated unit string.
+    tuple[str, str | None]
+        A tuple containing two elements:
+        - The first element is the standardized unit
+        - The second element is the corresponding carrier (or None if not found)
+
+    Raises
+    ------
+    KeyError
+        If the input unit is not found in the special_patterns dictionary.
 
     """
-    # Mapping of incorrect units to correct units
-    unit_corrections = {
-        "MW_FT": "MW",
-        "MWh_FT": "MWh",
-        "MWh_H2": "MWh",
-        "MWh_el": "MWh",
-        "t_CO2": "tonne",
-        "kWh_H2": "kWh",
-        "MWh_th": "MWh",
+
+    # Define conversion dictionary
+    special_patterns = {
+        'USD/MW_FT': ('USD/MW', '1/FT'),
+        'MWh_H2/MWh_FT': ('per unit', 'H2/FT'),
+        'MWh_el/MWh_FT': ('per unit', 'el/FT'),
+        't_CO2/MWh_FT': ('t/MWh', 'CO2/FT'),
+        'USD/kWh_H2': ('USD/kWh', '1/H2'),
+        'MWh_el/MWh_H2': ('per unit', 'el/H2'),
+        'USD/t_CO2/h': ('USD/t/h', '1/CO2'),
+        'MWh_el/t_CO2': ('MWh/t', 'el/CO2'),
+        'MWh_th/t_CO2': ('MWh/t', 'thermal/CO2')
     }
 
-    # Replace wrong units
-    for incorrect, correct in unit_corrections.items():
-        if incorrect == unit or incorrect in unit:
-            unit = unit.replace(incorrect, correct)
-
-    return unit
+    if input_unit in special_patterns.keys():
+        return special_patterns[input_unit]
+    else:
+        return input_unit, None
 
 
 def build_technology_collection(
@@ -150,6 +161,7 @@ def build_technology_collection(
         for _, row in group.iterrows():
             parameters[row["parameter"]] = Parameter(
                 magnitude=row["value"],
+                carrier=row["carrier"],
                 units=row["unit"],
                 note=row["further_description"],
                 provenance=row["financial_case"],
@@ -222,17 +234,16 @@ if __name__ == "__main__":
 
     manual_input_usa_df = pandas.read_csv(manual_input_usa_input_path, dtype=str)
 
-    # Standardize units
-    manual_input_usa_df["unit"] = manual_input_usa_df["unit"].apply(standardize_units)
-    logger.info("Units standardized.")
+    # Extract units and carriers
+    manual_input_usa_df[["unit", "carrier"]] = manual_input_usa_df["unit"].apply(
+        lambda x: pandas.Series(extract_units_and_carriers(x))
+    )
 
     # Include currency_year in unit if applicable
     manual_input_usa_df[["unit", "currency_year"]] = manual_input_usa_df[
         ["unit", "currency_year"]
     ].apply(update_unit_with_currency_year, axis=1)
     logger.info("`currency_year` included in `unit` column.")
-
-    print(manual_input_usa_df["unit"].unique())
 
     # Build TechnologyCollection
     manual_input_usa_base_path = pathlib.Path(
