@@ -239,15 +239,15 @@ if __name__ == "__main__":
     manual_input_usa_df["value"] = manual_input_usa_df["value"].astype(float)
 
     # Extract units and carriers
-    manual_input_usa_df[["unit", "carrier", "heating_value"]] = manual_input_usa_df["unit"].apply(
-        lambda x: pandas.Series(extract_units_and_carriers(x))
-    )
+    manual_input_usa_df[["unit", "carrier", "heating_value"]] = manual_input_usa_df[
+        "unit"
+    ].apply(lambda x: pandas.Series(extract_units_and_carriers(x)))
 
     # Replace "per unit" with "%" and multiply val by 100
     mask_per_unit = manual_input_usa_df["unit"].str.contains("per unit")
-    manual_input_usa_df.loc[mask_per_unit, "unit"] = manual_input_usa_df.loc[mask_per_unit, "unit"].str.replace(
-        "per unit", "%"
-    )
+    manual_input_usa_df.loc[mask_per_unit, "unit"] = manual_input_usa_df.loc[
+        mask_per_unit, "unit"
+    ].str.replace("per unit", "%")
     print(manual_input_usa_df.info())
     manual_input_usa_df.loc[mask_per_unit, "value"] = (
         manual_input_usa_df.loc[mask_per_unit, "value"] * 100.0
