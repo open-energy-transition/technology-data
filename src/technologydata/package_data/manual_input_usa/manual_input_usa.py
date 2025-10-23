@@ -53,7 +53,7 @@ def update_unit_with_currency_year(series: pandas.Series) -> pandas.Series:
     return pandas.Series([unit, currency_year])
 
 
-def extract_units_and_carriers(input_unit: str) -> tuple[str, str | None]:
+def extract_units_and_carriers(input_unit: str) -> tuple[str, str | None, str | None]:
     """
     Extract standardized units and carriers from an input unit string.
 
@@ -80,21 +80,21 @@ def extract_units_and_carriers(input_unit: str) -> tuple[str, str | None]:
     """
     # Define conversion dictionary
     special_patterns = {
-        "USD/MW_FT": ("USD/MW", "1/FT"),
-        "MWh_H2/MWh_FT": (" ", "H2/FT"),
-        "MWh_el/MWh_FT": (" ", "el/FT"),
-        "t_CO2/MWh_FT": ("t/MWh", "CO2/FT"),
-        "USD/kWh_H2": ("USD/kWh", "1/H2"),
-        "MWh_el/MWh_H2": (" ", "el/H2"),
-        "USD/t_CO2/h": ("USD/t/h", "1/CO2"),
-        "MWh_el/t_CO2": ("MWh/t", "el/CO2"),
-        "MWh_th/t_CO2": ("MWh/t", "thermal/CO2"),
+        "USD/MW_FT": ("USD/MW", "1/FT", "LHV"),
+        "MWh_H2/MWh_FT": ("MWh/MWh", "H2/FT", "LHV"),
+        "MWh_el/MWh_FT": ("MWh/MWh", "el/FT", "LHV"),
+        "t_CO2/MWh_FT": ("t/MWh", "CO2/FT", "LHV"),
+        "USD/kWh_H2": ("USD/kWh", "1/H2", "LHV"),
+        "MWh_el/MWh_H2": ("MWh/MWh", "el/H2", "LHV"),
+        "USD/t_CO2/h": ("USD/t/h", "1/CO2", "LHV"),
+        "MWh_el/t_CO2": ("MWh/t", "el/CO2", "LHV"),
+        "MWh_th/t_CO2": ("MWh/t", "thermal/CO2", "LHV"),
     }
 
     if input_unit in special_patterns.keys():
         return special_patterns[input_unit]
     else:
-        return input_unit, None
+        return input_unit, None, None
 
 
 def build_technology_collection(
@@ -157,11 +157,11 @@ def build_technology_collection(
     for (scenario, year, technology), group in dataframe.groupby(
         ["scenario", "year", "technology"], dropna=False
     ):
-        print(group)
         for _, row in group.iterrows():
             parameters[row["parameter"]] = Parameter(
                 magnitude=row["value"],
                 carrier=row["carrier"],
+                heating_value=str(row["heating_value"]),
                 units=str(row["unit"]),
                 note=str(row["further_description"]),
                 provenance=str(row["financial_case"]),
@@ -236,11 +236,22 @@ if __name__ == "__main__":
     manual_input_usa_df = pandas.read_csv(
         manual_input_usa_input_path, dtype=str, na_values="None"
     )
+    manual_input_usa_df["value"] = manual_input_usa_df["value"].astype(float)
 
     # Extract units and carriers
-    manual_input_usa_df[["unit", "carrier"]] = manual_input_usa_df["unit"].apply(
+    manual_input_usa_df[["unit", "carrier", "heating_value"]] = manual_input_usa_df["unit"].apply(
         lambda x: pandas.Series(extract_units_and_carriers(x))
     )
+
+    # Replace "per unit" with "%" and multiply val by 100
+    mask_per_unit = manual_input_usa_df["unit"].str.contains("per unit")
+    manual_input_usa_df.loc[mask_per_unit, "unit"] = manual_input_usa_df.loc[mask_per_unit, "unit"].str.replace(
+        "per unit", "%"
+    )
+    print(manual_input_usa_df.info())
+    manual_input_usa_df.loc[mask_per_unit, "value"] = (
+        manual_input_usa_df.loc[mask_per_unit, "value"] * 100.0
+    ).round(input_args.num_digits)
 
     # Include currency_year in unit if applicable
     manual_input_usa_df[["unit", "currency_year"]] = manual_input_usa_df[
