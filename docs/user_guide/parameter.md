@@ -81,6 +81,81 @@ param + param_hhv
 >>> # ValueError: Cannot add parameters with different heating values
 ```
 
+### Working with Series Data
+
+The `Parameter` class also supports using pandas Series or lists as the `magnitude` value, allowing you to work with time series or multiple scenarios simultaneously:
+
+```python
+import pandas as pd
+from technologydata.parameter import Parameter
+
+# Create a parameter with time series data
+years = pd.Series([2020, 2025, 2030, 2035, 2040])
+costs = pd.Series([1000, 800, 600, 400, 300], index=years)
+
+param_series = Parameter(
+    magnitude=costs,
+    units="USD_2020/kW",
+    carrier="H2",
+    heating_value="LHV",
+    provenance="Cost projection",
+    note="Declining costs over time"
+)
+
+>>> print(param_series.magnitude)
+2020    1000
+2025     800
+2030     600
+2035     400
+2040     300
+dtype: int64
+
+# Unit conversion preserves the series structure
+converted_series = param_series.to("EUR_2020/MW")
+>>> print(converted_series.magnitude)
+2020    1000000.0
+2025     800000.0
+2030     600000.0
+2035     400000.0
+2040     300000.0
+dtype: float64
+
+# Arithmetic operations work element-wise with scalars
+multiplier = 1.25  # Simple scalar multiplication
+adjusted_costs = param_series * multiplier
+>>> print(adjusted_costs.magnitude)
+2020    1250.0
+2025    1000.0
+2030     750.0
+2035     500.0
+2040     375.0
+
+# You can also use lists instead of pandas Series
+param_list = Parameter(
+    magnitude=[100, 200, 300],
+    units="kW",
+    note="List-based data"
+)
+>>> print(param_list.magnitude)
+[100, 200, 300]
+
+# Operations between series and scalar parameters
+base_load = Parameter(magnitude=50, units="kW")
+total_load = param_list + base_load
+>>> print(total_load.magnitude)
+0    150
+1    250
+2    350
+dtype: int64
+```
+
+**Series Features:**
+- **Index Preservation**: When using pandas Series, the index is preserved through arithmetic operations and conversions
+- **Element-wise Operations**: All arithmetic operations (`+`, `-`, `*`, `/`, `**`) work element-wise on series data
+- **Mixed Operations**: You can perform operations between series and scalar parameters
+- **Currency Conversion**: Currency conversion works on all elements of a series
+- **Heating Value Conversion**: Heating value changes are applied to all elements in a series
+
 ## Notes on Currency Conversion and pydeflate
 
 - **pydeflate Integration**: Currency and inflation adjustments are performed using the `pydeflate` package. This package uses data from either the World Bank or the International Monetary Fund. In order to use `pydeflate` with currency codes, we make some opinioated assumptions about the mapping from currency codes to countries which should in most cases be correct, but may not always be accurate for all currencies or years.
@@ -135,3 +210,5 @@ param_mixed_hhv = param_mixed.change_heating_value("HHV")
 - **Partial Unit Compatibility**: Only certain combinations of units, carriers, and heating values are supported for arithmetic operations.
 - **No Uncertainty Handling**: There is currently no support for uncertainty or error propagation.
 - **No Serialization/Deserialization**: Direct methods for exporting/importing to/from JSON or DataFrame are not implemented in this class.
+- **Series Index Alignment**: When performing operations between two series parameters with different indices, the result uses the index from the longer series. More sophisticated index alignment is not currently implemented.
+- **Mixed Series Types**: Operations between pandas Series and plain Python lists convert the list to a Series, which may not preserve intended semantics in all cases.

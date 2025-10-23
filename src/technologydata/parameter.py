@@ -8,17 +8,39 @@ Parameter class for encapsulating a value, its unit, provenance, notes, and sour
 Examples
 --------
 >>> from technologydata.source import Source
+>>> import pandas as pd
 >>> uv = pint.Quantity(1000, "EUR_2020/kW")
 >>> src = Source(name="Example Source", authors="some authors", url="http://example.com")
 >>> param = Parameter(quantity=uv, provenance="literature", note="Estimated", sources=[src])
+
+Series Support
+--------------
+>>> # Create parameter with time series data
+>>> years = pd.Series([2020, 2025, 2030])
+>>> costs = pd.Series([1000, 800, 600], index=years)
+>>> param_series = Parameter(magnitude=costs, units="USD_2020/kW")
+>>> print(param_series.magnitude)
+2020    1000
+2025     800
+2030     600
+dtype: int64
+
+>>> # Operations work element-wise on series
+>>> doubled = param_series * 2
+>>> print(doubled.magnitude)
+2020    2000
+2025    1600
+2030    1200
+dtype: int64
 
 """
 
 import logging
 from typing import Annotated, Self
 
+import pandas as pd
 import pint
-from pydantic import BaseModel, Field, PrivateAttr
+from pydantic import BaseModel, ConfigDict, Field, PrivateAttr
 
 import technologydata
 from technologydata.source_collection import SourceCollection
@@ -32,8 +54,8 @@ class Parameter(BaseModel):  # type: ignore
 
     Attributes
     ----------
-    magnitude : int | float
-        The numerical value of the parameter.
+    magnitude : int | float | list[float] | pd.Series
+        The numerical value(s) of the parameter. Can be a single value or a series of values.
     units : Optional[str]
         The unit of the parameter.
     carrier : Optional[str]
@@ -49,8 +71,11 @@ class Parameter(BaseModel):  # type: ignore
 
     """
 
+    model_config = ConfigDict(arbitrary_types_allowed=True)
+
     magnitude: Annotated[
-        int | float, Field(description="The numerical value of the parameter.")
+        int | float | list[float] | pd.Series, 
+        Field(description="The numerical value(s) of the parameter. Can be a single value or a series of values.")
     ]
     units: Annotated[str | None, Field(description="The unit of the parameter.")] = None
     carrier: Annotated[
@@ -75,7 +100,7 @@ class Parameter(BaseModel):  # type: ignore
     _pint_carrier: pint.Unit = PrivateAttr(None)
     _pint_heating_value: pint.Unit = PrivateAttr(None)
 
-    def __init__(self, **data: float | str | SourceCollection | None) -> None:
+    def __init__(self, **data: float | str | list[float] | pd.Series | SourceCollection | None) -> None:
         """Initialize Parameter and update pint attributes."""
         # pint uses canonical names for units, carriers, and heating values
         # Ensure the Parameter object is always created with these consistent names from pint
@@ -92,6 +117,23 @@ class Parameter(BaseModel):  # type: ignore
         super().__init__(**data)
         self._update_pint_attributes()
 
+    def _is_magnitude_series(self) -> bool:
+        """Check if magnitude is a pandas Series or list."""
+        return isinstance(self.magnitude, (pd.Series, list))
+
+    def _is_magnitude_scalar(self) -> bool:
+        """Check if magnitude is a scalar value."""
+        return isinstance(self.magnitude, (int, float))
+
+    def _get_magnitude_as_series(self) -> pd.Series:
+        """Convert magnitude to pandas Series if it's not already."""
+        if isinstance(self.magnitude, pd.Series):
+            return self.magnitude
+        elif isinstance(self.magnitude, list):
+            return pd.Series(self.magnitude)
+        else:
+            return pd.Series([self.magnitude])
+
     def _update_pint_attributes(self) -> None:
         """
         Update internal pint attributes based on current object fields.
@@ -105,6 +147,7 @@ class Parameter(BaseModel):  # type: ignore
         -----
         - Ensures that `units` are valid, especially for currency units.
         - Raises a ValueError if `heating_value` is set without a valid `carrier`.
+        - When magnitude is a series, creates an array of pint quantities or a single quantity with array magnitude.
 
         """
         # Create a pint quantity from magnitude and units
@@ -112,11 +155,23 @@ class Parameter(BaseModel):  # type: ignore
             # `units` may contain an undefined currency unit - ensure the ureg can handle it
             technologydata.ureg.ensure_currency_is_unit(self.units)
 
-            self._pint_quantity = technologydata.ureg.Quantity(
-                self.magnitude, self.units
-            )
+            if self._is_magnitude_series():
+                # For series data, create a quantity with array magnitude
+                magnitude_array = self._get_magnitude_as_series().values
+                self._pint_quantity = technologydata.ureg.Quantity(
+                    magnitude_array, self.units
+                )
+            else:
+                self._pint_quantity = technologydata.ureg.Quantity(
+                    self.magnitude, self.units
+                )
         else:
-            self._pint_quantity = technologydata.ureg.Quantity(self.magnitude)
+            if self._is_magnitude_series():
+                magnitude_array = self._get_magnitude_as_series().values
+                self._pint_quantity = technologydata.ureg.Quantity(magnitude_array)
+            else:
+                self._pint_quantity = technologydata.ureg.Quantity(self.magnitude)
+                
         # Create the carrier as pint unit
         if self.carrier:
             self._pint_carrier = technologydata.creg.Unit(self.carrier)
@@ -147,8 +202,21 @@ class Parameter(BaseModel):  # type: ignore
             )
 
         self._pint_quantity = self._pint_quantity.to(units)
+        
+        # Handle series vs scalar magnitude
+        if self._is_magnitude_series():
+            magnitude_series = self._get_magnitude_as_series()
+            if hasattr(self._pint_quantity.magnitude, '__iter__'):
+                # Update the series with new values
+                new_magnitude = pd.Series(self._pint_quantity.magnitude, index=magnitude_series.index)
+            else:
+                # Single value case
+                new_magnitude = self._pint_quantity.magnitude
+        else:
+            new_magnitude = self._pint_quantity.magnitude
+            
         return Parameter(
-            magnitude=self._pint_quantity.magnitude,
+            magnitude=new_magnitude,
             units=str(self._pint_quantity.units),
             carrier=self.carrier,
             heating_value=self.heating_value,
@@ -258,8 +326,20 @@ class Parameter(BaseModel):  # type: ignore
         # Actual conversion using pint
         quantity = self._pint_quantity.to(to_units, context)
 
+        # Handle series vs scalar magnitude
+        if self._is_magnitude_series():
+            magnitude_series = self._get_magnitude_as_series()
+            if hasattr(quantity.magnitude, '__iter__'):
+                # Update the series with new values
+                new_magnitude = pd.Series(quantity.magnitude, index=magnitude_series.index)
+            else:
+                # Single value case
+                new_magnitude = quantity.magnitude
+        else:
+            new_magnitude = quantity.magnitude
+
         return Parameter(
-            magnitude=quantity.magnitude,
+            magnitude=new_magnitude,
             units=str(quantity.units),
             carrier=self.carrier,
             heating_value=self.heating_value,
@@ -362,8 +442,15 @@ class Parameter(BaseModel):  # type: ignore
             # Adjust the hv_ratios for the exponent of the carrier
             multiplier *= hv_ratios[dim] ** exponent
 
+        # Handle series vs scalar magnitude
+        if self._is_magnitude_series():
+            magnitude_series = self._get_magnitude_as_series()
+            new_magnitude = magnitude_series * multiplier
+        else:
+            new_magnitude = self.magnitude * multiplier
+
         return Parameter(
-            magnitude=self.magnitude * multiplier,
+            magnitude=new_magnitude,
             units=self.units,
             carrier=self.carrier,
             heating_value=to_heating_value,
@@ -418,13 +505,34 @@ class Parameter(BaseModel):  # type: ignore
         This method checks for parameter compatibility before performing the addition.
         The resulting Parameter retains the carrier, heating value, and combines provenance,
         notes, and sources from both operands.
+        When adding series parameters, the operation is performed element-wise.
 
         """
+        self._update_pint_attributes()
+        other._update_pint_attributes()
         self._check_parameter_compatibility(other)
+        
         new_quantity = self._pint_quantity + other._pint_quantity
+        
+        # Handle series vs scalar magnitude
+        if self._is_magnitude_series() or other._is_magnitude_series():
+            if hasattr(new_quantity.magnitude, '__iter__'):
+                # If either parameter has a series and the result is an array
+                self_series = self._get_magnitude_as_series()
+                other_series = other._get_magnitude_as_series()
+                # Use the index from the longer series, or self if they're the same length
+                if len(self_series) >= len(other_series):
+                    new_magnitude = pd.Series(new_quantity.magnitude, index=self_series.index)
+                else:
+                    new_magnitude = pd.Series(new_quantity.magnitude, index=other_series.index)
+            else:
+                new_magnitude = new_quantity.magnitude
+        else:
+            new_magnitude = new_quantity.magnitude
+            
         return Parameter(
-            magnitude=new_quantity.magnitude,
-            units=new_quantity.units,
+            magnitude=new_magnitude,
+            units=str(new_quantity.units),
             carrier=self.carrier,
             heating_value=self.heating_value,
             provenance=(self.provenance or "")
@@ -453,12 +561,33 @@ class Parameter(BaseModel):  # type: ignore
         -----
         This method checks for parameter compatibility before performing the subtraction.
         The resulting Parameter retains the carrier, heating value, and combines provenance, notes, and sources.
+        When subtracting series parameters, the operation is performed element-wise.
 
         """
+        self._update_pint_attributes()
+        other._update_pint_attributes()
         self._check_parameter_compatibility(other)
+        
         new_quantity = self._pint_quantity - other._pint_quantity
+        
+        # Handle series vs scalar magnitude
+        if self._is_magnitude_series() or other._is_magnitude_series():
+            if hasattr(new_quantity.magnitude, '__iter__'):
+                # If either parameter has a series and the result is an array
+                self_series = self._get_magnitude_as_series()
+                other_series = other._get_magnitude_as_series()
+                # Use the index from the longer series, or self if they're the same length
+                if len(self_series) >= len(other_series):
+                    new_magnitude = pd.Series(new_quantity.magnitude, index=self_series.index)
+                else:
+                    new_magnitude = pd.Series(new_quantity.magnitude, index=other_series.index)
+            else:
+                new_magnitude = new_quantity.magnitude
+        else:
+            new_magnitude = new_quantity.magnitude
+            
         return Parameter(
-            magnitude=new_quantity.magnitude,
+            magnitude=new_magnitude,
             units=str(new_quantity.units),
             carrier=self.carrier,
             heating_value=self.heating_value,
@@ -472,7 +601,7 @@ class Parameter(BaseModel):  # type: ignore
 
     def __truediv__(self, other: int | float | Self) -> Self:
         """
-        Divide this Parameter by another Parameter.
+        Divide this Parameter by another Parameter or scalar.
 
         Parameters
         ----------
@@ -493,11 +622,21 @@ class Parameter(BaseModel):  # type: ignore
         -----
         The method divides the quantities of the parameters and constructs a new Parameter.
         It also handles the division of carriers and heating values if present.
+        When dividing series parameters, the operation is performed element-wise.
 
         """
-        if isinstance(other, (int | float)):
+        self._update_pint_attributes()
+        
+        if isinstance(other, (int, float)):
+            # Handle series vs scalar magnitude
+            if self._is_magnitude_series():
+                magnitude_series = self._get_magnitude_as_series()
+                new_magnitude = magnitude_series / other
+            else:
+                new_magnitude = self.magnitude / other
+                
             return Parameter(
-                magnitude=self.magnitude / other,
+                magnitude=new_magnitude,
                 units=self.units,
                 carrier=self.carrier,
                 heating_value=self.heating_value,
@@ -506,6 +645,9 @@ class Parameter(BaseModel):  # type: ignore
                 sources=self.sources,
             )
 
+        # Parameter division
+        other._update_pint_attributes()
+        
         # We don't check general compatibility here, as division is not a common operation for parameters.
         # Only ensure that the heating values are compatible.
         if self._pint_heating_value != other._pint_heating_value:
@@ -526,11 +668,27 @@ class Parameter(BaseModel):  # type: ignore
             else None
         )
 
+        # Handle series vs scalar magnitude
+        if self._is_magnitude_series() or other._is_magnitude_series():
+            if hasattr(new_quantity.magnitude, '__iter__'):
+                # If either parameter has a series and the result is an array
+                self_series = self._get_magnitude_as_series()
+                other_series = other._get_magnitude_as_series()
+                # Use the index from the longer series, or self if they're the same length
+                if len(self_series) >= len(other_series):
+                    new_magnitude = pd.Series(new_quantity.magnitude, index=self_series.index)
+                else:
+                    new_magnitude = pd.Series(new_quantity.magnitude, index=other_series.index)
+            else:
+                new_magnitude = new_quantity.magnitude
+        else:
+            new_magnitude = new_quantity.magnitude
+
         return Parameter(
-            magnitude=new_quantity.magnitude,
+            magnitude=new_magnitude,
             units=str(new_quantity.units),
-            carrier=new_carrier,
-            heating_value=new_heating_value,
+            carrier=str(new_carrier) if new_carrier else None,
+            heating_value=str(new_heating_value) if new_heating_value else None,
             provenance=(self.provenance or "")
             + (other.provenance or ""),  # TODO make nicer
             note=(self.note or "") + (other.note or ""),  # TODO make nicer
@@ -541,7 +699,7 @@ class Parameter(BaseModel):  # type: ignore
 
     def __mul__(self, other: int | float | Self) -> Self:
         """
-        Multiply two Parameter instances.
+        Multiply two Parameter instances or a Parameter with a scalar.
 
         Parameters
         ----------
@@ -565,11 +723,21 @@ class Parameter(BaseModel):  # type: ignore
         - The heating value of the resulting parameter is the product of the input heating values.
         - Provenance, notes, and sources are combined from both parameters.
         - Compatibility checks beyond heating values are not performed.
+        - When multiplying series parameters, the operation is performed element-wise.
 
         """
-        if isinstance(other, int | float):
+        self._update_pint_attributes()
+        
+        if isinstance(other, (int, float)):
+            # Handle series vs scalar magnitude
+            if self._is_magnitude_series():
+                magnitude_series = self._get_magnitude_as_series()
+                new_magnitude = magnitude_series * other
+            else:
+                new_magnitude = self.magnitude * other
+                
             return Parameter(
-                magnitude=self.magnitude * other,
+                magnitude=new_magnitude,
                 units=self.units,
                 carrier=self.carrier,
                 heating_value=self.heating_value,
@@ -578,6 +746,9 @@ class Parameter(BaseModel):  # type: ignore
                 sources=self.sources,
             )
 
+        # Parameter multiplication
+        other._update_pint_attributes()
+        
         # We don't check general compatibility here, as multiplication is not a common operation for parameters.
         # Only ensure that the heating values are compatible.
         if self._pint_heating_value != other._pint_heating_value:
@@ -594,11 +765,28 @@ class Parameter(BaseModel):  # type: ignore
         )
 
         new_heating_value = self._pint_heating_value * other._pint_heating_value
+        
+        # Handle series vs scalar magnitude
+        if self._is_magnitude_series() or other._is_magnitude_series():
+            if hasattr(new_quantity.magnitude, '__iter__'):
+                # If either parameter has a series and the result is an array
+                self_series = self._get_magnitude_as_series()
+                other_series = other._get_magnitude_as_series()
+                # Use the index from the longer series, or self if they're the same length
+                if len(self_series) >= len(other_series):
+                    new_magnitude = pd.Series(new_quantity.magnitude, index=self_series.index)
+                else:
+                    new_magnitude = pd.Series(new_quantity.magnitude, index=other_series.index)
+            else:
+                new_magnitude = new_quantity.magnitude
+        else:
+            new_magnitude = new_quantity.magnitude
+            
         return Parameter(
-            magnitude=new_quantity.magnitude,
+            magnitude=new_magnitude,
             units=str(new_quantity.units),
-            carrier=str(new_carrier),
-            heating_value=str(new_heating_value),
+            carrier=str(new_carrier) if new_carrier else None,
+            heating_value=str(new_heating_value) if new_heating_value else None,
             provenance=(self.provenance or "")
             + (other.provenance or ""),  # TODO make nicer
             note=(self.note or "") + (other.note or ""),  # TODO make nicer
@@ -656,15 +844,27 @@ class Parameter(BaseModel):  # type: ignore
         -----
         This method updates the internal pint attributes before applying the power operation.
         If the parameter has a carrier, it is also raised to the specified power.
+        When raising series parameters to a power, the operation is performed element-wise.
 
         """
         self._update_pint_attributes()
 
         new_quantity = self._pint_quantity**exponent
+        
+        # Handle series vs scalar magnitude
+        if self._is_magnitude_series():
+            if hasattr(new_quantity.magnitude, '__iter__'):
+                magnitude_series = self._get_magnitude_as_series()
+                new_magnitude = pd.Series(new_quantity.magnitude, index=magnitude_series.index)
+            else:
+                new_magnitude = new_quantity.magnitude
+        else:
+            new_magnitude = new_quantity.magnitude
+            
         return Parameter(
-            magnitude=new_quantity.magnitude,
+            magnitude=new_magnitude,
             units=str(new_quantity.units),
-            carrier=self._pint_carrier**exponent if self._pint_carrier else None,
+            carrier=str(self._pint_carrier**exponent) if self._pint_carrier else None,
             heating_value=self.heating_value,
             provenance=self.provenance,
             note=self.note,
