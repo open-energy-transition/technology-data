@@ -53,7 +53,9 @@ def update_unit_with_currency_year(series: pandas.Series) -> pandas.Series:
     return pandas.Series([unit, currency_year])
 
 
-def extract_units_carriers_heating_value(series: pandas.Series) -> pandas.Series:
+def extract_units_carriers_heating_value(
+    input_unit: str,
+) -> tuple[str, str | None, str | None]:
     """
     Extract standardized units and carriers from an input unit string. Add also heating_value.
 
@@ -62,34 +64,35 @@ def extract_units_carriers_heating_value(series: pandas.Series) -> pandas.Series
 
     Parameters
     ----------
-    series : pandas.Series
-        A series containing two elements: [unit, carrier, heating_value]
+    input_unit : str
+        A specialized unit string to be converted.
 
     Returns
     -------
-    pandas.Series
-        Updated series with modified unit, carrier and heating_value
+    tuple[str, str | None, str | None]
+        A tuple containing two elements:
+        - The first element is the standardized unit
+        - The second element is the corresponding carrier (or None if not found)
+        - The third element is the corresponding heating value (or None if not found)
 
     """
-    unit, carrier, heating_value = series
-
     # Define conversion dictionary
     special_patterns = {
-        "USD/MW_FT": ("USD/MW", "1/FT", "LHV"),
+        "USD_2022/MW_FT": ("USD_2022/MW", "1/FT", "LHV"),
         "MWh_H2/MWh_FT": ("MWh/MWh", "H2/FT", "LHV"),
         "MWh_el/MWh_FT": ("MWh/MWh", "el/FT", "LHV"),
         "t_CO2/MWh_FT": ("t/MWh", "CO2/FT", "LHV"),
-        "USD/kWh_H2": ("USD/kWh", "1/H2", "LHV"),
+        "USD_2022/kWh_H2": ("USD_2022/kWh", "1/H2", "LHV"),
         "MWh_el/MWh_H2": ("MWh/MWh", "el/H2", "LHV"),
-        "USD/t_CO2/h": ("USD/t/h", "1/CO2", "LHV"),
+        "USD_2023/t_CO2/h": ("USD_2023/t/h", "1/CO2", "LHV"),
         "MWh_el/t_CO2": ("MWh/t", "el/CO2", "LHV"),
         "MWh_th/t_CO2": ("MWh/t", "thermal/CO2", "LHV"),
     }
 
-    if isinstance(unit, str) and unit in special_patterns.keys():
-        unit, carrier, heating_value = special_patterns[unit]
-
-    return pandas.Series([unit, carrier, heating_value])
+    if isinstance(input_unit, str) and input_unit in special_patterns.keys():
+        return special_patterns[input_unit]
+    else:
+        return input_unit, None, None
 
 
 def build_technology_collection(
@@ -134,7 +137,6 @@ def build_technology_collection(
     - Each Technology is instantiated with group-specific attributes
 
     """
-    parameters = {}
     list_techs = []
 
     if store_source:
@@ -150,26 +152,32 @@ def build_technology_collection(
         sources = SourceCollection.from_json(sources_path)
 
     for (scenario, year, technology), group in dataframe.groupby(
-        ["scenario", "year", "technology"], dropna=False
+        ["scenario", "year", "technology"]
     ):
+        parameters = {}
         for _, row in group.iterrows():
+            unit, carrier, heating_value = extract_units_carriers_heating_value(
+                row["unit"]
+            )
             param_kwargs = {
                 "magnitude": row["value"],
                 "sources": sources,
             }
-            if pandas.notna(row["carrier"]):
-                param_kwargs["carrier"] = str(row["carrier"])
-            if pandas.notna(row["heating_value"]):
-                param_kwargs["heating_value"] = str(row["heating_value"])
-            if pandas.notna(row["unit"]):
-                param_kwargs["units"] = str(row["unit"])
-            if pandas.notna(row["further_description"]):
-                param_kwargs["note"] = str(row["further_description"])
-            if pandas.notna(row["financial_case"]):
+            if carrier is not None:
+                param_kwargs["carrier"] = carrier
+            if heating_value is not None:
+                param_kwargs["heating_value"] = heating_value
+            if unit is not None:
+                param_kwargs["units"] = unit
+            if row["further_description"] is not None and isinstance(
+                row["further_description"], str
+            ):
+                param_kwargs["note"] = row["further_description"]
+            if row["financial_case"] is not None and isinstance(
+                row["financial_case"], str
+            ):
                 param_kwargs["provenance"] = str(row["financial_case"])
-
             parameters[row["parameter"]] = Parameter(**param_kwargs)
-
         list_techs.append(
             Technology(
                 name=technology,
@@ -240,13 +248,9 @@ if __name__ == "__main__":
         manual_input_usa_input_path, dtype=str, na_values="None"
     )
     manual_input_usa_df["value"] = manual_input_usa_df["value"].astype(float)
-    manual_input_usa_df["carrier"] = pandas.Series.empty
-    manual_input_usa_df["heating_value"] = pandas.Series.empty
-
-    # Extract units and carriers and add heating_value
-    manual_input_usa_df[["unit", "carrier", "heating_value"]] = manual_input_usa_df[
-        ["unit", "carrier", "heating_value"]
-    ].apply(extract_units_carriers_heating_value, axis=1)
+    manual_input_usa_df["scenario"] = manual_input_usa_df["scenario"].fillna(
+        "not_available"
+    )
 
     # Replace "per unit" with "%" and multiply val by 100
     mask_per_unit = manual_input_usa_df["unit"].str.contains("per unit")
