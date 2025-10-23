@@ -53,31 +53,26 @@ def update_unit_with_currency_year(series: pandas.Series) -> pandas.Series:
     return pandas.Series([unit, currency_year])
 
 
-def extract_units_and_carriers(input_unit: str) -> tuple[str, str | None, str | None]:
+def extract_units_carriers_heating_value(series: pandas.Series) -> pandas.Series:
     """
-    Extract standardized units and carriers from an input unit string.
+    Extract standardized units and carriers from an input unit string. Add also heating_value.
 
     This function maps complex unit representations to simplified unit and carrier
     combinations using a predefined dictionary of special patterns.
 
     Parameters
     ----------
-    input_unit : str
-        A specialized unit string to be converted.
+    series : pandas.Series
+        A series containing two elements: [unit, carrier, heating_value]
 
     Returns
     -------
-    tuple[str, str | None]
-        A tuple containing two elements:
-        - The first element is the standardized unit
-        - The second element is the corresponding carrier (or None if not found)
-
-    Raises
-    ------
-    KeyError
-        If the input unit is not found in the special_patterns dictionary.
+    pandas.Series
+        Updated series with modified unit, carrier and heating_value
 
     """
+    unit, carrier, heating_value = series
+
     # Define conversion dictionary
     special_patterns = {
         "USD/MW_FT": ("USD/MW", "1/FT", "LHV"),
@@ -91,10 +86,10 @@ def extract_units_and_carriers(input_unit: str) -> tuple[str, str | None, str | 
         "MWh_th/t_CO2": ("MWh/t", "thermal/CO2", "LHV"),
     }
 
-    if input_unit in special_patterns.keys():
-        return special_patterns[input_unit]
-    else:
-        return input_unit, None, None
+    if isinstance(unit, str) and unit in special_patterns.keys():
+        unit, carrier, heating_value = special_patterns[unit]
+
+    return pandas.Series([unit, carrier, heating_value])
 
 
 def build_technology_collection(
@@ -158,15 +153,23 @@ def build_technology_collection(
         ["scenario", "year", "technology"], dropna=False
     ):
         for _, row in group.iterrows():
-            parameters[row["parameter"]] = Parameter(
-                magnitude=row["value"],
-                carrier=row["carrier"],
-                heating_value=str(row["heating_value"]),
-                units=str(row["unit"]),
-                note=str(row["further_description"]),
-                provenance=str(row["financial_case"]),
-                sources=sources,
-            )
+            param_kwargs = {
+                "magnitude": row["value"],
+                "sources": sources,
+            }
+            if pandas.notna(row["carrier"]):
+                param_kwargs["carrier"] = str(row["carrier"])
+            if pandas.notna(row["heating_value"]):
+                param_kwargs["heating_value"] = str(row["heating_value"])
+            if pandas.notna(row["unit"]):
+                param_kwargs["units"] = str(row["unit"])
+            if pandas.notna(row["further_description"]):
+                param_kwargs["note"] = str(row["further_description"])
+            if pandas.notna(row["financial_case"]):
+                param_kwargs["provenance"] = str(row["financial_case"])
+
+            parameters[row["parameter"]] = Parameter(**param_kwargs)
+
         list_techs.append(
             Technology(
                 name=technology,
@@ -237,29 +240,29 @@ if __name__ == "__main__":
         manual_input_usa_input_path, dtype=str, na_values="None"
     )
     manual_input_usa_df["value"] = manual_input_usa_df["value"].astype(float)
+    manual_input_usa_df["carrier"] = pandas.Series.empty
+    manual_input_usa_df["heating_value"] = pandas.Series.empty
 
-    # Extract units and carriers
-    manual_input_usa_df[["unit", "carrier", "heating_value"]] = manual_input_usa_df["unit"].apply(
-        lambda x: pandas.Series(extract_units_and_carriers(x))
-    )
+    # Extract units and carriers and add heating_value
+    manual_input_usa_df[["unit", "carrier", "heating_value"]] = manual_input_usa_df[
+        ["unit", "carrier", "heating_value"]
+    ].apply(extract_units_carriers_heating_value, axis=1)
 
     # Replace "per unit" with "%" and multiply val by 100
     mask_per_unit = manual_input_usa_df["unit"].str.contains("per unit")
-    manual_input_usa_df.loc[mask_per_unit, "unit"] = manual_input_usa_df.loc[mask_per_unit, "unit"].str.replace(
-        "per unit", "%"
-    )
-    print(manual_input_usa_df.info())
+    manual_input_usa_df.loc[mask_per_unit, "unit"] = manual_input_usa_df.loc[
+        mask_per_unit, "unit"
+    ].str.replace("per unit", "%")
     manual_input_usa_df.loc[mask_per_unit, "value"] = (
         manual_input_usa_df.loc[mask_per_unit, "value"] * 100.0
     ).round(input_args.num_digits)
+    logger.info("`per unit` replaced by `%`. Corresponding value multiplied by 100.")
 
     # Include currency_year in unit if applicable
     manual_input_usa_df[["unit", "currency_year"]] = manual_input_usa_df[
         ["unit", "currency_year"]
     ].apply(update_unit_with_currency_year, axis=1)
     logger.info("`currency_year` included in `unit` column.")
-
-    manual_input_usa_df.to_csv("random.csv")
 
     # Build TechnologyCollection
     manual_input_usa_base_path = pathlib.Path(
