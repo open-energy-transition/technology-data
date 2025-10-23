@@ -64,6 +64,43 @@ euro_param = param.to_currency("EUR_2023", "DEU", source="worldbank")
 950.0 EUR_2023 / kilowatt
 ```
 
+Currency conversion and infation adjustment are also available for `Technology` and `TechnologyCollection` objects.
+This allows to quickly adjust and harmonise the currency of all parameters in a technology or collection.
+
+```python
+# for a Technology
+from technologydata.technology import Technology
+tech = Technology(
+    name="Example Tech",
+    region="DEU",
+    parameters={"cost": param}
+)
+converted_tech = tech.to_currency("USD_2020", source="worldbank")
+>>> print(converted_tech.parameters["cost"].units)
+USD_2020 / kilowatt
+
+# and for a TechnologyCollection
+from technologydata.technology_collection import TechnologyCollection
+tech_collection = TechnologyCollection(technologies=[tech])
+converted_collection = tech_collection.to_currency("USD_2020", source="worldbank")
+>>> print(converted_collection.technologies[0].parameters["cost"].units)
+USD_2020 / kilowatt
+```
+
+Compared to the `to_currency()` method of the `Parameter` class, the `to_currency()` methods of `Technology` and `TechnologyCollection` do not require specifying a country for inflation adjustment.
+By default the `region` field of the `Technology` object or the `Technology` objects in the `TechnologyCollection` are used for inflation adjustment.
+If the value of the `region` field should not be used or is not suitable, because e.g. it is not a valid ISO 3166 alpha-3 country code, the optional `overwrite_country` argument can be used to specify a different country code for inflation adjustment.
+
+```python
+>>> print(tech.region)
+DEU
+converted_tech = tech.to_currency("USD_2020")  # uses tech.region (DEU) for inflation adjustment
+
+converted_tech = tech.to_currency("USD_2020", overwrite_country="FRA")  # uses FRA for inflation adjustment
+>>> print(converted_tech.region) # the region remains unchanged
+DEU
+```
+
 ### Arithmetic Operations
 
 ```python
