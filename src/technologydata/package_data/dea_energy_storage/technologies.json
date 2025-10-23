@@ -581,26 +581,6 @@
                         ]
                     }
                 },
-                "specific investment": {
-                    "magnitude": 489200.0,
-                    "units": "EUR_2020 / megawatt_hour",
-                    "carrier": null,
-                    "heating_value": null,
-                    "provenance": null,
-                    "note": null,
-                    "sources": {
-                        "sources": [
-                            {
-                                "title": "Technology Data for Energy storage",
-                                "authors": "Danish Energy Agency, Technology Data for Energy storage (2020), Excel datasheet: alldata_flat",
-                                "url": "https://ens.dk/media/6589/download",
-                                "url_archive": "https://web.archive.org/web/20251008092400/https://ens.dk/media/6589/download",
-                                "url_date": null,
-                                "url_date_archive": "2025-10-08 09:24:00"
-                            }
-                        ]
-                    }
-                },
                 "variable o&m": {
                     "magnitude": 0.0,
                     "units": "EUR_2020 / megawatt_hour",
@@ -850,26 +830,6 @@
                 },
                 "specific investment": {
                     "magnitude": 60600.0,
-                    "units": "EUR_2020 / megawatt_hour",
-                    "carrier": null,
-                    "heating_value": null,
-                    "provenance": null,
-                    "note": null,
-                    "sources": {
-                        "sources": [
-                            {
-                                "title": "Technology Data for Energy storage",
-                                "authors": "Danish Energy Agency, Technology Data for Energy storage (2020), Excel datasheet: alldata_flat",
-                                "url": "https://ens.dk/media/6589/download",
-                                "url_archive": "https://web.archive.org/web/20251008092400/https://ens.dk/media/6589/download",
-                                "url_date": null,
-                                "url_date_archive": "2025-10-08 09:24:00"
-                            }
-                        ]
-                    }
-                },
-                "variable o&m": {
-                    "magnitude": 0.0,
                     "units": "EUR_2020 / megawatt_hour",
                     "carrier": null,
                     "heating_value": null,
@@ -1312,26 +1272,6 @@
                             }
                         ]
                     }
-                },
-                "variable o&m": {
-                    "magnitude": 0.0,
-                    "units": "EUR_2020 / megawatt_hour",
-                    "carrier": null,
-                    "heating_value": null,
-                    "provenance": null,
-                    "note": null,
-                    "sources": {
-                        "sources": [
-                            {
-                                "title": "Technology Data for Energy storage",
-                                "authors": "Danish Energy Agency, Technology Data for Energy storage (2020), Excel datasheet: alldata_flat",
-                                "url": "https://ens.dk/media/6589/download",
-                                "url_archive": "https://web.archive.org/web/20251008092400/https://ens.dk/media/6589/download",
-                                "url_date": null,
-                                "url_date_archive": "2025-10-08 09:24:00"
-                            }
-                        ]
-                    }
                 }
             }
         },
@@ -1738,26 +1678,6 @@
                         ]
                     }
                 },
-                "specific investment": {
-                    "magnitude": 1062200.0,
-                    "units": "EUR_2020 / gigawatt_hour",
-                    "carrier": null,
-                    "heating_value": null,
-                    "provenance": null,
-                    "note": null,
-                    "sources": {
-                        "sources": [
-                            {
-                                "title": "Technology Data for Energy storage",
-                                "authors": "Danish Energy Agency, Technology Data for Energy storage (2020), Excel datasheet: alldata_flat",
-                                "url": "https://ens.dk/media/6589/download",
-                                "url_archive": "https://web.archive.org/web/20251008092400/https://ens.dk/media/6589/download",
-                                "url_date": null,
-                                "url_date_archive": "2025-10-08 09:24:00"
-                            }
-                        ]
-                    }
-                },
                 "variable o&m": {
                     "magnitude": 0.0,
                     "units": "EUR_2020 / megawatt_hour",
@@ -1876,26 +1796,6 @@
             "region": "EU",
             "year": 2020,
             "parameters": {
-                "technical lifetime": {
-                    "magnitude": 30.0,
-                    "units": "year",
-                    "carrier": null,
-                    "heating_value": null,
-                    "provenance": null,
-                    "note": null,
-                    "sources": {
-                        "sources": [
-                            {
-                                "title": "Technology Data for Energy storage",
-                                "authors": "Danish Energy Agency, Technology Data for Energy storage (2020), Excel datasheet: alldata_flat",
-                                "url": "https://ens.dk/media/6589/download",
-                                "url_archive": "https://web.archive.org/web/20251008092400/https://ens.dk/media/6589/download",
-                                "url_date": null,
-                                "url_date_archive": "2025-10-08 09:24:00"
-                            }
-                        ]
-                    }
-                },
                 "fixed o&m": {
                     "magnitude": 1.2698,
                     "units": "EUR_2020 / megawatt / year",
@@ -1918,26 +1818,6 @@
                 },
                 "specific investment": {
                     "magnitude": 200.0,
-                    "units": "EUR_2020 / megawatt_hour",
-                    "carrier": null,
-                    "heating_value": null,
-                    "provenance": null,
-                    "note": null,
-                    "sources": {
-                        "sources": [
-                            {
-                                "title": "Technology Data for Energy storage",
-                                "authors": "Danish Energy Agency, Technology Data for Energy storage (2020), Excel datasheet: alldata_flat",
-                                "url": "https://ens.dk/media/6589/download",
-                                "url_archive": "https://web.archive.org/web/20251008092400/https://ens.dk/media/6589/download",
-                                "url_date": null,
-                                "url_date_archive": "2025-10-08 09:24:00"
-                            }
-                        ]
-                    }
-                },
-                "variable o&m": {
-                    "magnitude": 0.7168,
                     "units": "EUR_2020 / megawatt_hour",
                     "carrier": null,
                     "heating_value": null,
@@ -2341,48 +2221,8 @@
                         ]
                     }
                 },
-                "fixed o&m": {
-                    "magnitude": 2500000.0,
-                    "units": "EUR_2020 / gigawatt_hour / year",
-                    "carrier": null,
-                    "heating_value": null,
-                    "provenance": null,
-                    "note": null,
-                    "sources": {
-                        "sources": [
-                            {
-                                "title": "Technology Data for Energy storage",
-                                "authors": "Danish Energy Agency, Technology Data for Energy storage (2020), Excel datasheet: alldata_flat",
-                                "url": "https://ens.dk/media/6589/download",
-                                "url_archive": "https://web.archive.org/web/20251008092400/https://ens.dk/media/6589/download",
-                                "url_date": null,
-                                "url_date_archive": "2025-10-08 09:24:00"
-                            }
-                        ]
-                    }
-                },
                 "specific investment": {
                     "magnitude": 13048.1,
-                    "units": "EUR_2020 / megawatt_hour",
-                    "carrier": null,
-                    "heating_value": null,
-                    "provenance": null,
-                    "note": null,
-                    "sources": {
-                        "sources": [
-                            {
-                                "title": "Technology Data for Energy storage",
-                                "authors": "Danish Energy Agency, Technology Data for Energy storage (2020), Excel datasheet: alldata_flat",
-                                "url": "https://ens.dk/media/6589/download",
-                                "url_archive": "https://web.archive.org/web/20251008092400/https://ens.dk/media/6589/download",
-                                "url_date": null,
-                                "url_date_archive": "2025-10-08 09:24:00"
-                            }
-                        ]
-                    }
-                },
-                "variable o&m": {
-                    "magnitude": 0.0,
                     "units": "EUR_2020 / megawatt_hour",
                     "carrier": null,
                     "heating_value": null,
@@ -2897,26 +2737,6 @@
                 },
                 "specific investment": {
                     "magnitude": 47800.0,
-                    "units": "EUR_2020 / megawatt_hour",
-                    "carrier": null,
-                    "heating_value": null,
-                    "provenance": null,
-                    "note": null,
-                    "sources": {
-                        "sources": [
-                            {
-                                "title": "Technology Data for Energy storage",
-                                "authors": "Danish Energy Agency, Technology Data for Energy storage (2020), Excel datasheet: alldata_flat",
-                                "url": "https://ens.dk/media/6589/download",
-                                "url_archive": "https://web.archive.org/web/20251008092400/https://ens.dk/media/6589/download",
-                                "url_date": null,
-                                "url_date_archive": "2025-10-08 09:24:00"
-                            }
-                        ]
-                    }
-                },
-                "variable o&m": {
-                    "magnitude": 0.0,
                     "units": "EUR_2020 / megawatt_hour",
                     "carrier": null,
                     "heating_value": null,
@@ -3518,26 +3338,6 @@
                         ]
                     }
                 },
-                "specific investment": {
-                    "magnitude": 1062200.0,
-                    "units": "EUR_2020 / gigawatt_hour",
-                    "carrier": null,
-                    "heating_value": null,
-                    "provenance": null,
-                    "note": null,
-                    "sources": {
-                        "sources": [
-                            {
-                                "title": "Technology Data for Energy storage",
-                                "authors": "Danish Energy Agency, Technology Data for Energy storage (2020), Excel datasheet: alldata_flat",
-                                "url": "https://ens.dk/media/6589/download",
-                                "url_archive": "https://web.archive.org/web/20251008092400/https://ens.dk/media/6589/download",
-                                "url_date": null,
-                                "url_date_archive": "2025-10-08 09:24:00"
-                            }
-                        ]
-                    }
-                },
                 "variable o&m": {
                     "magnitude": 0.0,
                     "units": "EUR_2020 / megawatt_hour",
@@ -3587,48 +3387,8 @@
                         ]
                     }
                 },
-                "fixed o&m": {
-                    "magnitude": 8507.2,
-                    "units": "EUR_2020 / megawatt / year",
-                    "carrier": null,
-                    "heating_value": null,
-                    "provenance": null,
-                    "note": null,
-                    "sources": {
-                        "sources": [
-                            {
-                                "title": "Technology Data for Energy storage",
-                                "authors": "Danish Energy Agency, Technology Data for Energy storage (2020), Excel datasheet: alldata_flat",
-                                "url": "https://ens.dk/media/6589/download",
-                                "url_archive": "https://web.archive.org/web/20251008092400/https://ens.dk/media/6589/download",
-                                "url_date": null,
-                                "url_date_archive": "2025-10-08 09:24:00"
-                            }
-                        ]
-                    }
-                },
                 "specific investment": {
                     "magnitude": 12395.6,
-                    "units": "EUR_2020 / megawatt_hour",
-                    "carrier": null,
-                    "heating_value": null,
-                    "provenance": null,
-                    "note": null,
-                    "sources": {
-                        "sources": [
-                            {
-                                "title": "Technology Data for Energy storage",
-                                "authors": "Danish Energy Agency, Technology Data for Energy storage (2020), Excel datasheet: alldata_flat",
-                                "url": "https://ens.dk/media/6589/download",
-                                "url_archive": "https://web.archive.org/web/20251008092400/https://ens.dk/media/6589/download",
-                                "url_date": null,
-                                "url_date_archive": "2025-10-08 09:24:00"
-                            }
-                        ]
-                    }
-                },
-                "variable o&m": {
-                    "magnitude": 0.0,
                     "units": "EUR_2020 / megawatt_hour",
                     "carrier": null,
                     "heating_value": null,
@@ -3745,26 +3505,6 @@
             "region": "EU",
             "year": 2030,
             "parameters": {
-                "technical lifetime": {
-                    "magnitude": 30.0,
-                    "units": "year",
-                    "carrier": null,
-                    "heating_value": null,
-                    "provenance": null,
-                    "note": null,
-                    "sources": {
-                        "sources": [
-                            {
-                                "title": "Technology Data for Energy storage",
-                                "authors": "Danish Energy Agency, Technology Data for Energy storage (2020), Excel datasheet: alldata_flat",
-                                "url": "https://ens.dk/media/6589/download",
-                                "url_archive": "https://web.archive.org/web/20251008092400/https://ens.dk/media/6589/download",
-                                "url_date": null,
-                                "url_date_archive": "2025-10-08 09:24:00"
-                            }
-                        ]
-                    }
-                },
                 "fixed o&m": {
                     "magnitude": 1.2698,
                     "units": "EUR_2020 / megawatt / year",
@@ -3787,26 +3527,6 @@
                 },
                 "specific investment": {
                     "magnitude": 200.0,
-                    "units": "EUR_2020 / megawatt_hour",
-                    "carrier": null,
-                    "heating_value": null,
-                    "provenance": null,
-                    "note": null,
-                    "sources": {
-                        "sources": [
-                            {
-                                "title": "Technology Data for Energy storage",
-                                "authors": "Danish Energy Agency, Technology Data for Energy storage (2020), Excel datasheet: alldata_flat",
-                                "url": "https://ens.dk/media/6589/download",
-                                "url_archive": "https://web.archive.org/web/20251008092400/https://ens.dk/media/6589/download",
-                                "url_date": null,
-                                "url_date_archive": "2025-10-08 09:24:00"
-                            }
-                        ]
-                    }
-                },
-                "variable o&m": {
-                    "magnitude": 1.0241,
                     "units": "EUR_2020 / megawatt_hour",
                     "carrier": null,
                     "heating_value": null,
@@ -4160,26 +3880,6 @@
                             }
                         ]
                     }
-                },
-                "variable o&m": {
-                    "magnitude": 1.5,
-                    "units": "percent / year",
-                    "carrier": null,
-                    "heating_value": null,
-                    "provenance": null,
-                    "note": null,
-                    "sources": {
-                        "sources": [
-                            {
-                                "title": "Technology Data for Energy storage",
-                                "authors": "Danish Energy Agency, Technology Data for Energy storage (2020), Excel datasheet: alldata_flat",
-                                "url": "https://ens.dk/media/6589/download",
-                                "url_archive": "https://web.archive.org/web/20251008092400/https://ens.dk/media/6589/download",
-                                "url_date": null,
-                                "url_date_archive": "2025-10-08 09:24:00"
-                            }
-                        ]
-                    }
                 }
             }
         },
@@ -4210,49 +3910,9 @@
                         ]
                     }
                 },
-                "fixed o&m": {
-                    "magnitude": 2500000.0,
-                    "units": "EUR_2020 / gigawatt_hour / year",
-                    "carrier": null,
-                    "heating_value": null,
-                    "provenance": null,
-                    "note": null,
-                    "sources": {
-                        "sources": [
-                            {
-                                "title": "Technology Data for Energy storage",
-                                "authors": "Danish Energy Agency, Technology Data for Energy storage (2020), Excel datasheet: alldata_flat",
-                                "url": "https://ens.dk/media/6589/download",
-                                "url_archive": "https://web.archive.org/web/20251008092400/https://ens.dk/media/6589/download",
-                                "url_date": null,
-                                "url_date_archive": "2025-10-08 09:24:00"
-                            }
-                        ]
-                    }
-                },
                 "specific investment": {
                     "magnitude": 11775.9,
                     "units": "EUR_2020 / megawatt_hour",
-                    "carrier": null,
-                    "heating_value": null,
-                    "provenance": null,
-                    "note": null,
-                    "sources": {
-                        "sources": [
-                            {
-                                "title": "Technology Data for Energy storage",
-                                "authors": "Danish Energy Agency, Technology Data for Energy storage (2020), Excel datasheet: alldata_flat",
-                                "url": "https://ens.dk/media/6589/download",
-                                "url_archive": "https://web.archive.org/web/20251008092400/https://ens.dk/media/6589/download",
-                                "url_date": null,
-                                "url_date_archive": "2025-10-08 09:24:00"
-                            }
-                        ]
-                    }
-                },
-                "variable o&m": {
-                    "magnitude": 1.5,
-                    "units": "percent / year",
                     "carrier": null,
                     "heating_value": null,
                     "provenance": null,
@@ -4588,26 +4248,6 @@
                 },
                 "specific investment": {
                     "magnitude": 28800.0,
-                    "units": "EUR_2020 / megawatt_hour",
-                    "carrier": null,
-                    "heating_value": null,
-                    "provenance": null,
-                    "note": null,
-                    "sources": {
-                        "sources": [
-                            {
-                                "title": "Technology Data for Energy storage",
-                                "authors": "Danish Energy Agency, Technology Data for Energy storage (2020), Excel datasheet: alldata_flat",
-                                "url": "https://ens.dk/media/6589/download",
-                                "url_archive": "https://web.archive.org/web/20251008092400/https://ens.dk/media/6589/download",
-                                "url_date": null,
-                                "url_date_archive": "2025-10-08 09:24:00"
-                            }
-                        ]
-                    }
-                },
-                "variable o&m": {
-                    "magnitude": 0.0,
                     "units": "EUR_2020 / megawatt_hour",
                     "carrier": null,
                     "heating_value": null,
@@ -5011,48 +4651,8 @@
                         ]
                     }
                 },
-                "fixed o&m": {
-                    "magnitude": 2500000.0,
-                    "units": "EUR_2020 / gigawatt_hour / year",
-                    "carrier": null,
-                    "heating_value": null,
-                    "provenance": null,
-                    "note": null,
-                    "sources": {
-                        "sources": [
-                            {
-                                "title": "Technology Data for Energy storage",
-                                "authors": "Danish Energy Agency, Technology Data for Energy storage (2020), Excel datasheet: alldata_flat",
-                                "url": "https://ens.dk/media/6589/download",
-                                "url_archive": "https://web.archive.org/web/20251008092400/https://ens.dk/media/6589/download",
-                                "url_date": null,
-                                "url_date_archive": "2025-10-08 09:24:00"
-                            }
-                        ]
-                    }
-                },
                 "specific investment": {
                     "magnitude": 11187.1,
-                    "units": "EUR_2020 / megawatt_hour",
-                    "carrier": null,
-                    "heating_value": null,
-                    "provenance": null,
-                    "note": null,
-                    "sources": {
-                        "sources": [
-                            {
-                                "title": "Technology Data for Energy storage",
-                                "authors": "Danish Energy Agency, Technology Data for Energy storage (2020), Excel datasheet: alldata_flat",
-                                "url": "https://ens.dk/media/6589/download",
-                                "url_archive": "https://web.archive.org/web/20251008092400/https://ens.dk/media/6589/download",
-                                "url_date": null,
-                                "url_date_archive": "2025-10-08 09:24:00"
-                            }
-                        ]
-                    }
-                },
-                "variable o&m": {
-                    "magnitude": 0.0,
                     "units": "EUR_2020 / megawatt_hour",
                     "carrier": null,
                     "heating_value": null,
@@ -5169,26 +4769,6 @@
             "region": "EU",
             "year": 2040,
             "parameters": {
-                "technical lifetime": {
-                    "magnitude": 30.0,
-                    "units": "year",
-                    "carrier": null,
-                    "heating_value": null,
-                    "provenance": null,
-                    "note": null,
-                    "sources": {
-                        "sources": [
-                            {
-                                "title": "Technology Data for Energy storage",
-                                "authors": "Danish Energy Agency, Technology Data for Energy storage (2020), Excel datasheet: alldata_flat",
-                                "url": "https://ens.dk/media/6589/download",
-                                "url_archive": "https://web.archive.org/web/20251008092400/https://ens.dk/media/6589/download",
-                                "url_date": null,
-                                "url_date_archive": "2025-10-08 09:24:00"
-                            }
-                        ]
-                    }
-                },
                 "fixed o&m": {
                     "magnitude": 1.2698,
                     "units": "EUR_2020 / megawatt / year",
@@ -5211,26 +4791,6 @@
                 },
                 "specific investment": {
                     "magnitude": 200.0,
-                    "units": "EUR_2020 / megawatt_hour",
-                    "carrier": null,
-                    "heating_value": null,
-                    "provenance": null,
-                    "note": null,
-                    "sources": {
-                        "sources": [
-                            {
-                                "title": "Technology Data for Energy storage",
-                                "authors": "Danish Energy Agency, Technology Data for Energy storage (2020), Excel datasheet: alldata_flat",
-                                "url": "https://ens.dk/media/6589/download",
-                                "url_archive": "https://web.archive.org/web/20251008092400/https://ens.dk/media/6589/download",
-                                "url_date": null,
-                                "url_date_archive": "2025-10-08 09:24:00"
-                            }
-                        ]
-                    }
-                },
-                "variable o&m": {
-                    "magnitude": 1.2289,
                     "units": "EUR_2020 / megawatt_hour",
                     "carrier": null,
                     "heating_value": null,
@@ -5745,26 +5305,6 @@
                 },
                 "specific investment": {
                     "magnitude": 22300.0,
-                    "units": "EUR_2020 / megawatt_hour",
-                    "carrier": null,
-                    "heating_value": null,
-                    "provenance": null,
-                    "note": null,
-                    "sources": {
-                        "sources": [
-                            {
-                                "title": "Technology Data for Energy storage",
-                                "authors": "Danish Energy Agency, Technology Data for Energy storage (2020), Excel datasheet: alldata_flat",
-                                "url": "https://ens.dk/media/6589/download",
-                                "url_archive": "https://web.archive.org/web/20251008092400/https://ens.dk/media/6589/download",
-                                "url_date": null,
-                                "url_date_archive": "2025-10-08 09:24:00"
-                            }
-                        ]
-                    }
-                },
-                "variable o&m": {
-                    "magnitude": 0.0,
                     "units": "EUR_2020 / megawatt_hour",
                     "carrier": null,
                     "heating_value": null,
@@ -6366,26 +5906,6 @@
                         ]
                     }
                 },
-                "specific investment": {
-                    "magnitude": 902900.0,
-                    "units": "EUR_2020 / gigawatt_hour",
-                    "carrier": null,
-                    "heating_value": null,
-                    "provenance": null,
-                    "note": null,
-                    "sources": {
-                        "sources": [
-                            {
-                                "title": "Technology Data for Energy storage",
-                                "authors": "Danish Energy Agency, Technology Data for Energy storage (2020), Excel datasheet: alldata_flat",
-                                "url": "https://ens.dk/media/6589/download",
-                                "url_archive": "https://web.archive.org/web/20251008092400/https://ens.dk/media/6589/download",
-                                "url_date": null,
-                                "url_date_archive": "2025-10-08 09:24:00"
-                            }
-                        ]
-                    }
-                },
                 "variable o&m": {
                     "magnitude": 0.0,
                     "units": "EUR_2020 / megawatt_hour",
@@ -6435,48 +5955,8 @@
                         ]
                     }
                 },
-                "fixed o&m": {
-                    "magnitude": 8507.2,
-                    "units": "EUR_2020 / megawatt / year",
-                    "carrier": null,
-                    "heating_value": null,
-                    "provenance": null,
-                    "note": null,
-                    "sources": {
-                        "sources": [
-                            {
-                                "title": "Technology Data for Energy storage",
-                                "authors": "Danish Energy Agency, Technology Data for Energy storage (2020), Excel datasheet: alldata_flat",
-                                "url": "https://ens.dk/media/6589/download",
-                                "url_archive": "https://web.archive.org/web/20251008092400/https://ens.dk/media/6589/download",
-                                "url_date": null,
-                                "url_date_archive": "2025-10-08 09:24:00"
-                            }
-                        ]
-                    }
-                },
                 "specific investment": {
                     "magnitude": 10068.4,
-                    "units": "EUR_2020 / megawatt_hour",
-                    "carrier": null,
-                    "heating_value": null,
-                    "provenance": null,
-                    "note": null,
-                    "sources": {
-                        "sources": [
-                            {
-                                "title": "Technology Data for Energy storage",
-                                "authors": "Danish Energy Agency, Technology Data for Energy storage (2020), Excel datasheet: alldata_flat",
-                                "url": "https://ens.dk/media/6589/download",
-                                "url_archive": "https://web.archive.org/web/20251008092400/https://ens.dk/media/6589/download",
-                                "url_date": null,
-                                "url_date_archive": "2025-10-08 09:24:00"
-                            }
-                        ]
-                    }
-                },
-                "variable o&m": {
-                    "magnitude": 0.0,
                     "units": "EUR_2020 / megawatt_hour",
                     "carrier": null,
                     "heating_value": null,
@@ -6593,26 +6073,6 @@
             "region": "EU",
             "year": 2050,
             "parameters": {
-                "technical lifetime": {
-                    "magnitude": 30.0,
-                    "units": "year",
-                    "carrier": null,
-                    "heating_value": null,
-                    "provenance": null,
-                    "note": null,
-                    "sources": {
-                        "sources": [
-                            {
-                                "title": "Technology Data for Energy storage",
-                                "authors": "Danish Energy Agency, Technology Data for Energy storage (2020), Excel datasheet: alldata_flat",
-                                "url": "https://ens.dk/media/6589/download",
-                                "url_archive": "https://web.archive.org/web/20251008092400/https://ens.dk/media/6589/download",
-                                "url_date": null,
-                                "url_date_archive": "2025-10-08 09:24:00"
-                            }
-                        ]
-                    }
-                },
                 "fixed o&m": {
                     "magnitude": 1.2698,
                     "units": "EUR_2020 / megawatt / year",
@@ -6635,26 +6095,6 @@
                 },
                 "specific investment": {
                     "magnitude": 200.0,
-                    "units": "EUR_2020 / megawatt_hour",
-                    "carrier": null,
-                    "heating_value": null,
-                    "provenance": null,
-                    "note": null,
-                    "sources": {
-                        "sources": [
-                            {
-                                "title": "Technology Data for Energy storage",
-                                "authors": "Danish Energy Agency, Technology Data for Energy storage (2020), Excel datasheet: alldata_flat",
-                                "url": "https://ens.dk/media/6589/download",
-                                "url_archive": "https://web.archive.org/web/20251008092400/https://ens.dk/media/6589/download",
-                                "url_date": null,
-                                "url_date_archive": "2025-10-08 09:24:00"
-                            }
-                        ]
-                    }
-                },
-                "variable o&m": {
-                    "magnitude": 1.2289,
                     "units": "EUR_2020 / megawatt_hour",
                     "carrier": null,
                     "heating_value": null,
@@ -7186,26 +6626,6 @@
                             }
                         ]
                     }
-                },
-                "variable o&m": {
-                    "magnitude": 0.0,
-                    "units": "EUR_2020 / megawatt_hour",
-                    "carrier": null,
-                    "heating_value": null,
-                    "provenance": null,
-                    "note": null,
-                    "sources": {
-                        "sources": [
-                            {
-                                "title": "Technology Data for Energy storage",
-                                "authors": "Danish Energy Agency, Technology Data for Energy storage (2020), Excel datasheet: alldata_flat",
-                                "url": "https://ens.dk/media/6589/download",
-                                "url_archive": "https://web.archive.org/web/20251008092400/https://ens.dk/media/6589/download",
-                                "url_date": null,
-                                "url_date_archive": "2025-10-08 09:24:00"
-                            }
-                        ]
-                    }
                 }
             }
         },
@@ -7572,49 +6992,9 @@
             "region": "EU",
             "year": 2020,
             "parameters": {
-                "technical lifetime": {
-                    "magnitude": 20.0,
-                    "units": "year",
-                    "carrier": null,
-                    "heating_value": null,
-                    "provenance": null,
-                    "note": null,
-                    "sources": {
-                        "sources": [
-                            {
-                                "title": "Technology Data for Energy storage",
-                                "authors": "Danish Energy Agency, Technology Data for Energy storage (2020), Excel datasheet: alldata_flat",
-                                "url": "https://ens.dk/media/6589/download",
-                                "url_archive": "https://web.archive.org/web/20251008092400/https://ens.dk/media/6589/download",
-                                "url_date": null,
-                                "url_date_archive": "2025-10-08 09:24:00"
-                            }
-                        ]
-                    }
-                },
                 "fixed o&m": {
                     "magnitude": 6380.4,
                     "units": "EUR_2020 / megawatt / year",
-                    "carrier": null,
-                    "heating_value": null,
-                    "provenance": null,
-                    "note": null,
-                    "sources": {
-                        "sources": [
-                            {
-                                "title": "Technology Data for Energy storage",
-                                "authors": "Danish Energy Agency, Technology Data for Energy storage (2020), Excel datasheet: alldata_flat",
-                                "url": "https://ens.dk/media/6589/download",
-                                "url_archive": "https://web.archive.org/web/20251008092400/https://ens.dk/media/6589/download",
-                                "url_date": null,
-                                "url_date_archive": "2025-10-08 09:24:00"
-                            }
-                        ]
-                    }
-                },
-                "specific investment": {
-                    "magnitude": 902900.0,
-                    "units": "EUR_2020 / gigawatt_hour",
                     "carrier": null,
                     "heating_value": null,
                     "provenance": null,
@@ -7859,49 +7239,9 @@
                         ]
                     }
                 },
-                "fixed o&m": {
-                    "magnitude": 1.0,
-                    "units": "percent / year",
-                    "carrier": null,
-                    "heating_value": null,
-                    "provenance": null,
-                    "note": null,
-                    "sources": {
-                        "sources": [
-                            {
-                                "title": "Technology Data for Energy storage",
-                                "authors": "Danish Energy Agency, Technology Data for Energy storage (2020), Excel datasheet: alldata_flat",
-                                "url": "https://ens.dk/media/6589/download",
-                                "url_archive": "https://web.archive.org/web/20251008092400/https://ens.dk/media/6589/download",
-                                "url_date": null,
-                                "url_date_archive": "2025-10-08 09:24:00"
-                            }
-                        ]
-                    }
-                },
                 "specific investment": {
                     "magnitude": 5655.0,
                     "units": "EUR_2020 / megawatt_hour",
-                    "carrier": null,
-                    "heating_value": null,
-                    "provenance": null,
-                    "note": null,
-                    "sources": {
-                        "sources": [
-                            {
-                                "title": "Technology Data for Energy storage",
-                                "authors": "Danish Energy Agency, Technology Data for Energy storage (2020), Excel datasheet: alldata_flat",
-                                "url": "https://ens.dk/media/6589/download",
-                                "url_archive": "https://web.archive.org/web/20251008092400/https://ens.dk/media/6589/download",
-                                "url_date": null,
-                                "url_date_archive": "2025-10-08 09:24:00"
-                            }
-                        ]
-                    }
-                },
-                "variable o&m": {
-                    "magnitude": 1.0,
-                    "units": "percent / year",
                     "carrier": null,
                     "heating_value": null,
                     "provenance": null,
@@ -8521,26 +7861,6 @@
                             }
                         ]
                     }
-                },
-                "variable o&m": {
-                    "magnitude": 0.0,
-                    "units": "EUR_2020 / megawatt_hour",
-                    "carrier": null,
-                    "heating_value": null,
-                    "provenance": null,
-                    "note": null,
-                    "sources": {
-                        "sources": [
-                            {
-                                "title": "Technology Data for Energy storage",
-                                "authors": "Danish Energy Agency, Technology Data for Energy storage (2020), Excel datasheet: alldata_flat",
-                                "url": "https://ens.dk/media/6589/download",
-                                "url_archive": "https://web.archive.org/web/20251008092400/https://ens.dk/media/6589/download",
-                                "url_date": null,
-                                "url_date_archive": "2025-10-08 09:24:00"
-                            }
-                        ]
-                    }
                 }
             }
         },
@@ -9085,49 +8405,9 @@
             "region": "EU",
             "year": 2050,
             "parameters": {
-                "technical lifetime": {
-                    "magnitude": 30.0,
-                    "units": "year",
-                    "carrier": null,
-                    "heating_value": null,
-                    "provenance": null,
-                    "note": null,
-                    "sources": {
-                        "sources": [
-                            {
-                                "title": "Technology Data for Energy storage",
-                                "authors": "Danish Energy Agency, Technology Data for Energy storage (2020), Excel datasheet: alldata_flat",
-                                "url": "https://ens.dk/media/6589/download",
-                                "url_archive": "https://web.archive.org/web/20251008092400/https://ens.dk/media/6589/download",
-                                "url_date": null,
-                                "url_date_archive": "2025-10-08 09:24:00"
-                            }
-                        ]
-                    }
-                },
                 "fixed o&m": {
                     "magnitude": 6380.4,
                     "units": "EUR_2020 / megawatt / year",
-                    "carrier": null,
-                    "heating_value": null,
-                    "provenance": null,
-                    "note": null,
-                    "sources": {
-                        "sources": [
-                            {
-                                "title": "Technology Data for Energy storage",
-                                "authors": "Danish Energy Agency, Technology Data for Energy storage (2020), Excel datasheet: alldata_flat",
-                                "url": "https://ens.dk/media/6589/download",
-                                "url_archive": "https://web.archive.org/web/20251008092400/https://ens.dk/media/6589/download",
-                                "url_date": null,
-                                "url_date_archive": "2025-10-08 09:24:00"
-                            }
-                        ]
-                    }
-                },
-                "specific investment": {
-                    "magnitude": 743600.0,
-                    "units": "EUR_2020 / gigawatt_hour",
                     "carrier": null,
                     "heating_value": null,
                     "provenance": null,
@@ -9194,48 +8474,8 @@
                         ]
                     }
                 },
-                "fixed o&m": {
-                    "magnitude": 6380.4,
-                    "units": "EUR_2020 / megawatt / year",
-                    "carrier": null,
-                    "heating_value": null,
-                    "provenance": null,
-                    "note": null,
-                    "sources": {
-                        "sources": [
-                            {
-                                "title": "Technology Data for Energy storage",
-                                "authors": "Danish Energy Agency, Technology Data for Energy storage (2020), Excel datasheet: alldata_flat",
-                                "url": "https://ens.dk/media/6589/download",
-                                "url_archive": "https://web.archive.org/web/20251008092400/https://ens.dk/media/6589/download",
-                                "url_date": null,
-                                "url_date_archive": "2025-10-08 09:24:00"
-                            }
-                        ]
-                    }
-                },
                 "specific investment": {
                     "magnitude": 4363.6,
-                    "units": "EUR_2020 / megawatt_hour",
-                    "carrier": null,
-                    "heating_value": null,
-                    "provenance": null,
-                    "note": null,
-                    "sources": {
-                        "sources": [
-                            {
-                                "title": "Technology Data for Energy storage",
-                                "authors": "Danish Energy Agency, Technology Data for Energy storage (2020), Excel datasheet: alldata_flat",
-                                "url": "https://ens.dk/media/6589/download",
-                                "url_archive": "https://web.archive.org/web/20251008092400/https://ens.dk/media/6589/download",
-                                "url_date": null,
-                                "url_date_archive": "2025-10-08 09:24:00"
-                            }
-                        ]
-                    }
-                },
-                "variable o&m": {
-                    "magnitude": 0.0,
                     "units": "EUR_2020 / megawatt_hour",
                     "carrier": null,
                     "heating_value": null,
@@ -9856,26 +9096,6 @@
                             }
                         ]
                     }
-                },
-                "variable o&m": {
-                    "magnitude": 0.0,
-                    "units": "EUR_2020 / megawatt_hour",
-                    "carrier": null,
-                    "heating_value": null,
-                    "provenance": null,
-                    "note": null,
-                    "sources": {
-                        "sources": [
-                            {
-                                "title": "Technology Data for Energy storage",
-                                "authors": "Danish Energy Agency, Technology Data for Energy storage (2020), Excel datasheet: alldata_flat",
-                                "url": "https://ens.dk/media/6589/download",
-                                "url_archive": "https://web.archive.org/web/20251008092400/https://ens.dk/media/6589/download",
-                                "url_date": null,
-                                "url_date_archive": "2025-10-08 09:24:00"
-                            }
-                        ]
-                    }
                 }
             }
         },
@@ -10242,49 +9462,9 @@
             "region": "EU",
             "year": 2020,
             "parameters": {
-                "technical lifetime": {
-                    "magnitude": 40.0,
-                    "units": "year",
-                    "carrier": null,
-                    "heating_value": null,
-                    "provenance": null,
-                    "note": null,
-                    "sources": {
-                        "sources": [
-                            {
-                                "title": "Technology Data for Energy storage",
-                                "authors": "Danish Energy Agency, Technology Data for Energy storage (2020), Excel datasheet: alldata_flat",
-                                "url": "https://ens.dk/media/6589/download",
-                                "url_archive": "https://web.archive.org/web/20251008092400/https://ens.dk/media/6589/download",
-                                "url_date": null,
-                                "url_date_archive": "2025-10-08 09:24:00"
-                            }
-                        ]
-                    }
-                },
                 "fixed o&m": {
                     "magnitude": 12760.8,
                     "units": "EUR_2020 / megawatt / year",
-                    "carrier": null,
-                    "heating_value": null,
-                    "provenance": null,
-                    "note": null,
-                    "sources": {
-                        "sources": [
-                            {
-                                "title": "Technology Data for Energy storage",
-                                "authors": "Danish Energy Agency, Technology Data for Energy storage (2020), Excel datasheet: alldata_flat",
-                                "url": "https://ens.dk/media/6589/download",
-                                "url_archive": "https://web.archive.org/web/20251008092400/https://ens.dk/media/6589/download",
-                                "url_date": null,
-                                "url_date_archive": "2025-10-08 09:24:00"
-                            }
-                        ]
-                    }
-                },
-                "specific investment": {
-                    "magnitude": 1221600.0,
-                    "units": "EUR_2020 / gigawatt_hour",
                     "carrier": null,
                     "heating_value": null,
                     "provenance": null,
@@ -10529,49 +9709,9 @@
                         ]
                     }
                 },
-                "fixed o&m": {
-                    "magnitude": 3.0,
-                    "units": "percent / year",
-                    "carrier": null,
-                    "heating_value": null,
-                    "provenance": null,
-                    "note": null,
-                    "sources": {
-                        "sources": [
-                            {
-                                "title": "Technology Data for Energy storage",
-                                "authors": "Danish Energy Agency, Technology Data for Energy storage (2020), Excel datasheet: alldata_flat",
-                                "url": "https://ens.dk/media/6589/download",
-                                "url_archive": "https://web.archive.org/web/20251008092400/https://ens.dk/media/6589/download",
-                                "url_date": null,
-                                "url_date_archive": "2025-10-08 09:24:00"
-                            }
-                        ]
-                    }
-                },
                 "specific investment": {
                     "magnitude": 18096.0,
                     "units": "EUR_2020 / megawatt_hour",
-                    "carrier": null,
-                    "heating_value": null,
-                    "provenance": null,
-                    "note": null,
-                    "sources": {
-                        "sources": [
-                            {
-                                "title": "Technology Data for Energy storage",
-                                "authors": "Danish Energy Agency, Technology Data for Energy storage (2020), Excel datasheet: alldata_flat",
-                                "url": "https://ens.dk/media/6589/download",
-                                "url_archive": "https://web.archive.org/web/20251008092400/https://ens.dk/media/6589/download",
-                                "url_date": null,
-                                "url_date_archive": "2025-10-08 09:24:00"
-                            }
-                        ]
-                    }
-                },
-                "variable o&m": {
-                    "magnitude": 3.0,
-                    "units": "percent / year",
                     "carrier": null,
                     "heating_value": null,
                     "provenance": null,
@@ -11191,26 +10331,6 @@
                             }
                         ]
                     }
-                },
-                "variable o&m": {
-                    "magnitude": 0.0,
-                    "units": "EUR_2020 / megawatt_hour",
-                    "carrier": null,
-                    "heating_value": null,
-                    "provenance": null,
-                    "note": null,
-                    "sources": {
-                        "sources": [
-                            {
-                                "title": "Technology Data for Energy storage",
-                                "authors": "Danish Energy Agency, Technology Data for Energy storage (2020), Excel datasheet: alldata_flat",
-                                "url": "https://ens.dk/media/6589/download",
-                                "url_archive": "https://web.archive.org/web/20251008092400/https://ens.dk/media/6589/download",
-                                "url_date": null,
-                                "url_date_archive": "2025-10-08 09:24:00"
-                            }
-                        ]
-                    }
                 }
             }
         },
@@ -11755,49 +10875,9 @@
             "region": "EU",
             "year": 2050,
             "parameters": {
-                "technical lifetime": {
-                    "magnitude": 50.0,
-                    "units": "year",
-                    "carrier": null,
-                    "heating_value": null,
-                    "provenance": null,
-                    "note": null,
-                    "sources": {
-                        "sources": [
-                            {
-                                "title": "Technology Data for Energy storage",
-                                "authors": "Danish Energy Agency, Technology Data for Energy storage (2020), Excel datasheet: alldata_flat",
-                                "url": "https://ens.dk/media/6589/download",
-                                "url_archive": "https://web.archive.org/web/20251008092400/https://ens.dk/media/6589/download",
-                                "url_date": null,
-                                "url_date_archive": "2025-10-08 09:24:00"
-                            }
-                        ]
-                    }
-                },
                 "fixed o&m": {
                     "magnitude": 12760.8,
                     "units": "EUR_2020 / megawatt / year",
-                    "carrier": null,
-                    "heating_value": null,
-                    "provenance": null,
-                    "note": null,
-                    "sources": {
-                        "sources": [
-                            {
-                                "title": "Technology Data for Energy storage",
-                                "authors": "Danish Energy Agency, Technology Data for Energy storage (2020), Excel datasheet: alldata_flat",
-                                "url": "https://ens.dk/media/6589/download",
-                                "url_archive": "https://web.archive.org/web/20251008092400/https://ens.dk/media/6589/download",
-                                "url_date": null,
-                                "url_date_archive": "2025-10-08 09:24:00"
-                            }
-                        ]
-                    }
-                },
-                "specific investment": {
-                    "magnitude": 1062200.0,
-                    "units": "EUR_2020 / gigawatt_hour",
                     "carrier": null,
                     "heating_value": null,
                     "provenance": null,
@@ -11864,48 +10944,8 @@
                         ]
                     }
                 },
-                "fixed o&m": {
-                    "magnitude": 12760.8,
-                    "units": "EUR_2020 / megawatt / year",
-                    "carrier": null,
-                    "heating_value": null,
-                    "provenance": null,
-                    "note": null,
-                    "sources": {
-                        "sources": [
-                            {
-                                "title": "Technology Data for Energy storage",
-                                "authors": "Danish Energy Agency, Technology Data for Energy storage (2020), Excel datasheet: alldata_flat",
-                                "url": "https://ens.dk/media/6589/download",
-                                "url_archive": "https://web.archive.org/web/20251008092400/https://ens.dk/media/6589/download",
-                                "url_date": null,
-                                "url_date_archive": "2025-10-08 09:24:00"
-                            }
-                        ]
-                    }
-                },
                 "specific investment": {
                     "magnitude": 13963.6,
-                    "units": "EUR_2020 / megawatt_hour",
-                    "carrier": null,
-                    "heating_value": null,
-                    "provenance": null,
-                    "note": null,
-                    "sources": {
-                        "sources": [
-                            {
-                                "title": "Technology Data for Energy storage",
-                                "authors": "Danish Energy Agency, Technology Data for Energy storage (2020), Excel datasheet: alldata_flat",
-                                "url": "https://ens.dk/media/6589/download",
-                                "url_archive": "https://web.archive.org/web/20251008092400/https://ens.dk/media/6589/download",
-                                "url_date": null,
-                                "url_date_archive": "2025-10-08 09:24:00"
-                            }
-                        ]
-                    }
-                },
-                "variable o&m": {
-                    "magnitude": 0.0,
                     "units": "EUR_2020 / megawatt_hour",
                     "carrier": null,
                     "heating_value": null,

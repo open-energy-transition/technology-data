@@ -392,6 +392,7 @@ def filter_parameters(
         "specific investment",
         "variable o&m",
     }
+    print("filter_flag", filter_flag)
     if filter_flag:
         # Filter the DataFrame based on the allowed set
         df_filtered = dataframe[dataframe["par"].isin(allowed_set)].reset_index(
@@ -445,7 +446,6 @@ def build_technology_collection(
     - Each Technology is instantiated with group-specific attributes
 
     """
-    parameters = {}
     list_techs = []
 
     if store_source:
@@ -463,6 +463,7 @@ def build_technology_collection(
     for (est, year, ws, technology_name), group in dataframe.groupby(
         ["est", "year", "ws", "Technology"]
     ):
+        parameters = {}
         for _, row in group.iterrows():
             parameters[row["par"]] = Parameter(
                 magnitude=row["val"], units=row["unit"], sources=sources
@@ -510,13 +511,13 @@ def parse_input_arguments() -> argparse.Namespace:
     parser.add_argument(
         "--store_source",
         action="store_true",
-        help="Store_source, store the source object on the wayback machine. Default: false",
+        help="store_source, store the source object on the wayback machine. Default: false",
     )
 
     parser.add_argument(
-        "--all_params",
+        "--filter_params",
         action="store_true",
-        help="all_params. Store to technologies.json all parameters. Default: false",
+        help="filter_params. Filter the parameters stored to technologies.json. Default: false",
     )
 
     # Parse arguments
@@ -628,7 +629,7 @@ if __name__ == "__main__":
     cleaned_df = cleaned_df.drop(columns=columns_to_drop, errors="ignore")
     logger.info("Unnecessary columns dropped.")
 
-    filtered_df = filter_parameters(cleaned_df, input_args.all_params)
+    filtered_df = filter_parameters(cleaned_df, input_args.filter_params)
 
     # Build TechnologyCollection
     dea_storage_path = pathlib.Path(
