@@ -150,6 +150,7 @@ dtype: int64
 ```
 
 **Series Features:**
+
 - **Index Preservation**: When using pandas Series, the index is preserved through arithmetic operations and conversions
 - **Element-wise Operations**: All arithmetic operations (`+`, `-`, `*`, `/`, `**`) work element-wise on series data
 - **Mixed Operations**: You can perform operations between series and scalar parameters

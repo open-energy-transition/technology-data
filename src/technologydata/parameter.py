@@ -74,8 +74,10 @@ class Parameter(BaseModel):  # type: ignore
     model_config = ConfigDict(arbitrary_types_allowed=True)
 
     magnitude: Annotated[
-        int | float | list[float] | pd.Series, 
-        Field(description="The numerical value(s) of the parameter. Can be a single value or a series of values.")
+        int | float | list[float] | pd.Series,
+        Field(
+            description="The numerical value(s) of the parameter. Can be a single value or a series of values."
+        ),
     ]
     units: Annotated[str | None, Field(description="The unit of the parameter.")] = None
     carrier: Annotated[
@@ -100,7 +102,9 @@ class Parameter(BaseModel):  # type: ignore
     _pint_carrier: pint.Unit = PrivateAttr(None)
     _pint_heating_value: pint.Unit = PrivateAttr(None)
 
-    def __init__(self, **data: float | str | list[float] | pd.Series | SourceCollection | None) -> None:
+    def __init__(
+        self, **data: float | str | list[float] | pd.Series | SourceCollection | None
+    ) -> None:
         """Initialize Parameter and update pint attributes."""
         # pint uses canonical names for units, carriers, and heating values
         # Ensure the Parameter object is always created with these consistent names from pint
@@ -171,7 +175,7 @@ class Parameter(BaseModel):  # type: ignore
                 self._pint_quantity = technologydata.ureg.Quantity(magnitude_array)
             else:
                 self._pint_quantity = technologydata.ureg.Quantity(self.magnitude)
-                
+
         # Create the carrier as pint unit
         if self.carrier:
             self._pint_carrier = technologydata.creg.Unit(self.carrier)
@@ -202,19 +206,21 @@ class Parameter(BaseModel):  # type: ignore
             )
 
         self._pint_quantity = self._pint_quantity.to(units)
-        
+
         # Handle series vs scalar magnitude
         if self._is_magnitude_series():
             magnitude_series = self._get_magnitude_as_series()
-            if hasattr(self._pint_quantity.magnitude, '__iter__'):
+            if hasattr(self._pint_quantity.magnitude, "__iter__"):
                 # Update the series with new values
-                new_magnitude = pd.Series(self._pint_quantity.magnitude, index=magnitude_series.index)
+                new_magnitude = pd.Series(
+                    self._pint_quantity.magnitude, index=magnitude_series.index
+                )
             else:
                 # Single value case
                 new_magnitude = self._pint_quantity.magnitude
         else:
             new_magnitude = self._pint_quantity.magnitude
-            
+
         return Parameter(
             magnitude=new_magnitude,
             units=str(self._pint_quantity.units),
@@ -329,9 +335,11 @@ class Parameter(BaseModel):  # type: ignore
         # Handle series vs scalar magnitude
         if self._is_magnitude_series():
             magnitude_series = self._get_magnitude_as_series()
-            if hasattr(quantity.magnitude, '__iter__'):
+            if hasattr(quantity.magnitude, "__iter__"):
                 # Update the series with new values
-                new_magnitude = pd.Series(quantity.magnitude, index=magnitude_series.index)
+                new_magnitude = pd.Series(
+                    quantity.magnitude, index=magnitude_series.index
+                )
             else:
                 # Single value case
                 new_magnitude = quantity.magnitude
@@ -511,25 +519,29 @@ class Parameter(BaseModel):  # type: ignore
         self._update_pint_attributes()
         other._update_pint_attributes()
         self._check_parameter_compatibility(other)
-        
+
         new_quantity = self._pint_quantity + other._pint_quantity
-        
+
         # Handle series vs scalar magnitude
         if self._is_magnitude_series() or other._is_magnitude_series():
-            if hasattr(new_quantity.magnitude, '__iter__'):
+            if hasattr(new_quantity.magnitude, "__iter__"):
                 # If either parameter has a series and the result is an array
                 self_series = self._get_magnitude_as_series()
                 other_series = other._get_magnitude_as_series()
                 # Use the index from the longer series, or self if they're the same length
                 if len(self_series) >= len(other_series):
-                    new_magnitude = pd.Series(new_quantity.magnitude, index=self_series.index)
+                    new_magnitude = pd.Series(
+                        new_quantity.magnitude, index=self_series.index
+                    )
                 else:
-                    new_magnitude = pd.Series(new_quantity.magnitude, index=other_series.index)
+                    new_magnitude = pd.Series(
+                        new_quantity.magnitude, index=other_series.index
+                    )
             else:
                 new_magnitude = new_quantity.magnitude
         else:
             new_magnitude = new_quantity.magnitude
-            
+
         return Parameter(
             magnitude=new_magnitude,
             units=str(new_quantity.units),
@@ -567,25 +579,29 @@ class Parameter(BaseModel):  # type: ignore
         self._update_pint_attributes()
         other._update_pint_attributes()
         self._check_parameter_compatibility(other)
-        
+
         new_quantity = self._pint_quantity - other._pint_quantity
-        
+
         # Handle series vs scalar magnitude
         if self._is_magnitude_series() or other._is_magnitude_series():
-            if hasattr(new_quantity.magnitude, '__iter__'):
+            if hasattr(new_quantity.magnitude, "__iter__"):
                 # If either parameter has a series and the result is an array
                 self_series = self._get_magnitude_as_series()
                 other_series = other._get_magnitude_as_series()
                 # Use the index from the longer series, or self if they're the same length
                 if len(self_series) >= len(other_series):
-                    new_magnitude = pd.Series(new_quantity.magnitude, index=self_series.index)
+                    new_magnitude = pd.Series(
+                        new_quantity.magnitude, index=self_series.index
+                    )
                 else:
-                    new_magnitude = pd.Series(new_quantity.magnitude, index=other_series.index)
+                    new_magnitude = pd.Series(
+                        new_quantity.magnitude, index=other_series.index
+                    )
             else:
                 new_magnitude = new_quantity.magnitude
         else:
             new_magnitude = new_quantity.magnitude
-            
+
         return Parameter(
             magnitude=new_magnitude,
             units=str(new_quantity.units),
@@ -626,7 +642,7 @@ class Parameter(BaseModel):  # type: ignore
 
         """
         self._update_pint_attributes()
-        
+
         if isinstance(other, (int, float)):
             # Handle series vs scalar magnitude
             if self._is_magnitude_series():
@@ -634,7 +650,7 @@ class Parameter(BaseModel):  # type: ignore
                 new_magnitude = magnitude_series / other
             else:
                 new_magnitude = self.magnitude / other
-                
+
             return Parameter(
                 magnitude=new_magnitude,
                 units=self.units,
@@ -647,7 +663,7 @@ class Parameter(BaseModel):  # type: ignore
 
         # Parameter division
         other._update_pint_attributes()
-        
+
         # We don't check general compatibility here, as division is not a common operation for parameters.
         # Only ensure that the heating values are compatible.
         if self._pint_heating_value != other._pint_heating_value:
@@ -670,15 +686,19 @@ class Parameter(BaseModel):  # type: ignore
 
         # Handle series vs scalar magnitude
         if self._is_magnitude_series() or other._is_magnitude_series():
-            if hasattr(new_quantity.magnitude, '__iter__'):
+            if hasattr(new_quantity.magnitude, "__iter__"):
                 # If either parameter has a series and the result is an array
                 self_series = self._get_magnitude_as_series()
                 other_series = other._get_magnitude_as_series()
                 # Use the index from the longer series, or self if they're the same length
                 if len(self_series) >= len(other_series):
-                    new_magnitude = pd.Series(new_quantity.magnitude, index=self_series.index)
+                    new_magnitude = pd.Series(
+                        new_quantity.magnitude, index=self_series.index
+                    )
                 else:
-                    new_magnitude = pd.Series(new_quantity.magnitude, index=other_series.index)
+                    new_magnitude = pd.Series(
+                        new_quantity.magnitude, index=other_series.index
+                    )
             else:
                 new_magnitude = new_quantity.magnitude
         else:
@@ -727,7 +747,7 @@ class Parameter(BaseModel):  # type: ignore
 
         """
         self._update_pint_attributes()
-        
+
         if isinstance(other, (int, float)):
             # Handle series vs scalar magnitude
             if self._is_magnitude_series():
@@ -735,7 +755,7 @@ class Parameter(BaseModel):  # type: ignore
                 new_magnitude = magnitude_series * other
             else:
                 new_magnitude = self.magnitude * other
-                
+
             return Parameter(
                 magnitude=new_magnitude,
                 units=self.units,
@@ -748,7 +768,7 @@ class Parameter(BaseModel):  # type: ignore
 
         # Parameter multiplication
         other._update_pint_attributes()
-        
+
         # We don't check general compatibility here, as multiplication is not a common operation for parameters.
         # Only ensure that the heating values are compatible.
         if self._pint_heating_value != other._pint_heating_value:
@@ -765,23 +785,27 @@ class Parameter(BaseModel):  # type: ignore
         )
 
         new_heating_value = self._pint_heating_value * other._pint_heating_value
-        
+
         # Handle series vs scalar magnitude
         if self._is_magnitude_series() or other._is_magnitude_series():
-            if hasattr(new_quantity.magnitude, '__iter__'):
+            if hasattr(new_quantity.magnitude, "__iter__"):
                 # If either parameter has a series and the result is an array
                 self_series = self._get_magnitude_as_series()
                 other_series = other._get_magnitude_as_series()
                 # Use the index from the longer series, or self if they're the same length
                 if len(self_series) >= len(other_series):
-                    new_magnitude = pd.Series(new_quantity.magnitude, index=self_series.index)
+                    new_magnitude = pd.Series(
+                        new_quantity.magnitude, index=self_series.index
+                    )
                 else:
-                    new_magnitude = pd.Series(new_quantity.magnitude, index=other_series.index)
+                    new_magnitude = pd.Series(
+                        new_quantity.magnitude, index=other_series.index
+                    )
             else:
                 new_magnitude = new_quantity.magnitude
         else:
             new_magnitude = new_quantity.magnitude
-            
+
         return Parameter(
             magnitude=new_magnitude,
             units=str(new_quantity.units),
@@ -850,17 +874,19 @@ class Parameter(BaseModel):  # type: ignore
         self._update_pint_attributes()
 
         new_quantity = self._pint_quantity**exponent
-        
+
         # Handle series vs scalar magnitude
         if self._is_magnitude_series():
-            if hasattr(new_quantity.magnitude, '__iter__'):
+            if hasattr(new_quantity.magnitude, "__iter__"):
                 magnitude_series = self._get_magnitude_as_series()
-                new_magnitude = pd.Series(new_quantity.magnitude, index=magnitude_series.index)
+                new_magnitude = pd.Series(
+                    new_quantity.magnitude, index=magnitude_series.index
+                )
             else:
                 new_magnitude = new_quantity.magnitude
         else:
             new_magnitude = new_quantity.magnitude
-            
+
         return Parameter(
             magnitude=new_magnitude,
             units=str(new_quantity.units),

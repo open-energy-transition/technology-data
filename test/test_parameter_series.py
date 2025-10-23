@@ -5,7 +5,6 @@ Tests the new capability of Parameter to handle both scalar values and pandas Se
 ensuring that all existing functionality works with series data.
 """
 
-import numpy as np
 import pandas as pd
 import pytest
 
@@ -24,9 +23,9 @@ class TestParameterSeries:
             magnitude=series_data,
             units="EUR_2020/kW",
             provenance="test",
-            note="Test parameter with series"
+            note="Test parameter with series",
         )
-        
+
         assert param._is_magnitude_series()
         assert not param._is_magnitude_scalar()
         assert isinstance(param.magnitude, pd.Series)
@@ -40,9 +39,9 @@ class TestParameterSeries:
             magnitude=list_data,
             units="EUR_2020/kW",
             provenance="test",
-            note="Test parameter with list"
+            note="Test parameter with list",
         )
-        
+
         assert param._is_magnitude_series()
         assert not param._is_magnitude_scalar()
         assert isinstance(param.magnitude, list)
@@ -52,10 +51,10 @@ class TestParameterSeries:
     def test_parameter_scalar_helpers(self):
         """Test helper methods work correctly for scalar values."""
         param = Parameter(magnitude=150.0, units="EUR_2020/kW")
-        
+
         assert param._is_magnitude_scalar()
         assert not param._is_magnitude_series()
-        
+
         series_version = param._get_magnitude_as_series()
         assert isinstance(series_version, pd.Series)
         assert len(series_version) == 1
@@ -65,10 +64,10 @@ class TestParameterSeries:
         """Test helper methods work correctly for series values."""
         series_data = pd.Series([100, 200, 300], index=["2020", "2030", "2040"])
         param = Parameter(magnitude=series_data, units="EUR_2020/kW")
-        
+
         assert param._is_magnitude_series()
         assert not param._is_magnitude_scalar()
-        
+
         series_version = param._get_magnitude_as_series()
         assert isinstance(series_version, pd.Series)
         assert len(series_version) == 3
@@ -84,19 +83,21 @@ class TestParameterSeries:
         assert isinstance(converted.magnitude, pd.Series)
         assert len(converted.magnitude) == 3
         pd.testing.assert_index_equal(converted.magnitude.index, series_data.index)
-        assert converted.magnitude.loc["2030"] == 2000000.0  # 2000 kW = 2,000,000 EUR_2020/MW
+        assert (
+            converted.magnitude.loc["2030"] == 2000000.0
+        )  # 2000 kW = 2,000,000 EUR_2020/MW
         assert converted.units == "EUR_2020 / megawatt"
 
     def test_parameter_series_arithmetic_addition(self):
         """Test addition with series parameters."""
         series1 = pd.Series([100, 200, 300], index=["2020", "2030", "2040"])
         series2 = pd.Series([50, 100, 150], index=["2020", "2030", "2040"])
-        
+
         param1 = Parameter(magnitude=series1, units="EUR_2020/kW")
         param2 = Parameter(magnitude=series2, units="EUR_2020/kW")
-        
+
         result = param1 + param2
-        
+
         assert isinstance(result.magnitude, pd.Series)
         assert len(result.magnitude) == 3
         pd.testing.assert_index_equal(result.magnitude.index, series1.index)
@@ -107,12 +108,12 @@ class TestParameterSeries:
         """Test subtraction with series parameters."""
         series1 = pd.Series([300, 400, 500], index=["2020", "2030", "2040"])
         series2 = pd.Series([100, 150, 200], index=["2020", "2030", "2040"])
-        
+
         param1 = Parameter(magnitude=series1, units="EUR_2020/kW")
         param2 = Parameter(magnitude=series2, units="EUR_2020/kW")
-        
+
         result = param1 - param2
-        
+
         assert isinstance(result.magnitude, pd.Series)
         assert len(result.magnitude) == 3
         pd.testing.assert_index_equal(result.magnitude.index, series1.index)
@@ -123,9 +124,9 @@ class TestParameterSeries:
         """Test multiplication of series parameter with scalar."""
         series_data = pd.Series([100, 200, 300], index=["2020", "2030", "2040"])
         param = Parameter(magnitude=series_data, units="EUR_2020/kW")
-        
+
         result = param * 2.5
-        
+
         assert isinstance(result.magnitude, pd.Series)
         assert len(result.magnitude) == 3
         pd.testing.assert_index_equal(result.magnitude.index, series_data.index)
@@ -136,9 +137,9 @@ class TestParameterSeries:
         """Test division of series parameter by scalar."""
         series_data = pd.Series([100, 200, 300], index=["2020", "2030", "2040"])
         param = Parameter(magnitude=series_data, units="EUR_2020/kW")
-        
+
         result = param / 2.0
-        
+
         assert isinstance(result.magnitude, pd.Series)
         assert len(result.magnitude) == 3
         pd.testing.assert_index_equal(result.magnitude.index, series_data.index)
@@ -149,9 +150,9 @@ class TestParameterSeries:
         """Test raising series parameter to a power."""
         series_data = pd.Series([2, 3, 4], index=["2020", "2030", "2040"])
         param = Parameter(magnitude=series_data, units="meter")
-        
-        result = param ** 2
-        
+
+        result = param**2
+
         assert isinstance(result.magnitude, pd.Series)
         assert len(result.magnitude) == 3
         pd.testing.assert_index_equal(result.magnitude.index, series_data.index)
@@ -163,11 +164,11 @@ class TestParameterSeries:
         scalar_param = Parameter(magnitude=100, units="EUR_2020/kW")
         series_param = Parameter(
             magnitude=pd.Series([50, 100, 150], index=["2020", "2030", "2040"]),
-            units="EUR_2020/kW"
+            units="EUR_2020/kW",
         )
-        
+
         result = scalar_param + series_param
-        
+
         assert isinstance(result.magnitude, pd.Series)
         assert len(result.magnitude) == 3
         assert result.magnitude.loc["2030"] == 200  # 100 + 100
@@ -176,7 +177,7 @@ class TestParameterSeries:
         """Test currency conversion with series magnitude."""
         series_data = pd.Series([1000, 2000, 3000], index=["2020", "2030", "2040"])
         param = Parameter(magnitude=series_data, units="EUR_2020/kW")
-        
+
         # Note: This test might fail if currency data is not available
         # We'll use a simple test case
         try:
@@ -193,26 +194,27 @@ class TestParameterSeries:
         """Test heating value conversion with series magnitude."""
         series_data = pd.Series([10, 20, 30], index=["2020", "2030", "2040"])
         param = Parameter(
-            magnitude=series_data,
-            units="kWh/kg",
-            carrier="H2",
-            heating_value="LHV"
+            magnitude=series_data, units="kWh/kg", carrier="H2", heating_value="LHV"
         )
-        
+
         converted = param.change_heating_value("HHV")
-        
+
         assert isinstance(converted.magnitude, pd.Series)
         assert len(converted.magnitude) == 3
         pd.testing.assert_index_equal(converted.magnitude.index, series_data.index)
         # Check that conversion actually happened (HHV should be higher than LHV)
         assert converted.magnitude.loc["2030"] > param.magnitude.loc["2030"]
-        assert converted.heating_value == "higher_heating_value"  # pint uses canonical names
+        assert (
+            converted.heating_value == "higher_heating_value"
+        )  # pint uses canonical names
 
     def test_parameter_series_preserves_metadata(self):
         """Test that series operations preserve metadata."""
         series_data = pd.Series([100, 200, 300], index=["2020", "2030", "2040"])
-        source = Source(title="Test Source", authors="Test Author", url="http://test.com")
-        
+        source = Source(
+            title="Test Source", authors="Test Author", url="http://test.com"
+        )
+
         param = Parameter(
             magnitude=series_data,
             units="EUR_2020/kW",
@@ -220,11 +222,11 @@ class TestParameterSeries:
             heating_value=None,
             provenance="test_data",
             note="Test note",
-            sources=SourceCollection(sources=[source])
+            sources=SourceCollection(sources=[source]),
         )
-        
+
         result = param * 2
-        
+
         assert result.carrier == "electricity"  # pint uses canonical names
         assert result.provenance == "test_data"
         assert result.note == "Test note"
@@ -241,15 +243,17 @@ class TestParameterSeries:
 
         # This should work with matching lengths
         result = param1 + param2
-        
+
         assert isinstance(result.magnitude, pd.Series)
         assert len(result.magnitude) == 2
         assert result.magnitude.loc["2020"] == 150  # 100 + 50
-        assert result.magnitude.loc["2030"] == 300  # 200 + 100    def test_parameter_empty_series(self):
+        assert (
+            result.magnitude.loc["2030"] == 300
+        )  # 200 + 100    def test_parameter_empty_series(self):
         """Test parameter with empty series."""
         empty_series = pd.Series([], dtype=float)
         param = Parameter(magnitude=empty_series, units="EUR_2020/kW")
-        
+
         assert param._is_magnitude_series()
         assert len(param.magnitude) == 0
 
@@ -257,7 +261,7 @@ class TestParameterSeries:
         """Test parameter with single-element series."""
         single_series = pd.Series([42.0], index=["2020"])
         param = Parameter(magnitude=single_series, units="EUR_2020/kW")
-        
+
         assert param._is_magnitude_series()
         assert len(param.magnitude) == 1
         assert param.magnitude.iloc[0] == 42.0
