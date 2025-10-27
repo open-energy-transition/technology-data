@@ -318,6 +318,7 @@ def patch_pint_registry_error_handling(registry: pint.registry.UnitRegistry) -> 
     ----------
     registry : pint.registry.UnitRegistry
         The Pint unit registry to patch.
+
     """
     # Store the original method
     original_get_name = registry.get_name
@@ -404,7 +405,7 @@ class CustomUndefinedUnitError(pint.errors.UndefinedUnitError):  # type: ignore
 
         """
         # Extract unit names from the error
-        unit_names = getattr(self, 'unit_names', [])
+        unit_names = getattr(self, "unit_names", [])
 
         # Find currency units without a year
         currency_without_year: list[str] = [
