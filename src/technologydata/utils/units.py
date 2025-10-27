@@ -318,11 +318,12 @@ def patch_pint_registry_error_handling(registry: pint.registry.UnitRegistry) -> 
     ----------
     registry : pint.registry.UnitRegistry
         The Pint unit registry to patch.
+
     """
     # Store the original method
     original_get_name = registry.get_name
 
-    def patched_get_name(self, name, *args, **kwargs):
+    def patched_get_name(self, name: str, *args: Any, **kwargs: Any) -> Any:
         try:
             return original_get_name(name, *args, **kwargs)
         except pint.errors.UndefinedUnitError as e:
@@ -404,14 +405,15 @@ class CustomUndefinedUnitError(pint.errors.UndefinedUnitError):  # type: ignore
 
         """
         # Extract unit names from the error
-        unit_names = getattr(self, 'unit_names', [])
+        unit_names = getattr(self, "unit_names", [])
+        all_currency_codes = set(get_iso3_to_currency_codes().values())
 
         # Find currency units without a year
         currency_without_year: list[str] = [
             currency
-            for name in unit_names
-            for currency, year in CURRENCY_UNIT_PATTERN.findall(str(name))
-            if year == ""
+            for currency in unit_names
+            if currency in all_currency_codes
+            and CURRENCY_UNIT_PATTERN.findall(currency) == []
         ]
 
         # Provide specific error message for currency units
@@ -420,7 +422,7 @@ class CustomUndefinedUnitError(pint.errors.UndefinedUnitError):  # type: ignore
             return f"Currency unit '{element}' is missing the currency year (e.g. {element}_2020)."
 
         # Fallback to parent class error message
-        return super.__str__(self)
+        return super().__str__()  # type: ignore
 
 
 class SpecialUnitRegistry(pint.UnitRegistry):  # type: ignore

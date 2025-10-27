@@ -57,20 +57,19 @@ class TestParameter:
         with pytest.raises(CustomUndefinedUnitError) as excinfo:
             technologydata.Parameter(
                 magnitude=1000,
+                units="USD",
+            )
+        assert (
+            str(excinfo.value)
+            == "Currency unit 'USD' is missing the currency year (e.g. USD_2020)."
+        )
+
+        with pytest.raises(pint.errors.UndefinedUnitError) as excinfo:
+            technologydata.Parameter(
+                magnitude=1000,
                 units="INVALID_UNIT",
             )
         assert "INVALID_UNIT" in str(excinfo.value)
-
-        with pytest.raises(CustomUndefinedUnitError) as excinfo:
-            technologydata.Parameter(
-                magnitude=1000,
-                units="USD",
-            )
-        print(excinfo.value.args)
-        assert (
-            str(excinfo.value)
-            == "Currency unit 'USD' is missing the currency year (e.g. {element}_2020)."
-        )
 
         with pytest.raises(pint.errors.UndefinedUnitError) as excinfo:
             technologydata.Parameter(
