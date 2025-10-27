@@ -13,8 +13,7 @@ import pytest
 
 import technologydata
 from technologydata.constants import EnergyDensityLHV
-
-# from technologydata.utils.units import extract_currency_units, ureg
+from technologydata.utils.units import CustomUndefinedUnitError
 
 path_cwd = pathlib.Path.cwd()
 
@@ -55,12 +54,23 @@ class TestParameter:
 
     def test_parameter_invalid_units(self) -> None:
         """Test that an error is raised when invalid units are provided."""
-        with pytest.raises(pint.errors.UndefinedUnitError) as excinfo:
+        with pytest.raises(CustomUndefinedUnitError) as excinfo:
             technologydata.Parameter(
                 magnitude=1000,
                 units="INVALID_UNIT",
             )
         assert "INVALID_UNIT" in str(excinfo.value)
+
+        with pytest.raises(CustomUndefinedUnitError) as excinfo:
+            technologydata.Parameter(
+                magnitude=1000,
+                units="USD",
+            )
+        print(excinfo.value.args)
+        assert (
+            str(excinfo.value)
+            == "Currency unit 'USD' is missing the currency year (e.g. {element}_2020)."
+        )
 
         with pytest.raises(pint.errors.UndefinedUnitError) as excinfo:
             technologydata.Parameter(

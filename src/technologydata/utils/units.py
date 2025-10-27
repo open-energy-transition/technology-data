@@ -6,6 +6,7 @@
 import json
 import logging
 import re
+import typing
 from functools import lru_cache
 from pathlib import Path
 from typing import Any
@@ -309,6 +310,29 @@ def get_iso3_from_currency_code(
         ) from e
 
 
+def patch_pint_registry_error_handling(registry: pint.registry.UnitRegistry) -> None:
+    """
+    Patch a Pint registry to use CustomUndefinedUnitError.
+
+    Parameters
+    ----------
+    registry : pint.registry.UnitRegistry
+        The Pint unit registry to patch.
+    """
+    # Store the original method
+    original_get_name = registry.get_name
+
+    def patched_get_name(self, name, *args, **kwargs):
+        try:
+            return original_get_name(name, *args, **kwargs)
+        except pint.errors.UndefinedUnitError as e:
+            # Raise the custom error with the same arguments
+            raise CustomUndefinedUnitError(e.args[0]) from e
+
+    # Replace the method
+    registry.get_name = patched_get_name.__get__(registry)
+
+
 class CustomUndefinedUnitError(pint.errors.UndefinedUnitError):  # type: ignore
     """
     Custom message for undefined unit errors.
@@ -327,16 +351,6 @@ class CustomUndefinedUnitError(pint.errors.UndefinedUnitError):  # type: ignore
     unit_names : list of str
         The names of the units that are not defined in the unit registry.
 
-    Examples
-    --------
-    >>> import pint
-    >>> ureg = pint.UnitRegistry()
-    >>> try:
-    ...     ureg.parse_expression('100 USD')
-    ... except pint.errors.UndefinedUnitError as e:
-    ...     raise CustomUndefinedUnitError(e.unit_names) from e
-    CustomUndefinedUnitError: Currency unit 'USD' is missing the currency year (e.g., USD_2020).
-
     Notes
     -----
     This error is a subclass of `pint.errors.UndefinedUnitError` and is designed
@@ -344,6 +358,22 @@ class CustomUndefinedUnitError(pint.errors.UndefinedUnitError):  # type: ignore
     the currency year.
 
     """
+
+    def __init__(self, unit_names: str | typing.Iterable[str]) -> None:
+        """
+        Initialize a CustomUndefinedUnitError instance.
+
+        This constructor creates a new `CustomUndefinedUnitError` object,
+        inheriting all default behaviors from `pint.errors.UndefinedUnitError`.
+
+        Parameters
+        ----------
+        unit_names : str or iterable of str
+            The name or names of the undefined units that caused the error.
+
+        """
+        # Use all defaults definitions from a standard pint.errors.UndefinedUnitError
+        super().__init__(unit_names)
 
     def __str__(self) -> str:
         """
@@ -373,20 +403,24 @@ class CustomUndefinedUnitError(pint.errors.UndefinedUnitError):  # type: ignore
         ('meter', 'second') are not defined in the unit registry
 
         """
+        # Extract unit names from the error
+        unit_names = getattr(self, 'unit_names', [])
+
+        # Find currency units without a year
         currency_without_year: list[str] = [
             currency
-            for name in self.unit_names
+            for name in unit_names
             for currency, year in CURRENCY_UNIT_PATTERN.findall(str(name))
             if year == ""
         ]
 
+        # Provide specific error message for currency units
         if currency_without_year:
             element = currency_without_year[0]
             return f"Currency unit '{element}' is missing the currency year (e.g. {element}_2020)."
-        elif len(self.unit_names) == 1:
-            return f"'{tuple(self.unit_names)[0]}' is not defined in the unit registry"
-        else:
-            return f"{tuple(self.unit_names)} are not defined in the unit registry"
+
+        # Fallback to parent class error message
+        return super.__str__(self)
 
 
 class SpecialUnitRegistry(pint.UnitRegistry):  # type: ignore
@@ -478,8 +512,6 @@ class SpecialUnitRegistry(pint.UnitRegistry):  # type: ignore
 
 
 # Unit registries used throughout the package for different purposes
-pint.errors.UndefinedUnitError = CustomUndefinedUnitError
-
 ureg = SpecialUnitRegistry()  # For handling units, conversions, and currency units
 creg = pint.UnitRegistry(
     filename=Path(__file__).parent / "carriers.txt"
@@ -487,3 +519,5 @@ creg = pint.UnitRegistry(
 hvreg = pint.UnitRegistry(
     filename=Path(__file__).parent / "heating_values.txt"
 )  # For tracking heating values and ensuring compatibility between them
+
+patch_pint_registry_error_handling(ureg)
