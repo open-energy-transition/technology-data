@@ -309,6 +309,86 @@ def get_iso3_from_currency_code(
         ) from e
 
 
+class CustomUndefinedUnitError(pint.errors.UndefinedUnitError):  # type: ignore
+    """
+    Custom message for undefined unit errors.
+
+    This custom error is raised when a unit is not defined in the unit registry.
+    It provides more specific error messages, especially for currency units
+    that are missing the currency year.
+
+    Parameters
+    ----------
+    unit_names : list of str
+        The names of the units that are not defined in the unit registry.
+
+    Attributes
+    ----------
+    unit_names : list of str
+        The names of the units that are not defined in the unit registry.
+
+    Examples
+    --------
+    >>> import pint
+    >>> ureg = pint.UnitRegistry()
+    >>> try:
+    ...     ureg.parse_expression('100 USD')
+    ... except pint.errors.UndefinedUnitError as e:
+    ...     raise CustomUndefinedUnitError(e.unit_names) from e
+    CustomUndefinedUnitError: Currency unit 'USD' is missing the currency year (e.g., USD_2020).
+
+    Notes
+    -----
+    This error is a subclass of `pint.errors.UndefinedUnitError` and is designed
+    to provide more specific error messages for currency units that are missing
+    the currency year.
+
+    """
+
+    def __str__(self) -> str:
+        """
+        Generate a custom error message string.
+
+        This method generates a custom error message string based on the
+        unit names that are not defined in the unit registry. It provides
+        specific messages for currency units that are missing the currency year.
+
+        Returns
+        -------
+        str
+            The custom error message string.
+
+        Examples
+        --------
+        >>> error = CustomUndefinedUnitError(['USD'])
+        >>> print(str(error))
+        Currency unit 'USD' is missing the currency year (e.g. USD_2020).
+
+        >>> error = CustomUndefinedUnitError(['meter'])
+        >>> print(str(error))
+        'meter' is not defined in the unit registry
+
+        >>> error = CustomUndefinedUnitError(['meter', 'second'])
+        >>> print(str(error))
+        ('meter', 'second') are not defined in the unit registry
+
+        """
+        currency_without_year: list[str] = [
+            currency
+            for name in self.unit_names
+            for currency, year in CURRENCY_UNIT_PATTERN.findall(str(name))
+            if year == ""
+        ]
+
+        if currency_without_year:
+            element = currency_without_year[0]
+            return f"Currency unit '{element}' is missing the currency year (e.g. {element}_2020)."
+        elif len(self.unit_names) == 1:
+            return f"'{tuple(self.unit_names)[0]}' is not defined in the unit registry"
+        else:
+            return f"{tuple(self.unit_names)} are not defined in the unit registry"
+
+
 class SpecialUnitRegistry(pint.UnitRegistry):  # type: ignore
     """A special pint.UnitRegistry subclass that includes methods for handling currency units and conversion using pydeflate."""
 
@@ -398,6 +478,8 @@ class SpecialUnitRegistry(pint.UnitRegistry):  # type: ignore
 
 
 # Unit registries used throughout the package for different purposes
+pint.errors.UndefinedUnitError = CustomUndefinedUnitError
+
 ureg = SpecialUnitRegistry()  # For handling units, conversions, and currency units
 creg = pint.UnitRegistry(
     filename=Path(__file__).parent / "carriers.txt"
