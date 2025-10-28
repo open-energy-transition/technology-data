@@ -262,8 +262,8 @@ class TechnologyCollection(pydantic.BaseModel):  # type: ignore
 
         Returns
         -------
-        Technology
-            A new Technology object with all its parameters adjusted to the target currency.
+        TechnologyCollection
+            A new TechnologyCollection object with all its parameters adjusted to the target currency.
 
         """
         new_techs = []

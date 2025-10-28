@@ -88,18 +88,29 @@ class TestTechnology:
         assert converted.year == tech.year
 
         # Check that parameters with currency units are converted
-        assert "USD_2020" in converted["investment"].units
-        assert "EUR_2022" not in converted["investment"].units
-        assert "USD_2020" in converted["fixed_om"].units
-        assert "EUR_2022" not in converted["fixed_om"].units
+        assert "USD_2020" in str(converted.parameters["investment"].units)
+        assert "EUR_2022" not in str(converted.parameters["investment"].units)
+        assert "USD_2020" in str(converted.parameters["fixed_om"].units)
+        assert "EUR_2022" not in str(converted.parameters["fixed_om"].units)
 
         # Check that parameters without currency units remain unchanged
-        assert converted["lifetime"].units == tech["lifetime"].units
-        assert converted["lifetime"].magnitude == tech["lifetime"].magnitude
+        assert (
+            converted.parameters["lifetime"].units == tech.parameters["lifetime"].units
+        )
+        assert (
+            converted.parameters["lifetime"].magnitude
+            == tech.parameters["lifetime"].magnitude
+        )
 
         # Check that magnitude changed for currency parameters
-        assert converted["investment"].magnitude != tech["investment"].magnitude
-        assert converted["fixed_om"].magnitude != tech["fixed_om"].magnitude
+        assert (
+            converted.parameters["investment"].magnitude
+            != tech.parameters["investment"].magnitude
+        )
+        assert (
+            converted.parameters["fixed_om"].magnitude
+            != tech.parameters["fixed_om"].magnitude
+        )
 
     def test_technology_to_currency_with_overwrite_country(self) -> None:
         """Test currency conversion with a different country for inflation adjustment."""
@@ -122,8 +133,11 @@ class TestTechnology:
         converted = tech.to_currency("USD_2023", overwrite_country="USA")
 
         assert isinstance(converted, technologydata.Technology)
-        assert "USD_2023" in converted["investment"].units
-        assert converted["investment"].magnitude != tech["investment"].magnitude
+        assert "USD_2023" in str(converted.parameters["investment"].units)
+        assert (
+            converted.parameters["investment"].magnitude
+            != tech.parameters["investment"].magnitude
+        )
 
     def test_technology_to_currency_with_source(self) -> None:
         """Test currency conversion with different inflation data sources."""
@@ -144,12 +158,12 @@ class TestTechnology:
         # Convert using worldbank source
         converted_wb = tech.to_currency("EUR_2022", source="worldbank")
         assert isinstance(converted_wb, technologydata.Technology)
-        assert "EUR_2022" in converted_wb["investment"].units
+        assert "EUR_2022" in str(converted_wb.parameters["investment"].units)
 
         # Convert using IMF source
         converted_imf = tech.to_currency("EUR_2022", source="imf")
         assert isinstance(converted_imf, technologydata.Technology)
-        assert "EUR_2022" in converted_imf["investment"].units
+        assert "EUR_2022" in str(converted_imf.parameters["investment"].units)
 
     def test_technology_to_currency_preserves_other_attributes(self) -> None:
         """Test that currency conversion preserves other parameter attributes."""
@@ -181,11 +195,20 @@ class TestTechnology:
         converted = tech.to_currency("USD_2020")
 
         # Check that non-currency attributes are preserved
-        assert converted["investment"].carrier == tech["investment"].carrier
-        assert converted["investment"].provenance == tech["investment"].provenance
-        assert converted["investment"].note == tech["investment"].note
-        assert len(converted["investment"].sources.sources) == len(
-            tech["investment"].sources.sources
+        assert (
+            converted.parameters["investment"].carrier
+            == tech.parameters["investment"].carrier
+        )
+        assert (
+            converted.parameters["investment"].provenance
+            == tech.parameters["investment"].provenance
+        )
+        assert (
+            converted.parameters["investment"].note
+            == tech.parameters["investment"].note
+        )
+        assert len(converted.parameters["investment"].sources.sources) == len(
+            tech.parameters["investment"].sources.sources
         )
 
     def test_technology_to_currency_empty_parameters(self) -> None:
@@ -233,11 +256,16 @@ class TestTechnology:
         converted = tech.to_currency("GBP_2021")
 
         # All currency parameters should be converted to GBP_2021
-        assert "GBP_2021" in converted["investment_solar"].units
-        assert "EUR_2022" not in converted["investment_solar"].units
-        assert "GBP_2021" in converted["investment_wind"].units
-        assert "USD_2020" not in converted["investment_wind"].units
+        assert "GBP_2021" in str(converted.parameters["investment_solar"].units)
+        assert "EUR_2022" not in str(converted.parameters["investment_solar"].units)
+        assert "GBP_2021" in str(converted.parameters["investment_wind"].units)
+        assert "USD_2020" not in str(converted.parameters["investment_wind"].units)
 
         # Non-currency parameter should remain unchanged
-        assert converted["capacity"].units == tech["capacity"].units
-        assert converted["capacity"].magnitude == tech["capacity"].magnitude
+        assert (
+            converted.parameters["capacity"].units == tech.parameters["capacity"].units
+        )
+        assert (
+            converted.parameters["capacity"].magnitude
+            == tech.parameters["capacity"].magnitude
+        )
