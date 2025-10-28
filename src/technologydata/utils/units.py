@@ -323,7 +323,9 @@ def patch_pint_registry_error_handling(registry: pint.registry.UnitRegistry) -> 
     # Store the original method
     original_get_name = registry.get_name
 
-    def patched_get_name(self, name: str, *args: Any, **kwargs: Any) -> Any:
+    def patched_get_name(
+        self: pint.registry.UnitRegistry, name: str, *args: Any, **kwargs: Any
+    ) -> Any:
         try:
             return original_get_name(name, *args, **kwargs)
         except pint.errors.UndefinedUnitError as e:
