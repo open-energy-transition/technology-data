@@ -63,6 +63,7 @@ class TestParameter:
             str(excinfo.value)
             == "Currency unit 'USD' is missing the currency year (e.g. USD_2020)."
         )
+        assert excinfo.type == CustomUndefinedUnitError
 
         with pytest.raises(pint.errors.UndefinedUnitError) as excinfo:
             technologydata.Parameter(
