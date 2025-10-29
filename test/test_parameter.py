@@ -547,7 +547,9 @@ class TestParameter:
         param = technologydata.Parameter(magnitude=2, units="kW")
         result = param * factor
         assert isinstance(result, technologydata.Parameter)
-        assert result.magnitude == param.magnitude * factor
+        assert result.magnitude == technologydata.Commons.safe_multiply(
+            param.magnitude, factor
+        )
         assert result.units == param.units
 
         # Test multiplication by an integer
@@ -560,12 +562,14 @@ class TestParameter:
 
     def test_parameter_div_scalar(self) -> None:
         """Test division of a Parameter by a scalar."""
-        # Test division by an float
+        # Test division by a float
         divisor = 3.0
         param = technologydata.Parameter(magnitude=6, units="kW")
         result = param / divisor
         assert isinstance(result, technologydata.Parameter)
-        assert result.magnitude == param.magnitude / divisor
+        assert result.magnitude == technologydata.Commons.safe_divide(
+            param.magnitude, divisor
+        )
         assert result.units == param.units
 
         # Test division by an integer
@@ -573,7 +577,9 @@ class TestParameter:
         param = technologydata.Parameter(magnitude=6, units="kW")
         result = param / divisor
         assert isinstance(result, technologydata.Parameter)
-        assert result.magnitude == param.magnitude / divisor
+        assert result.magnitude == technologydata.Commons.safe_divide(
+            param.magnitude, divisor
+        )
         assert result.units == param.units
 
     def test_parameter_pow_basic(self) -> None:

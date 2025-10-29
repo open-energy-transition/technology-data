@@ -6,6 +6,7 @@
 
 import typing
 
+import pandas
 import pytest
 
 import technologydata
@@ -151,3 +152,67 @@ class TestCommonsUtils:
             technologydata.FileExtensionEnum.search_file_extension_in_url(input_string)
             == expected_string
         )
+
+    def test_safe_divide_scalars(self) -> None:
+        """Check if the safe_divide works as expected."""
+        assert technologydata.Commons.safe_divide(10, 2) == 5.0
+
+    def test_safe_divide_lists(self) -> None:
+        """Check if the safe_divide works as expected."""
+        result = technologydata.Commons.safe_divide([10, 20], [2, 4])
+        print(result)
+        assert result.equals(pandas.Series([5.0, 5.0]))
+
+    def test_safe_divide_series(self) -> None:
+        """Check if the safe_divide works as expected."""
+        a = pandas.Series([10, 20])
+        b = pandas.Series([2, 4])
+        result = technologydata.Commons.safe_divide(a, b)
+        assert result.equals(pandas.Series([5.0, 5.0]))
+
+    def test_safe_divide_zero_division(self) -> None:
+        """Check if the safe_divide works as expected."""
+        with pytest.raises(ZeroDivisionError):
+            technologydata.Commons.safe_divide(1, 0)
+
+    def test_safe_multiply_scalars(self) -> None:
+        """Check if the safe_multiply works as expected."""
+        assert technologydata.Commons.safe_multiply(3, 4) == 12.0
+
+    def test_safe_multiply_lists(self) -> None:
+        """Check if the safe_multiply works as expected."""
+        result = technologydata.Commons.safe_multiply([2, 3], [4, 5])
+        assert result.equals(pandas.Series([8, 15]))
+
+    def test_safe_multiply_series(self) -> None:
+        """Check if the safe_multiply works as expected."""
+        a = pandas.Series([2, 3])
+        b = pandas.Series([4, 5])
+        result = technologydata.Commons.safe_multiply(a, b)
+        assert result.equals(pandas.Series([8, 15]))
+
+    def test_safe_len_sized(self) -> None:
+        """Check if the safe_len works as expected."""
+        assert technologydata.Commons.safe_len([1, 2, 3]) == 3
+
+    def test_safe_len_unsized(self) -> None:
+        """Check if the safe_len works as expected."""
+        assert technologydata.Commons.safe_len(42) == 1
+
+    def test_safe_loc_series(self) -> None:
+        """Check if the safe_loc works as expected."""
+        s = pandas.Series({"a": 1, "b": 2})
+        assert technologydata.Commons.safe_loc(s, "a") == 1
+
+    def test_safe_loc_scalar(self) -> None:
+        """Check if the safe_loc works as expected."""
+        assert technologydata.Commons.safe_loc(5, "a") == 5
+
+    def test_safe_iloc_series(self) -> None:
+        """Check if the safe_iloc works as expected."""
+        s = pandas.Series([10, 20, 30])
+        assert technologydata.Commons.safe_iloc(s, 1) == 20
+
+    def test_safe_iloc_scalar(self) -> None:
+        """Check if the safe_iloc works as expected."""
+        assert technologydata.Commons.safe_iloc(7, 0) == 7

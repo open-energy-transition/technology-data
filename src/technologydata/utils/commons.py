@@ -7,6 +7,7 @@
 import enum
 import logging
 import re
+import typing
 from typing import Any
 
 import dateutil
@@ -319,24 +320,85 @@ class Commons:
         Parameters
         ----------
         a : int, float, list of float, or pandas.Series
-            The numerator.
+            The first operand.
         b : int, float, list of float, or pandas.Series
-            The denominator.
+            The second operand.
 
         Returns
         -------
         Any
-            The result of the division, which may be a scalar or pandas.Series.
-
-        Raises
-        ------
-        ZeroDivisionError
-            If division by zero occurs.
+            The result of the multiplication, which may be a scalar or pandas.Series.
 
         """
         if isinstance(a, list) or isinstance(b, list):
             a = pandas.Series(a) if not isinstance(a, pandas.Series) else a
             b = pandas.Series(b) if not isinstance(b, pandas.Series) else b
-            return a / b
+            return a * b
         else:
-            return a / b
+            return a * b
+
+    @staticmethod
+    def safe_len(obj: object) -> int:
+        """
+        Return the length of a sized object, or 1 if the object is not sized.
+
+        Parameters
+        ----------
+        obj : object
+            The object whose length is to be determined.
+
+        Returns
+        -------
+        int
+            The length of the object if it is sized, otherwise 1.
+
+        """
+        return len(obj) if isinstance(obj, typing.Sized) else 1
+
+    @staticmethod
+    def safe_loc(
+        obj: int | float | list[float] | pandas.Series | typing.Any, key: str
+    ) -> typing.Any:
+        """
+        Return obj.loc[key] if obj is a pandas Series, else return obj itself.
+
+        Parameters
+        ----------
+        obj : int, float, list[float], pd.Series, or any
+            The object to index.
+        key : str
+            The key to use for indexing if obj is a Series.
+
+        Returns
+        -------
+        any
+            The indexed value or obj itself.
+
+        """
+        if isinstance(obj, pandas.Series):
+            return obj.loc[key]
+        return obj
+
+    @staticmethod
+    def safe_iloc(
+        obj: int | float | list[float] | pandas.Series | typing.Any, key: int
+    ) -> typing.Any:
+        """
+        Return obj.iloc[key] if obj is a pandas Series, else return obj itself.
+
+        Parameters
+        ----------
+        obj : int, float, list[float], pd.Series, or any
+            The object to index.
+        key : int
+            The integer position to use for indexing if obj is a Series.
+
+        Returns
+        -------
+        any
+            The indexed value or obj itself.
+
+        """
+        if isinstance(obj, pandas.Series):
+            return obj.iloc[key]
+        return obj

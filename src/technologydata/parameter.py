@@ -756,6 +756,9 @@ class Parameter(BaseModel):  # type: ignore
             if self._is_magnitude_series():
                 magnitude_series = self._get_magnitude_as_series()
                 new_magnitude = magnitude_series * other
+            elif isinstance(self.magnitude, list):
+                # Convert list to Series for multiplication
+                new_magnitude = pd.Series(self.magnitude) * other
             else:
                 new_magnitude = self.magnitude * other
 

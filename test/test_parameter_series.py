@@ -9,80 +9,13 @@ Tests the new capability of Parameter to handle both scalar values and pandas Se
 ensuring that all existing functionality works with series data.
 """
 
-import typing
-
 import pandas as pd
 import pytest
 
+import technologydata
 from technologydata.parameter import Parameter
 from technologydata.source import Source
 from technologydata.source_collection import SourceCollection
-
-
-def safe_len(obj: object) -> int:
-    """
-    Return the length of a sized object, or 1 if the object is not sized.
-
-    Parameters
-    ----------
-    obj : object
-        The object whose length is to be determined.
-
-    Returns
-    -------
-    int
-        The length of the object if it is sized, otherwise 1.
-
-    """
-    return len(obj) if isinstance(obj, typing.Sized) else 1
-
-
-def safe_loc(
-    obj: int | float | list[float] | pd.Series | typing.Any, key: str
-) -> typing.Any:
-    """
-    Return obj.loc[key] if obj is a pandas Series, else return obj itself.
-
-    Parameters
-    ----------
-    obj : int, float, list[float], pd.Series, or any
-        The object to index.
-    key : str
-        The key to use for indexing if obj is a Series.
-
-    Returns
-    -------
-    any
-        The indexed value or obj itself.
-
-    """
-    if isinstance(obj, pd.Series):
-        return obj.loc[key]
-    return obj
-
-
-def safe_iloc(
-    obj: int | float | list[float] | pd.Series | typing.Any, key: int
-) -> typing.Any:
-    """
-    Return obj.iloc[key] if obj is a pandas Series, else return obj itself.
-
-    Parameters
-    ----------
-    obj : int, float, list[float], pd.Series, or any
-        The object to index.
-    key : int
-        The integer position to use for indexing if obj is a Series.
-
-    Returns
-    -------
-    any
-        The indexed value or obj itself.
-
-    """
-    if isinstance(obj, pd.Series):
-        return obj.iloc[key]
-    return obj
 
 
 class TestParameterSeries:
@@ -101,8 +34,8 @@ class TestParameterSeries:
         assert param._is_magnitude_series()
         assert not param._is_magnitude_scalar()
         assert isinstance(param.magnitude, pd.Series)
-        assert safe_len(param.magnitude) == 3
-        assert safe_loc(param.magnitude, "2030") == 200
+        assert technologydata.Commons.safe_len(param.magnitude) == 3
+        assert technologydata.Commons.safe_loc(param.magnitude, "2030") == 200
 
     def test_parameter_creation_with_list(self) -> None:
         """Test creating a Parameter with list magnitude."""
@@ -117,7 +50,7 @@ class TestParameterSeries:
         assert param._is_magnitude_series()
         assert not param._is_magnitude_scalar()
         assert isinstance(param.magnitude, list)
-        assert safe_len(param.magnitude) == 3
+        assert technologydata.Commons.safe_len(param.magnitude) == 3
         assert param.magnitude[1] == 200.0
 
     def test_parameter_scalar_helpers(self) -> None:
@@ -129,8 +62,8 @@ class TestParameterSeries:
 
         series_version = param._get_magnitude_as_series()
         assert isinstance(series_version, pd.Series)
-        assert safe_len(series_version) == 1
-        assert safe_iloc(series_version, 0) == 150.0
+        assert technologydata.Commons.safe_len(series_version) == 1
+        assert technologydata.Commons.safe_iloc(series_version, 0) == 150.0
 
     def test_parameter_series_helpers(self) -> None:
         """Test helper methods work correctly for series values."""
@@ -142,7 +75,7 @@ class TestParameterSeries:
 
         series_version = param._get_magnitude_as_series()
         assert isinstance(series_version, pd.Series)
-        assert safe_len(series_version) == 3
+        assert technologydata.Commons.safe_len(series_version) == 3
         pd.testing.assert_series_equal(series_version, series_data)
 
     def test_parameter_to_conversion_with_series(self) -> None:
@@ -153,10 +86,10 @@ class TestParameterSeries:
         converted = param.to("EUR_2020/MW")
 
         assert isinstance(converted.magnitude, pd.Series)
-        assert safe_len(converted.magnitude) == 3
+        assert technologydata.Commons.safe_len(converted.magnitude) == 3
         pd.testing.assert_index_equal(converted.magnitude.index, series_data.index)
         assert (
-            safe_loc(converted.magnitude, "2030") == 2000000.0
+            technologydata.Commons.safe_loc(converted.magnitude, "2030") == 2000000.0
         )  # 2000 kW = 2,000,000 EUR_2020/MW
         assert converted.units == "EUR_2020 / megawatt"
 
@@ -171,9 +104,11 @@ class TestParameterSeries:
         result = param1 + param2
 
         assert isinstance(result.magnitude, pd.Series)
-        assert safe_len(result.magnitude) == 3
+        assert technologydata.Commons.safe_len(result.magnitude) == 3
         pd.testing.assert_index_equal(result.magnitude.index, series1.index)
-        assert safe_loc(result.magnitude, "2030") == 300  # 200 + 100
+        assert (
+            technologydata.Commons.safe_loc(result.magnitude, "2030") == 300
+        )  # 200 + 100
         assert result.units == "EUR_2020 / kilowatt"
 
     def test_parameter_series_arithmetic_subtraction(self) -> None:
@@ -187,9 +122,11 @@ class TestParameterSeries:
         result = param1 - param2
 
         assert isinstance(result.magnitude, pd.Series)
-        assert safe_len(result.magnitude) == 3
+        assert technologydata.Commons.safe_len(result.magnitude) == 3
         pd.testing.assert_index_equal(result.magnitude.index, series1.index)
-        assert safe_loc(result.magnitude, "2030") == 250  # 400 - 150
+        assert (
+            technologydata.Commons.safe_loc(result.magnitude, "2030") == 250
+        )  # 400 - 150
         assert result.units == "EUR_2020 / kilowatt"
 
     def test_parameter_series_scalar_multiplication(self) -> None:
@@ -200,9 +137,11 @@ class TestParameterSeries:
         result = param * 2.5
 
         assert isinstance(result.magnitude, pd.Series)
-        assert safe_len(result.magnitude) == 3
+        assert technologydata.Commons.safe_len(result.magnitude) == 3
         pd.testing.assert_index_equal(result.magnitude.index, series_data.index)
-        assert safe_loc(result.magnitude, "2030") == 500  # 200 * 2.5
+        assert (
+            technologydata.Commons.safe_loc(result.magnitude, "2030") == 500
+        )  # 200 * 2.5
         assert result.units == "EUR_2020 / kilowatt"
 
     def test_parameter_series_scalar_division(self) -> None:
@@ -213,9 +152,11 @@ class TestParameterSeries:
         result = param / 2.0
 
         assert isinstance(result.magnitude, pd.Series)
-        assert safe_len(result.magnitude) == 3
+        assert technologydata.Commons.safe_len(result.magnitude) == 3
         pd.testing.assert_index_equal(result.magnitude.index, series_data.index)
-        assert safe_loc(result.magnitude, "2030") == 100  # 200 / 2.0
+        assert (
+            technologydata.Commons.safe_loc(result.magnitude, "2030") == 100
+        )  # 200 / 2.0
         assert result.units == "EUR_2020 / kilowatt"
 
     def test_parameter_series_power(self) -> None:
@@ -226,9 +167,9 @@ class TestParameterSeries:
         result = param**2
 
         assert isinstance(result.magnitude, pd.Series)
-        assert safe_len(result.magnitude) == 3
+        assert technologydata.Commons.safe_len(result.magnitude) == 3
         pd.testing.assert_index_equal(result.magnitude.index, series_data.index)
-        assert safe_loc(result.magnitude, "2030") == 9  # 3^2
+        assert technologydata.Commons.safe_loc(result.magnitude, "2030") == 9  # 3^2
         assert result.units == "meter ** 2"
 
     def test_parameter_mixed_scalar_series_addition(self) -> None:
@@ -242,8 +183,10 @@ class TestParameterSeries:
         result = scalar_param + series_param
 
         assert isinstance(result.magnitude, pd.Series)
-        assert safe_len(result.magnitude) == 3
-        assert safe_loc(result.magnitude, "2030") == 200  # 100 + 100
+        assert technologydata.Commons.safe_len(result.magnitude) == 3
+        assert (
+            technologydata.Commons.safe_loc(result.magnitude, "2030") == 200
+        )  # 100 + 100
 
     def test_parameter_series_currency_conversion(self) -> None:
         """Test currency conversion with series magnitude."""
@@ -255,7 +198,7 @@ class TestParameterSeries:
         try:
             converted = param.to_currency("USD_2020", "USA")
             assert isinstance(converted.magnitude, pd.Series)
-            assert safe_len(converted.magnitude) == 3
+            assert technologydata.Commons.safe_len(converted.magnitude) == 3
             pd.testing.assert_index_equal(converted.magnitude.index, series_data.index)
             assert "USD_2020" in str(converted.units)
         except Exception:
@@ -272,10 +215,12 @@ class TestParameterSeries:
         converted = param.change_heating_value("HHV")
 
         assert isinstance(converted.magnitude, pd.Series)
-        assert safe_len(converted.magnitude) == 3
+        assert technologydata.Commons.safe_len(converted.magnitude) == 3
         pd.testing.assert_index_equal(converted.magnitude.index, series_data.index)
         # Check that conversion actually happened (HHV should be higher than LHV)
-        assert safe_loc(converted.magnitude, "2030") > safe_loc(param.magnitude, "2030")
+        assert technologydata.Commons.safe_loc(
+            converted.magnitude, "2030"
+        ) > technologydata.Commons.safe_loc(param.magnitude, "2030")
         assert (
             converted.heating_value == "higher_heating_value"
         )  # pint uses canonical names
@@ -302,7 +247,7 @@ class TestParameterSeries:
         assert result.carrier == "electricity"  # pint uses canonical names
         assert result.provenance == "test_data"
         assert result.note == "Test note"
-        assert safe_len(result.sources.sources) == 1
+        assert technologydata.Commons.safe_len(result.sources.sources) == 1
         assert result.sources.sources[0].title == "Test Source"
 
     def test_parameter_series_different_lengths(self) -> None:
@@ -317,17 +262,19 @@ class TestParameterSeries:
         result = param1 + param2
 
         assert isinstance(result.magnitude, pd.Series)
-        assert safe_len(result.magnitude) == 2
-        assert safe_loc(result.magnitude, "2020") == 150  # 100 + 50
+        assert technologydata.Commons.safe_len(result.magnitude) == 2
         assert (
-            safe_loc(result.magnitude, "2030") == 300
+            technologydata.Commons.safe_loc(result.magnitude, "2020") == 150
+        )  # 100 + 50
+        assert (
+            technologydata.Commons.safe_loc(result.magnitude, "2030") == 300
         )  # 200 + 100    def test_parameter_empty_series(self):
         """Test parameter with empty series."""
         empty_series = pd.Series([], dtype=float)
         param = Parameter(magnitude=empty_series, units="EUR_2020/kW")
 
         assert param._is_magnitude_series()
-        assert safe_len(param.magnitude) == 0
+        assert technologydata.Commons.safe_len(param.magnitude) == 0
 
     def test_parameter_single_element_series(self) -> None:
         """Test parameter with single-element series."""
@@ -335,5 +282,5 @@ class TestParameterSeries:
         param = Parameter(magnitude=single_series, units="EUR_2020/kW")
 
         assert param._is_magnitude_series()
-        assert safe_len(param.magnitude) == 1
-        assert safe_iloc(param.magnitude, 0) == 42.0
+        assert technologydata.Commons.safe_len(param.magnitude) == 1
+        assert technologydata.Commons.safe_iloc(param.magnitude, 0) == 42.0
