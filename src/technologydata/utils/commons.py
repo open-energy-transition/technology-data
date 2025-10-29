@@ -10,6 +10,7 @@ import re
 from typing import Any
 
 import dateutil
+import pandas
 
 logger = logging.getLogger(__name__)
 
@@ -267,3 +268,75 @@ class Commons:
         # Lower case the string
         replaced = replaced.casefold()
         return replaced
+
+    @staticmethod
+    def safe_divide(
+        a: int | float | list[float] | pandas.Series,
+        b: int | float | list[float] | pandas.Series,
+    ) -> Any:
+        """
+        Safely divide two operands, converting to pandas Series if needed.
+
+        If either operand is a list or pandas Series, both are converted to Series before division.
+        Otherwise, standard division is performed.
+
+        Parameters
+        ----------
+        a : int, float, list of float, or pandas.Series
+            The numerator.
+        b : int, float, list of float, or pandas.Series
+            The denominator.
+
+        Returns
+        -------
+        Any
+            The result of the division, which may be a scalar or pandas.Series.
+
+        Raises
+        ------
+        ZeroDivisionError
+            If division by zero occurs.
+
+        """
+        if isinstance(a, list) or isinstance(b, list):
+            a = pandas.Series(a) if not isinstance(a, pandas.Series) else a
+            b = pandas.Series(b) if not isinstance(b, pandas.Series) else b
+            return a / b
+        else:
+            return a / b
+
+    @staticmethod
+    def safe_multiply(
+        a: int | float | list[float] | pandas.Series,
+        b: int | float | list[float] | pandas.Series,
+    ) -> Any:
+        """
+        Safely multiply two operands, converting to pandas Series if needed.
+
+        If either operand is a list or pandas Series, both are converted to Series before multiplication.
+        Otherwise, standard multiplication is performed.
+
+        Parameters
+        ----------
+        a : int, float, list of float, or pandas.Series
+            The numerator.
+        b : int, float, list of float, or pandas.Series
+            The denominator.
+
+        Returns
+        -------
+        Any
+            The result of the division, which may be a scalar or pandas.Series.
+
+        Raises
+        ------
+        ZeroDivisionError
+            If division by zero occurs.
+
+        """
+        if isinstance(a, list) or isinstance(b, list):
+            a = pandas.Series(a) if not isinstance(a, pandas.Series) else a
+            b = pandas.Series(b) if not isinstance(b, pandas.Series) else b
+            return a / b
+        else:
+            return a / b

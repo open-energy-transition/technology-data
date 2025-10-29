@@ -61,6 +61,30 @@ def safe_loc(
     return obj
 
 
+def safe_iloc(
+    obj: int | float | list[float] | pd.Series | typing.Any, key: int
+) -> typing.Any:
+    """
+    Return obj.iloc[key] if obj is a pandas Series, else return obj itself.
+
+    Parameters
+    ----------
+    obj : int, float, list[float], pd.Series, or any
+        The object to index.
+    key : int
+        The integer position to use for indexing if obj is a Series.
+
+    Returns
+    -------
+    any
+        The indexed value or obj itself.
+
+    """
+    if isinstance(obj, pd.Series):
+        return obj.iloc[key]
+    return obj
+
+
 class TestParameterSeries:
     """Test Parameter class with pandas Series magnitude values."""
 
@@ -106,7 +130,7 @@ class TestParameterSeries:
         series_version = param._get_magnitude_as_series()
         assert isinstance(series_version, pd.Series)
         assert safe_len(series_version) == 1
-        assert series_version.iloc[0] == 150.0
+        assert safe_iloc(series_version, 0) == 150.0
 
     def test_parameter_series_helpers(self) -> None:
         """Test helper methods work correctly for series values."""
@@ -312,4 +336,4 @@ class TestParameterSeries:
 
         assert param._is_magnitude_series()
         assert safe_len(param.magnitude) == 1
-        assert param.magnitude.iloc[0] == 42.0
+        assert safe_iloc(param.magnitude, 0) == 42.0

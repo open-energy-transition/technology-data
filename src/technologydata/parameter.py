@@ -423,8 +423,8 @@ class Parameter(BaseModel):  # type: ignore
 
         for dimension in self._pint_carrier.dimensionality.keys():
             if dimension in lhvs and dimension in hhvs:
-                hv_ratios[dimension] = (
-                    hhvs[dimension].magnitude / lhvs[dimension].magnitude
+                hv_ratios[dimension] = technologydata.Commons.safe_divide(
+                    hhvs[dimension].magnitude, lhvs[dimension].magnitude
                 )
             else:
                 logger.error(
