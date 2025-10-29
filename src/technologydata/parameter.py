@@ -123,11 +123,11 @@ class Parameter(BaseModel):  # type: ignore
 
     def _is_magnitude_series(self) -> bool:
         """Check if magnitude is a pandas Series or list."""
-        return isinstance(self.magnitude, (pd.Series, list))
+        return isinstance(self.magnitude, pd.Series | list)
 
     def _is_magnitude_scalar(self) -> bool:
         """Check if magnitude is a scalar value."""
-        return isinstance(self.magnitude, (int, float))
+        return isinstance(self.magnitude, int | float)
 
     def _get_magnitude_as_series(self) -> pd.Series:
         """Convert magnitude to pandas Series if it's not already."""
@@ -161,7 +161,7 @@ class Parameter(BaseModel):  # type: ignore
 
             if self._is_magnitude_series():
                 # For series data, create a quantity with array magnitude
-                magnitude_array = self._get_magnitude_as_series().values
+                magnitude_array = self._get_magnitude_as_series().to_numpy()
                 self._pint_quantity = technologydata.ureg.Quantity(
                     magnitude_array, self.units
                 )
@@ -171,7 +171,7 @@ class Parameter(BaseModel):  # type: ignore
                 )
         else:
             if self._is_magnitude_series():
-                magnitude_array = self._get_magnitude_as_series().values
+                magnitude_array = self._get_magnitude_as_series().to_numpy()
                 self._pint_quantity = technologydata.ureg.Quantity(magnitude_array)
             else:
                 self._pint_quantity = technologydata.ureg.Quantity(self.magnitude)
@@ -202,7 +202,7 @@ class Parameter(BaseModel):  # type: ignore
         ) != technologydata.extract_currency_units(units):
             raise NotImplementedError(
                 "Currency conversion is not supported in the `to` method. "
-                "Use `change_currency` for currency conversions."
+                "Use `to_currency` for currency conversions."
             )
 
         self._pint_quantity = self._pint_quantity.to(units)
@@ -643,11 +643,14 @@ class Parameter(BaseModel):  # type: ignore
         """
         self._update_pint_attributes()
 
-        if isinstance(other, (int, float)):
+        if isinstance(other, int | float):
             # Handle series vs scalar magnitude
             if self._is_magnitude_series():
                 magnitude_series = self._get_magnitude_as_series()
                 new_magnitude = magnitude_series / other
+            elif isinstance(self.magnitude, list):
+                # Convert list to Series for division
+                new_magnitude = pd.Series(self.magnitude) / other
             else:
                 new_magnitude = self.magnitude / other
 
@@ -748,7 +751,7 @@ class Parameter(BaseModel):  # type: ignore
         """
         self._update_pint_attributes()
 
-        if isinstance(other, (int, float)):
+        if isinstance(other, int | float):
             # Handle series vs scalar magnitude
             if self._is_magnitude_series():
                 magnitude_series = self._get_magnitude_as_series()
