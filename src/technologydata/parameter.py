@@ -119,7 +119,9 @@ class Parameter(BaseModel):  # type: ignore
             )
         if "magnitude" in data and isinstance(data["magnitude"], pd.Series):
             if not all(isinstance(x, float) for x in data["magnitude"]):
-                raise TypeError("All elements of the magnitude series should be floats")
+                raise TypeError(
+                    "All elements of the magnitude series should be floats."
+                )
 
         super().__init__(**data)
         self._update_pint_attributes()

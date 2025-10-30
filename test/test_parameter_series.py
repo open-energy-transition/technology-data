@@ -20,6 +20,23 @@ from technologydata.source_collection import SourceCollection
 class TestParameterSeries:
     """Test Parameter class with pandas Series magnitude values."""
 
+    def test_parameter_creation_with_series_of_strings(self) -> None:
+        """Test creating a Parameter with pandas Series magnitude of integers."""
+        series_data = pd.Series([100, 200, 300], index=["2020", "2030", "2040"])
+
+        with pytest.raises(TypeError) as excinfo:
+            Parameter(
+                magnitude=series_data,
+                units="EUR_2020/kW",
+                provenance="test",
+                note="Test parameter with series",
+            )
+        assert (
+            str(excinfo.value)
+            == "All elements of the magnitude series should be floats."
+        )
+        assert excinfo.type == TypeError
+
     def test_parameter_creation_with_series(self) -> None:
         """Test creating a Parameter with pandas Series magnitude."""
         series_data = pd.Series([100.0, 200.0, 300.0], index=["2020", "2030", "2040"])
