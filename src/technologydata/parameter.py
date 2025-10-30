@@ -54,7 +54,7 @@ class Parameter(BaseModel):  # type: ignore
 
     Attributes
     ----------
-    magnitude : int | float | list[float] | pd.Series
+    magnitude : int | float | pd.Series(float)
         The numerical value(s) of the parameter. Can be a single value or a series of values.
     units : Optional[str]
         The unit of the parameter.
@@ -74,7 +74,7 @@ class Parameter(BaseModel):  # type: ignore
     model_config = ConfigDict(arbitrary_types_allowed=True)
 
     magnitude: Annotated[
-        int | float | list[float] | pd.Series,
+        int | float | pd.Series,
         Field(
             description="The numerical value(s) of the parameter. Can be a single value or a series of values."
         ),
@@ -103,7 +103,7 @@ class Parameter(BaseModel):  # type: ignore
     _pint_heating_value: pint.Unit = PrivateAttr(None)
 
     def __init__(
-        self, **data: float | str | list[float] | pd.Series | SourceCollection | None
+        self, **data: float | str | pd.Series | SourceCollection | None
     ) -> None:
         """Initialize Parameter and update pint attributes."""
         # pint uses canonical names for units, carriers, and heating values
@@ -117,13 +117,16 @@ class Parameter(BaseModel):  # type: ignore
             data["heating_value"] = str(
                 technologydata.hvreg.Unit(data["heating_value"])
             )
+        if "magnitude" in data and isinstance(data["magnitude"], pd.Series):
+            if not all(isinstance(x, float) for x in data["magnitude"]):
+                raise TypeError("All elements of the magnitude series should be floats")
 
         super().__init__(**data)
         self._update_pint_attributes()
 
     def _is_magnitude_series(self) -> bool:
-        """Check if magnitude is a pandas Series or list."""
-        return isinstance(self.magnitude, pd.Series | list)
+        """Check if magnitude is a pandas Series."""
+        return isinstance(self.magnitude, pd.Series)
 
     def _is_magnitude_scalar(self) -> bool:
         """Check if magnitude is a scalar value."""
@@ -133,8 +136,6 @@ class Parameter(BaseModel):  # type: ignore
         """Convert magnitude to pandas Series if it's not already."""
         if isinstance(self.magnitude, pd.Series):
             return self.magnitude
-        elif isinstance(self.magnitude, list):
-            return pd.Series(self.magnitude)
         else:
             return pd.Series([self.magnitude])
 
@@ -423,8 +424,8 @@ class Parameter(BaseModel):  # type: ignore
 
         for dimension in self._pint_carrier.dimensionality.keys():
             if dimension in lhvs and dimension in hhvs:
-                hv_ratios[dimension] = technologydata.Commons.safe_divide(
-                    hhvs[dimension].magnitude, lhvs[dimension].magnitude
+                hv_ratios[dimension] = (
+                    hhvs[dimension].magnitude / lhvs[dimension].magnitude
                 )
             else:
                 logger.error(
@@ -648,9 +649,6 @@ class Parameter(BaseModel):  # type: ignore
             if self._is_magnitude_series():
                 magnitude_series = self._get_magnitude_as_series()
                 new_magnitude = magnitude_series / other
-            elif isinstance(self.magnitude, list):
-                # Convert list to Series for division
-                new_magnitude = pd.Series(self.magnitude) / other
             else:
                 new_magnitude = self.magnitude / other
 
@@ -756,9 +754,6 @@ class Parameter(BaseModel):  # type: ignore
             if self._is_magnitude_series():
                 magnitude_series = self._get_magnitude_as_series()
                 new_magnitude = magnitude_series * other
-            elif isinstance(self.magnitude, list):
-                # Convert list to Series for multiplication
-                new_magnitude = pd.Series(self.magnitude) * other
             else:
                 new_magnitude = self.magnitude * other
 
