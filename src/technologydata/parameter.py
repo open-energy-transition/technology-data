@@ -55,7 +55,7 @@ class Parameter(BaseModel):  # type: ignore
     Attributes
     ----------
     magnitude : int | float | pd.Series(float)
-        The numerical value(s) of the parameter. Can be a single value or a series of values.
+        The numerical value(s) of the parameter. Can be a single value or an index-series of values.
     units : Optional[str]
         The unit of the parameter.
     carrier : Optional[str]
