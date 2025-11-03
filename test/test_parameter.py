@@ -61,7 +61,18 @@ class TestParameter:
             )
         assert (
             str(excinfo.value)
-            == "Currency unit 'USD' is missing the currency year (e.g. USD_2020)."
+            == "Currency unit 'USD' is missing the 4-digit currency year (e.g. USD_2020)."
+        )
+        assert excinfo.type == CustomUndefinedUnitError
+
+        with pytest.raises(CustomUndefinedUnitError) as excinfo:
+            technologydata.Parameter(
+                magnitude=1000,
+                units="USD_20/kW",
+            )
+        assert (
+            str(excinfo.value)
+            == "Currency unit 'USD' is missing the 4-digit currency year (e.g. USD_2020)."
         )
         assert excinfo.type == CustomUndefinedUnitError
 
