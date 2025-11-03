@@ -35,7 +35,7 @@ class TestParameterSeries:
             str(excinfo.value)
             == "All elements of the magnitude series should be floats."
         )
-        assert excinfo.type == TypeError
+        assert excinfo.type is TypeError
 
     def test_parameter_creation_with_series(self) -> None:
         """Test creating a Parameter with pandas Series magnitude."""
