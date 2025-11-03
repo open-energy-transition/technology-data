@@ -421,7 +421,7 @@ class CustomUndefinedUnitError(pint.errors.UndefinedUnitError):  # type: ignore
         # Provide specific error message for currency units
         if currency_without_year:
             element = currency_without_year[0]
-            return f"Currency unit '{element}' is missing the currency year (e.g. {element}_2020)."
+            return f"Currency unit '{element}' is missing the 4-digit currency year (e.g. {element}_2020)."
 
         # Fallback to parent class error message
         return super().__str__()  # type: ignore
