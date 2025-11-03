@@ -2,38 +2,7 @@
 #
 # SPDX-License-Identifier: MIT
 
-"""
-Parameter class for encapsulating a value, its unit, provenance, notes, and sources.
-
-Examples
---------
->>> from technologydata.source import Source
->>> import pandas as pd
->>> uv = pint.Quantity(1000, "EUR_2020/kW")
->>> src = Source(name="Example Source", authors="some authors", url="http://example.com")
->>> param = Parameter(quantity=uv, provenance="literature", note="Estimated", sources=[src])
-
-Series Support
---------------
->>> # Create parameter with time series data
->>> years = pd.Series([2020, 2025, 2030])
->>> costs = pd.Series([1000, 800, 600], index=years)
->>> param_series = Parameter(magnitude=costs, units="USD_2020/kW")
->>> print(param_series.magnitude)
-2020    1000
-2025     800
-2030     600
-dtype: int64
-
->>> # Operations work element-wise on series
->>> doubled = param_series * 2
->>> print(doubled.magnitude)
-2020    2000
-2025    1600
-2030    1200
-dtype: int64
-
-"""
+"""Parameter class for encapsulating a value, its unit, provenance, notes, and sources."""
 
 import logging
 from typing import Annotated, Self
