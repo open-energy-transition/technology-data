@@ -13,6 +13,7 @@ import pytest
 
 import technologydata
 from technologydata.constants import EnergyDensityLHV
+from technologydata.utils.units import CustomUndefinedUnitError
 
 path_cwd = pathlib.Path.cwd()
 
@@ -53,6 +54,39 @@ class TestParameter:
 
     def test_parameter_invalid_units(self) -> None:
         """Test that an error is raised when invalid units are provided."""
+        with pytest.raises(CustomUndefinedUnitError) as excinfo:
+            technologydata.Parameter(
+                magnitude=1000,
+                units="USD",
+            )
+        assert (
+            str(excinfo.value)
+            == "Currency unit 'USD' is missing the 4-digit currency year (e.g. USD_2020)."
+        )
+        assert excinfo.type == CustomUndefinedUnitError
+
+        with pytest.raises(CustomUndefinedUnitError) as excinfo:
+            technologydata.Parameter(
+                magnitude=1000,
+                units="USD_20/kW",
+            )
+        assert (
+            str(excinfo.value)
+            == "Currency unit 'USD' is missing the 4-digit currency year (e.g. USD_2020)."
+        )
+        assert excinfo.type == CustomUndefinedUnitError
+
+        with pytest.raises(CustomUndefinedUnitError) as excinfo:
+            technologydata.Parameter(
+                magnitude=1000,
+                units="abc_USD_20/kW",
+            )
+        assert (
+            str(excinfo.value)
+            == "Currency unit 'USD' is missing the 4-digit currency year (e.g. USD_2020)."
+        )
+        assert excinfo.type == CustomUndefinedUnitError
+
         with pytest.raises(pint.errors.UndefinedUnitError) as excinfo:
             technologydata.Parameter(
                 magnitude=1000,
@@ -558,7 +592,7 @@ class TestParameter:
 
     def test_parameter_div_scalar(self) -> None:
         """Test division of a Parameter by a scalar."""
-        # Test division by a float
+        # Test division by an float
         divisor = 3.0
         param = technologydata.Parameter(magnitude=6, units="kW")
         result = param / divisor
