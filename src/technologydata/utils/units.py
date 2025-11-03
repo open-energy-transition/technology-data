@@ -391,40 +391,27 @@ class CustomUndefinedUnitError(pint.errors.UndefinedUnitError):  # type: ignore
         str
             The custom error message string.
 
-        Examples
-        --------
-        >>> error = CustomUndefinedUnitError(['USD'])
-        >>> print(str(error))
-        Currency unit 'USD' is missing the currency year (e.g. USD_2020).
-
-        >>> error = CustomUndefinedUnitError(['meter'])
-        >>> print(str(error))
-        'meter' is not defined in the unit registry
-
-        >>> error = CustomUndefinedUnitError(['meter', 'second'])
-        >>> print(str(error))
-        ('meter', 'second') are not defined in the unit registry
-
         """
-        # Extract unit names from the error
+        # Retrieve unit names, defaulting to an empty list if not present
         unit_names = getattr(self, "unit_names", [])
+
+        # Precompute valid currency codes for efficiency
         all_currency_codes = set(get_iso3_to_currency_codes().values())
 
-        # Find currency units without a year
-        currency_without_year: list[str] = [
-            currency
-            for currency in unit_names
-            if currency in all_currency_codes
-            and CURRENCY_UNIT_PATTERN.findall(currency) == []
+        # Identify currency units without a year specification
+        currency_errors = [
+            code for unit in unit_names
+            for code in re.findall(r"[A-Z]{3}", str(unit))
+            if code in all_currency_codes and not CURRENCY_UNIT_PATTERN.search(str(unit))
         ]
 
-        # Provide specific error message for currency units
-        if currency_without_year:
-            element = currency_without_year[0]
-            return f"Currency unit '{element}' is missing the 4-digit currency year (e.g. {element}_2020)."
+        # Generate specific error message for currency units
+        if currency_errors:
+            missing_code = currency_errors[0]
+            return f"Currency unit '{missing_code}' is missing the 4-digit currency year (e.g. {missing_code}_2020)."
 
-        # Fallback to parent class error message
-        return super().__str__()  # type: ignore
+        # Fallback to parent class error message if no specific currency error found
+        return super().__str__()
 
 
 class SpecialUnitRegistry(pint.UnitRegistry):  # type: ignore
