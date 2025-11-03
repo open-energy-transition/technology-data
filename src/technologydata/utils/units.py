@@ -400,9 +400,11 @@ class CustomUndefinedUnitError(pint.errors.UndefinedUnitError):  # type: ignore
 
         # Identify currency units without a year specification
         currency_errors = [
-            code for unit in unit_names
+            code
+            for unit in unit_names
             for code in re.findall(r"[A-Z]{3}", str(unit))
-            if code in all_currency_codes and not CURRENCY_UNIT_PATTERN.search(str(unit))
+            if code in all_currency_codes
+            and not CURRENCY_UNIT_PATTERN.search(str(unit))
         ]
 
         # Generate specific error message for currency units
@@ -411,7 +413,7 @@ class CustomUndefinedUnitError(pint.errors.UndefinedUnitError):  # type: ignore
             return f"Currency unit '{missing_code}' is missing the 4-digit currency year (e.g. {missing_code}_2020)."
 
         # Fallback to parent class error message if no specific currency error found
-        return super().__str__()
+        return super().__str__()  # type: ignore
 
 
 class SpecialUnitRegistry(pint.UnitRegistry):  # type: ignore
