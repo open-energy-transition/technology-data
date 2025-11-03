@@ -400,9 +400,11 @@ class CustomUndefinedUnitError(pint.errors.UndefinedUnitError):  # type: ignore
 
         # Identify currency units without a year specification
         currency_errors = [
-            code for unit in unit_names
+            code
+            for unit in unit_names
             for code in re.findall(r"[A-Z]{3}", str(unit))
-            if code in all_currency_codes and not CURRENCY_UNIT_PATTERN.search(str(unit))
+            if code in all_currency_codes
+            and not CURRENCY_UNIT_PATTERN.search(str(unit))
         ]
 
         # Generate specific error message for currency units
