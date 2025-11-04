@@ -5,6 +5,7 @@
 
 import inspect
 import logging
+import typing
 from abc import abstractmethod
 from collections.abc import Callable
 from typing import Annotated, Self
@@ -37,23 +38,19 @@ class GrowthModel(BaseModel):
         list[tuple[float, float]],
         Field(
             description="Data points (x, y) for fitting the model, where f(x) = y.",
-            default=list(),
+            default=list,
         ),
     ]
 
-    # TODO: should each implementation of the `function` be a classmethod?
-    # TODO: We are not using the same signature for `function` in the subclasses, this is a bit ugly, can we do better? mypy is also complaining (hence the type: ignore[override] in subclasses)
     @abstractmethod
-    def function(self, x: float, x0: float, **kwargs: dict[str, float]) -> float:
-        """Function that represents the growth model."""  # noqa: D401
+    def function(self, *args: typing.Any, **kwargs: typing.Any) -> float:
+        """Represent the growth model function."""
         pass
 
     @property
     def model_parameters(self) -> list[str]:
         """Return the set of model parameters that have been provided (are not None)."""
-        return [
-            p for p in inspect.signature(self.function).parameters.keys() if p != "x"
-        ]
+        return [f for f in type(self).model_fields.keys() if f != "data_points"]
 
     @property
     def provided_parameters(self) -> list[str]:
@@ -222,11 +219,11 @@ class LinearGrowth(GrowthModel):
         Field(description="Starting value for the linear function.", default=None),
     ]
 
-    def function(self, x: float, x0: float, m: float, A: float) -> float:  # type: ignore[override]
+    def function(self, x: float, x0: float, m: float, a: float) -> float:
         """
         Linear function for the growth model.
 
-        f(x) = m * (x - x0) + A
+        f(x) = m * (x - x0) + a
 
         Parameters
         ----------
@@ -236,7 +233,7 @@ class LinearGrowth(GrowthModel):
             The reference x-value (e.g., starting year) for the linear function.
         m : float, optional
             The slope of the linear function.
-        A : float, optional
+        a : float, optional
             The constant offset of the linear function.
 
         Returns
@@ -245,7 +242,7 @@ class LinearGrowth(GrowthModel):
             The result of the linear function evaluation at x.
 
         """
-        return m * (x - x0) + A
+        return m * (x - x0) + a
 
 
 class ExponentialGrowth(GrowthModel):
@@ -271,7 +268,7 @@ class ExponentialGrowth(GrowthModel):
         Field(description="Growth rate for the exponential function.", default=None),
     ]
 
-    def function(self, x: float, x0: float, A: float, m: float, k: float) -> float:  # type: ignore[override]
+    def function(self, x: float, x0: float, A: float, m: float, k: float) -> float:
         """
         Exponential function for the growth model.
 
