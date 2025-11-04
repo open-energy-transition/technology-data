@@ -36,14 +36,11 @@ class GrowthModel(BaseModel):
 
     data_points: Annotated[
         list[tuple[float, float]],
-        Field(
-            description="Data points (x, y) for fitting the model, where f(x) = y.",
-            default=list,
-        ),
-    ]
+        Field(description="Data points (x, y) for fitting the model, where f(x) = y."),
+    ] = list()
 
     @abstractmethod
-    def function(self, *args: typing.Any, **kwargs: typing.Any) -> float:
+    def function(self, *args: typing.Any, **kwargs: typing.Any) -> float | np.ndarray:
         """Represent the growth model function."""
         pass
 
@@ -207,19 +204,20 @@ class LinearGrowth(GrowthModel):
         float | None,
         Field(
             description="The reference x-value (e.g., starting year) for the linear function.",
-            default=None,
         ),
-    ]
+    ] = None
     m: Annotated[
         float | None,
-        Field(description="Annual growth rate for the linear function.", default=None),
-    ]
+        Field(description="Annual growth rate for the linear function."),
+    ] = None
     A: Annotated[
         float | None,
-        Field(description="Starting value for the linear function.", default=None),
-    ]
+        Field(description="Starting value for the linear function."),
+    ] = None
 
-    def function(self, x: float, x0: float, m: float, A: float) -> float:
+    def function(
+        self, x: float | np.ndarray, x0: float, m: float, A: float
+    ) -> float | np.ndarray:
         """
         Linear function for the growth model.
 
@@ -227,8 +225,8 @@ class LinearGrowth(GrowthModel):
 
         Parameters
         ----------
-        x : float
-            The input value on which to evaluate the function, e.g. a year '2025'.
+        x : float | numpy Array
+            The input value(s) on which to evaluate the function, e.g. a year '2025'.
         x0 : float
             The reference x-value (e.g., starting year) for the linear function.
         m : float, optional
@@ -238,8 +236,8 @@ class LinearGrowth(GrowthModel):
 
         Returns
         -------
-        float
-            The result of the linear function evaluation at x.
+        float | numpy Array
+            The result(s) of the linear function evaluation at x.
 
         """
         return m * (x - x0) + A
@@ -252,23 +250,24 @@ class ExponentialGrowth(GrowthModel):
         float | None,
         Field(
             description="The reference x-value (e.g., starting year) for the exponential function.",
-            default=None,
         ),
-    ]
+    ] = None
     A: Annotated[
         float | None,
-        Field(description="Initial value for the exponential function.", default=None),
-    ]
+        Field(description="Initial value for the exponential function."),
+    ] = None
     m: Annotated[
         float | None,
-        Field(description="The multiplier for the exponential function.", default=None),
-    ]
+        Field(description="The multiplier for the exponential function."),
+    ] = None
     k: Annotated[
         float | None,
-        Field(description="Growth rate for the exponential function.", default=None),
-    ]
+        Field(description="Growth rate for the exponential function."),
+    ] = None
 
-    def function(self, x: float, x0: float, A: float, m: float, k: float) -> float:
+    def function(
+        self, x: float | np.ndarray, x0: float, A: float, m: float, k: float
+    ) -> float | np.ndarray:
         """
         Exponential function for the growth model.
 
@@ -276,8 +275,8 @@ class ExponentialGrowth(GrowthModel):
 
         Parameters
         ----------
-        x : float
-            The input value on which to evaluate the function, e.g. a year '2025'.
+        x : float | numpy Array
+            The input value(s) on which to evaluate the function, e.g. a year '2025'.
         x0 : float
             The reference x-value (e.g., starting year) for the exponential function.
         A : float
@@ -289,11 +288,11 @@ class ExponentialGrowth(GrowthModel):
 
         Returns
         -------
-        float
-            The result of the exponential function evaluation at x.
+        float | numpy Array
+            The result(s) of the exponential function evaluation at x.
 
         """
-        return float(A + m * np.exp(k * (x - x0)))
+        return A + m * np.exp(k * (x - x0))
 
 
 class GeneralLogisticGrowth(GrowthModel):
@@ -303,55 +302,48 @@ class GeneralLogisticGrowth(GrowthModel):
         float | None,
         Field(
             description="The x-value of the sigmoid's midpoint (inflection point/midpoint year).",
-            default=None,
         ),
-    ]
+    ] = None
     A: Annotated[
         float | None,
         Field(
             description="The lower horizontal asymptote of the logistic function.",
-            default=None,
         ),
-    ]
+    ] = None
     K: Annotated[
         float | None,
         Field(
             description="The upper horizontal asymptote of the logistic function for C=1.",
-            default=None,
         ),
-    ]
+    ] = None
     B: Annotated[
         float | None,
         Field(
             description="The growth rate of the logistic function.",
-            default=None,
         ),
-    ]
+    ] = None
     Q: Annotated[
         float | None,
         Field(
             description="Parameter related to the value of f(0).",
-            default=None,
         ),
-    ]
+    ] = None
     C: Annotated[
         float | None,
         Field(
             description="Parameter related to the upper horizontal asymptote, often set to 1.",
-            default=None,
         ),
-    ]
+    ] = None
     nu: Annotated[
         float | None,
         Field(
             description="Parameter affecting near which asymptote the maximum growth occurs.",
-            default=None,
         ),
-    ]
+    ] = None
 
     def function(
         self,
-        x: float,
+        x: float | np.ndarray,
         x0: float,
         A: float,
         K: float,
@@ -359,7 +351,7 @@ class GeneralLogisticGrowth(GrowthModel):
         Q: float,
         C: float,
         nu: float,
-    ) -> float:
+    ) -> float | np.ndarray:
         """
         Generalized logistic function for the growth model.
 
@@ -367,8 +359,8 @@ class GeneralLogisticGrowth(GrowthModel):
 
         Parameters
         ----------
-        x : float
-            The input value on which to evaluate the function, e.g. a year '2025'.
+        x : float | numpy Array
+            The input value(s) on which to evaluate the function, e.g. a year '2025'.
         x0 : float
             The x-value of the sigmoid's midpoint (inflection point).
         A : float
@@ -387,11 +379,11 @@ class GeneralLogisticGrowth(GrowthModel):
 
         Returns
         -------
-        float
-            The result of the generalized logistic function evaluation at x.
+        float | numpy Array
+            The result(s) of the generalized logistic function evaluation at x.
 
         """
-        return float(A + (K - A) / (C + Q * np.exp(-B * (x - x0))) ** (1 / nu))
+        return A + (K - A) / (C + Q * np.exp(-B * (x - x0))) ** (1.0 / nu)
 
 
 class LogisticGrowth(GrowthModel):
@@ -401,31 +393,30 @@ class LogisticGrowth(GrowthModel):
         float | None,
         Field(
             description="The x-value of the sigmoid's midpoint (inflection point/midpoint year).",
-            default=None,
         ),
-    ]
+    ] = None
     A: Annotated[
         float | None,
         Field(
             description="The lower horizontal asymptote of the logistic function.",
         ),
-    ]
+    ] = None
     L: Annotated[
         float | None,
         Field(
             description="Carrying capacity of the logistic function.",
-            default=None,
         ),
-    ]
+    ] = None
     k: Annotated[
         float | None,
         Field(
             description="Growth rate of the logistic function.",
-            default=None,
         ),
-    ]
+    ] = None
 
-    def function(self, x: float, x0: float, A: float, L: float, k: float) -> float:
+    def function(
+        self, x: float | np.ndarray, x0: float, A: float, L: float, k: float
+    ) -> float | np.ndarray:
         """
         Logistic function for the growth model.
 
@@ -433,8 +424,8 @@ class LogisticGrowth(GrowthModel):
 
         Parameters
         ----------
-        x : float
-            The input value on which to evaluate the function, e.g. a year '2025'.
+        x : float | numpy Array
+            The input value(s) on which to evaluate the function, e.g. a year '2025'.
         x0 : float
             The x-value of the sigmoid's midpoint (inflection point).
         A : float
@@ -446,11 +437,11 @@ class LogisticGrowth(GrowthModel):
 
         Returns
         -------
-        float
-            The result of the logistic function evaluation at x.
+        float | numpy Array
+            The result(s) of the logistic function evaluation at x.
 
         """
-        return float(A + L / (1 + np.exp(-k * (x - x0))))
+        return A + L / (1 + np.exp(-k * (x - x0)))
 
 
 class GompertzGrowth(GrowthModel):
@@ -460,32 +451,30 @@ class GompertzGrowth(GrowthModel):
         float | None,
         Field(
             description="The upper asymptote (maximum value) of the Gompertz function.",
-            default=None,
         ),
-    ]
+    ] = None
     k: Annotated[
         float | None,
         Field(
             description="The growth rate of the Gompertz function.",
-            default=None,
         ),
-    ]
+    ] = None
     x0: Annotated[
         float | None,
         Field(
             description="The x-value of the inflection point (midpoint year) of the Gompertz function.",
-            default=None,
         ),
-    ]
+    ] = None
     b: Annotated[
         float | None,
         Field(
             description="The displacement along the x-axis of the Gompertz function.",
-            default=None,
         ),
-    ]
+    ] = None
 
-    def function(self, x: float, A: float, k: float, x0: float, b: float) -> float:
+    def function(
+        self, x: float | np.ndarray, A: float, k: float, x0: float, b: float
+    ) -> float | np.ndarray:
         """
         Gompertz function for the growth model.
 
@@ -493,8 +482,8 @@ class GompertzGrowth(GrowthModel):
 
         Parameters
         ----------
-        x : float
-            The input value on which to evaluate the function, e.g. a year '2025'.
+        x : float | numpy Array
+            The input value(s) on which to evaluate the function, e.g. a year '2025'.
         A : float
             The upper asymptote (maximum value) of the Gompertz function.
         k : float
@@ -506,8 +495,8 @@ class GompertzGrowth(GrowthModel):
 
         Returns
         -------
-        float
-            The result of the Gompertz function evaluation at x.
+        float | numpy Array
+            The result(s) of the Gompertz function evaluation at x.
 
         """
-        return float(A * np.exp(-b * np.exp(-k * (x - x0))))
+        return A * np.exp(-b * np.exp(-k * (x - x0)))

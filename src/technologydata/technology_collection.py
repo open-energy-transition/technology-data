@@ -9,7 +9,6 @@ import json
 import logging
 import pathlib
 import re
-import typing
 from collections.abc import Iterator
 from typing import Annotated, Self
 
@@ -24,7 +23,7 @@ from technologydata.technology import Technology
 logger = logging.getLogger(__name__)
 
 
-class TechnologyCollection(pydantic.BaseModel):  # type: ignore
+class TechnologyCollection(pydantic.BaseModel):
     """
     Represent a collection of technologies.
 
@@ -39,7 +38,7 @@ class TechnologyCollection(pydantic.BaseModel):  # type: ignore
         list[Technology], pydantic.Field(description="List of Technology objects.")
     ]
 
-    def __iter__(self) -> Iterator[Technology]:
+    def __iter__(self) -> Iterator[Technology]:  # type: ignore
         """
         Return an iterator over the list of Technology objects.
 
@@ -122,7 +121,7 @@ class TechnologyCollection(pydantic.BaseModel):  # type: ignore
                 if pattern_detailed_technology.search(t.detailed_technology)
             ]
 
-        return TechnologyCollection(technologies=filtered_technologies)
+        return TechnologyCollection(technologies=filtered_technologies)  # type: ignore
 
     def to_dataframe(self) -> pandas.DataFrame:
         """
@@ -237,9 +236,8 @@ class TechnologyCollection(pydantic.BaseModel):  # type: ignore
 
         # pydantic_core.from_json return Any. Therefore, typing.cast makes sure that
         # the output is indeed a TechnologyCollection
-        return typing.cast(
-            TechnologyCollection,
-            cls.model_validate(pydantic_core.from_json(json_data, allow_partial=True)),
+        return cls.model_validate(
+            pydantic_core.from_json(json_data, allow_partial=True)
         )
 
     def to_currency(
@@ -282,7 +280,7 @@ class TechnologyCollection(pydantic.BaseModel):  # type: ignore
                 )
             )
 
-        return TechnologyCollection(technologies=new_techs)
+        return TechnologyCollection(technologies=new_techs)  # type: ignore
 
     def fit(
         self, parameter: str, model: GrowthModel, p0: dict[str, float] | None = None
@@ -350,7 +348,7 @@ class TechnologyCollection(pydantic.BaseModel):  # type: ignore
         for each technology in the collection to the given future years.
 
         To keep other parameters that should not be projected, add them to the dictionary as well
-        without a growth model. Instead there are other options available:
+        without a growth model. Instead, there are other options available:
         'mean', 'closest' and 'NaN'.
         'mean' will set the parameter to the mean of all existing values in the collection,
         while 'NaN' will add the parameter with NaN values as a placeholder.
@@ -458,4 +456,4 @@ class TechnologyCollection(pydantic.BaseModel):  # type: ignore
 
             projected_technologies.append(new_tech)
 
-        return TechnologyCollection(technologies=projected_technologies)
+        return TechnologyCollection(technologies=projected_technologies)  # type: ignore
