@@ -219,7 +219,7 @@ class LinearGrowth(GrowthModel):
         Field(description="Starting value for the linear function.", default=None),
     ]
 
-    def function(self, x: float, x0: float, m: float, a: float) -> float:
+    def function(self, x: float, x0: float, m: float, A: float) -> float:
         """
         Linear function for the growth model.
 
@@ -233,7 +233,7 @@ class LinearGrowth(GrowthModel):
             The reference x-value (e.g., starting year) for the linear function.
         m : float, optional
             The slope of the linear function.
-        a : float, optional
+        A : float, optional
             The constant offset of the linear function.
 
         Returns
@@ -242,7 +242,7 @@ class LinearGrowth(GrowthModel):
             The result of the linear function evaluation at x.
 
         """
-        return m * (x - x0) + a
+        return m * (x - x0) + A
 
 
 class ExponentialGrowth(GrowthModel):
@@ -349,7 +349,7 @@ class GeneralLogisticGrowth(GrowthModel):
         ),
     ]
 
-    def function(  # type: ignore[override]
+    def function(
         self,
         x: float,
         x0: float,
@@ -425,7 +425,7 @@ class LogisticGrowth(GrowthModel):
         ),
     ]
 
-    def function(self, x: float, x0: float, A: float, L: float, k: float) -> float:  # type: ignore[override]
+    def function(self, x: float, x0: float, A: float, L: float, k: float) -> float:
         """
         Logistic function for the growth model.
 
@@ -485,7 +485,7 @@ class GompertzGrowth(GrowthModel):
         ),
     ]
 
-    def function(self, x: float, A: float, k: float, x0: float, b: float) -> float:  # type: ignore[override]
+    def function(self, x: float, A: float, k: float, x0: float, b: float) -> float:
         """
         Gompertz function for the growth model.
 
