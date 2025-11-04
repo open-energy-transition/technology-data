@@ -13,8 +13,7 @@ import pytest
 
 import technologydata
 from technologydata.constants import EnergyDensityLHV
-
-# from technologydata.utils.units import extract_currency_units, ureg
+from technologydata.utils.units import CustomUndefinedUnitError
 
 path_cwd = pathlib.Path.cwd()
 
@@ -55,6 +54,39 @@ class TestParameter:
 
     def test_parameter_invalid_units(self) -> None:
         """Test that an error is raised when invalid units are provided."""
+        with pytest.raises(CustomUndefinedUnitError) as excinfo:
+            technologydata.Parameter(
+                magnitude=1000,
+                units="USD",
+            )
+        assert (
+            str(excinfo.value)
+            == "Currency unit 'USD' is missing the 4-digit currency year (e.g. USD_2020)."
+        )
+        assert excinfo.type == CustomUndefinedUnitError
+
+        with pytest.raises(CustomUndefinedUnitError) as excinfo:
+            technologydata.Parameter(
+                magnitude=1000,
+                units="USD_20/kW",
+            )
+        assert (
+            str(excinfo.value)
+            == "Currency unit 'USD' is missing the 4-digit currency year (e.g. USD_2020)."
+        )
+        assert excinfo.type == CustomUndefinedUnitError
+
+        with pytest.raises(CustomUndefinedUnitError) as excinfo:
+            technologydata.Parameter(
+                magnitude=1000,
+                units="abc_USD_20/kW",
+            )
+        assert (
+            str(excinfo.value)
+            == "Currency unit 'USD' is missing the 4-digit currency year (e.g. USD_2020)."
+        )
+        assert excinfo.type == CustomUndefinedUnitError
+
         with pytest.raises(pint.errors.UndefinedUnitError) as excinfo:
             technologydata.Parameter(
                 magnitude=1000,
@@ -142,7 +174,7 @@ class TestParameter:
             technologydata.ureg.Unit("USD_2020 / kWh")
         )
 
-    def test_parameter_change_currency(self) -> None:
+    def test_parameter_to_currency(self) -> None:
         """Test currency conversion with inflation adjustment."""
         param = technologydata.Parameter(
             magnitude=1,
@@ -150,7 +182,7 @@ class TestParameter:
         )
 
         # Convert to EUR with inflation adjustment for Germany
-        converted = param.change_currency("EUR_2023", "DEU")
+        converted = param.to_currency("EUR_2023", "DEU")
         assert isinstance(converted, technologydata.Parameter)
         assert converted.units is not None
         assert "EUR_2023" in converted.units
@@ -169,7 +201,7 @@ class TestParameter:
         )
 
         # Convert using IMF data source
-        converted = param.change_currency("USD_2022", "USA", source="worldbank")
+        converted = param.to_currency("USD_2022", "USA", source="worldbank")
         assert isinstance(converted, technologydata.Parameter)
         assert converted.units is not None
         assert "USD_2022" in converted.units
@@ -185,7 +217,7 @@ class TestParameter:
         )
 
         # Convert using IMF data source
-        converted = param.change_currency("USD_2022", "USA", source="imf")
+        converted = param.to_currency("USD_2022", "USA", source="imf")
         assert isinstance(converted, technologydata.Parameter)
         assert converted.units is not None
         assert "USD_2022" in converted.units
@@ -199,7 +231,7 @@ class TestParameter:
         )
 
         # Convert all currencies to CNY_2023
-        converted = param.change_currency("CNY_2023", "CHN")
+        converted = param.to_currency("CNY_2023", "CHN")
         assert isinstance(converted, technologydata.Parameter)
         # Both USD_2020 and EUR_2021 should be replaced with CNY_2023
         assert converted.units is not None
@@ -215,7 +247,7 @@ class TestParameter:
         )
 
         # Convert to USD but different year (inflation adjustment)
-        converted = param.change_currency("USD_2023", "USA")
+        converted = param.to_currency("USD_2023", "USA")
         assert isinstance(converted, technologydata.Parameter)
         assert converted.units == "USD_2023 / kilowatt"
         # Magnitude should change due to inflation adjustment
@@ -230,7 +262,7 @@ class TestParameter:
         )
 
         # Convert to the same currency and year
-        converted = param.change_currency("USD_2020", "USA")
+        converted = param.to_currency("USD_2020", "USA")
         assert isinstance(converted, technologydata.Parameter)
         assert converted._pint_quantity.is_compatible_with("USD_2020 / kW")
         # Magnitude should remain unchanged
@@ -246,7 +278,7 @@ class TestParameter:
 
         # Invalid country code should raise an error
         with pytest.raises((ValueError, KeyError)):
-            param.change_currency("EUR_2023", "USB")
+            param.to_currency("EUR_2023", "USB")
 
     def test_parameter_change_currency_invalid_source(self) -> None:
         """Test that invalid inflation data sources raise appropriate errors."""
@@ -257,7 +289,7 @@ class TestParameter:
 
         # Invalid source should raise an error
         with pytest.raises(KeyError):
-            param.change_currency("EUR_2023", "DEU", source="invalid_source")
+            param.to_currency("EUR_2023", "DEU", source="invalid_source")
 
     def test_parameter_change_currency_no_units(self) -> None:
         """Test currency conversion with parameter that has no units."""
@@ -266,7 +298,7 @@ class TestParameter:
         )
 
         # Should handle parameters without currency units gracefully
-        converted = param.change_currency("EUR_2023", "DEU")
+        converted = param.to_currency("EUR_2023", "DEU")
         assert isinstance(converted, technologydata.Parameter)
         assert converted.magnitude == 42
         assert converted.units is None or "EUR_2023" not in str(converted.units)
@@ -283,7 +315,7 @@ class TestParameter:
         )
 
         # Convert to EUR_2023
-        converted = param.change_currency("EUR_2023", "DEU")
+        converted = param.to_currency("EUR_2023", "DEU")
 
         # Check that other attributes remain unchanged
         assert converted.carrier == param.carrier
@@ -737,7 +769,7 @@ class TestParameter:
         "folder_id",
         ["WB_CNY_2020", "WB_EUR_2020", "WB_USD_2020"],
     )  # type: ignore
-    def test_change_currency(self, folder_id: str) -> None:
+    def test_to_currency(self, folder_id: str) -> None:
         """Validate the currency conversion rates."""
         input_path = pathlib.Path(
             path_cwd,
@@ -757,8 +789,8 @@ class TestParameter:
             output_param = technologydata.Parameter(
                 magnitude=row["input_magnitude"],
                 units=row["input_units"],
-            ).change_currency(
-                to_currency=technologydata.extract_currency_units(
+            ).to_currency(
+                target_currency=technologydata.extract_currency_units(
                     row["reference_units"]
                 )[0],
                 country=row["country"],
