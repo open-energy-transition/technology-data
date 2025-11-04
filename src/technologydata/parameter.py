@@ -143,7 +143,7 @@ class Parameter(BaseModel):  # type: ignore
         ) != technologydata.extract_currency_units(units):
             raise NotImplementedError(
                 "Currency conversion is not supported in the `to` method. "
-                "Use `change_currency` for currency conversions."
+                "Use `to_currency` for currency conversions."
             )
 
         self._pint_quantity = self._pint_quantity.to(units)
