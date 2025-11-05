@@ -2,17 +2,7 @@
 #
 # SPDX-License-Identifier: MIT
 
-"""
-Parameter class for encapsulating a value, its unit, provenance, notes, and sources.
-
-Examples
---------
->>> from technologydata.source import Source
->>> uv = pint.Quantity(1000, "EUR_2020/kW")
->>> src = Source(name="Example Source", authors="some authors", url="http://example.com")
->>> param = Parameter(quantity=uv, provenance="literature", note="Estimated", sources=[src])
-
-"""
+"""Parameter class for encapsulating a value, its unit, provenance, notes, and sources."""
 
 import logging
 from typing import Annotated, Self
