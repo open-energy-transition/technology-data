@@ -1,3 +1,5 @@
+# Title
+
 <!--
 SPDX-FileCopyrightText: The technology-data authors
 
@@ -11,10 +13,12 @@ SPDX-License-Identifier: MIT
 
 TODO: Add badges
 **Suggestions:**
+
 - Use http://shields.io or a similar service to create and host the images.
 - Add the [Standard Readme badge](https://github.com/RichardLitt/standard-readme#badge).
 
 -->
+
 A Python package to manage techno-economic assumptions for energy system models.
 
 ## Overview
@@ -43,7 +47,7 @@ automating common tasks and transformations to reduce errors and allowing for ea
 
 ## Background
 
-> Modelling is 10% science, 10% art, and 80% finding the right data and getting it into the right format.  
+> Modelling is 10% science, 10% art, and 80% finding the right data and getting it into the right format.
 > — Every energy modeller ever
 
 Modelling energy systems requires a lot of data.
