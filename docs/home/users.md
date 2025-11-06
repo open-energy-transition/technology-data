@@ -8,12 +8,18 @@ We would love to hear about your use case and stay in touch, in order to develop
 
 ## Academia and Research institutions
 
-TODO
+<!-- TODO -->
+
+For the moment, this is a prototype of the new version of `technologydata`. Users will be specified at a later stage.
 
 ## Industry
 
-TODO
+<!-- TODO -->
+
+For the moment, this is a prototype of the new version of `technologydata`. Users will be specified at a later stage.
 
 ## Institutions and Organisations
 
-TODO
+<!-- TODO -->
+
+For the moment, this is a prototype of the new version of `technologydata`. Users will be specified at a later stage.

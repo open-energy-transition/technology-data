@@ -118,10 +118,3 @@ dp.get_source_collection()
 
 - **Error Handling**: If neither technologies nor sources are available, source extraction will raise a `ValueError`.
 - **No Data Validation**: The class assumes that the underlying `TechnologyCollection` and `SourceCollection` are valid and compatible.
-
-## See Also
-
-- [`TechnologyCollection` Documentation](./technology_collection.md)
-- [`SourceCollection` Documentation](./source_collection.md)
-- [`Parameter` Documentation](./parameter.md)
-- [`Growth Models` Documentation](./models.md)
