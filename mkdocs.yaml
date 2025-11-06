@@ -21,10 +21,11 @@ nav:
     - Contacts: home/contacts.md
 
 - User Guide:
-  - Use Cases: user_guide/design.md
-  - Parameter: user_guide/parameter.md
   - Data Package: user_guide/datapackage.md
   - Growth Models: user_guide/models.md
+  - Parameter: user_guide/parameter.md
+  - Source: user_guide/source.md
+  - Use Cases: user_guide/design.md
 
 - Contributing:
   - Instructions: contributing/instructions.md
