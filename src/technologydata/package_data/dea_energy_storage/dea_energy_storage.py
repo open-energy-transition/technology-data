@@ -10,6 +10,7 @@ import pathlib
 import re
 import typing
 
+import pandas as pd
 import pydantic
 
 from technologydata import (
@@ -25,7 +26,7 @@ path_cwd = pathlib.Path.cwd()
 logger = logging.getLogger(__name__)
 
 
-def drop_invalid_rows(dataframe: pandas.DataFrame) -> pandas.DataFrame:
+def drop_invalid_rows(dataframe: pd.DataFrame) -> pd.DataFrame:
     """
     Clean and filter a DataFrame by removing rows with invalid or incomplete data.
 
@@ -241,7 +242,7 @@ def extract_year(year_str: str) -> int | None:
     return int(digits[0]) if digits else None
 
 
-def update_unit_with_price_year(series: pandas.Series) -> pandas.Series:
+def update_unit_with_price_year(series: pd.Series) -> pd.Series:
     """
     Update unit string to include price year for EUR-based units.
 
@@ -264,11 +265,11 @@ def update_unit_with_price_year(series: pandas.Series) -> pandas.Series:
     unit, price_year = series
 
     # Check if unit is a string, contains 'EUR', and price_year is not null
-    if isinstance(unit, str) and "EUR" in unit and pandas.notna(price_year):
+    if isinstance(unit, str) and "EUR" in unit and pd.notna(price_year):
         # Replace 'EUR/' with 'EUR_{price_year}/'
         unit = unit.replace("EUR", f"EUR_{int(price_year)}")
 
-    return pandas.Series([unit, price_year])
+    return pd.Series([unit, price_year])
 
 
 @pydantic.validate_call  # type: ignore
@@ -301,7 +302,7 @@ def clean_est_string(est_str: str) -> str:
     return cleaned_str
 
 
-def standardize_units(series: pandas.Series) -> pandas.Series:
+def standardize_units(series: pd.Series) -> pd.Series:
     """
     Complete missing units based on parameter names and replace incorrect units.
 
@@ -360,12 +361,10 @@ def standardize_units(series: pandas.Series) -> pandas.Series:
         if incorrect == unit or incorrect in unit:
             unit = unit.replace(incorrect, correct)
 
-    return pandas.Series([par, unit])
+    return pd.Series([par, unit])
 
 
-def filter_parameters(
-    dataframe: pandas.DataFrame, filter_flag: bool
-) -> pandas.DataFrame:
+def filter_parameters(dataframe: pd.DataFrame, filter_flag: bool) -> pd.DataFrame:
     """
     Filter rows of a DataFrame by allowed technology parameters.
 
@@ -405,7 +404,7 @@ def filter_parameters(
 
 
 def build_technology_collection(
-    dataframe: pandas.DataFrame,
+    dataframe: pd.DataFrame,
     sources_path: pathlib.Path,
     store_source: bool = False,
 ) -> TechnologyCollection:
@@ -540,7 +539,7 @@ if __name__ == "__main__":
         "Technology_datasheet_for_energy_storage.xlsx",
     )
 
-    dea_energy_storage_df = pandas.read_excel(
+    dea_energy_storage_df = pd.read_excel(
         dea_energy_storage_file_path,
         sheet_name="alldata_flat",
         engine="calamine",
