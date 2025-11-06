@@ -38,6 +38,7 @@ dp = DataPackage(
 ```
 
 ### Loading from JSON
+
 To load a `DataPackage` from a folder containing `technologies.json` and (optionally) `sources.json`:
 
 ```python
