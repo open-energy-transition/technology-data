@@ -23,6 +23,8 @@ nav:
 - User Guide:
   - Use Cases: user_guide/design.md
   - Parameter: user_guide/parameter.md
+  - Data Package: user_guide/datapackage.md
+  - Growth Models: user_guide/models.md
 
 - Contributing:
   - Instructions: contributing/instructions.md
