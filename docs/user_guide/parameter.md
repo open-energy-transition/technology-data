@@ -106,6 +106,8 @@ DEU
 ### Arithmetic Operations
 
 ```python
+from technologydata.parameter import Parameter
+
 param2 = Parameter(magnitude=500, units="USD_2020/kW", carrier="H2", heating_value="LHV")
 sum_param = param + param2
 >>> print(sum_param.magnitude, sum_param.units)
@@ -115,6 +117,8 @@ sum_param = param + param2
 **Note:** If you try to add or subtract parameters with different carriers or heating values, a `ValueError` will be raised:
 
 ```python
+from technologydata.parameter import Parameter
+
 param_hhv = Parameter(magnitude=1, units="USD_2020/kW", carrier="H2", heating_value="HHV")
 param + param_hhv
 >>> # ValueError: Cannot add parameters with different heating values
