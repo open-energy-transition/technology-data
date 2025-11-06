@@ -25,6 +25,7 @@ nav:
   - Growth Models: user_guide/models.md
   - Parameter: user_guide/parameter.md
   - Source: user_guide/source.md
+  - Source Collection: user_guide/source_collection.md
   - Use Cases: user_guide/design.md
 
 - Contributing:
