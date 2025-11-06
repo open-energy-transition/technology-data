@@ -1,4 +1,4 @@
-# Title
+# technologydata
 
 <!--
 SPDX-FileCopyrightText: The technology-data authors
@@ -6,8 +6,6 @@ SPDX-FileCopyrightText: The technology-data authors
 SPDX-License-Identifier: MIT
 
 -->
-
-# technologydata
 
 <!--
 
@@ -35,15 +33,13 @@ automating common tasks and transformations to reduce errors and allowing for ea
 
 ## Table of Contents
 
-1. [Overview](#overview)
-2. [Table of Contents](#table-of-contents)
-3. [Background](#background)
-4. [Install](#install)
-5. [Usage](#usage)
-6. [Maintainer(s)](#maintainers)
-7. [Thanks](#thanks)
-8. [Contributing](#contributing)
-9. [License](#license)
+1. [Background](#background)
+2. [Install](#install)
+3. [Usage](#usage)
+4. [Maintainers](#maintainers)
+5. [Thanks](#thanks)
+6. [Contributing](#contributing)
+7. [License](#license)
 
 ## Background
 
@@ -102,7 +98,7 @@ tech = Technology(
 tech = tech.to_currency("EUR_2023")
 ```
 
-## Maintainer(s)
+## Maintainers
 
 This repository is currently maintained by [Open Energy Transition](https://openenergytransition.org/) with the maintainers and developers being:
 
@@ -121,7 +117,7 @@ For contributing instructions, guidelines and our code of conduct, please refer 
 
 This project is licensed under the [MIT License](LICENSES/MIT.txt).
 
-Primary data included in the repository may be licensed under speciic terms.
+Primary data included in the repository may be licensed under specific terms.
 Processed data included in the project is licensed under [Creative Commons Attribution 4.0 International (CC BY 4.0)](LICENSES/CC-BY-4.0.txt).
 
 To make it easier to identify which data is licensed under which terms, this repository follows the [REUSE](https://reuse.software/) specification.
