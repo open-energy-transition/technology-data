@@ -10,7 +10,6 @@ import pathlib
 import re
 import typing
 
-import pandas as pd
 import pydantic
 
 from technologydata import (
