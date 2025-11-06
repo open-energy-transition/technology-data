@@ -170,7 +170,49 @@ param_mixed_hhv = param_mixed.change_heating_value("HHV")
 0.13 kWh/kg higher_heating_value
 ```
 
-## Limitations & Missing Features
+## API Reference
+
+### Attributes
+
+- `magnitude`: int | float
+    - The numerical value of the parameter.
+- `units`: str | None
+    - The unit of the parameter (e.g., 'USD_2020/kW').
+- `carrier`: str | None
+    - The energy carrier (e.g., 'H2', 'el').
+- `heating_value`: str | None
+    - The heating value type ('LHV' or 'HHV').
+- `provenance`: str | None
+    - Description of the data's provenance.
+- `note`: str | None
+    - Additional notes about the parameter.
+- `sources`: SourceCollection
+    - List of sources for the parameter.
+
+### Methods
+
+- `to(units: str) -> Parameter`
+    - Convert the parameter's quantity to new units (excluding currency conversion).
+- `to_currency(target_currency: str, country: str, source: str = "worldbank") -> Parameter`
+    - Convert the parameter to a different currency and adjust for inflation.
+- `change_heating_value(to_heating_value: str) -> Parameter`
+    - Convert the heating value type (e.g., from LHV to HHV) using carrier-specific energy densities.
+- `_check_parameter_compatibility(other: Parameter) -> None`
+    - Check if two parameters are compatible in terms of units, carrier, and heating value.
+- `__add__(other: Parameter) -> Parameter`
+    - Add two compatible parameters.
+- `__sub__(other: Parameter) -> Parameter`
+    - Subtract one parameter from another (if compatible).
+- `__truediv__(other: int | float | Parameter) -> Parameter`
+    - Divide the parameter by a scalar or another parameter.
+- `__mul__(other: int | float | Parameter) -> Parameter`
+    - Multiply the parameter by a scalar or another parameter.
+- `__eq__(other: object) -> bool`
+    - Check for equality with another parameter.
+- `__pow__(exponent: float | int) -> Parameter`
+    - Raise the parameter's value to a specified power.
+
+## Limitations & Notes
 
 - **Provenance/Note/Sources in Arithmetic**: When performing arithmetic operations, the handling and merging of `provenance`, `note`, and `sources` is not yet implemented (see `TODO` comments in the code).
 - **Unit Conversion**: The `.to()` method does not support currency conversion; use `.to_currency()` for that.
