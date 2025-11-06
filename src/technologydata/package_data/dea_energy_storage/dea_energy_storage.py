@@ -2,7 +2,22 @@
 #
 # SPDX-License-Identifier: MIT
 
-"""Data parser for the DEA energy storage data set."""
+"""
+Data parser for the DEA energy storage data set.
+
+How to run:
+    From the repository root, execute:
+        python src/technologydata/package_data/dea_energy_storage/dea_energy_storage.py
+
+Configuration options (command-line arguments):
+    --num_digits <int>         Number of significant digits to round the values. Default: 4
+    --store_source             Store the source object on the Wayback Machine. Default: False
+    --filter_params            Filter the parameters stored to technologies.json. Default: False
+
+Example:
+    python src/technologydata/package_data/dea_energy_storage/dea_energy_storage.py --num_digits 3 --store_source --filter_params
+
+"""
 
 import argparse
 import logging
@@ -84,7 +99,7 @@ def drop_invalid_rows(dataframe: pd.DataFrame) -> pd.DataFrame:
     return df_cleaned
 
 
-@pydantic.validate_call  # type: ignore
+@pydantic.validate_call
 def clean_parameter_string(text_string: str) -> str:
     """
     Remove any string between [] or [), any leading hyphen or double quotes from the input string. Lower-case all.
@@ -122,7 +137,7 @@ def clean_parameter_string(text_string: str) -> str:
     return result
 
 
-@pydantic.validate_call  # type: ignore
+@pydantic.validate_call
 def clean_technology_string(tech_str: str) -> str:
     """
     Clean a technology string by removing numeric patterns and standardizing case.
@@ -166,7 +181,7 @@ def clean_technology_string(tech_str: str) -> str:
         return tech_str
 
 
-@pydantic.validate_call  # type: ignore
+@pydantic.validate_call
 def format_val_number(input_value: str, num_decimals: int) -> float | None | typing.Any:
     """
     Parse various number formats into a float value.
@@ -214,7 +229,7 @@ def format_val_number(input_value: str, num_decimals: int) -> float | None | typ
         raise ValueError(f"Cannot parse number from input: {input_value}")
 
 
-@pydantic.validate_call  # type: ignore
+@pydantic.validate_call
 def extract_year(year_str: str) -> int | None:
     """
     Extract the first year (integer) from a given input.
@@ -272,7 +287,7 @@ def update_unit_with_price_year(series: pd.Series) -> pd.Series:
     return pd.Series([unit, price_year])
 
 
-@pydantic.validate_call  # type: ignore
+@pydantic.validate_call
 def clean_est_string(est_str: str) -> str:
     """
     Casefold the 'est' string, trim whitespace and replace `ctrl` with `control`.
@@ -389,12 +404,17 @@ def filter_parameters(dataframe: pd.DataFrame, filter_flag: bool) -> pd.DataFram
         "fixed o&m",
         "specific investment",
         "variable o&m",
+        "charge efficiency",
+        "discharge efficiency",
     }
     print("filter_flag", filter_flag)
     if filter_flag:
         # Filter the DataFrame based on the allowed set
         df_filtered = dataframe[dataframe["par"].isin(allowed_set)].reset_index(
             drop=True
+        )
+        logger.info(
+            f"technologies.json contains a subset of the allowed parameters: {allowed_set}."
         )
     else:
         # Return the original DataFrame if filter_flag is False
@@ -448,9 +468,10 @@ def build_technology_collection(
 
     if store_source:
         source = Source(
-            title="Technology Data for Energy storage",
-            authors="Danish Energy Agency, Technology Data for Energy storage (2020), Excel datasheet: alldata_flat",
+            title="Technology Data for Energy storage (May 2025)",
+            authors="Danish Energy Agency",
             url="https://ens.dk/media/6589/download",
+            url_date="2025-10-08 09:24:00",
         )
         source.ensure_in_wayback()
         sources = SourceCollection(sources=[source])
@@ -464,7 +485,10 @@ def build_technology_collection(
         parameters = {}
         for _, row in group.iterrows():
             parameters[row["par"]] = Parameter(
-                magnitude=row["val"], units=row["unit"], sources=sources
+                magnitude=row["val"],
+                units=row["unit"],
+                sources=sources,
+                provenance="Parsed from Excel file",
             )
         list_techs.append(
             Technology(
@@ -479,7 +503,7 @@ def build_technology_collection(
     return TechnologyCollection(technologies=list_techs)
 
 
-@pydantic.validate_call  # type: ignore
+@pydantic.validate_call
 def parse_input_arguments() -> argparse.Namespace:
     """
     Parse command line arguments.
@@ -652,3 +676,19 @@ if __name__ == "__main__":
     logger.info("TechnologyCollection object instantiated.")
     tech_col.to_json(output_technologies_path)
     logger.info("TechnologyCollection object exported to json.")
+
+    # Move schema files if they exist
+    schema_folder = pathlib.Path(
+        path_cwd, "src", "technologydata", "package_data", "schemas"
+    )
+    sources_schema = pathlib.Path(dea_storage_path, "sources.schema.json")
+    technologies_schema = pathlib.Path(dea_storage_path, "technologies.schema.json")
+
+    schema_folder.mkdir(parents=True, exist_ok=True)
+
+    if sources_schema.exists():
+        sources_schema.rename(schema_folder / "sources.schema.json")
+        logger.info(f"Moved {sources_schema} to {schema_folder}")
+    if technologies_schema.exists():
+        technologies_schema.rename(schema_folder / "technologies.schema.json")
+        logger.info(f"Moved {technologies_schema} to {schema_folder}")

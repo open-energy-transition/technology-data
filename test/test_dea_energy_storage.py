@@ -4,19 +4,23 @@
 
 """Test the functions of the DEA energy storage parser."""
 
+import pathlib
 import typing
 
 import pandas
 import pytest
 
 from technologydata.package_data.dea_energy_storage.dea_energy_storage import (
+    build_technology_collection,
     clean_est_string,
     clean_parameter_string,
     clean_technology_string,
     drop_invalid_rows,
     extract_year,
+    filter_parameters,
     format_val_number,
     standardize_units,
+    update_unit_with_price_year,
 )
 
 
@@ -196,3 +200,42 @@ class TestDEAEnergyStorage:
         )
         comparison_df = input_dataframe.compare(expected_dataframe)
         assert comparison_df.empty
+
+    def test_update_unit_with_price_year_eur(self) -> None:
+        """Check if update_unit_with_price_year_eur works as expected."""
+        s = pandas.Series(["EUR/kWh", "2020"])
+        result = update_unit_with_price_year(s)
+        assert "EUR_2020" in result[0]
+        s2 = pandas.Series(["USD/kWh", "2020"])
+        result2 = update_unit_with_price_year(s2)
+        assert result2[0] == "USD/kWh"
+
+    def test_filter_parameters_true_false(self) -> None:
+        """Check if filter_parameters works as expected."""
+        dataframe = pandas.DataFrame(
+            {"par": ["technical lifetime", "other"], "Technology": ["A", "B"]}
+        )
+        filtered = filter_parameters(dataframe, True)
+        assert all(filtered["par"] == "technical lifetime")
+        filtered2 = filter_parameters(dataframe, False)
+        assert len(filtered2) == 2
+
+    def test_build_technology_collection(self, tmp_path: pathlib.Path) -> None:
+        """Check if build_technology_collection works as expected."""
+        dataframe = pandas.DataFrame(
+            {
+                "est": ["base"],
+                "year": [2020],
+                "ws": ["Tech1"],
+                "Technology": ["Solar PV"],
+                "par": ["specific_investment"],
+                "val": [1000],
+                "unit": ["EUR_2020/kW"],
+            }
+        )
+        sources_path = pathlib.Path(tmp_path, "sources.json")
+        tech_collection = build_technology_collection(
+            dataframe, sources_path, store_source=True
+        )
+        assert len(tech_collection.technologies) == 1
+        assert "specific_investment" in tech_collection.technologies[0].parameters

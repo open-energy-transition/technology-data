@@ -16,7 +16,7 @@ SPDX-License-Identifier = "CC-BY-4.0"
 
 [[annotations]]
 path = [
-    "src/technologydata/package_data/dea_energy_storage/*.json"
+    "src/technologydata/package_data/dea_energy_storage/*.json", "src/technologydata/package_data/schemas/*.json"
 ]
 SPDX-FileCopyrightText = "The technology-data authors"
 SPDX-License-Identifier = "CC-BY-4.0"
