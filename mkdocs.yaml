@@ -26,6 +26,7 @@ nav:
   - Parameter: user_guide/parameter.md
   - Source: user_guide/source.md
   - Source Collection: user_guide/source_collection.md
+  - Technology: user_guide/technology.md
   - Technology Collection: user_guide/technology_collection.md
   - Use Cases: user_guide/design.md
 
