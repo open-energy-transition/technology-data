@@ -25,5 +25,5 @@ SPDX-License-Identifier = "CC-BY-4.0"
 path = [
     "src/technologydata/package_data/raw/Technology_datasheet_for_energy_storage.xlsx"
 ]
-SPDX-FileCopyrightText = "The technology-data authors"
+SPDX-FileCopyrightText = "The Danish Energy Agency"
 SPDX-License-Identifier = "CC-BY-4.0"
