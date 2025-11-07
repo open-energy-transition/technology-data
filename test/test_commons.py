@@ -164,5 +164,7 @@ class TestCommonsUtils:
         self, input_unit: str, input_year: str, expected_string: str
     ) -> None:
         """Check if update_unit_with_currency_year works as expected."""
-        result = technologydata.Commons.update_unit_with_currency_year(input_unit, input_year)
+        result = technologydata.Commons.update_unit_with_currency_year(
+            input_unit, input_year
+        )
         assert result == expected_string

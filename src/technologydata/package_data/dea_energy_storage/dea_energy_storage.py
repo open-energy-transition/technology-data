@@ -29,12 +29,12 @@ import pandas as pd
 import pydantic
 
 from technologydata import (
+    Commons,
     Parameter,
     Source,
     SourceCollection,
     Technology,
     TechnologyCollection,
-    Commons,
 )
 
 path_cwd = pathlib.Path.cwd()
@@ -569,7 +569,9 @@ if __name__ == "__main__":
 
     # Include priceyear in unit if applicable
     cleaned_df["unit"] = cleaned_df.apply(
-        lambda row: Commons.update_unit_with_currency_year(row["unit"], row["priceyear"]),
+        lambda row: Commons.update_unit_with_currency_year(
+            row["unit"], row["priceyear"]
+        ),
         axis=1,
     )
     logger.info("`priceyear` included in `unit` column.")
