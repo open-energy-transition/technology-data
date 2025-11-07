@@ -8,11 +8,11 @@ import enum
 import logging
 import re
 from typing import Any
-import pandas as pd
 
 import dateutil
+import pandas as pd
 
-from technologydata.utils.units import get_iso3_to_currency_codes, CURRENCY_UNIT_PATTERN
+from technologydata.utils.units import CURRENCY_UNIT_PATTERN, get_iso3_to_currency_codes
 
 logger = logging.getLogger(__name__)
 
@@ -291,16 +291,20 @@ class Commons:
             Updated unit
 
         """
-
         # Check if the units contain a currency-like string, defined as "{3-letter currency code}_{year as YYYY}"
         matches = CURRENCY_UNIT_PATTERN.findall(unit)
 
         # Check if unit is a string, contains the currency, and currency_year is not null
         if isinstance(unit, str) and pd.notna(currency_year):
-
             for currency_code in all_currency_codes:
-                if pd.notna(currency_code) and currency_code in unit and len(matches) == 0:
+                if (
+                    pd.notna(currency_code)
+                    and currency_code in unit
+                    and len(matches) == 0
+                ):
                     # Replace currency with currency_currency_year
-                    unit = unit.replace(currency_code, f"{currency_code}_{currency_year}")
+                    unit = unit.replace(
+                        currency_code, f"{currency_code}_{currency_year}"
+                    )
 
         return unit
