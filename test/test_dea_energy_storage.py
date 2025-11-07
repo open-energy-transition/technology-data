@@ -20,7 +20,6 @@ from technologydata.package_data.dea_energy_storage.dea_energy_storage import (
     filter_parameters,
     format_val_number,
     standardize_units,
-    update_unit_with_price_year,
 )
 
 
@@ -200,15 +199,6 @@ class TestDEAEnergyStorage:
         )
         comparison_df = input_dataframe.compare(expected_dataframe)
         assert comparison_df.empty
-
-    def test_update_unit_with_price_year_eur(self) -> None:
-        """Check if update_unit_with_price_year_eur works as expected."""
-        s = pandas.Series(["EUR/kWh", "2020"])
-        result = update_unit_with_price_year(s)
-        assert "EUR_2020" in result[0]
-        s2 = pandas.Series(["USD/kWh", "2020"])
-        result2 = update_unit_with_price_year(s2)
-        assert result2[0] == "USD/kWh"
 
     def test_filter_parameters_true_false(self) -> None:
         """Check if filter_parameters works as expected."""

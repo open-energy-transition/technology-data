@@ -34,6 +34,7 @@ from technologydata import (
     SourceCollection,
     Technology,
     TechnologyCollection,
+    Commons,
 )
 
 path_cwd = pathlib.Path.cwd()
@@ -255,36 +256,6 @@ def extract_year(year_str: str) -> int | None:
 
     # Convert to integer
     return int(digits[0]) if digits else None
-
-
-def update_unit_with_price_year(series: pd.Series) -> pd.Series:
-    """
-    Update unit string to include price year for EUR-based units.
-
-    Parameters
-    ----------
-    series : pandas.Series
-        A series containing two elements: [unit, price_year]
-
-    Returns
-    -------
-    pandas.Series
-        Updated series with modified unit
-
-    Examples
-    --------
-    >>> update_unit_with_price_year(["EUR/Kwh", "2020"])
-    EUR_2020/KwH
-
-    """
-    unit, price_year = series
-
-    # Check if unit is a string, contains 'EUR', and price_year is not null
-    if isinstance(unit, str) and "EUR" in unit and pd.notna(price_year):
-        # Replace 'EUR/' with 'EUR_{price_year}/'
-        unit = unit.replace("EUR", f"EUR_{int(price_year)}")
-
-    return pd.Series([unit, price_year])
 
 
 @pydantic.validate_call
@@ -597,8 +568,9 @@ if __name__ == "__main__":
     logger.info("Missing units added and wrong units replaced.")
 
     # Include priceyear in unit if applicable
-    cleaned_df[["unit", "priceyear"]] = cleaned_df[["unit", "priceyear"]].apply(
-        update_unit_with_price_year, axis=1
+    cleaned_df["unit"] = cleaned_df.apply(
+        lambda row: Commons.update_unit_with_currency_year(row["unit"], row["priceyear"]),
+        axis=1,
     )
     logger.info("`priceyear` included in `unit` column.")
 
