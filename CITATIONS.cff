@@ -1,0 +1,17 @@
+# SPDX-FileCopyrightText: The technology-data authors
+#
+# SPDX-License-Identifier: MIT
+
+cff-version: 1.2.0
+message: "If you use this package, we suggest the following way of citing it."
+title: "technology-data: Data for Energy Systems Models"
+repository: https://github.com/pypsa/technology-data
+version: v2-prototype # TODO: Update automatically using a release script
+license: MIT
+authors:
+  - family-names: Hampp
+    given-names: Johannes
+    orcid: 0000-0002-1776-116X
+  - family-names: Finozzi
+    given-names: Fabrizio
+    orcid: <TODO>
