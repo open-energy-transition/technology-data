@@ -377,6 +377,7 @@ def filter_parameters(dataframe: pd.DataFrame, filter_flag: bool) -> pd.DataFram
         "variable o&m",
         "charge efficiency",
         "discharge efficiency",
+        "capacity",
     }
     print("filter_flag", filter_flag)
     if filter_flag:
@@ -398,6 +399,7 @@ def build_technology_collection(
     dataframe: pd.DataFrame,
     sources_path: pathlib.Path,
     store_source: bool = False,
+    output_schema: bool = False,
 ) -> TechnologyCollection:
     """
     Compute a collection of technologies from a grouped DataFrame.
@@ -421,6 +423,8 @@ def build_technology_collection(
         Output path for storing the SourceCollection object
     store_source: Optional[bool]
         Flag to decide whether to store the source object on the Wayback Machine. Default False.
+    output_schema : Optional[bool]
+        Flag to decide whether to export the source collection schema. Default False.
 
     Returns
     -------
@@ -446,7 +450,7 @@ def build_technology_collection(
         )
         source.ensure_in_wayback()
         sources = SourceCollection(sources=[source])
-        sources.to_json(sources_path)
+        sources.to_json(sources_path, output_schema=output_schema)
     else:
         sources = SourceCollection.from_json(sources_path)
 
@@ -511,6 +515,12 @@ def parse_input_arguments() -> argparse.Namespace:
         "--filter_params",
         action="store_true",
         help="filter_params. Filter the parameters stored to technologies.json. Default: false",
+    )
+
+    parser.add_argument(
+        "--export_schema",
+        action="store_true",
+        help="export_schema. Export the Source/TechnologyCollection schemas. Default: false",
     )
 
     # Parse arguments
@@ -616,6 +626,15 @@ if __name__ == "__main__":
     )
     cleaned_df.loc[mask_mols, "val"] = cleaned_df.loc[mask_mols, "val"] * 1_000_000.0
 
+    # Replace, in column `par`, `energy storage capacity for one unit` and `tank volume of example` with `capacity`
+    mask_capacity = cleaned_df["par"].isin(
+        [
+            "energy storage capacity for one unit",
+            "tank volume of example",
+        ]
+    )
+    cleaned_df.loc[mask_capacity, "par"] = "capacity"
+
     # Clean est column
     cleaned_df["est"] = cleaned_df["est"].apply(clean_est_string)
     logger.info("`est` column cleaned.")
@@ -645,24 +664,28 @@ if __name__ == "__main__":
     )
 
     tech_col = build_technology_collection(
-        filtered_df, output_sources_path, store_source=input_args.store_source
+        filtered_df,
+        output_sources_path,
+        store_source=input_args.store_source,
+        output_schema=input_args.export_schema,
     )
     logger.info("TechnologyCollection object instantiated.")
-    tech_col.to_json(output_technologies_path)
+    tech_col.to_json(output_technologies_path, output_schema=input_args.export_schema)
     logger.info("TechnologyCollection object exported to json.")
 
-    # Move schema files if they exist
-    schema_folder = pathlib.Path(
-        path_cwd, "src", "technologydata", "package_data", "schemas"
-    )
-    sources_schema = pathlib.Path(dea_storage_path, "sources.schema.json")
-    technologies_schema = pathlib.Path(dea_storage_path, "technologies.schema.json")
+    if input_args.export_schema:
+        # Move schema files if they exist
+        schema_folder = pathlib.Path(
+            path_cwd, "src", "technologydata", "package_data", "schemas"
+        )
+        sources_schema = pathlib.Path(dea_storage_path, "sources.schema.json")
+        technologies_schema = pathlib.Path(dea_storage_path, "technologies.schema.json")
 
-    schema_folder.mkdir(parents=True, exist_ok=True)
+        schema_folder.mkdir(parents=True, exist_ok=True)
 
-    if sources_schema.exists():
-        sources_schema.rename(schema_folder / "sources.schema.json")
-        logger.info(f"Moved {sources_schema} to {schema_folder}")
-    if technologies_schema.exists():
-        technologies_schema.rename(schema_folder / "technologies.schema.json")
-        logger.info(f"Moved {technologies_schema} to {schema_folder}")
+        if sources_schema.exists():
+            sources_schema.rename(schema_folder / "sources.schema.json")
+            logger.info(f"Moved {sources_schema} to {schema_folder}")
+        if technologies_schema.exists():
+            technologies_schema.rename(schema_folder / "technologies.schema.json")
+            logger.info(f"Moved {technologies_schema} to {schema_folder}")
