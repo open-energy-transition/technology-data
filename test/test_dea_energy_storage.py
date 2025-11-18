@@ -224,8 +224,6 @@ class TestDEAEnergyStorage:
             }
         )
         sources_path = pathlib.Path(tmp_path, "sources.json")
-        tech_collection = build_technology_collection(
-            dataframe, sources_path, store_source=True
-        )
+        tech_collection = build_technology_collection(dataframe, sources_path)
         assert len(tech_collection.technologies) == 1
         assert "specific_investment" in tech_collection.technologies[0].parameters
