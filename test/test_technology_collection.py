@@ -48,7 +48,11 @@ class TestTechnologyCollection:
         )
         assert isinstance(technology_collection.to_dataframe(), pandas.DataFrame)
 
-    def test_to_json(self) -> None:
+    @pytest.mark.parametrize(
+        "output_schema",
+        [True, False],
+    )  # type: ignore
+    def test_to_json(self, output_schema: bool) -> None:
         """Check if to_json works as expected."""
         input_file = pathlib.Path(
             path_cwd,
@@ -62,9 +66,14 @@ class TestTechnologyCollection:
         )
         output_file = pathlib.Path(path_cwd, "technologies.json")
         schema_file = pathlib.Path(path_cwd, "technologies.schema.json")
-        technology_collection.to_json(pathlib.Path(output_file))
+        technology_collection.to_json(
+            pathlib.Path(output_file), output_schema=output_schema
+        )
         assert output_file.is_file()
-        assert schema_file.is_file()
+        if output_schema:
+            assert schema_file.is_file()
+        else:
+            assert not schema_file.is_file()
         output_file.unlink(missing_ok=True)
         schema_file.unlink(missing_ok=True)
 
@@ -97,7 +106,7 @@ class TestTechnologyCollection:
         )
         output_file = pathlib.Path("to_json_test.json")
         schema_file = pathlib.Path(path_cwd, "to_json_test.schema.json")
-        technology_collection.to_json(output_file)
+        technology_collection.to_json(output_file, output_schema=True)
 
         # Read files and strip trailing whitespace/newlines before comparing
         with open(input_file) as f1, open(output_file) as f2:
@@ -137,6 +146,144 @@ class TestTechnologyCollection:
         )
         assert isinstance(result, technologydata.TechnologyCollection)
         assert len(result.technologies) == 1
+
+    def test_fit_linear_growth(self) -> None:
+        """Test TechnologyCollection.fit with LinearGrowth model."""
+        tech = technologydata.Technology(
+            name="Amazing technology",
+            detailed_technology="",
+            region="",
+            case="",
+            year=2020,
+            parameters={
+                "total units": technologydata.Parameter(magnitude=2020),
+            },
+        )
+
+        tc = technologydata.TechnologyCollection(
+            technologies=[
+                tech,
+                tech.model_copy(
+                    deep=True,
+                    update={
+                        "year": 2030,
+                        "parameters": {
+                            "total units": technologydata.Parameter(magnitude=2030),
+                        },
+                    },
+                ),
+                tech.model_copy(
+                    deep=True,
+                    update={
+                        "year": 2040,
+                        "parameters": {
+                            "total units": technologydata.Parameter(magnitude=2040),
+                        },
+                    },
+                ),
+            ]
+        )
+
+        # Fit 'total units' parameter with LinearGrowth
+        from technologydata.technologies.growth_models import LinearGrowth
+
+        model = LinearGrowth()
+        fitted = tc.fit("total units", model, p0={"x0": 0, "m": 1, "A": 0})
+        assert isinstance(fitted, LinearGrowth)
+        print(fitted)
+        assert pytest.approx(fitted.x0) == 0
+        assert pytest.approx(fitted.m) == 1
+        assert pytest.approx(fitted.A) == 0
+
+    def test_project_linear_growth(self) -> None:
+        """Test TechnologyCollection.project with LinearGrowth model."""
+        input_file = pathlib.Path(
+            path_cwd,
+            "test",
+            "test_data",
+            "solar_photovoltaics_example",
+            "technologies.json",
+        )
+        tc = technologydata.TechnologyCollection.from_json(input_file)
+        from technologydata.technologies.growth_models import LinearGrowth
+
+        projected_tc = tc.project(
+            to_years=[2030],
+            parameters={"capacity": LinearGrowth(x0=2020)},
+        )
+        assert isinstance(projected_tc, technologydata.TechnologyCollection)
+        assert projected_tc.technologies[0].year == 2030
+        assert "capacity" in projected_tc.technologies[0].parameters
+        assert isinstance(
+            projected_tc.technologies[0].parameters["capacity"].magnitude, float
+        )
+
+        # non-projected parameters should not be present
+        assert "investment" not in projected_tc.technologies[0].parameters
+
+    def test_project_other_parameter_options(self) -> None:
+        """Test projection of parameters using 'mean', 'closest', and 'NaN' options."""
+        tech = technologydata.Technology(
+            name="Amazing technology",
+            detailed_technology="",
+            region="",
+            case="",
+            year=2020,
+            parameters={
+                "total units": technologydata.Parameter(magnitude=2000),
+            },
+        )
+
+        tc = technologydata.TechnologyCollection(
+            technologies=[
+                tech,
+                tech.model_copy(
+                    deep=True,
+                    update={
+                        "year": 2030,
+                        "parameters": {
+                            "total units": technologydata.Parameter(magnitude=3000),
+                        },
+                    },
+                ),
+            ]
+        )
+
+        ptc = tc.project(
+            to_years=[2025],
+            parameters={
+                "total units": "mean",
+            },
+        )
+
+        assert (
+            pytest.approx(
+                (
+                    tc.technologies[0].parameters["total units"].magnitude
+                    + tc.technologies[1].parameters["total units"].magnitude
+                )
+                / 2,
+            )
+            == ptc.technologies[0].parameters["total units"].magnitude
+        )
+
+        ptc = tc.project(
+            to_years=[2025],
+            parameters={
+                "total units": "NaN",
+            },
+        )
+
+        assert pandas.isna(ptc.technologies[0].parameters["total units"].magnitude)
+
+        # "closest" currently raises NotImplementedError
+        with pytest.raises(NotImplementedError):
+            _ = tc.project(
+                to_years=[2025],
+                parameters={
+                    "total units": "closest",
+                },
+            )
 
     def test_to_currency(self) -> None:
         """Test currency conversion for all technologies in the collection."""

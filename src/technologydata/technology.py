@@ -2,9 +2,6 @@
 #
 # SPDX-License-Identifier: MIT
 
-
-# TODO replaceholder
-
 """Technology class for representing a technology with parameters and transformation methods."""
 
 from typing import Annotated, Any, Self
@@ -14,7 +11,7 @@ import pydantic
 from technologydata.parameter import Parameter
 
 
-class Technology(pydantic.BaseModel):  # type: ignore
+class Technology(pydantic.BaseModel):
     """
     Represent a technology with region, year, and a flexible set of parameters.
 

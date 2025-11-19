@@ -8,7 +8,6 @@ import csv
 import json
 import pathlib
 import re
-import typing
 from collections.abc import Iterator
 from typing import Annotated, Self
 
@@ -19,7 +18,7 @@ import pydantic_core
 from technologydata.source import Source
 
 
-class SourceCollection(pydantic.BaseModel):  # type: ignore
+class SourceCollection(pydantic.BaseModel):
     """
     Represent a collection of sources.
 
@@ -34,7 +33,7 @@ class SourceCollection(pydantic.BaseModel):  # type: ignore
         list[Source], pydantic.Field(description="List of Source objects.")
     ]
 
-    def __iter__(self) -> Iterator["Source"]:
+    def __iter__(self) -> Iterator["Source"]:  # type: ignore
         """
         Return an iterator over the list of Source objects.
 
@@ -102,7 +101,7 @@ class SourceCollection(pydantic.BaseModel):  # type: ignore
                 s for s in filtered_sources if pattern_authors.search(s.authors)
             ]
 
-        return SourceCollection(sources=filtered_sources)
+        return SourceCollection(sources=filtered_sources)  # type: ignore
 
     def retrieve_all_from_wayback(
         self, download_directory: pathlib.Path
@@ -178,7 +177,10 @@ class SourceCollection(pydantic.BaseModel):  # type: ignore
         output_dataframe.to_csv(**merged_kwargs)
 
     def to_json(
-        self, file_path: pathlib.Path, schema_path: pathlib.Path | None = None
+        self,
+        file_path: pathlib.Path,
+        schema_path: pathlib.Path | None = None,
+        output_schema: bool = False,
     ) -> None:
         """
         Export the SourceCollection to a JSON file, together with a data schema.
@@ -189,17 +191,21 @@ class SourceCollection(pydantic.BaseModel):  # type: ignore
             The path to the JSON file to be created.
         schema_path : pathlib.Path
             The path to the JSON schema file to be created. By default, created with a `schema` suffix next to `file_path`.
+        output_schema : bool, default False
+            If True, generates a JSON schema file describing the data structure.
+            The schema will include field descriptions and type information.
 
         """
-        if schema_path is None:
-            schema_path = file_path.with_suffix(".schema.json")
+        if output_schema:
+            if schema_path is None:
+                schema_path = file_path.with_suffix(".schema.json")
 
-        # Export the model's schema with descriptions to a dict
-        schema = self.model_json_schema()
+            # Export the model's schema with descriptions to a dict
+            schema = self.model_json_schema()
 
-        # Save the schema (which includes descriptions) to a JSON file
-        with open(schema_path, "w") as f:
-            json.dump(schema, f, indent=4)
+            # Save the schema (which includes descriptions) to a JSON file
+            with open(schema_path, "w") as f:
+                json.dump(schema, f, indent=4)
 
         with open(file_path, mode="w", encoding="utf-8") as jsonfile:
             json_data = self.model_dump_json(indent=4)  # Convert to JSON string
@@ -232,7 +238,6 @@ class SourceCollection(pydantic.BaseModel):  # type: ignore
 
         # pydantic_core.from_json return Any. Therefore, typing.cast makes sure that
         # the output is indeed a TechnologyCollection
-        return typing.cast(
-            SourceCollection,
-            cls.model_validate(pydantic_core.from_json(json_data, allow_partial=True)),
+        return cls.model_validate(
+            pydantic_core.from_json(json_data, allow_partial=True)
         )
