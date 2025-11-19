@@ -209,3 +209,22 @@ class TestDEAEnergyStorage:
         assert all(filtered["par"] == "technical lifetime")
         filtered2 = filter_parameters(dataframe, False)
         assert len(filtered2) == 2
+
+    @pytest.mark.webarchive  # type: ignore
+    def test_build_technology_collection(self, tmp_path: pathlib.Path) -> None:
+        """Check if build_technology_collection works as expected."""
+        dataframe = pandas.DataFrame(
+            {
+                "est": ["base"],
+                "year": [2020],
+                "ws": ["Tech1"],
+                "Technology": ["Solar PV"],
+                "par": ["specific_investment"],
+                "val": [1000],
+                "unit": ["EUR_2020/kW"],
+            }
+        )
+        sources_path = pathlib.Path(tmp_path, "sources.json")
+        tech_collection = build_technology_collection(dataframe, sources_path)
+        assert len(tech_collection.technologies) == 1
+        assert "specific_investment" in tech_collection.technologies[0].parameters
