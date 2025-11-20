@@ -2,15 +2,29 @@
 #
 # SPDX-License-Identifier: MIT
 
-"""Data parser for the manual_input_usa.csv data set."""
+"""
+Data parser for the manual_input_usa.csv data set.
 
-import argparse
+How to run:
+    From the repository root, execute:
+        python src/technologydata/package_data/manual_input_usa/manual_input_usa.py
+
+Configuration options (command-line arguments):
+    --num_digits <int>         Number of significant digits to round the values. Default: 4
+    --store_source             Store the source object on the Wayback Machine. Default: False
+
+Example:
+    python src/technologydata/package_data/manual_input_usa/manual_input_usa.py --num_digits 3 --store_source
+
+"""
+
 import logging
 import pathlib
 
 import pandas
 
 from technologydata import (
+    Commons,
     Parameter,
     Source,
     SourceCollection,
@@ -21,36 +35,6 @@ from technologydata import (
 path_cwd = pathlib.Path.cwd()
 
 logger = logging.getLogger(__name__)
-
-
-def update_unit_with_currency_year(series: pandas.Series) -> pandas.Series:
-    """
-    Update unit string to include currency year for USD-based units.
-
-    Parameters
-    ----------
-    series : pandas.Series
-        A series containing two elements: [unit, currency_year]
-
-    Returns
-    -------
-    pandas.Series
-        Updated series with modified unit
-
-    Examples
-    --------
-    >>> update_unit_with_currency_year(["USD/Kwh", "2020"])
-    USD_2020/KwH
-
-    """
-    unit, currency_year = series
-
-    # Check if unit is a string, contains 'USD', and price_year is not null
-    if isinstance(unit, str) and "USD" in unit and pandas.notna(currency_year):
-        # Replace 'USD/' with 'uSD{price_year}/'
-        unit = unit.replace("USD", f"USD_{int(currency_year)}")
-
-    return pandas.Series([unit, currency_year])
 
 
 def extract_units_carriers_heating_value(
@@ -192,47 +176,11 @@ def build_technology_collection(
     return TechnologyCollection(technologies=list_techs)
 
 
-def parse_input_arguments() -> argparse.Namespace:
-    """
-    Parse command line arguments.
-
-    Returns
-    -------
-    argparse.Namespace
-        Parsed command line arguments containing:
-        - Number of significant digits
-        - Store source flag
-
-    """
-    # Create the parser
-    parser = argparse.ArgumentParser(
-        description="Parse the technology_data manual_input_usa.csv dataset",
-        formatter_class=argparse.RawTextHelpFormatter,
-    )
-
-    # Define arguments
-    parser.add_argument(
-        "--num_digits",
-        type=int,
-        default=4,
-        help="Name of significant digits to round the values. ",
-    )
-
-    parser.add_argument(
-        "--store_source",
-        action="store_true",
-        help="Store_source, store the source object on the wayback machine. Default: false",
-    )
-
-    # Parse arguments
-    args = parser.parse_args()
-
-    return args
-
-
 if __name__ == "__main__":
     # Parse input arguments
-    input_args = parse_input_arguments()
+    input_args = Commons.parse_input_arguments(
+        description="Parse the technology_data manual_input_usa.csv dataset"
+    )
     logger.info("Command line arguments parsed.")
 
     manual_input_usa_input_path = pathlib.Path(
@@ -263,9 +211,12 @@ if __name__ == "__main__":
     logger.info("`per unit` replaced by `%`. Corresponding value multiplied by 100.")
 
     # Include currency_year in unit if applicable
-    manual_input_usa_df[["unit", "currency_year"]] = manual_input_usa_df[
-        ["unit", "currency_year"]
-    ].apply(update_unit_with_currency_year, axis=1)
+    manual_input_usa_df["unit"] = manual_input_usa_df.apply(
+        lambda row: Commons.update_unit_with_currency_year(
+            row["unit"], row["currency_year"]
+        ),
+        axis=1,
+    )
     logger.info("`currency_year` included in `unit` column.")
 
     # Build TechnologyCollection

@@ -2910,7 +2910,7 @@
         {
             "name": "Alkaline electrolyzer large size",
             "detailed_technology": "Alkaline electrolyzer large size",
-            "case": "nan",
+            "case": "not_available",
             "region": "US",
             "year": 2020,
             "parameters": {
@@ -2939,7 +2939,7 @@
         {
             "name": "Coal-IGCC",
             "detailed_technology": "Coal-IGCC",
-            "case": "nan",
+            "case": "not_available",
             "region": "US",
             "year": 2020,
             "parameters": {
@@ -2988,7 +2988,7 @@
         {
             "name": "Fischer-Tropsch",
             "detailed_technology": "Fischer-Tropsch",
-            "case": "nan",
+            "case": "not_available",
             "region": "US",
             "year": 2020,
             "parameters": {
@@ -3137,7 +3137,7 @@
         {
             "name": "NG 2-on-1 Combined Cycle (F-Frame)",
             "detailed_technology": "NG 2-on-1 Combined Cycle (F-Frame)",
-            "case": "nan",
+            "case": "not_available",
             "region": "US",
             "year": 2020,
             "parameters": {
@@ -3166,7 +3166,7 @@
         {
             "name": "PEM electrolyzer small size",
             "detailed_technology": "PEM electrolyzer small size",
-            "case": "nan",
+            "case": "not_available",
             "region": "US",
             "year": 2020,
             "parameters": {
@@ -3195,7 +3195,7 @@
         {
             "name": "SOEC",
             "detailed_technology": "SOEC",
-            "case": "nan",
+            "case": "not_available",
             "region": "US",
             "year": 2020,
             "parameters": {
@@ -3224,7 +3224,7 @@
         {
             "name": "direct air capture",
             "detailed_technology": "direct air capture",
-            "case": "nan",
+            "case": "not_available",
             "region": "US",
             "year": 2020,
             "parameters": {
@@ -3293,7 +3293,7 @@
         {
             "name": "hydrogen storage compressor",
             "detailed_technology": "hydrogen storage compressor",
-            "case": "nan",
+            "case": "not_available",
             "region": "US",
             "year": 2020,
             "parameters": {
@@ -3382,7 +3382,7 @@
         {
             "name": "hydrogen storage tank type 1",
             "detailed_technology": "hydrogen storage tank type 1",
-            "case": "nan",
+            "case": "not_available",
             "region": "US",
             "year": 2020,
             "parameters": {
@@ -3471,7 +3471,7 @@
         {
             "name": "battery inverter",
             "detailed_technology": "battery inverter",
-            "case": "nan",
+            "case": "not_available",
             "region": "US",
             "year": 2022,
             "parameters": {
@@ -3500,7 +3500,7 @@
         {
             "name": "battery storage",
             "detailed_technology": "battery storage",
-            "case": "nan",
+            "case": "not_available",
             "region": "US",
             "year": 2022,
             "parameters": {
@@ -3529,7 +3529,7 @@
         {
             "name": "Coal integrated retrofit 90%-CCS",
             "detailed_technology": "Coal integrated retrofit 90%-CCS",
-            "case": "nan",
+            "case": "not_available",
             "region": "US",
             "year": 2030,
             "parameters": {
@@ -3578,7 +3578,7 @@
         {
             "name": "Coal integrated retrofit 95%-CCS",
             "detailed_technology": "Coal integrated retrofit 95%-CCS",
-            "case": "nan",
+            "case": "not_available",
             "region": "US",
             "year": 2030,
             "parameters": {
@@ -3627,7 +3627,7 @@
         {
             "name": "Coal-95%-CCS",
             "detailed_technology": "Coal-95%-CCS",
-            "case": "nan",
+            "case": "not_available",
             "region": "US",
             "year": 2030,
             "parameters": {
@@ -3696,7 +3696,7 @@
         {
             "name": "Coal-99%-CCS",
             "detailed_technology": "Coal-99%-CCS",
-            "case": "nan",
+            "case": "not_available",
             "region": "US",
             "year": 2030,
             "parameters": {
@@ -3765,7 +3765,7 @@
         {
             "name": "Coal-IGCC-90%-CCS",
             "detailed_technology": "Coal-IGCC-90%-CCS",
-            "case": "nan",
+            "case": "not_available",
             "region": "US",
             "year": 2030,
             "parameters": {
@@ -3834,7 +3834,7 @@
         {
             "name": "Fischer-Tropsch",
             "detailed_technology": "Fischer-Tropsch",
-            "case": "nan",
+            "case": "not_available",
             "region": "US",
             "year": 2030,
             "parameters": {
@@ -3863,7 +3863,7 @@
         {
             "name": "NG 2-on-1 Combined Cycle (F-Frame)",
             "detailed_technology": "NG 2-on-1 Combined Cycle (F-Frame)",
-            "case": "nan",
+            "case": "not_available",
             "region": "US",
             "year": 2030,
             "parameters": {
@@ -3912,7 +3912,7 @@
         {
             "name": "NG 2-on-1 Combined Cycle (F-Frame) 95% CCS",
             "detailed_technology": "NG 2-on-1 Combined Cycle (F-Frame) 95% CCS",
-            "case": "nan",
+            "case": "not_available",
             "region": "US",
             "year": 2030,
             "parameters": {
@@ -3981,7 +3981,7 @@
         {
             "name": "NG 2-on-1 Combined Cycle (F-Frame) 97% CCS",
             "detailed_technology": "NG 2-on-1 Combined Cycle (F-Frame) 97% CCS",
-            "case": "nan",
+            "case": "not_available",
             "region": "US",
             "year": 2030,
             "parameters": {
@@ -4050,7 +4050,7 @@
         {
             "name": "NG Combined Cycle F-Class integrated retrofit 90%-CCS",
             "detailed_technology": "NG Combined Cycle F-Class integrated retrofit 90%-CCS",
-            "case": "nan",
+            "case": "not_available",
             "region": "US",
             "year": 2030,
             "parameters": {
@@ -4099,7 +4099,7 @@
         {
             "name": "NG Combined Cycle F-Class integrated retrofit 95%-CCS",
             "detailed_technology": "NG Combined Cycle F-Class integrated retrofit 95%-CCS",
-            "case": "nan",
+            "case": "not_available",
             "region": "US",
             "year": 2030,
             "parameters": {
