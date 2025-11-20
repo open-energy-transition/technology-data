@@ -35,6 +35,9 @@ nav:
   - Code of Conduct: contributing/CODE_OF_CONDUCT.md
   - Contributors: contributing/contributors.md
 
+- API Reference:
+  - Source: api/source.md
+
 # Theme settings
 theme:
   name: material
