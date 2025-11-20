@@ -8,7 +8,7 @@ import argparse
 import enum
 import logging
 import re
-from typing import Annotated, Any, Type
+from typing import Annotated, Any
 
 import dateutil
 import pandas as pd

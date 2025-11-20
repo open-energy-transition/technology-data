@@ -20,7 +20,6 @@ Example:
 
 """
 
-import argparse
 import logging
 import pathlib
 import re
@@ -496,7 +495,10 @@ if __name__ == "__main__":
         ),
     ]
 
-    input_args = Commons.parse_input_arguments(additional_arguments=additional_input_args, description="Parse the DEA technology storage dataset")
+    input_args = Commons.parse_input_arguments(
+        additional_arguments=additional_input_args,
+        description="Parse the DEA technology storage dataset",
+    )
     logger.info("Command line arguments parsed.")
 
     # Read the raw data
