@@ -80,10 +80,13 @@ dp.to_csv("path/to/output_folder")
 
 ### Extracting Source Collection
 
-If you want to extract and aggregate all sources from the technology collection:
+The `sources` attribute of the `DataPackage` can be automatically populated by extracting the sources from the `TechnologyCollection`.
+
+In this context, `extracting` means scanning the `TechnologyCollection` for all `Source` references that appear in the technology parameters, and aggregating them into a single `SourceCollection`. The extraction process yields a collection of unique sources, by removing duplicates based on all source attributes.
 
 ```python
-from technologydata import DataPackage, TechnologyCollection
+from technologydata.datapackage import DataPackage
+from technologydata.technology_collection import TechnologyCollection
 
 # Create a DataPackage with existing collections
 dp = DataPackage(
@@ -93,6 +96,11 @@ dp = DataPackage(
 # Populate dp.sources with all unique sources from the technology collection
 dp.get_source_collection()
 ```
+
+Extracing the source collection can be useful in scenarios such as:
+- When loading a data package that does not include a `sources.json` file, to ensure that all sources referenced in the technologies are captured.
+- Before exporting the data package (to `sources.json`, CSV, or for sharing) so the package includes a consistent, central catalog of sources.
+- When you need to produce provenance, citation lists, or run validations that require an explicit `SourceCollection`.
 
 ## API Reference
 
