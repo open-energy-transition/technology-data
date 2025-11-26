@@ -162,6 +162,7 @@ plugins:
           filters:
           - "!^_[^_]"
           - "!logger"
+          - "!iteration"
           heading_level: 1
           merge_init_into_class: true
           parameter_headings: false
@@ -176,6 +177,7 @@ plugins:
           summary: true
           show_if_no_docstring: true
           show_inheritance_diagram: true
+          show_root_toc_entry: false
 
 hooks:
 - docs/assets/overrides/hooks/shortcodes.py

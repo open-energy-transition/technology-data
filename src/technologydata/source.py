@@ -140,10 +140,6 @@ class Source(pydantic.BaseModel):
         an archived URL or archive date is already present. If neither is available, it attempts to archive the
         URL using the Wayback Machine and updates the corresponding attributes.
 
-        Parameters
-        ----------
-        None
-
         Returns
         -------
         None
