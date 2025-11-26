@@ -1,8 +1,7 @@
 ::: technologydata.source_collection
     options:
-        members_order: source 
+        members_order: source
         filters:
-          - "!^_[^_]"
-          - "!logger"
-          - "!iteration"
-
+            - "!^_[^_]"
+            - "!logger"
+            - "!iteration"
