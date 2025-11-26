@@ -1,1 +1,1 @@
-::: technologydata.datapackage
+::: technologydata.datapackage.DataPackage

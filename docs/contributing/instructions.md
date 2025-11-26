@@ -17,7 +17,7 @@ We enthusiastically invite anyone interested in `technologydata` to share new id
 
 ## Where to go for help
 
-- To **discuss** with other `technologydata` users, organise projects, share news, and get in touch with the community, please refer to the [Contacts](/docs/home/contacts.md) page.
+- To **discuss** with other `technologydata` users, organise projects, share news, and get in touch with the community, please refer to the [Contacts](../home/contacts.md) page.
 - For **guidelines to contribute**, stay right here.
 
 ## Code contributions

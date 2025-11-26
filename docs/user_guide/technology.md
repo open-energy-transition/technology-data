@@ -133,37 +133,7 @@ scaled_tech = tech.adjust_scale(1.1)
 
 ## API Reference
 
-### Attributes
-
-- `name`: str
-  - Name of the technology.
-- `detailed_technology`: str
-  - More detailed technology name.
-- `case`: str
-  - Case or scenario identifier.
-- `region`: str
-  - Region identifier.
-- `year`: int
-  - Year of the data.
-- `parameters`: dict[str, Parameter]
-  - Dictionary of parameter names to `Parameter` objects.
-
-### Methods
-
-- `__getitem__(key: str) -> Parameter`
-  - Access a parameter by name.
-- `__setitem__(key: str, value: Parameter) -> None`
-  - Set a parameter by name.
-- `check_consistency() -> bool`
-  - Check for consistency and completeness of required parameters.
-- `calculate_parameters(parameters: Any | None = None) -> Technology`
-  - Calculate missing or derived parameters (placeholder).
-- `to_currency(target_currency: str, overwrite_country: None | str = None, source: str = "worldbank") -> Technology`
-  - Adjust the currency of all parameters to the target currency.
-- `adjust_region(target_region: str) -> Technology`
-  - Adjust technology parameters to match a different region (placeholder).
-- `adjust_scale(scaling_factor: float) -> Technology`
-  - Scale parameter values by a scaling factor (placeholder).
+Please refer to the [API documentation](../api/technology.md) for detailed information on the `Technology` class methods and attributes.
 
 ## Limitations & Notes
 

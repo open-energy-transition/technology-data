@@ -103,17 +103,7 @@ dp.get_source_collection()
 
 ## API Reference
 
-### Attributes
-
-- `technologies`: Optional `TechnologyCollection` containing technology objects.
-- `sources`: Optional `SourceCollection` containing source objects.
-
-### Methods
-
-- `get_source_collection()`: Extracts all sources from the technology collection and populates the `sources` attribute.
-- `from_json(path_to_folder)`: Loads a `DataPackage` from JSON files in the specified folder.
-- `to_json(folder_path)`: Exports the data package to JSON files.
-- `to_csv(folder_path)`: Exports the data package to CSV files.
+Please refer to the [API documentation](../api/datapackage.md) for detailed information on the `DataPackage` class methods and attributes.
 
 ## Limitations & Notes
 

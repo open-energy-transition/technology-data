@@ -124,33 +124,7 @@ projected = collection.project(
 
 ## API Reference
 
-### Attributes
-
-- `technologies`: list[Technology]
-  - List of Technology objects in the collection.
-
-### Methods
-
-- `__iter__() -> Iterator[Technology]`
-  - Iterate over the technologies in the collection.
-- `__len__() -> int`
-  - Return the number of technologies in the collection.
-- `get(name, region, year, case, detailed_technology) -> TechnologyCollection`
-  - Filter technologies using regex patterns for key attributes.
-- `to_dataframe() -> pandas.DataFrame`
-  - Convert the collection to a pandas DataFrame.
-- `to_csv(**kwargs)`
-  - Export the collection to a CSV file.
-- `to_json(file_path, schema_path=None)`
-  - Export the collection to a JSON file and schema.
-- `from_json(file_path) -> TechnologyCollection`
-  - Load a collection from a JSON file.
-- `to_currency(target_currency, overwrite_country=None, source='worldbank') -> TechnologyCollection`
-  - Adjust all technology parameters to the target currency.
-- `fit(parameter, model, p0=None) -> GrowthModel`
-  - Fit a growth model to a specified parameter across all technologies.
-- `project(to_years, parameters) -> TechnologyCollection`
-  - Project specified parameters for all technologies to future years.
+Please refer to the [API documentation](../api/technology_collection.md) for detailed information on the `TechnologyCollection` class methods and attributes.
 
 ## Limitations & Notes
 

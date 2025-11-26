@@ -93,21 +93,7 @@ print(downloaded_paths)
 
 ## API Reference
 
-### Attributes
-
-- `sources`: List of `Source` objects.
-
-### Methods
-
-- `__iter__()`: Returns an iterator over the sources.
-- `__len__()`: Returns the number of sources in the collection.
-- `__str__()`: Returns a string representation of the collection.
-- `get(title, authors)`: Returns a filtered `SourceCollection` using regex patterns.
-- `retrieve_all_from_wayback(download_directory)`: Downloads archived files for all sources.
-- `to_dataframe()`: Converts the collection to a pandas DataFrame.
-- `to_csv(**kwargs)`: Exports the collection to a CSV file.
-- `to_json(file_path, schema_path=None)`: Exports the collection to a JSON file and schema.
-- `from_json(file_path)`: Class method to import a collection from a JSON file.
+Please refer to the [API documentation](../api/source_collection.md) for detailed information on the `SourceCollection` class methods and attributes.
 
 ## Limitations & Notes
 

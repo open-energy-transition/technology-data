@@ -53,26 +53,7 @@ print(output_path)  # Path to downloaded file
 
 ## API Reference
 
-### Attributes
-
-- `title`: Title of the source (str).
-- `authors`: Authors of the source (str).
-- `url`: Optional URL of the source (str or None).
-- `url_archive`: Optional archived URL (str or None).
-- `url_date`: Optional date the URL was accessed (str or None).
-- `url_date_archive`: Optional date the URL was archived (str or None).
-
-### Methods
-
-- `__eq__(other)`: Checks equality with another Source.
-- `__hash__()`: Returns a hash value for the Source.
-- `__str__()`: Returns a string representation of the Source.
-- `ensure_in_wayback()`: Archives the URL in the Wayback Machine and updates attributes.
-- `retrieve_from_wayback(download_directory)`: Downloads the archived file to the specified directory.
-- `_store_in_wayback(url_to_archive)`: Static (private) method to archive a URL and extract timestamp.
-- `_get_save_path(url_archived, source_path, source_title)`: Static (private) method to determine save path and extension.
-- `_get_content_type(url_archived)`: Static method to fetch content type from archived URL.
-- `_download_file(url_archived, save_path)`: Static (private) method to download file from archived URL.
+Please refer to the [API documentation](../api/source.md) for detailed information on the `Source` class methods and attributes.
 
 ## Limitations & Notes
 
