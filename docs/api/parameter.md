@@ -1,1 +1,1 @@
-::: technologydata.parameter
+::: technologydata.parameter.Parameter

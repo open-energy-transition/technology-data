@@ -1,1 +1,1 @@
-::: technologydata.technology_collection
+::: technologydata.technology_collection.TechnologyCollection
