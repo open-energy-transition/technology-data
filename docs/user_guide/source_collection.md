@@ -95,7 +95,7 @@ print(downloaded_paths)
 
 Please refer to the [API documentation](../api/source_collection.md) for detailed information on the `SourceCollection` class methods and attributes.
 
-## Limitations & Notes
+## Notes
 
 - **Filtering**: Regex patterns are case-insensitive and applied to non-optional attributes.
 - **Archiving**: Download failures return `None` for the corresponding source.

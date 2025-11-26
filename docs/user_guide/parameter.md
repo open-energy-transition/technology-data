@@ -174,7 +174,7 @@ param_mixed_hhv = param_mixed.change_heating_value("HHV")
 
 Please refer to the [API documentation](../api/parameter.md) for detailed information on the `Parameter` class methods and attributes.
 
-## Limitations & Notes
+## Notes
 
 - **Provenance/Note/Sources in Arithmetic**: When performing arithmetic operations, the handling and merging of `provenance`, `note`, and `sources` is not yet implemented (see `TODO` comments in the code).
 - **Unit Conversion**: The `.to()` method does not support currency conversion; use `.to_currency()` for that.

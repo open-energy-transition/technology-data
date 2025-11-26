@@ -26,9 +26,7 @@ The `DataPackage` class in `technologydata` provides a container for managing co
 You can create a `DataPackage` by instantiating it directly or by loading from JSON files.
 
 ```python
-from technologydata.datapackage import DataPackage
-from technologydata.technology_collection import TechnologyCollection
-from technologydata.source_collection import SourceCollection
+from technologydata import DataPackage, TechnologyCollection, SourceCollection
 
 # Create a DataPackage with existing collections
 dp = DataPackage(
@@ -42,7 +40,7 @@ dp = DataPackage(
 To load a `DataPackage` from a folder containing `technologies.json` and (optionally) `sources.json`:
 
 ```python
-from technologydata.datapackage import DataPackage
+from technologydata import DataPackage
 dp = DataPackage.from_json("path/to/data_package_folder")
 ```
 
@@ -53,9 +51,7 @@ This will automatically extract sources from the technologies if not already pre
 Export the data package to JSON files in a specified folder:
 
 ```python
-from technologydata.datapackage import DataPackage
-from technologydata.technology_collection import TechnologyCollection
-from technologydata.source_collection import SourceCollection
+from technologydata import DataPackage, TechnologyCollection, SourceCollection
 
 # Create a DataPackage with existing collections
 dp = DataPackage(
@@ -70,9 +66,7 @@ dp.to_json("path/to/output_folder")
 Export the data package to CSV files:
 
 ```python
-from technologydata.datapackage import DataPackage
-from technologydata.technology_collection import TechnologyCollection
-from technologydata.source_collection import SourceCollection
+from technologydata import DataPackage, TechnologyCollection, SourceCollection
 
 # Create a DataPackage with existing collections
 dp = DataPackage(
@@ -89,8 +83,7 @@ dp.to_csv("path/to/output_folder")
 If you want to extract and aggregate all sources from the technology collection:
 
 ```python
-from technologydata.datapackage import DataPackage
-from technologydata.technology_collection import TechnologyCollection
+from technologydata import DataPackage, TechnologyCollection
 
 # Create a DataPackage with existing collections
 dp = DataPackage(

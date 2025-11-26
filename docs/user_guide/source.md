@@ -28,6 +28,7 @@ The `Source` class in `technologydata` represents bibliographic and web sources,
 from technologydata.source import Source
 src = Source(title="Example Source", authors="The Authors", url="http://example.com")
 ```
+A `Source` object can also be used to archive and retrieve PDFs or other files format as Excel.
 
 ### Archiving a URL
 
@@ -51,11 +52,35 @@ output_path = src.retrieve_from_wayback(pathlib.Path("downloads/"))
 print(output_path)  # Path to downloaded file
 ```
 
+### Example usage for an Excel file
+
+```python
+import pathlib
+import pandas as pd
+from technologydata.source import Source
+
+# Create a Source for an Excel file
+excel_src = Source(title="Example Spreadsheet", authors="The Authors", url="http://example.com/data.xlsx")
+
+# Ensure the URL is archived (creates an archive if missing)
+excel_src.ensure_in_wayback()
+print("Archive URL:", excel_src.url_archive)
+print("Archive timestamp:", excel_src.url_date_archive)
+
+# Retrieve the archived file to `downloads/`
+out_path = excel_src.retrieve_from_wayback(pathlib.Path("downloads/"))
+print("Downloaded to:", out_path)
+
+# Read the downloaded Excel file with pandas
+df = pd.read_excel(out_path)
+print(df.head())
+```
+
 ## API Reference
 
 Please refer to the [API documentation](../api/source.md) for detailed information on the `Source` class methods and attributes.
 
-## Limitations & Notes
+## Notes
 
 - **Archiving**: If the URL is not set, archiving will raise a `ValueError`.
 - **File Extensions**: File extension is inferred from content type or URL; unsupported types raise a `ValueError`.

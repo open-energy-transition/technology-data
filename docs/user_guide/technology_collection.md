@@ -126,7 +126,7 @@ projected = collection.project(
 
 Please refer to the [API documentation](../api/technology_collection.md) for detailed information on the `TechnologyCollection` class methods and attributes.
 
-## Limitations & Notes
+## Notes
 
 - **Filtering**: Regex patterns are case-insensitive and applied to non-optional attributes.
 - **Export**: Default CSV export uses UTF-8 encoding and quotes all fields.

@@ -135,7 +135,7 @@ scaled_tech = tech.adjust_scale(1.1)
 
 Please refer to the [API documentation](../api/technology.md) for detailed information on the `Technology` class methods and attributes.
 
-## Limitations & Notes
+## Notes
 
 - **Parameter Calculation**: The method for calculating missing or derived parameters is a placeholder and not yet implemented.
 - **Region and Scale Adjustment**: Methods for region and scale adjustment are placeholders.
