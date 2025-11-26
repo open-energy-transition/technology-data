@@ -36,7 +36,12 @@ nav:
   - Contributors: contributing/contributors.md
 
 - API Reference:
+  - Data Package: api/datapackage.md
+  - Parameter: api/parameter.md
   - Source: api/source.md
+  - Source Collection: api/source_collection.md
+  - Technology: api/technology.md
+  - Technology Collection: api/technology_collection.md
 
 # Theme settings
 theme:
