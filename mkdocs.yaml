@@ -30,10 +30,8 @@ nav:
   - Technology Collection: user_guide/technology_collection.md
   - Use Cases: user_guide/design.md
 
-- Contributing:
-  - Instructions: contributing/instructions.md
-  - Code of Conduct: contributing/CODE_OF_CONDUCT.md
-  - Contributors: contributing/contributors.md
+- Examples:
+  - Danish Energy Agency energy storage: examples/dea_storage.md
 
 - API Reference:
   - Data Package: api/datapackage.md
@@ -42,6 +40,11 @@ nav:
   - Source Collection: api/source_collection.md
   - Technology: api/technology.md
   - Technology Collection: api/technology_collection.md
+
+- Contributing:
+  - Instructions: contributing/instructions.md
+  - Code of Conduct: contributing/CODE_OF_CONDUCT.md
+  - Contributors: contributing/contributors.md
 
 # Theme settings
 theme:
