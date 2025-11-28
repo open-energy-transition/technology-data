@@ -22,7 +22,7 @@ nav:
 
 - User Guide:
   - Data Package: user_guide/datapackage.md
-  - Growth Models: user_guide/models.md
+  - Models: user_guide/models.md
   - Parameter: user_guide/parameter.md
   - Source: user_guide/source.md
   - Source Collection: user_guide/source_collection.md
@@ -31,7 +31,7 @@ nav:
   - Use Cases: user_guide/design.md
 
 - Examples:
-  - Danish Energy Agency energy storage: examples/dea_storage.md
+  - Danish Energy Agency Parser: examples/dea_storage.md
 
 - API Reference:
   - Data Package: api/datapackage.md

@@ -1,4 +1,4 @@
-# Title
+# Growth Models Documentation
 
 <!--
 SPDX-FileCopyrightText: 2025 The technology-data authors
