@@ -1,17 +1,17 @@
 # Danish Energy Agency Parser Documentation
 
-
 ## Overview
+
 The Danish Energy Agency (DEA) data parser `dea_energy_storage.py` demonstrates a full data-cleaning and transformation pipeline for converting raw tabular data into the `technologydata` schema`technologies.json` and `sources.json`. The parser is implemented in `src/technologydata/package_data/dea_energy_storage/dea_energy_storage.py`.
 
 ## Dataset Description
 
-
-Original dataset: https://ens.dk/media/6589/download
+Original dataset: <https://ens.dk/media/6589/download>
 
 Raw source file included in the repository: `src/technologydata/package_data/raw/Technology_datasheet_for_energy_storage.xlsx`
 
 Dataset description
+
 - The Excel file contains a flat table (sheet `alldata_flat`) of technology parameters for a range of energy storage technologies.
 - Typical columns include: `Technology`, `ws`, `par` (parameter name), `val` (value), `unit`, `year`, `est` (case/estimate), `priceyear`, plus metadata columns such as `cat`, `ref`, `note`.
 - Rows are individual parameter records (parameter value + unit + context) for technologies and estimation cases.
@@ -76,13 +76,14 @@ Step‑by‑step description of the code
     - If `--export_schema` is used, schema files produced during export are moved into `src/technologydata/package_data/schemas`.
 
 Running the example
+
 - From repository root:
   - Basic run: `python src/technologydata/package_data/dea_energy_storage/dea_energy_storage.py`
   - Example with options:
     - `--num_digits 3 --store_source --filter_params --export_schema`
 
 Outputs
+
 - `src/technologydata/package_data/dea_energy_storage/technologies.json` (produced by the script).
 - `src/technologydata/package_data/dea_energy_storage/sources.json` (produced or read).
 - Optional schema files moved to `src/technologydata/package_data/schemas` when `--export_schema` is used.
-

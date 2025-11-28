@@ -9,6 +9,3 @@ The package is available at: https://github.com/open-energy-transition/technolog
 
 Authors: Johannes Hampp, Fabrizio Finozzi
 ```
-
-
-
