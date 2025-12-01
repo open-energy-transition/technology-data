@@ -40,6 +40,15 @@ nav:
   - Source Collection: api/source_collection.md
   - Technology: api/technology.md
   - Technology Collection: api/technology_collection.md
+  - Utils:
+    - Commons:
+      - Common functionalities: api/commons/commons.md
+      - File extension enumeration: api/commons/fileextensionenum.md
+      - Date format enumeration: api/commons/dateformatenum.md
+    - Units:
+      - Custom undefined unit error: api/units/customundefineduniterror.md
+      - Special unit registry: api/units/specialunitregistry.md
+
 
 - Contributing:
   - Instructions: contributing/instructions.md
