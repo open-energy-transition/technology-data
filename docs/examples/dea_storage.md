@@ -1,22 +1,15 @@
 # Danish Energy Agency Parser Documentation
 
-
 ## Overview
-The Danish Energy Agency (DEA) data parser `dea_energy_storage.py` demonstrates a full data-cleaning and transformation pipeline for converting raw tabular data into the `technologydata` schema`technologies.json` and `sources.json`. The parser is implemented in `src/technologydata/package_data/dea_energy_storage/dea_energy_storage.py`.
+The Danish Energy Agency (DEA) data parser `dea_energy_storage.py` demonstrates a full data-cleaning and transformation pipeline for converting raw tabular data into the `technologydata` schema files `technologies.json` and `sources.json`. The parser is implemented in `src/technologydata/package_data/dea_energy_storage/dea_energy_storage.py`.
 
 ## Dataset Description
 
+The original dataset is available at this [link](https://ens.dk/media/6589/download). A full description of the dataset is available at this [link](https://ens.dk/media/6588/download). The raw source file is included in the repository at `src/technologydata/package_data/raw/Technology_datasheet_for_energy_storage.xlsx`.
 
-Original dataset: https://ens.dk/media/6589/download
+The dataset is in Excel format, and it includes, under the data sheet `alldata_flat`, a flat table of technology parameters for a range of energy storage technologies. Columns include `Technology`, `ws`, `par` (parameter name), `val` (value), `unit`, `year`, `est` (case/estimate), `priceyear`, plus metadata columns such as `cat`, `ref`, `note`. Rows are individual parameter records (parameter value + unit + context) for technologies and estimation cases.
 
-Raw source file included in the repository: `src/technologydata/package_data/raw/Technology_datasheet_for_energy_storage.xlsx`
-
-Dataset description
-- The Excel file contains a flat table (sheet `alldata_flat`) of technology parameters for a range of energy storage technologies.
-- Typical columns include: `Technology`, `ws`, `par` (parameter name), `val` (value), `unit`, `year`, `est` (case/estimate), `priceyear`, plus metadata columns such as `cat`, `ref`, `note`.
-- Rows are individual parameter records (parameter value + unit + context) for technologies and estimation cases.
-
-Step‑by‑step description of the code
+## Parser description
 
 - Argument parsing
   - `parse_input_arguments()` defines and parses CLI flags:
