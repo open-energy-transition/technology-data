@@ -27,15 +27,16 @@ Function `parse_input_arguments()` defines and parses the command-line arguments
 The script reads the raw data available at `src/technologydata/package_data/raw/Technology_datasheet_for_energy_storage.xlsx`, under sheet `alldata_flat`, in a `pandas` dataframe. It uses `pandas.read_excel(..., engine=calamine, dtype=str)`. All entries are handled as strings initially.
 
 ### Data cleaning, validation and dealing with missing/null values
+
 The data cleaning and validation happens with the following steps.
 
 Function `drop_invalid_rows(df)` validates whether required columns are present. It drops rows with missing/null or empty critical fields (`Technology`, `par`, `val`, `year`) and keeps rows where `year` contains a 4-digit year and `val` contains numeric characters and no comparator symbols (`<`, `>`, `≤`, `≥`).
 
 Function `clean_technology_string()` normalizes text fields by removing leading 3-digit numeric codes, trims whitespace and lower-cases the string for consistent matching. It is applied to the columns `Technology` and `ws`. As an example, `clean_technology_string()` converts `151b Hydrogen Storage - LOHC` to `hydrogen storage - lohc`.
 
-Function `extract_year()` extracts the first sequence of digits from the `year` column and converts it to an integer. The column contains in fact entries like `Uncertainty (2050)` (str) which are converted to `2050` (int). 
+Function `extract_year()` extracts the first sequence of digits from the `year` column and converts it to an integer. The column contains in fact entries like `Uncertainty (2050)` (str) which are converted to `2050` (int).
 
-Function `clean_parameter_string()` removes leading hyphens, removes text inside square brackets (units/notes), collapses extra spaces and lower-cases the parameter name. It is applied to the `par` column. 
+Function `clean_parameter_string()` removes leading hyphens, removes text inside square brackets (units/notes), collapses extra spaces and lower-cases the parameter name. It is applied to the `par` column.
 
 Function `standardize_units()` is applied to columns `par` and `unit`. It completes missing units based on parameter name (e.g., `energy storage capacity for one unit` is mapped to the unit `MWh`) via a parameter-to-unit map. Moreover, it replaces known incorrect unit strings as `⁰C` -> `C` or `m2` to `meter**2`. The unit substitutions are driven by the `pint` documentation available at this [link](https://github.com/hgrecco/pint/blob/master/pint/default_en.txt).
 
@@ -72,6 +73,7 @@ From repository root:
   - `--num_digits 3 --store_source --filter_params --export_schema`
 
 ### Outputs
+
 The parser generates the following outputs:
 - `src/technologydata/package_data/dea_energy_storage/technologies.json`.
 - `src/technologydata/package_data/dea_energy_storage/sources.json`.
