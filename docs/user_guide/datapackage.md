@@ -97,7 +97,7 @@ dp = DataPackage(
 dp.get_source_collection()
 ```
 
-Extracing the source collection can be useful in scenarios such as:
+Extracting the source collection can be useful in scenarios such as:
 - When loading a data package that does not include a `sources.json` file, to ensure that all sources referenced in the technologies are captured.
 - Before exporting the data package (to `sources.json`, CSV, or for sharing) so the package includes a consistent, central catalog of sources.
 - When you need to produce provenance, citation lists, or run validations that require an explicit `SourceCollection`.
