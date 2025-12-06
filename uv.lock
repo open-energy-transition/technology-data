@@ -2178,7 +2178,7 @@ wheels = [
 
 [[package]]
 name = "pydeflate"
-version = "2.3.1"
+version = "2.3.2"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "filelock" },
@@ -2192,9 +2192,9 @@ dependencies = [
     { name = "requests" },
     { name = "wbgapi" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/b2/03/7f8b29b92f6a0afea367c3aa41449204778346a9a06c9baf3751965227bd/pydeflate-2.3.1.tar.gz", hash = "sha256:1701a7a66aaf657ed21aa3399165b0f76c4d6dbef35e8934a7998cfb4f2fe68b", size = 39352, upload_time = "2025-12-05T11:53:47.154Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/cc/8a/afd7ba64525b90419dc1b8c8e38c16acc171e34de9d5152e9eefa4e31ea5/pydeflate-2.3.2.tar.gz", hash = "sha256:8073ee97fbb36aeb6bec0dff6374388f9abe3744063dedbfc62e1a54376e83fa", size = 39371, upload_time = "2025-12-06T14:39:32.231Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/9c/c8/73a9070eb9f862cca8a7c2cd0589b5f311938468848c582023d5ad0a91f6/pydeflate-2.3.1-py3-none-any.whl", hash = "sha256:8c20878117b993ef28bf4415f429742e425d330d638a2ca2b08a3c13a05ef454", size = 53961, upload_time = "2025-12-05T11:53:48.406Z" },
+    { url = "https://files.pythonhosted.org/packages/ad/43/2d6041bf98ce926573e90e2fcba31f6f49b6458dca6d3cd8713e67bc0f11/pydeflate-2.3.2-py3-none-any.whl", hash = "sha256:9e563a88bf089c2f9fe7b0b902f3797195f8099362d98056a1cb379ea3a0e086", size = 53985, upload_time = "2025-12-06T14:39:30.979Z" },
 ]
 
 [[package]]
@@ -3065,7 +3065,7 @@ requires-dist = [
     { name = "pandas", specifier = ">=2.2.3" },
     { name = "pint", specifier = ">=0.24.4" },
     { name = "pydantic", specifier = ">=2.11.7" },
-    { name = "pydeflate", specifier = ">=2.3.1" },
+    { name = "pydeflate", specifier = ">=2.3.2" },
     { name = "requests", specifier = ">=2.32.3" },
     { name = "savepagenow", specifier = ">=1.3.0" },
     { name = "scipy", specifier = ">=1.16.1" },
