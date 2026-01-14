@@ -44,7 +44,6 @@ Homepage = "https://github.com/open-energy-transition/technology-data"
 Source = "https://github.com/open-energy-transition/technology-data"
 BugTracker = "https://github.com/open-energy-transition/technology-data/issues"
 Changelog = "https://github.com/open-energy-transition/technology-data/releases"
-Documentation = ""
 
 # https://docs.astral.sh/uv/concepts/projects/dependencies/#dependency-groups
 # editable installation of package and non-packaged dependencies
