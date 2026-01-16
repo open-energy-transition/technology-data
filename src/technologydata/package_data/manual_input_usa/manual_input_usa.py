@@ -8,7 +8,8 @@ Data parser for manually specified, USA-specific data from the technology-data r
 How to run:
     From the repository root, execute:
         python src/technologydata/package_data/manual_input_usa/manual_input_usa.py
-
+This will regenerate the files `src/technologydata/package_data/manual_input_usa/{sources.json|technologies.json}` with the specified options.
+Use the default options to reproduce the file provided with the package.
 Configuration options (command-line arguments):
     --num_digits <int>         Number of significant digits to round the values. Default: 4
     --store_source             Store the source object on the Wayback Machine. Default: False
