@@ -58,7 +58,7 @@ and a few right ways to convert these to e.g. EUR and adjust it for inflation to
 
 The package is currently under development. A pre-release is published to `PyPI`. The package is not yet available on `conda-forge`.
 
-To install the package 
+To install the package
 
 ```bash
 pip install technologydata
