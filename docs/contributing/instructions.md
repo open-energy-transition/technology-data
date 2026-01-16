@@ -168,7 +168,7 @@ If you encounter such issues, you can run the tests sequentially by omitting the
 pytest
 ```
 
-## Documentation contributions
+## Building the documentation locally
 
 The documentation is generated with [MkDocs](https://www.mkdocs.org/). The documentation source files are written in Markdown and are available under the `/docs` sub-folder. The documentation is configured with the `mkdocs.yaml` file.
 
