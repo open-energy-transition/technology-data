@@ -17,6 +17,7 @@ The parser is articulated in the following steps.
 ### Command line argument parsing
 
 Function `parse_input_arguments()` defines and parses the command-line arguments:
+
 - `--num_digits` (int, default 4) — number of decimals used when rounding numeric values. The default value is 4.
 - `--store_source` (boolean flag) — whether to store the source on the Wayback Machine. The default value is `false`.
 - `--filter_params` (boolean flag) — whether to limit exported parameters to a fixed allowed set. The default value is `false`.
@@ -45,6 +46,7 @@ Function `Commons.update_unit_with_currency_year(unit, priceyear)`, if present, 
 Function `format_val_number(value, num_decimals)` parses numeric formats including comma decimal separators and scientific notation variants (e.g., `×10`) and converts them to float and rounds them to `num_decimals`.
 
 The parser also applies the following corrections and substitutions:
+
 - Convert `MEUR_2020` and `kEUR_2020`/`KEUR_2020` to `EUR_2020` and scale numeric `val` accordingly (×1e6 or ×1e3).
 - Specific unit fixes (example: `mol/s/m/MPa1/2` → `mol/s/m/Pa` with value scaling).
 - Certain `par` values (e.g., `energy storage capacity for one unit`, `tank volume of example`) are normalized to `capacity`.
@@ -56,6 +58,7 @@ Function `filter_parameters(df, filter_flag)`, if `filter_flag` is true, keeps o
 ### Populate and export the source and technology collections
 
 Function `build_technology_collection()`:
+
 - if `store_source` is set, constructs a `Source` object for the DEA dataset, calls `ensure_in_wayback()` and writes `sources.json`; otherwise reads an existing `sources.json`.
 - groups the cleaned DataFrame by `est`, `year`, `ws`, `Technology`.
 - for each group, builds a dictionary of `Parameter` objects (each with `magnitude`, `units`, `sources`, `provenance`).
@@ -68,13 +71,14 @@ Function `build_technology_collection()`:
 ### Execution instructions
 
 From repository root:
+
 - Basic run: `python src/technologydata/package_data/dea_energy_storage/dea_energy_storage.py`
-- Example with options:
-  - `--num_digits 3 --store_source --filter_params --export_schema`
+- Example with options: `--num_digits 3 --store_source --filter_params --export_schema`
 
 ### Outputs
 
 The parser generates the following outputs:
+
 - `src/technologydata/package_data/dea_energy_storage/technologies.json`.
 - `src/technologydata/package_data/dea_energy_storage/sources.json`.
 - Optional schema files moved to `src/technologydata/package_data/schemas` when `--export_schema` is used.
