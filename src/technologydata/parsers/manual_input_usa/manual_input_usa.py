@@ -169,7 +169,7 @@ def build_technology_collection(
         list_techs.append(
             Technology(
                 name=technology,
-                region="US",
+                region="USA",
                 year=year,
                 parameters=parameters,
                 case=str(scenario),
