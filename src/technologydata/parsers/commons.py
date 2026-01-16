@@ -3,11 +3,12 @@
 # SPDX-License-Identifier: MIT
 
 """Classes for Commons methods for the data parsers."""
+
 import argparse
 from typing import Annotated, Any
 
 import pydantic
-from pydantic import ConfigDict, BaseModel
+from pydantic import BaseModel, ConfigDict
 
 
 class ArgumentConfig(BaseModel):
