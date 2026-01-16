@@ -3,7 +3,7 @@
 # SPDX-License-Identifier: MIT
 
 """
-Data parser for the manual_input_usa.csv data set.
+Data parser for manually specified, USA-specific data from the technology-data repository (`manual_input_usa.csv`).
 
 How to run:
     From the repository root, execute:
