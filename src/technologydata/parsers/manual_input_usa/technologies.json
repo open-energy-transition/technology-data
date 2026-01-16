@@ -4,7 +4,7 @@
             "name": "Alkaline electrolyzer large size",
             "detailed_technology": "Alkaline electrolyzer large size",
             "case": "Advanced",
-            "region": "US",
+            "region": "USA",
             "year": 2020,
             "parameters": {
                 "investment": {
@@ -19,9 +19,9 @@
                             {
                                 "title": "Energy system technology data for the US",
                                 "authors": "Contributors to technology-data. Data source: manual_input_usa.csv",
-                                "url": "https://github.com/PyPSA/technology-data/blob/master/inputs/US/manual_input_usa.csv",
+                                "url": "https://github.com/PyPSA/technology-data/blob/v0.13.4/inputs/US/manual_input_usa.csv",
                                 "url_archive": null,
-                                "url_date": null,
+                                "url_date": "2025-10-20",
                                 "url_date_archive": null
                             }
                         ]
@@ -39,9 +39,9 @@
                             {
                                 "title": "Energy system technology data for the US",
                                 "authors": "Contributors to technology-data. Data source: manual_input_usa.csv",
-                                "url": "https://github.com/PyPSA/technology-data/blob/master/inputs/US/manual_input_usa.csv",
+                                "url": "https://github.com/PyPSA/technology-data/blob/v0.13.4/inputs/US/manual_input_usa.csv",
                                 "url_archive": null,
-                                "url_date": null,
+                                "url_date": "2025-10-20",
                                 "url_date_archive": null
                             }
                         ]
@@ -53,7 +53,7 @@
             "name": "PEM electrolyzer small size",
             "detailed_technology": "PEM electrolyzer small size",
             "case": "Advanced",
-            "region": "US",
+            "region": "USA",
             "year": 2020,
             "parameters": {
                 "investment": {
@@ -68,9 +68,9 @@
                             {
                                 "title": "Energy system technology data for the US",
                                 "authors": "Contributors to technology-data. Data source: manual_input_usa.csv",
-                                "url": "https://github.com/PyPSA/technology-data/blob/master/inputs/US/manual_input_usa.csv",
+                                "url": "https://github.com/PyPSA/technology-data/blob/v0.13.4/inputs/US/manual_input_usa.csv",
                                 "url_archive": null,
-                                "url_date": null,
+                                "url_date": "2025-10-20",
                                 "url_date_archive": null
                             }
                         ]
@@ -88,9 +88,9 @@
                             {
                                 "title": "Energy system technology data for the US",
                                 "authors": "Contributors to technology-data. Data source: manual_input_usa.csv",
-                                "url": "https://github.com/PyPSA/technology-data/blob/master/inputs/US/manual_input_usa.csv",
+                                "url": "https://github.com/PyPSA/technology-data/blob/v0.13.4/inputs/US/manual_input_usa.csv",
                                 "url_archive": null,
-                                "url_date": null,
+                                "url_date": "2025-10-20",
                                 "url_date_archive": null
                             }
                         ]
@@ -102,7 +102,7 @@
             "name": "SOEC",
             "detailed_technology": "SOEC",
             "case": "Advanced",
-            "region": "US",
+            "region": "USA",
             "year": 2020,
             "parameters": {
                 "investment": {
@@ -117,9 +117,9 @@
                             {
                                 "title": "Energy system technology data for the US",
                                 "authors": "Contributors to technology-data. Data source: manual_input_usa.csv",
-                                "url": "https://github.com/PyPSA/technology-data/blob/master/inputs/US/manual_input_usa.csv",
+                                "url": "https://github.com/PyPSA/technology-data/blob/v0.13.4/inputs/US/manual_input_usa.csv",
                                 "url_archive": null,
-                                "url_date": null,
+                                "url_date": "2025-10-20",
                                 "url_date_archive": null
                             }
                         ]
@@ -137,9 +137,9 @@
                             {
                                 "title": "Energy system technology data for the US",
                                 "authors": "Contributors to technology-data. Data source: manual_input_usa.csv",
-                                "url": "https://github.com/PyPSA/technology-data/blob/master/inputs/US/manual_input_usa.csv",
+                                "url": "https://github.com/PyPSA/technology-data/blob/v0.13.4/inputs/US/manual_input_usa.csv",
                                 "url_archive": null,
-                                "url_date": null,
+                                "url_date": "2025-10-20",
                                 "url_date_archive": null
                             }
                         ]
@@ -151,7 +151,7 @@
             "name": "direct air capture",
             "detailed_technology": "direct air capture",
             "case": "Advanced",
-            "region": "US",
+            "region": "USA",
             "year": 2020,
             "parameters": {
                 "FOM": {
@@ -166,9 +166,9 @@
                             {
                                 "title": "Energy system technology data for the US",
                                 "authors": "Contributors to technology-data. Data source: manual_input_usa.csv",
-                                "url": "https://github.com/PyPSA/technology-data/blob/master/inputs/US/manual_input_usa.csv",
+                                "url": "https://github.com/PyPSA/technology-data/blob/v0.13.4/inputs/US/manual_input_usa.csv",
                                 "url_archive": null,
-                                "url_date": null,
+                                "url_date": "2025-10-20",
                                 "url_date_archive": null
                             }
                         ]
@@ -178,7 +178,7 @@
                     "magnitude": 7103597.31,
                     "units": "USD_2023 / hour / metric_ton",
                     "carrier": "1 / carbon_dioxide",
-                    "heating_value": "lower_heating_value",
+                    "heating_value": null,
                     "provenance": "Market",
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
@@ -186,9 +186,9 @@
                             {
                                 "title": "Energy system technology data for the US",
                                 "authors": "Contributors to technology-data. Data source: manual_input_usa.csv",
-                                "url": "https://github.com/PyPSA/technology-data/blob/master/inputs/US/manual_input_usa.csv",
+                                "url": "https://github.com/PyPSA/technology-data/blob/v0.13.4/inputs/US/manual_input_usa.csv",
                                 "url_archive": null,
-                                "url_date": null,
+                                "url_date": "2025-10-20",
                                 "url_date_archive": null
                             }
                         ]
@@ -200,7 +200,7 @@
             "name": "battery inverter",
             "detailed_technology": "battery inverter",
             "case": "Advanced",
-            "region": "US",
+            "region": "USA",
             "year": 2022,
             "parameters": {
                 "investment": {
@@ -215,9 +215,9 @@
                             {
                                 "title": "Energy system technology data for the US",
                                 "authors": "Contributors to technology-data. Data source: manual_input_usa.csv",
-                                "url": "https://github.com/PyPSA/technology-data/blob/master/inputs/US/manual_input_usa.csv",
+                                "url": "https://github.com/PyPSA/technology-data/blob/v0.13.4/inputs/US/manual_input_usa.csv",
                                 "url_archive": null,
-                                "url_date": null,
+                                "url_date": "2025-10-20",
                                 "url_date_archive": null
                             }
                         ]
@@ -235,9 +235,9 @@
                             {
                                 "title": "Energy system technology data for the US",
                                 "authors": "Contributors to technology-data. Data source: manual_input_usa.csv",
-                                "url": "https://github.com/PyPSA/technology-data/blob/master/inputs/US/manual_input_usa.csv",
+                                "url": "https://github.com/PyPSA/technology-data/blob/v0.13.4/inputs/US/manual_input_usa.csv",
                                 "url_archive": null,
-                                "url_date": null,
+                                "url_date": "2025-10-20",
                                 "url_date_archive": null
                             }
                         ]
@@ -249,7 +249,7 @@
             "name": "battery storage",
             "detailed_technology": "battery storage",
             "case": "Advanced",
-            "region": "US",
+            "region": "USA",
             "year": 2022,
             "parameters": {
                 "investment": {
@@ -264,9 +264,9 @@
                             {
                                 "title": "Energy system technology data for the US",
                                 "authors": "Contributors to technology-data. Data source: manual_input_usa.csv",
-                                "url": "https://github.com/PyPSA/technology-data/blob/master/inputs/US/manual_input_usa.csv",
+                                "url": "https://github.com/PyPSA/technology-data/blob/v0.13.4/inputs/US/manual_input_usa.csv",
                                 "url_archive": null,
-                                "url_date": null,
+                                "url_date": "2025-10-20",
                                 "url_date_archive": null
                             }
                         ]
@@ -284,9 +284,9 @@
                             {
                                 "title": "Energy system technology data for the US",
                                 "authors": "Contributors to technology-data. Data source: manual_input_usa.csv",
-                                "url": "https://github.com/PyPSA/technology-data/blob/master/inputs/US/manual_input_usa.csv",
+                                "url": "https://github.com/PyPSA/technology-data/blob/v0.13.4/inputs/US/manual_input_usa.csv",
                                 "url_archive": null,
-                                "url_date": null,
+                                "url_date": "2025-10-20",
                                 "url_date_archive": null
                             }
                         ]
@@ -298,7 +298,7 @@
             "name": "Alkaline electrolyzer large size",
             "detailed_technology": "Alkaline electrolyzer large size",
             "case": "Advanced",
-            "region": "US",
+            "region": "USA",
             "year": 2030,
             "parameters": {
                 "investment": {
@@ -313,9 +313,9 @@
                             {
                                 "title": "Energy system technology data for the US",
                                 "authors": "Contributors to technology-data. Data source: manual_input_usa.csv",
-                                "url": "https://github.com/PyPSA/technology-data/blob/master/inputs/US/manual_input_usa.csv",
+                                "url": "https://github.com/PyPSA/technology-data/blob/v0.13.4/inputs/US/manual_input_usa.csv",
                                 "url_archive": null,
-                                "url_date": null,
+                                "url_date": "2025-10-20",
                                 "url_date_archive": null
                             }
                         ]
@@ -333,9 +333,9 @@
                             {
                                 "title": "Energy system technology data for the US",
                                 "authors": "Contributors to technology-data. Data source: manual_input_usa.csv",
-                                "url": "https://github.com/PyPSA/technology-data/blob/master/inputs/US/manual_input_usa.csv",
+                                "url": "https://github.com/PyPSA/technology-data/blob/v0.13.4/inputs/US/manual_input_usa.csv",
                                 "url_archive": null,
-                                "url_date": null,
+                                "url_date": "2025-10-20",
                                 "url_date_archive": null
                             }
                         ]
@@ -347,7 +347,7 @@
             "name": "PEM electrolyzer small size",
             "detailed_technology": "PEM electrolyzer small size",
             "case": "Advanced",
-            "region": "US",
+            "region": "USA",
             "year": 2030,
             "parameters": {
                 "investment": {
@@ -362,9 +362,9 @@
                             {
                                 "title": "Energy system technology data for the US",
                                 "authors": "Contributors to technology-data. Data source: manual_input_usa.csv",
-                                "url": "https://github.com/PyPSA/technology-data/blob/master/inputs/US/manual_input_usa.csv",
+                                "url": "https://github.com/PyPSA/technology-data/blob/v0.13.4/inputs/US/manual_input_usa.csv",
                                 "url_archive": null,
-                                "url_date": null,
+                                "url_date": "2025-10-20",
                                 "url_date_archive": null
                             }
                         ]
@@ -382,9 +382,9 @@
                             {
                                 "title": "Energy system technology data for the US",
                                 "authors": "Contributors to technology-data. Data source: manual_input_usa.csv",
-                                "url": "https://github.com/PyPSA/technology-data/blob/master/inputs/US/manual_input_usa.csv",
+                                "url": "https://github.com/PyPSA/technology-data/blob/v0.13.4/inputs/US/manual_input_usa.csv",
                                 "url_archive": null,
-                                "url_date": null,
+                                "url_date": "2025-10-20",
                                 "url_date_archive": null
                             }
                         ]
@@ -396,7 +396,7 @@
             "name": "SOEC",
             "detailed_technology": "SOEC",
             "case": "Advanced",
-            "region": "US",
+            "region": "USA",
             "year": 2030,
             "parameters": {
                 "investment": {
@@ -411,9 +411,9 @@
                             {
                                 "title": "Energy system technology data for the US",
                                 "authors": "Contributors to technology-data. Data source: manual_input_usa.csv",
-                                "url": "https://github.com/PyPSA/technology-data/blob/master/inputs/US/manual_input_usa.csv",
+                                "url": "https://github.com/PyPSA/technology-data/blob/v0.13.4/inputs/US/manual_input_usa.csv",
                                 "url_archive": null,
-                                "url_date": null,
+                                "url_date": "2025-10-20",
                                 "url_date_archive": null
                             }
                         ]
@@ -431,9 +431,9 @@
                             {
                                 "title": "Energy system technology data for the US",
                                 "authors": "Contributors to technology-data. Data source: manual_input_usa.csv",
-                                "url": "https://github.com/PyPSA/technology-data/blob/master/inputs/US/manual_input_usa.csv",
+                                "url": "https://github.com/PyPSA/technology-data/blob/v0.13.4/inputs/US/manual_input_usa.csv",
                                 "url_archive": null,
-                                "url_date": null,
+                                "url_date": "2025-10-20",
                                 "url_date_archive": null
                             }
                         ]
@@ -445,7 +445,7 @@
             "name": "battery inverter",
             "detailed_technology": "battery inverter",
             "case": "Advanced",
-            "region": "US",
+            "region": "USA",
             "year": 2030,
             "parameters": {
                 "investment": {
@@ -460,9 +460,9 @@
                             {
                                 "title": "Energy system technology data for the US",
                                 "authors": "Contributors to technology-data. Data source: manual_input_usa.csv",
-                                "url": "https://github.com/PyPSA/technology-data/blob/master/inputs/US/manual_input_usa.csv",
+                                "url": "https://github.com/PyPSA/technology-data/blob/v0.13.4/inputs/US/manual_input_usa.csv",
                                 "url_archive": null,
-                                "url_date": null,
+                                "url_date": "2025-10-20",
                                 "url_date_archive": null
                             }
                         ]
@@ -480,9 +480,9 @@
                             {
                                 "title": "Energy system technology data for the US",
                                 "authors": "Contributors to technology-data. Data source: manual_input_usa.csv",
-                                "url": "https://github.com/PyPSA/technology-data/blob/master/inputs/US/manual_input_usa.csv",
+                                "url": "https://github.com/PyPSA/technology-data/blob/v0.13.4/inputs/US/manual_input_usa.csv",
                                 "url_archive": null,
-                                "url_date": null,
+                                "url_date": "2025-10-20",
                                 "url_date_archive": null
                             }
                         ]
@@ -494,7 +494,7 @@
             "name": "battery storage",
             "detailed_technology": "battery storage",
             "case": "Advanced",
-            "region": "US",
+            "region": "USA",
             "year": 2030,
             "parameters": {
                 "investment": {
@@ -509,9 +509,9 @@
                             {
                                 "title": "Energy system technology data for the US",
                                 "authors": "Contributors to technology-data. Data source: manual_input_usa.csv",
-                                "url": "https://github.com/PyPSA/technology-data/blob/master/inputs/US/manual_input_usa.csv",
+                                "url": "https://github.com/PyPSA/technology-data/blob/v0.13.4/inputs/US/manual_input_usa.csv",
                                 "url_archive": null,
-                                "url_date": null,
+                                "url_date": "2025-10-20",
                                 "url_date_archive": null
                             }
                         ]
@@ -529,9 +529,9 @@
                             {
                                 "title": "Energy system technology data for the US",
                                 "authors": "Contributors to technology-data. Data source: manual_input_usa.csv",
-                                "url": "https://github.com/PyPSA/technology-data/blob/master/inputs/US/manual_input_usa.csv",
+                                "url": "https://github.com/PyPSA/technology-data/blob/v0.13.4/inputs/US/manual_input_usa.csv",
                                 "url_archive": null,
-                                "url_date": null,
+                                "url_date": "2025-10-20",
                                 "url_date_archive": null
                             }
                         ]
@@ -543,7 +543,7 @@
             "name": "Alkaline electrolyzer large size",
             "detailed_technology": "Alkaline electrolyzer large size",
             "case": "Advanced",
-            "region": "US",
+            "region": "USA",
             "year": 2040,
             "parameters": {
                 "investment": {
@@ -558,9 +558,9 @@
                             {
                                 "title": "Energy system technology data for the US",
                                 "authors": "Contributors to technology-data. Data source: manual_input_usa.csv",
-                                "url": "https://github.com/PyPSA/technology-data/blob/master/inputs/US/manual_input_usa.csv",
+                                "url": "https://github.com/PyPSA/technology-data/blob/v0.13.4/inputs/US/manual_input_usa.csv",
                                 "url_archive": null,
-                                "url_date": null,
+                                "url_date": "2025-10-20",
                                 "url_date_archive": null
                             }
                         ]
@@ -572,7 +572,7 @@
             "name": "PEM electrolyzer small size",
             "detailed_technology": "PEM electrolyzer small size",
             "case": "Advanced",
-            "region": "US",
+            "region": "USA",
             "year": 2040,
             "parameters": {
                 "investment": {
@@ -587,9 +587,9 @@
                             {
                                 "title": "Energy system technology data for the US",
                                 "authors": "Contributors to technology-data. Data source: manual_input_usa.csv",
-                                "url": "https://github.com/PyPSA/technology-data/blob/master/inputs/US/manual_input_usa.csv",
+                                "url": "https://github.com/PyPSA/technology-data/blob/v0.13.4/inputs/US/manual_input_usa.csv",
                                 "url_archive": null,
-                                "url_date": null,
+                                "url_date": "2025-10-20",
                                 "url_date_archive": null
                             }
                         ]
@@ -601,7 +601,7 @@
             "name": "SOEC",
             "detailed_technology": "SOEC",
             "case": "Advanced",
-            "region": "US",
+            "region": "USA",
             "year": 2040,
             "parameters": {
                 "investment": {
@@ -616,9 +616,9 @@
                             {
                                 "title": "Energy system technology data for the US",
                                 "authors": "Contributors to technology-data. Data source: manual_input_usa.csv",
-                                "url": "https://github.com/PyPSA/technology-data/blob/master/inputs/US/manual_input_usa.csv",
+                                "url": "https://github.com/PyPSA/technology-data/blob/v0.13.4/inputs/US/manual_input_usa.csv",
                                 "url_archive": null,
-                                "url_date": null,
+                                "url_date": "2025-10-20",
                                 "url_date_archive": null
                             }
                         ]
@@ -630,7 +630,7 @@
             "name": "battery inverter",
             "detailed_technology": "battery inverter",
             "case": "Advanced",
-            "region": "US",
+            "region": "USA",
             "year": 2040,
             "parameters": {
                 "investment": {
@@ -645,9 +645,9 @@
                             {
                                 "title": "Energy system technology data for the US",
                                 "authors": "Contributors to technology-data. Data source: manual_input_usa.csv",
-                                "url": "https://github.com/PyPSA/technology-data/blob/master/inputs/US/manual_input_usa.csv",
+                                "url": "https://github.com/PyPSA/technology-data/blob/v0.13.4/inputs/US/manual_input_usa.csv",
                                 "url_archive": null,
-                                "url_date": null,
+                                "url_date": "2025-10-20",
                                 "url_date_archive": null
                             }
                         ]
@@ -665,9 +665,9 @@
                             {
                                 "title": "Energy system technology data for the US",
                                 "authors": "Contributors to technology-data. Data source: manual_input_usa.csv",
-                                "url": "https://github.com/PyPSA/technology-data/blob/master/inputs/US/manual_input_usa.csv",
+                                "url": "https://github.com/PyPSA/technology-data/blob/v0.13.4/inputs/US/manual_input_usa.csv",
                                 "url_archive": null,
-                                "url_date": null,
+                                "url_date": "2025-10-20",
                                 "url_date_archive": null
                             }
                         ]
@@ -679,7 +679,7 @@
             "name": "battery storage",
             "detailed_technology": "battery storage",
             "case": "Advanced",
-            "region": "US",
+            "region": "USA",
             "year": 2040,
             "parameters": {
                 "investment": {
@@ -694,9 +694,9 @@
                             {
                                 "title": "Energy system technology data for the US",
                                 "authors": "Contributors to technology-data. Data source: manual_input_usa.csv",
-                                "url": "https://github.com/PyPSA/technology-data/blob/master/inputs/US/manual_input_usa.csv",
+                                "url": "https://github.com/PyPSA/technology-data/blob/v0.13.4/inputs/US/manual_input_usa.csv",
                                 "url_archive": null,
-                                "url_date": null,
+                                "url_date": "2025-10-20",
                                 "url_date_archive": null
                             }
                         ]
@@ -714,9 +714,9 @@
                             {
                                 "title": "Energy system technology data for the US",
                                 "authors": "Contributors to technology-data. Data source: manual_input_usa.csv",
-                                "url": "https://github.com/PyPSA/technology-data/blob/master/inputs/US/manual_input_usa.csv",
+                                "url": "https://github.com/PyPSA/technology-data/blob/v0.13.4/inputs/US/manual_input_usa.csv",
                                 "url_archive": null,
-                                "url_date": null,
+                                "url_date": "2025-10-20",
                                 "url_date_archive": null
                             }
                         ]
@@ -728,7 +728,7 @@
             "name": "Alkaline electrolyzer large size",
             "detailed_technology": "Alkaline electrolyzer large size",
             "case": "Advanced",
-            "region": "US",
+            "region": "USA",
             "year": 2050,
             "parameters": {
                 "investment": {
@@ -743,9 +743,9 @@
                             {
                                 "title": "Energy system technology data for the US",
                                 "authors": "Contributors to technology-data. Data source: manual_input_usa.csv",
-                                "url": "https://github.com/PyPSA/technology-data/blob/master/inputs/US/manual_input_usa.csv",
+                                "url": "https://github.com/PyPSA/technology-data/blob/v0.13.4/inputs/US/manual_input_usa.csv",
                                 "url_archive": null,
-                                "url_date": null,
+                                "url_date": "2025-10-20",
                                 "url_date_archive": null
                             }
                         ]
@@ -763,9 +763,9 @@
                             {
                                 "title": "Energy system technology data for the US",
                                 "authors": "Contributors to technology-data. Data source: manual_input_usa.csv",
-                                "url": "https://github.com/PyPSA/technology-data/blob/master/inputs/US/manual_input_usa.csv",
+                                "url": "https://github.com/PyPSA/technology-data/blob/v0.13.4/inputs/US/manual_input_usa.csv",
                                 "url_archive": null,
-                                "url_date": null,
+                                "url_date": "2025-10-20",
                                 "url_date_archive": null
                             }
                         ]
@@ -777,7 +777,7 @@
             "name": "PEM electrolyzer small size",
             "detailed_technology": "PEM electrolyzer small size",
             "case": "Advanced",
-            "region": "US",
+            "region": "USA",
             "year": 2050,
             "parameters": {
                 "investment": {
@@ -792,9 +792,9 @@
                             {
                                 "title": "Energy system technology data for the US",
                                 "authors": "Contributors to technology-data. Data source: manual_input_usa.csv",
-                                "url": "https://github.com/PyPSA/technology-data/blob/master/inputs/US/manual_input_usa.csv",
+                                "url": "https://github.com/PyPSA/technology-data/blob/v0.13.4/inputs/US/manual_input_usa.csv",
                                 "url_archive": null,
-                                "url_date": null,
+                                "url_date": "2025-10-20",
                                 "url_date_archive": null
                             }
                         ]
@@ -812,9 +812,9 @@
                             {
                                 "title": "Energy system technology data for the US",
                                 "authors": "Contributors to technology-data. Data source: manual_input_usa.csv",
-                                "url": "https://github.com/PyPSA/technology-data/blob/master/inputs/US/manual_input_usa.csv",
+                                "url": "https://github.com/PyPSA/technology-data/blob/v0.13.4/inputs/US/manual_input_usa.csv",
                                 "url_archive": null,
-                                "url_date": null,
+                                "url_date": "2025-10-20",
                                 "url_date_archive": null
                             }
                         ]
@@ -826,7 +826,7 @@
             "name": "SOEC",
             "detailed_technology": "SOEC",
             "case": "Advanced",
-            "region": "US",
+            "region": "USA",
             "year": 2050,
             "parameters": {
                 "investment": {
@@ -841,9 +841,9 @@
                             {
                                 "title": "Energy system technology data for the US",
                                 "authors": "Contributors to technology-data. Data source: manual_input_usa.csv",
-                                "url": "https://github.com/PyPSA/technology-data/blob/master/inputs/US/manual_input_usa.csv",
+                                "url": "https://github.com/PyPSA/technology-data/blob/v0.13.4/inputs/US/manual_input_usa.csv",
                                 "url_archive": null,
-                                "url_date": null,
+                                "url_date": "2025-10-20",
                                 "url_date_archive": null
                             }
                         ]
@@ -861,9 +861,9 @@
                             {
                                 "title": "Energy system technology data for the US",
                                 "authors": "Contributors to technology-data. Data source: manual_input_usa.csv",
-                                "url": "https://github.com/PyPSA/technology-data/blob/master/inputs/US/manual_input_usa.csv",
+                                "url": "https://github.com/PyPSA/technology-data/blob/v0.13.4/inputs/US/manual_input_usa.csv",
                                 "url_archive": null,
-                                "url_date": null,
+                                "url_date": "2025-10-20",
                                 "url_date_archive": null
                             }
                         ]
@@ -875,7 +875,7 @@
             "name": "battery inverter",
             "detailed_technology": "battery inverter",
             "case": "Advanced",
-            "region": "US",
+            "region": "USA",
             "year": 2050,
             "parameters": {
                 "investment": {
@@ -890,9 +890,9 @@
                             {
                                 "title": "Energy system technology data for the US",
                                 "authors": "Contributors to technology-data. Data source: manual_input_usa.csv",
-                                "url": "https://github.com/PyPSA/technology-data/blob/master/inputs/US/manual_input_usa.csv",
+                                "url": "https://github.com/PyPSA/technology-data/blob/v0.13.4/inputs/US/manual_input_usa.csv",
                                 "url_archive": null,
-                                "url_date": null,
+                                "url_date": "2025-10-20",
                                 "url_date_archive": null
                             }
                         ]
@@ -910,9 +910,9 @@
                             {
                                 "title": "Energy system technology data for the US",
                                 "authors": "Contributors to technology-data. Data source: manual_input_usa.csv",
-                                "url": "https://github.com/PyPSA/technology-data/blob/master/inputs/US/manual_input_usa.csv",
+                                "url": "https://github.com/PyPSA/technology-data/blob/v0.13.4/inputs/US/manual_input_usa.csv",
                                 "url_archive": null,
-                                "url_date": null,
+                                "url_date": "2025-10-20",
                                 "url_date_archive": null
                             }
                         ]
@@ -924,7 +924,7 @@
             "name": "battery storage",
             "detailed_technology": "battery storage",
             "case": "Advanced",
-            "region": "US",
+            "region": "USA",
             "year": 2050,
             "parameters": {
                 "investment": {
@@ -939,9 +939,9 @@
                             {
                                 "title": "Energy system technology data for the US",
                                 "authors": "Contributors to technology-data. Data source: manual_input_usa.csv",
-                                "url": "https://github.com/PyPSA/technology-data/blob/master/inputs/US/manual_input_usa.csv",
+                                "url": "https://github.com/PyPSA/technology-data/blob/v0.13.4/inputs/US/manual_input_usa.csv",
                                 "url_archive": null,
-                                "url_date": null,
+                                "url_date": "2025-10-20",
                                 "url_date_archive": null
                             }
                         ]
@@ -959,9 +959,9 @@
                             {
                                 "title": "Energy system technology data for the US",
                                 "authors": "Contributors to technology-data. Data source: manual_input_usa.csv",
-                                "url": "https://github.com/PyPSA/technology-data/blob/master/inputs/US/manual_input_usa.csv",
+                                "url": "https://github.com/PyPSA/technology-data/blob/v0.13.4/inputs/US/manual_input_usa.csv",
                                 "url_archive": null,
-                                "url_date": null,
+                                "url_date": "2025-10-20",
                                 "url_date_archive": null
                             }
                         ]
@@ -973,7 +973,7 @@
             "name": "Alkaline electrolyzer large size",
             "detailed_technology": "Alkaline electrolyzer large size",
             "case": "Conservative",
-            "region": "US",
+            "region": "USA",
             "year": 2020,
             "parameters": {
                 "investment": {
@@ -988,9 +988,9 @@
                             {
                                 "title": "Energy system technology data for the US",
                                 "authors": "Contributors to technology-data. Data source: manual_input_usa.csv",
-                                "url": "https://github.com/PyPSA/technology-data/blob/master/inputs/US/manual_input_usa.csv",
+                                "url": "https://github.com/PyPSA/technology-data/blob/v0.13.4/inputs/US/manual_input_usa.csv",
                                 "url_archive": null,
-                                "url_date": null,
+                                "url_date": "2025-10-20",
                                 "url_date_archive": null
                             }
                         ]
@@ -1008,9 +1008,9 @@
                             {
                                 "title": "Energy system technology data for the US",
                                 "authors": "Contributors to technology-data. Data source: manual_input_usa.csv",
-                                "url": "https://github.com/PyPSA/technology-data/blob/master/inputs/US/manual_input_usa.csv",
+                                "url": "https://github.com/PyPSA/technology-data/blob/v0.13.4/inputs/US/manual_input_usa.csv",
                                 "url_archive": null,
-                                "url_date": null,
+                                "url_date": "2025-10-20",
                                 "url_date_archive": null
                             }
                         ]
@@ -1022,7 +1022,7 @@
             "name": "PEM electrolyzer small size",
             "detailed_technology": "PEM electrolyzer small size",
             "case": "Conservative",
-            "region": "US",
+            "region": "USA",
             "year": 2020,
             "parameters": {
                 "investment": {
@@ -1037,9 +1037,9 @@
                             {
                                 "title": "Energy system technology data for the US",
                                 "authors": "Contributors to technology-data. Data source: manual_input_usa.csv",
-                                "url": "https://github.com/PyPSA/technology-data/blob/master/inputs/US/manual_input_usa.csv",
+                                "url": "https://github.com/PyPSA/technology-data/blob/v0.13.4/inputs/US/manual_input_usa.csv",
                                 "url_archive": null,
-                                "url_date": null,
+                                "url_date": "2025-10-20",
                                 "url_date_archive": null
                             }
                         ]
@@ -1057,9 +1057,9 @@
                             {
                                 "title": "Energy system technology data for the US",
                                 "authors": "Contributors to technology-data. Data source: manual_input_usa.csv",
-                                "url": "https://github.com/PyPSA/technology-data/blob/master/inputs/US/manual_input_usa.csv",
+                                "url": "https://github.com/PyPSA/technology-data/blob/v0.13.4/inputs/US/manual_input_usa.csv",
                                 "url_archive": null,
-                                "url_date": null,
+                                "url_date": "2025-10-20",
                                 "url_date_archive": null
                             }
                         ]
@@ -1071,7 +1071,7 @@
             "name": "SOEC",
             "detailed_technology": "SOEC",
             "case": "Conservative",
-            "region": "US",
+            "region": "USA",
             "year": 2020,
             "parameters": {
                 "investment": {
@@ -1086,9 +1086,9 @@
                             {
                                 "title": "Energy system technology data for the US",
                                 "authors": "Contributors to technology-data. Data source: manual_input_usa.csv",
-                                "url": "https://github.com/PyPSA/technology-data/blob/master/inputs/US/manual_input_usa.csv",
+                                "url": "https://github.com/PyPSA/technology-data/blob/v0.13.4/inputs/US/manual_input_usa.csv",
                                 "url_archive": null,
-                                "url_date": null,
+                                "url_date": "2025-10-20",
                                 "url_date_archive": null
                             }
                         ]
@@ -1106,9 +1106,9 @@
                             {
                                 "title": "Energy system technology data for the US",
                                 "authors": "Contributors to technology-data. Data source: manual_input_usa.csv",
-                                "url": "https://github.com/PyPSA/technology-data/blob/master/inputs/US/manual_input_usa.csv",
+                                "url": "https://github.com/PyPSA/technology-data/blob/v0.13.4/inputs/US/manual_input_usa.csv",
                                 "url_archive": null,
-                                "url_date": null,
+                                "url_date": "2025-10-20",
                                 "url_date_archive": null
                             }
                         ]
@@ -1120,7 +1120,7 @@
             "name": "direct air capture",
             "detailed_technology": "direct air capture",
             "case": "Conservative",
-            "region": "US",
+            "region": "USA",
             "year": 2020,
             "parameters": {
                 "FOM": {
@@ -1135,9 +1135,9 @@
                             {
                                 "title": "Energy system technology data for the US",
                                 "authors": "Contributors to technology-data. Data source: manual_input_usa.csv",
-                                "url": "https://github.com/PyPSA/technology-data/blob/master/inputs/US/manual_input_usa.csv",
+                                "url": "https://github.com/PyPSA/technology-data/blob/v0.13.4/inputs/US/manual_input_usa.csv",
                                 "url_archive": null,
-                                "url_date": null,
+                                "url_date": "2025-10-20",
                                 "url_date_archive": null
                             }
                         ]
@@ -1147,7 +1147,7 @@
                     "magnitude": 19180739.93,
                     "units": "USD_2023 / hour / metric_ton",
                     "carrier": "1 / carbon_dioxide",
-                    "heating_value": "lower_heating_value",
+                    "heating_value": null,
                     "provenance": "Market",
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
@@ -1155,9 +1155,9 @@
                             {
                                 "title": "Energy system technology data for the US",
                                 "authors": "Contributors to technology-data. Data source: manual_input_usa.csv",
-                                "url": "https://github.com/PyPSA/technology-data/blob/master/inputs/US/manual_input_usa.csv",
+                                "url": "https://github.com/PyPSA/technology-data/blob/v0.13.4/inputs/US/manual_input_usa.csv",
                                 "url_archive": null,
-                                "url_date": null,
+                                "url_date": "2025-10-20",
                                 "url_date_archive": null
                             }
                         ]
@@ -1169,7 +1169,7 @@
             "name": "battery inverter",
             "detailed_technology": "battery inverter",
             "case": "Conservative",
-            "region": "US",
+            "region": "USA",
             "year": 2022,
             "parameters": {
                 "investment": {
@@ -1184,9 +1184,9 @@
                             {
                                 "title": "Energy system technology data for the US",
                                 "authors": "Contributors to technology-data. Data source: manual_input_usa.csv",
-                                "url": "https://github.com/PyPSA/technology-data/blob/master/inputs/US/manual_input_usa.csv",
+                                "url": "https://github.com/PyPSA/technology-data/blob/v0.13.4/inputs/US/manual_input_usa.csv",
                                 "url_archive": null,
-                                "url_date": null,
+                                "url_date": "2025-10-20",
                                 "url_date_archive": null
                             }
                         ]
@@ -1204,9 +1204,9 @@
                             {
                                 "title": "Energy system technology data for the US",
                                 "authors": "Contributors to technology-data. Data source: manual_input_usa.csv",
-                                "url": "https://github.com/PyPSA/technology-data/blob/master/inputs/US/manual_input_usa.csv",
+                                "url": "https://github.com/PyPSA/technology-data/blob/v0.13.4/inputs/US/manual_input_usa.csv",
                                 "url_archive": null,
-                                "url_date": null,
+                                "url_date": "2025-10-20",
                                 "url_date_archive": null
                             }
                         ]
@@ -1218,7 +1218,7 @@
             "name": "battery storage",
             "detailed_technology": "battery storage",
             "case": "Conservative",
-            "region": "US",
+            "region": "USA",
             "year": 2022,
             "parameters": {
                 "investment": {
@@ -1233,9 +1233,9 @@
                             {
                                 "title": "Energy system technology data for the US",
                                 "authors": "Contributors to technology-data. Data source: manual_input_usa.csv",
-                                "url": "https://github.com/PyPSA/technology-data/blob/master/inputs/US/manual_input_usa.csv",
+                                "url": "https://github.com/PyPSA/technology-data/blob/v0.13.4/inputs/US/manual_input_usa.csv",
                                 "url_archive": null,
-                                "url_date": null,
+                                "url_date": "2025-10-20",
                                 "url_date_archive": null
                             }
                         ]
@@ -1253,9 +1253,9 @@
                             {
                                 "title": "Energy system technology data for the US",
                                 "authors": "Contributors to technology-data. Data source: manual_input_usa.csv",
-                                "url": "https://github.com/PyPSA/technology-data/blob/master/inputs/US/manual_input_usa.csv",
+                                "url": "https://github.com/PyPSA/technology-data/blob/v0.13.4/inputs/US/manual_input_usa.csv",
                                 "url_archive": null,
-                                "url_date": null,
+                                "url_date": "2025-10-20",
                                 "url_date_archive": null
                             }
                         ]
@@ -1267,7 +1267,7 @@
             "name": "Alkaline electrolyzer large size",
             "detailed_technology": "Alkaline electrolyzer large size",
             "case": "Conservative",
-            "region": "US",
+            "region": "USA",
             "year": 2030,
             "parameters": {
                 "investment": {
@@ -1282,9 +1282,9 @@
                             {
                                 "title": "Energy system technology data for the US",
                                 "authors": "Contributors to technology-data. Data source: manual_input_usa.csv",
-                                "url": "https://github.com/PyPSA/technology-data/blob/master/inputs/US/manual_input_usa.csv",
+                                "url": "https://github.com/PyPSA/technology-data/blob/v0.13.4/inputs/US/manual_input_usa.csv",
                                 "url_archive": null,
-                                "url_date": null,
+                                "url_date": "2025-10-20",
                                 "url_date_archive": null
                             }
                         ]
@@ -1302,9 +1302,9 @@
                             {
                                 "title": "Energy system technology data for the US",
                                 "authors": "Contributors to technology-data. Data source: manual_input_usa.csv",
-                                "url": "https://github.com/PyPSA/technology-data/blob/master/inputs/US/manual_input_usa.csv",
+                                "url": "https://github.com/PyPSA/technology-data/blob/v0.13.4/inputs/US/manual_input_usa.csv",
                                 "url_archive": null,
-                                "url_date": null,
+                                "url_date": "2025-10-20",
                                 "url_date_archive": null
                             }
                         ]
@@ -1316,7 +1316,7 @@
             "name": "PEM electrolyzer small size",
             "detailed_technology": "PEM electrolyzer small size",
             "case": "Conservative",
-            "region": "US",
+            "region": "USA",
             "year": 2030,
             "parameters": {
                 "investment": {
@@ -1331,9 +1331,9 @@
                             {
                                 "title": "Energy system technology data for the US",
                                 "authors": "Contributors to technology-data. Data source: manual_input_usa.csv",
-                                "url": "https://github.com/PyPSA/technology-data/blob/master/inputs/US/manual_input_usa.csv",
+                                "url": "https://github.com/PyPSA/technology-data/blob/v0.13.4/inputs/US/manual_input_usa.csv",
                                 "url_archive": null,
-                                "url_date": null,
+                                "url_date": "2025-10-20",
                                 "url_date_archive": null
                             }
                         ]
@@ -1351,9 +1351,9 @@
                             {
                                 "title": "Energy system technology data for the US",
                                 "authors": "Contributors to technology-data. Data source: manual_input_usa.csv",
-                                "url": "https://github.com/PyPSA/technology-data/blob/master/inputs/US/manual_input_usa.csv",
+                                "url": "https://github.com/PyPSA/technology-data/blob/v0.13.4/inputs/US/manual_input_usa.csv",
                                 "url_archive": null,
-                                "url_date": null,
+                                "url_date": "2025-10-20",
                                 "url_date_archive": null
                             }
                         ]
@@ -1365,7 +1365,7 @@
             "name": "SOEC",
             "detailed_technology": "SOEC",
             "case": "Conservative",
-            "region": "US",
+            "region": "USA",
             "year": 2030,
             "parameters": {
                 "investment": {
@@ -1380,9 +1380,9 @@
                             {
                                 "title": "Energy system technology data for the US",
                                 "authors": "Contributors to technology-data. Data source: manual_input_usa.csv",
-                                "url": "https://github.com/PyPSA/technology-data/blob/master/inputs/US/manual_input_usa.csv",
+                                "url": "https://github.com/PyPSA/technology-data/blob/v0.13.4/inputs/US/manual_input_usa.csv",
                                 "url_archive": null,
-                                "url_date": null,
+                                "url_date": "2025-10-20",
                                 "url_date_archive": null
                             }
                         ]
@@ -1400,9 +1400,9 @@
                             {
                                 "title": "Energy system technology data for the US",
                                 "authors": "Contributors to technology-data. Data source: manual_input_usa.csv",
-                                "url": "https://github.com/PyPSA/technology-data/blob/master/inputs/US/manual_input_usa.csv",
+                                "url": "https://github.com/PyPSA/technology-data/blob/v0.13.4/inputs/US/manual_input_usa.csv",
                                 "url_archive": null,
-                                "url_date": null,
+                                "url_date": "2025-10-20",
                                 "url_date_archive": null
                             }
                         ]
@@ -1414,7 +1414,7 @@
             "name": "battery inverter",
             "detailed_technology": "battery inverter",
             "case": "Conservative",
-            "region": "US",
+            "region": "USA",
             "year": 2030,
             "parameters": {
                 "investment": {
@@ -1429,9 +1429,9 @@
                             {
                                 "title": "Energy system technology data for the US",
                                 "authors": "Contributors to technology-data. Data source: manual_input_usa.csv",
-                                "url": "https://github.com/PyPSA/technology-data/blob/master/inputs/US/manual_input_usa.csv",
+                                "url": "https://github.com/PyPSA/technology-data/blob/v0.13.4/inputs/US/manual_input_usa.csv",
                                 "url_archive": null,
-                                "url_date": null,
+                                "url_date": "2025-10-20",
                                 "url_date_archive": null
                             }
                         ]
@@ -1449,9 +1449,9 @@
                             {
                                 "title": "Energy system technology data for the US",
                                 "authors": "Contributors to technology-data. Data source: manual_input_usa.csv",
-                                "url": "https://github.com/PyPSA/technology-data/blob/master/inputs/US/manual_input_usa.csv",
+                                "url": "https://github.com/PyPSA/technology-data/blob/v0.13.4/inputs/US/manual_input_usa.csv",
                                 "url_archive": null,
-                                "url_date": null,
+                                "url_date": "2025-10-20",
                                 "url_date_archive": null
                             }
                         ]
@@ -1463,7 +1463,7 @@
             "name": "battery storage",
             "detailed_technology": "battery storage",
             "case": "Conservative",
-            "region": "US",
+            "region": "USA",
             "year": 2030,
             "parameters": {
                 "investment": {
@@ -1478,9 +1478,9 @@
                             {
                                 "title": "Energy system technology data for the US",
                                 "authors": "Contributors to technology-data. Data source: manual_input_usa.csv",
-                                "url": "https://github.com/PyPSA/technology-data/blob/master/inputs/US/manual_input_usa.csv",
+                                "url": "https://github.com/PyPSA/technology-data/blob/v0.13.4/inputs/US/manual_input_usa.csv",
                                 "url_archive": null,
-                                "url_date": null,
+                                "url_date": "2025-10-20",
                                 "url_date_archive": null
                             }
                         ]
@@ -1498,9 +1498,9 @@
                             {
                                 "title": "Energy system technology data for the US",
                                 "authors": "Contributors to technology-data. Data source: manual_input_usa.csv",
-                                "url": "https://github.com/PyPSA/technology-data/blob/master/inputs/US/manual_input_usa.csv",
+                                "url": "https://github.com/PyPSA/technology-data/blob/v0.13.4/inputs/US/manual_input_usa.csv",
                                 "url_archive": null,
-                                "url_date": null,
+                                "url_date": "2025-10-20",
                                 "url_date_archive": null
                             }
                         ]
@@ -1512,7 +1512,7 @@
             "name": "Alkaline electrolyzer large size",
             "detailed_technology": "Alkaline electrolyzer large size",
             "case": "Conservative",
-            "region": "US",
+            "region": "USA",
             "year": 2040,
             "parameters": {
                 "investment": {
@@ -1527,9 +1527,9 @@
                             {
                                 "title": "Energy system technology data for the US",
                                 "authors": "Contributors to technology-data. Data source: manual_input_usa.csv",
-                                "url": "https://github.com/PyPSA/technology-data/blob/master/inputs/US/manual_input_usa.csv",
+                                "url": "https://github.com/PyPSA/technology-data/blob/v0.13.4/inputs/US/manual_input_usa.csv",
                                 "url_archive": null,
-                                "url_date": null,
+                                "url_date": "2025-10-20",
                                 "url_date_archive": null
                             }
                         ]
@@ -1541,7 +1541,7 @@
             "name": "PEM electrolyzer small size",
             "detailed_technology": "PEM electrolyzer small size",
             "case": "Conservative",
-            "region": "US",
+            "region": "USA",
             "year": 2040,
             "parameters": {
                 "investment": {
@@ -1556,9 +1556,9 @@
                             {
                                 "title": "Energy system technology data for the US",
                                 "authors": "Contributors to technology-data. Data source: manual_input_usa.csv",
-                                "url": "https://github.com/PyPSA/technology-data/blob/master/inputs/US/manual_input_usa.csv",
+                                "url": "https://github.com/PyPSA/technology-data/blob/v0.13.4/inputs/US/manual_input_usa.csv",
                                 "url_archive": null,
-                                "url_date": null,
+                                "url_date": "2025-10-20",
                                 "url_date_archive": null
                             }
                         ]
@@ -1570,7 +1570,7 @@
             "name": "SOEC",
             "detailed_technology": "SOEC",
             "case": "Conservative",
-            "region": "US",
+            "region": "USA",
             "year": 2040,
             "parameters": {
                 "investment": {
@@ -1585,9 +1585,9 @@
                             {
                                 "title": "Energy system technology data for the US",
                                 "authors": "Contributors to technology-data. Data source: manual_input_usa.csv",
-                                "url": "https://github.com/PyPSA/technology-data/blob/master/inputs/US/manual_input_usa.csv",
+                                "url": "https://github.com/PyPSA/technology-data/blob/v0.13.4/inputs/US/manual_input_usa.csv",
                                 "url_archive": null,
-                                "url_date": null,
+                                "url_date": "2025-10-20",
                                 "url_date_archive": null
                             }
                         ]
@@ -1599,7 +1599,7 @@
             "name": "battery inverter",
             "detailed_technology": "battery inverter",
             "case": "Conservative",
-            "region": "US",
+            "region": "USA",
             "year": 2040,
             "parameters": {
                 "investment": {
@@ -1614,9 +1614,9 @@
                             {
                                 "title": "Energy system technology data for the US",
                                 "authors": "Contributors to technology-data. Data source: manual_input_usa.csv",
-                                "url": "https://github.com/PyPSA/technology-data/blob/master/inputs/US/manual_input_usa.csv",
+                                "url": "https://github.com/PyPSA/technology-data/blob/v0.13.4/inputs/US/manual_input_usa.csv",
                                 "url_archive": null,
-                                "url_date": null,
+                                "url_date": "2025-10-20",
                                 "url_date_archive": null
                             }
                         ]
@@ -1634,9 +1634,9 @@
                             {
                                 "title": "Energy system technology data for the US",
                                 "authors": "Contributors to technology-data. Data source: manual_input_usa.csv",
-                                "url": "https://github.com/PyPSA/technology-data/blob/master/inputs/US/manual_input_usa.csv",
+                                "url": "https://github.com/PyPSA/technology-data/blob/v0.13.4/inputs/US/manual_input_usa.csv",
                                 "url_archive": null,
-                                "url_date": null,
+                                "url_date": "2025-10-20",
                                 "url_date_archive": null
                             }
                         ]
@@ -1648,7 +1648,7 @@
             "name": "battery storage",
             "detailed_technology": "battery storage",
             "case": "Conservative",
-            "region": "US",
+            "region": "USA",
             "year": 2040,
             "parameters": {
                 "investment": {
@@ -1663,9 +1663,9 @@
                             {
                                 "title": "Energy system technology data for the US",
                                 "authors": "Contributors to technology-data. Data source: manual_input_usa.csv",
-                                "url": "https://github.com/PyPSA/technology-data/blob/master/inputs/US/manual_input_usa.csv",
+                                "url": "https://github.com/PyPSA/technology-data/blob/v0.13.4/inputs/US/manual_input_usa.csv",
                                 "url_archive": null,
-                                "url_date": null,
+                                "url_date": "2025-10-20",
                                 "url_date_archive": null
                             }
                         ]
@@ -1683,9 +1683,9 @@
                             {
                                 "title": "Energy system technology data for the US",
                                 "authors": "Contributors to technology-data. Data source: manual_input_usa.csv",
-                                "url": "https://github.com/PyPSA/technology-data/blob/master/inputs/US/manual_input_usa.csv",
+                                "url": "https://github.com/PyPSA/technology-data/blob/v0.13.4/inputs/US/manual_input_usa.csv",
                                 "url_archive": null,
-                                "url_date": null,
+                                "url_date": "2025-10-20",
                                 "url_date_archive": null
                             }
                         ]
@@ -1697,7 +1697,7 @@
             "name": "Alkaline electrolyzer large size",
             "detailed_technology": "Alkaline electrolyzer large size",
             "case": "Conservative",
-            "region": "US",
+            "region": "USA",
             "year": 2050,
             "parameters": {
                 "investment": {
@@ -1712,9 +1712,9 @@
                             {
                                 "title": "Energy system technology data for the US",
                                 "authors": "Contributors to technology-data. Data source: manual_input_usa.csv",
-                                "url": "https://github.com/PyPSA/technology-data/blob/master/inputs/US/manual_input_usa.csv",
+                                "url": "https://github.com/PyPSA/technology-data/blob/v0.13.4/inputs/US/manual_input_usa.csv",
                                 "url_archive": null,
-                                "url_date": null,
+                                "url_date": "2025-10-20",
                                 "url_date_archive": null
                             }
                         ]
@@ -1732,9 +1732,9 @@
                             {
                                 "title": "Energy system technology data for the US",
                                 "authors": "Contributors to technology-data. Data source: manual_input_usa.csv",
-                                "url": "https://github.com/PyPSA/technology-data/blob/master/inputs/US/manual_input_usa.csv",
+                                "url": "https://github.com/PyPSA/technology-data/blob/v0.13.4/inputs/US/manual_input_usa.csv",
                                 "url_archive": null,
-                                "url_date": null,
+                                "url_date": "2025-10-20",
                                 "url_date_archive": null
                             }
                         ]
@@ -1746,7 +1746,7 @@
             "name": "PEM electrolyzer small size",
             "detailed_technology": "PEM electrolyzer small size",
             "case": "Conservative",
-            "region": "US",
+            "region": "USA",
             "year": 2050,
             "parameters": {
                 "investment": {
@@ -1761,9 +1761,9 @@
                             {
                                 "title": "Energy system technology data for the US",
                                 "authors": "Contributors to technology-data. Data source: manual_input_usa.csv",
-                                "url": "https://github.com/PyPSA/technology-data/blob/master/inputs/US/manual_input_usa.csv",
+                                "url": "https://github.com/PyPSA/technology-data/blob/v0.13.4/inputs/US/manual_input_usa.csv",
                                 "url_archive": null,
-                                "url_date": null,
+                                "url_date": "2025-10-20",
                                 "url_date_archive": null
                             }
                         ]
@@ -1781,9 +1781,9 @@
                             {
                                 "title": "Energy system technology data for the US",
                                 "authors": "Contributors to technology-data. Data source: manual_input_usa.csv",
-                                "url": "https://github.com/PyPSA/technology-data/blob/master/inputs/US/manual_input_usa.csv",
+                                "url": "https://github.com/PyPSA/technology-data/blob/v0.13.4/inputs/US/manual_input_usa.csv",
                                 "url_archive": null,
-                                "url_date": null,
+                                "url_date": "2025-10-20",
                                 "url_date_archive": null
                             }
                         ]
@@ -1795,7 +1795,7 @@
             "name": "SOEC",
             "detailed_technology": "SOEC",
             "case": "Conservative",
-            "region": "US",
+            "region": "USA",
             "year": 2050,
             "parameters": {
                 "investment": {
@@ -1810,9 +1810,9 @@
                             {
                                 "title": "Energy system technology data for the US",
                                 "authors": "Contributors to technology-data. Data source: manual_input_usa.csv",
-                                "url": "https://github.com/PyPSA/technology-data/blob/master/inputs/US/manual_input_usa.csv",
+                                "url": "https://github.com/PyPSA/technology-data/blob/v0.13.4/inputs/US/manual_input_usa.csv",
                                 "url_archive": null,
-                                "url_date": null,
+                                "url_date": "2025-10-20",
                                 "url_date_archive": null
                             }
                         ]
@@ -1830,9 +1830,9 @@
                             {
                                 "title": "Energy system technology data for the US",
                                 "authors": "Contributors to technology-data. Data source: manual_input_usa.csv",
-                                "url": "https://github.com/PyPSA/technology-data/blob/master/inputs/US/manual_input_usa.csv",
+                                "url": "https://github.com/PyPSA/technology-data/blob/v0.13.4/inputs/US/manual_input_usa.csv",
                                 "url_archive": null,
-                                "url_date": null,
+                                "url_date": "2025-10-20",
                                 "url_date_archive": null
                             }
                         ]
@@ -1844,7 +1844,7 @@
             "name": "battery inverter",
             "detailed_technology": "battery inverter",
             "case": "Conservative",
-            "region": "US",
+            "region": "USA",
             "year": 2050,
             "parameters": {
                 "investment": {
@@ -1859,9 +1859,9 @@
                             {
                                 "title": "Energy system technology data for the US",
                                 "authors": "Contributors to technology-data. Data source: manual_input_usa.csv",
-                                "url": "https://github.com/PyPSA/technology-data/blob/master/inputs/US/manual_input_usa.csv",
+                                "url": "https://github.com/PyPSA/technology-data/blob/v0.13.4/inputs/US/manual_input_usa.csv",
                                 "url_archive": null,
-                                "url_date": null,
+                                "url_date": "2025-10-20",
                                 "url_date_archive": null
                             }
                         ]
@@ -1879,9 +1879,9 @@
                             {
                                 "title": "Energy system technology data for the US",
                                 "authors": "Contributors to technology-data. Data source: manual_input_usa.csv",
-                                "url": "https://github.com/PyPSA/technology-data/blob/master/inputs/US/manual_input_usa.csv",
+                                "url": "https://github.com/PyPSA/technology-data/blob/v0.13.4/inputs/US/manual_input_usa.csv",
                                 "url_archive": null,
-                                "url_date": null,
+                                "url_date": "2025-10-20",
                                 "url_date_archive": null
                             }
                         ]
@@ -1893,7 +1893,7 @@
             "name": "battery storage",
             "detailed_technology": "battery storage",
             "case": "Conservative",
-            "region": "US",
+            "region": "USA",
             "year": 2050,
             "parameters": {
                 "investment": {
@@ -1908,9 +1908,9 @@
                             {
                                 "title": "Energy system technology data for the US",
                                 "authors": "Contributors to technology-data. Data source: manual_input_usa.csv",
-                                "url": "https://github.com/PyPSA/technology-data/blob/master/inputs/US/manual_input_usa.csv",
+                                "url": "https://github.com/PyPSA/technology-data/blob/v0.13.4/inputs/US/manual_input_usa.csv",
                                 "url_archive": null,
-                                "url_date": null,
+                                "url_date": "2025-10-20",
                                 "url_date_archive": null
                             }
                         ]
@@ -1928,9 +1928,9 @@
                             {
                                 "title": "Energy system technology data for the US",
                                 "authors": "Contributors to technology-data. Data source: manual_input_usa.csv",
-                                "url": "https://github.com/PyPSA/technology-data/blob/master/inputs/US/manual_input_usa.csv",
+                                "url": "https://github.com/PyPSA/technology-data/blob/v0.13.4/inputs/US/manual_input_usa.csv",
                                 "url_archive": null,
-                                "url_date": null,
+                                "url_date": "2025-10-20",
                                 "url_date_archive": null
                             }
                         ]
@@ -1942,7 +1942,7 @@
             "name": "Alkaline electrolyzer large size",
             "detailed_technology": "Alkaline electrolyzer large size",
             "case": "Moderate",
-            "region": "US",
+            "region": "USA",
             "year": 2020,
             "parameters": {
                 "investment": {
@@ -1957,9 +1957,9 @@
                             {
                                 "title": "Energy system technology data for the US",
                                 "authors": "Contributors to technology-data. Data source: manual_input_usa.csv",
-                                "url": "https://github.com/PyPSA/technology-data/blob/master/inputs/US/manual_input_usa.csv",
+                                "url": "https://github.com/PyPSA/technology-data/blob/v0.13.4/inputs/US/manual_input_usa.csv",
                                 "url_archive": null,
-                                "url_date": null,
+                                "url_date": "2025-10-20",
                                 "url_date_archive": null
                             }
                         ]
@@ -1977,9 +1977,9 @@
                             {
                                 "title": "Energy system technology data for the US",
                                 "authors": "Contributors to technology-data. Data source: manual_input_usa.csv",
-                                "url": "https://github.com/PyPSA/technology-data/blob/master/inputs/US/manual_input_usa.csv",
+                                "url": "https://github.com/PyPSA/technology-data/blob/v0.13.4/inputs/US/manual_input_usa.csv",
                                 "url_archive": null,
-                                "url_date": null,
+                                "url_date": "2025-10-20",
                                 "url_date_archive": null
                             }
                         ]
@@ -1991,7 +1991,7 @@
             "name": "PEM electrolyzer small size",
             "detailed_technology": "PEM electrolyzer small size",
             "case": "Moderate",
-            "region": "US",
+            "region": "USA",
             "year": 2020,
             "parameters": {
                 "investment": {
@@ -2006,9 +2006,9 @@
                             {
                                 "title": "Energy system technology data for the US",
                                 "authors": "Contributors to technology-data. Data source: manual_input_usa.csv",
-                                "url": "https://github.com/PyPSA/technology-data/blob/master/inputs/US/manual_input_usa.csv",
+                                "url": "https://github.com/PyPSA/technology-data/blob/v0.13.4/inputs/US/manual_input_usa.csv",
                                 "url_archive": null,
-                                "url_date": null,
+                                "url_date": "2025-10-20",
                                 "url_date_archive": null
                             }
                         ]
@@ -2026,9 +2026,9 @@
                             {
                                 "title": "Energy system technology data for the US",
                                 "authors": "Contributors to technology-data. Data source: manual_input_usa.csv",
-                                "url": "https://github.com/PyPSA/technology-data/blob/master/inputs/US/manual_input_usa.csv",
+                                "url": "https://github.com/PyPSA/technology-data/blob/v0.13.4/inputs/US/manual_input_usa.csv",
                                 "url_archive": null,
-                                "url_date": null,
+                                "url_date": "2025-10-20",
                                 "url_date_archive": null
                             }
                         ]
@@ -2040,7 +2040,7 @@
             "name": "SOEC",
             "detailed_technology": "SOEC",
             "case": "Moderate",
-            "region": "US",
+            "region": "USA",
             "year": 2020,
             "parameters": {
                 "investment": {
@@ -2055,9 +2055,9 @@
                             {
                                 "title": "Energy system technology data for the US",
                                 "authors": "Contributors to technology-data. Data source: manual_input_usa.csv",
-                                "url": "https://github.com/PyPSA/technology-data/blob/master/inputs/US/manual_input_usa.csv",
+                                "url": "https://github.com/PyPSA/technology-data/blob/v0.13.4/inputs/US/manual_input_usa.csv",
                                 "url_archive": null,
-                                "url_date": null,
+                                "url_date": "2025-10-20",
                                 "url_date_archive": null
                             }
                         ]
@@ -2075,9 +2075,9 @@
                             {
                                 "title": "Energy system technology data for the US",
                                 "authors": "Contributors to technology-data. Data source: manual_input_usa.csv",
-                                "url": "https://github.com/PyPSA/technology-data/blob/master/inputs/US/manual_input_usa.csv",
+                                "url": "https://github.com/PyPSA/technology-data/blob/v0.13.4/inputs/US/manual_input_usa.csv",
                                 "url_archive": null,
-                                "url_date": null,
+                                "url_date": "2025-10-20",
                                 "url_date_archive": null
                             }
                         ]
@@ -2089,7 +2089,7 @@
             "name": "direct air capture",
             "detailed_technology": "direct air capture",
             "case": "Moderate",
-            "region": "US",
+            "region": "USA",
             "year": 2020,
             "parameters": {
                 "FOM": {
@@ -2104,9 +2104,9 @@
                             {
                                 "title": "Energy system technology data for the US",
                                 "authors": "Contributors to technology-data. Data source: manual_input_usa.csv",
-                                "url": "https://github.com/PyPSA/technology-data/blob/master/inputs/US/manual_input_usa.csv",
+                                "url": "https://github.com/PyPSA/technology-data/blob/v0.13.4/inputs/US/manual_input_usa.csv",
                                 "url_archive": null,
-                                "url_date": null,
+                                "url_date": "2025-10-20",
                                 "url_date_archive": null
                             }
                         ]
@@ -2116,7 +2116,7 @@
                     "magnitude": 12398844.91,
                     "units": "USD_2023 / hour / metric_ton",
                     "carrier": "1 / carbon_dioxide",
-                    "heating_value": "lower_heating_value",
+                    "heating_value": null,
                     "provenance": "Market",
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
@@ -2124,9 +2124,9 @@
                             {
                                 "title": "Energy system technology data for the US",
                                 "authors": "Contributors to technology-data. Data source: manual_input_usa.csv",
-                                "url": "https://github.com/PyPSA/technology-data/blob/master/inputs/US/manual_input_usa.csv",
+                                "url": "https://github.com/PyPSA/technology-data/blob/v0.13.4/inputs/US/manual_input_usa.csv",
                                 "url_archive": null,
-                                "url_date": null,
+                                "url_date": "2025-10-20",
                                 "url_date_archive": null
                             }
                         ]
@@ -2138,7 +2138,7 @@
             "name": "battery inverter",
             "detailed_technology": "battery inverter",
             "case": "Moderate",
-            "region": "US",
+            "region": "USA",
             "year": 2022,
             "parameters": {
                 "investment": {
@@ -2153,9 +2153,9 @@
                             {
                                 "title": "Energy system technology data for the US",
                                 "authors": "Contributors to technology-data. Data source: manual_input_usa.csv",
-                                "url": "https://github.com/PyPSA/technology-data/blob/master/inputs/US/manual_input_usa.csv",
+                                "url": "https://github.com/PyPSA/technology-data/blob/v0.13.4/inputs/US/manual_input_usa.csv",
                                 "url_archive": null,
-                                "url_date": null,
+                                "url_date": "2025-10-20",
                                 "url_date_archive": null
                             }
                         ]
@@ -2173,9 +2173,9 @@
                             {
                                 "title": "Energy system technology data for the US",
                                 "authors": "Contributors to technology-data. Data source: manual_input_usa.csv",
-                                "url": "https://github.com/PyPSA/technology-data/blob/master/inputs/US/manual_input_usa.csv",
+                                "url": "https://github.com/PyPSA/technology-data/blob/v0.13.4/inputs/US/manual_input_usa.csv",
                                 "url_archive": null,
-                                "url_date": null,
+                                "url_date": "2025-10-20",
                                 "url_date_archive": null
                             }
                         ]
@@ -2187,7 +2187,7 @@
             "name": "battery storage",
             "detailed_technology": "battery storage",
             "case": "Moderate",
-            "region": "US",
+            "region": "USA",
             "year": 2022,
             "parameters": {
                 "investment": {
@@ -2202,9 +2202,9 @@
                             {
                                 "title": "Energy system technology data for the US",
                                 "authors": "Contributors to technology-data. Data source: manual_input_usa.csv",
-                                "url": "https://github.com/PyPSA/technology-data/blob/master/inputs/US/manual_input_usa.csv",
+                                "url": "https://github.com/PyPSA/technology-data/blob/v0.13.4/inputs/US/manual_input_usa.csv",
                                 "url_archive": null,
-                                "url_date": null,
+                                "url_date": "2025-10-20",
                                 "url_date_archive": null
                             }
                         ]
@@ -2222,9 +2222,9 @@
                             {
                                 "title": "Energy system technology data for the US",
                                 "authors": "Contributors to technology-data. Data source: manual_input_usa.csv",
-                                "url": "https://github.com/PyPSA/technology-data/blob/master/inputs/US/manual_input_usa.csv",
+                                "url": "https://github.com/PyPSA/technology-data/blob/v0.13.4/inputs/US/manual_input_usa.csv",
                                 "url_archive": null,
-                                "url_date": null,
+                                "url_date": "2025-10-20",
                                 "url_date_archive": null
                             }
                         ]
@@ -2236,7 +2236,7 @@
             "name": "Alkaline electrolyzer large size",
             "detailed_technology": "Alkaline electrolyzer large size",
             "case": "Moderate",
-            "region": "US",
+            "region": "USA",
             "year": 2030,
             "parameters": {
                 "investment": {
@@ -2251,9 +2251,9 @@
                             {
                                 "title": "Energy system technology data for the US",
                                 "authors": "Contributors to technology-data. Data source: manual_input_usa.csv",
-                                "url": "https://github.com/PyPSA/technology-data/blob/master/inputs/US/manual_input_usa.csv",
+                                "url": "https://github.com/PyPSA/technology-data/blob/v0.13.4/inputs/US/manual_input_usa.csv",
                                 "url_archive": null,
-                                "url_date": null,
+                                "url_date": "2025-10-20",
                                 "url_date_archive": null
                             }
                         ]
@@ -2271,9 +2271,9 @@
                             {
                                 "title": "Energy system technology data for the US",
                                 "authors": "Contributors to technology-data. Data source: manual_input_usa.csv",
-                                "url": "https://github.com/PyPSA/technology-data/blob/master/inputs/US/manual_input_usa.csv",
+                                "url": "https://github.com/PyPSA/technology-data/blob/v0.13.4/inputs/US/manual_input_usa.csv",
                                 "url_archive": null,
-                                "url_date": null,
+                                "url_date": "2025-10-20",
                                 "url_date_archive": null
                             }
                         ]
@@ -2285,7 +2285,7 @@
             "name": "PEM electrolyzer small size",
             "detailed_technology": "PEM electrolyzer small size",
             "case": "Moderate",
-            "region": "US",
+            "region": "USA",
             "year": 2030,
             "parameters": {
                 "investment": {
@@ -2300,9 +2300,9 @@
                             {
                                 "title": "Energy system technology data for the US",
                                 "authors": "Contributors to technology-data. Data source: manual_input_usa.csv",
-                                "url": "https://github.com/PyPSA/technology-data/blob/master/inputs/US/manual_input_usa.csv",
+                                "url": "https://github.com/PyPSA/technology-data/blob/v0.13.4/inputs/US/manual_input_usa.csv",
                                 "url_archive": null,
-                                "url_date": null,
+                                "url_date": "2025-10-20",
                                 "url_date_archive": null
                             }
                         ]
@@ -2320,9 +2320,9 @@
                             {
                                 "title": "Energy system technology data for the US",
                                 "authors": "Contributors to technology-data. Data source: manual_input_usa.csv",
-                                "url": "https://github.com/PyPSA/technology-data/blob/master/inputs/US/manual_input_usa.csv",
+                                "url": "https://github.com/PyPSA/technology-data/blob/v0.13.4/inputs/US/manual_input_usa.csv",
                                 "url_archive": null,
-                                "url_date": null,
+                                "url_date": "2025-10-20",
                                 "url_date_archive": null
                             }
                         ]
@@ -2334,7 +2334,7 @@
             "name": "SOEC",
             "detailed_technology": "SOEC",
             "case": "Moderate",
-            "region": "US",
+            "region": "USA",
             "year": 2030,
             "parameters": {
                 "investment": {
@@ -2349,9 +2349,9 @@
                             {
                                 "title": "Energy system technology data for the US",
                                 "authors": "Contributors to technology-data. Data source: manual_input_usa.csv",
-                                "url": "https://github.com/PyPSA/technology-data/blob/master/inputs/US/manual_input_usa.csv",
+                                "url": "https://github.com/PyPSA/technology-data/blob/v0.13.4/inputs/US/manual_input_usa.csv",
                                 "url_archive": null,
-                                "url_date": null,
+                                "url_date": "2025-10-20",
                                 "url_date_archive": null
                             }
                         ]
@@ -2369,9 +2369,9 @@
                             {
                                 "title": "Energy system technology data for the US",
                                 "authors": "Contributors to technology-data. Data source: manual_input_usa.csv",
-                                "url": "https://github.com/PyPSA/technology-data/blob/master/inputs/US/manual_input_usa.csv",
+                                "url": "https://github.com/PyPSA/technology-data/blob/v0.13.4/inputs/US/manual_input_usa.csv",
                                 "url_archive": null,
-                                "url_date": null,
+                                "url_date": "2025-10-20",
                                 "url_date_archive": null
                             }
                         ]
@@ -2383,7 +2383,7 @@
             "name": "battery inverter",
             "detailed_technology": "battery inverter",
             "case": "Moderate",
-            "region": "US",
+            "region": "USA",
             "year": 2030,
             "parameters": {
                 "investment": {
@@ -2398,9 +2398,9 @@
                             {
                                 "title": "Energy system technology data for the US",
                                 "authors": "Contributors to technology-data. Data source: manual_input_usa.csv",
-                                "url": "https://github.com/PyPSA/technology-data/blob/master/inputs/US/manual_input_usa.csv",
+                                "url": "https://github.com/PyPSA/technology-data/blob/v0.13.4/inputs/US/manual_input_usa.csv",
                                 "url_archive": null,
-                                "url_date": null,
+                                "url_date": "2025-10-20",
                                 "url_date_archive": null
                             }
                         ]
@@ -2418,9 +2418,9 @@
                             {
                                 "title": "Energy system technology data for the US",
                                 "authors": "Contributors to technology-data. Data source: manual_input_usa.csv",
-                                "url": "https://github.com/PyPSA/technology-data/blob/master/inputs/US/manual_input_usa.csv",
+                                "url": "https://github.com/PyPSA/technology-data/blob/v0.13.4/inputs/US/manual_input_usa.csv",
                                 "url_archive": null,
-                                "url_date": null,
+                                "url_date": "2025-10-20",
                                 "url_date_archive": null
                             }
                         ]
@@ -2432,7 +2432,7 @@
             "name": "battery storage",
             "detailed_technology": "battery storage",
             "case": "Moderate",
-            "region": "US",
+            "region": "USA",
             "year": 2030,
             "parameters": {
                 "investment": {
@@ -2447,9 +2447,9 @@
                             {
                                 "title": "Energy system technology data for the US",
                                 "authors": "Contributors to technology-data. Data source: manual_input_usa.csv",
-                                "url": "https://github.com/PyPSA/technology-data/blob/master/inputs/US/manual_input_usa.csv",
+                                "url": "https://github.com/PyPSA/technology-data/blob/v0.13.4/inputs/US/manual_input_usa.csv",
                                 "url_archive": null,
-                                "url_date": null,
+                                "url_date": "2025-10-20",
                                 "url_date_archive": null
                             }
                         ]
@@ -2467,9 +2467,9 @@
                             {
                                 "title": "Energy system technology data for the US",
                                 "authors": "Contributors to technology-data. Data source: manual_input_usa.csv",
-                                "url": "https://github.com/PyPSA/technology-data/blob/master/inputs/US/manual_input_usa.csv",
+                                "url": "https://github.com/PyPSA/technology-data/blob/v0.13.4/inputs/US/manual_input_usa.csv",
                                 "url_archive": null,
-                                "url_date": null,
+                                "url_date": "2025-10-20",
                                 "url_date_archive": null
                             }
                         ]
@@ -2481,7 +2481,7 @@
             "name": "Alkaline electrolyzer large size",
             "detailed_technology": "Alkaline electrolyzer large size",
             "case": "Moderate",
-            "region": "US",
+            "region": "USA",
             "year": 2040,
             "parameters": {
                 "investment": {
@@ -2496,9 +2496,9 @@
                             {
                                 "title": "Energy system technology data for the US",
                                 "authors": "Contributors to technology-data. Data source: manual_input_usa.csv",
-                                "url": "https://github.com/PyPSA/technology-data/blob/master/inputs/US/manual_input_usa.csv",
+                                "url": "https://github.com/PyPSA/technology-data/blob/v0.13.4/inputs/US/manual_input_usa.csv",
                                 "url_archive": null,
-                                "url_date": null,
+                                "url_date": "2025-10-20",
                                 "url_date_archive": null
                             }
                         ]
@@ -2510,7 +2510,7 @@
             "name": "PEM electrolyzer small size",
             "detailed_technology": "PEM electrolyzer small size",
             "case": "Moderate",
-            "region": "US",
+            "region": "USA",
             "year": 2040,
             "parameters": {
                 "investment": {
@@ -2525,9 +2525,9 @@
                             {
                                 "title": "Energy system technology data for the US",
                                 "authors": "Contributors to technology-data. Data source: manual_input_usa.csv",
-                                "url": "https://github.com/PyPSA/technology-data/blob/master/inputs/US/manual_input_usa.csv",
+                                "url": "https://github.com/PyPSA/technology-data/blob/v0.13.4/inputs/US/manual_input_usa.csv",
                                 "url_archive": null,
-                                "url_date": null,
+                                "url_date": "2025-10-20",
                                 "url_date_archive": null
                             }
                         ]
@@ -2539,7 +2539,7 @@
             "name": "SOEC",
             "detailed_technology": "SOEC",
             "case": "Moderate",
-            "region": "US",
+            "region": "USA",
             "year": 2040,
             "parameters": {
                 "investment": {
@@ -2554,9 +2554,9 @@
                             {
                                 "title": "Energy system technology data for the US",
                                 "authors": "Contributors to technology-data. Data source: manual_input_usa.csv",
-                                "url": "https://github.com/PyPSA/technology-data/blob/master/inputs/US/manual_input_usa.csv",
+                                "url": "https://github.com/PyPSA/technology-data/blob/v0.13.4/inputs/US/manual_input_usa.csv",
                                 "url_archive": null,
-                                "url_date": null,
+                                "url_date": "2025-10-20",
                                 "url_date_archive": null
                             }
                         ]
@@ -2568,7 +2568,7 @@
             "name": "battery inverter",
             "detailed_technology": "battery inverter",
             "case": "Moderate",
-            "region": "US",
+            "region": "USA",
             "year": 2040,
             "parameters": {
                 "investment": {
@@ -2583,9 +2583,9 @@
                             {
                                 "title": "Energy system technology data for the US",
                                 "authors": "Contributors to technology-data. Data source: manual_input_usa.csv",
-                                "url": "https://github.com/PyPSA/technology-data/blob/master/inputs/US/manual_input_usa.csv",
+                                "url": "https://github.com/PyPSA/technology-data/blob/v0.13.4/inputs/US/manual_input_usa.csv",
                                 "url_archive": null,
-                                "url_date": null,
+                                "url_date": "2025-10-20",
                                 "url_date_archive": null
                             }
                         ]
@@ -2603,9 +2603,9 @@
                             {
                                 "title": "Energy system technology data for the US",
                                 "authors": "Contributors to technology-data. Data source: manual_input_usa.csv",
-                                "url": "https://github.com/PyPSA/technology-data/blob/master/inputs/US/manual_input_usa.csv",
+                                "url": "https://github.com/PyPSA/technology-data/blob/v0.13.4/inputs/US/manual_input_usa.csv",
                                 "url_archive": null,
-                                "url_date": null,
+                                "url_date": "2025-10-20",
                                 "url_date_archive": null
                             }
                         ]
@@ -2617,7 +2617,7 @@
             "name": "battery storage",
             "detailed_technology": "battery storage",
             "case": "Moderate",
-            "region": "US",
+            "region": "USA",
             "year": 2040,
             "parameters": {
                 "investment": {
@@ -2632,9 +2632,9 @@
                             {
                                 "title": "Energy system technology data for the US",
                                 "authors": "Contributors to technology-data. Data source: manual_input_usa.csv",
-                                "url": "https://github.com/PyPSA/technology-data/blob/master/inputs/US/manual_input_usa.csv",
+                                "url": "https://github.com/PyPSA/technology-data/blob/v0.13.4/inputs/US/manual_input_usa.csv",
                                 "url_archive": null,
-                                "url_date": null,
+                                "url_date": "2025-10-20",
                                 "url_date_archive": null
                             }
                         ]
@@ -2652,9 +2652,9 @@
                             {
                                 "title": "Energy system technology data for the US",
                                 "authors": "Contributors to technology-data. Data source: manual_input_usa.csv",
-                                "url": "https://github.com/PyPSA/technology-data/blob/master/inputs/US/manual_input_usa.csv",
+                                "url": "https://github.com/PyPSA/technology-data/blob/v0.13.4/inputs/US/manual_input_usa.csv",
                                 "url_archive": null,
-                                "url_date": null,
+                                "url_date": "2025-10-20",
                                 "url_date_archive": null
                             }
                         ]
@@ -2666,7 +2666,7 @@
             "name": "Alkaline electrolyzer large size",
             "detailed_technology": "Alkaline electrolyzer large size",
             "case": "Moderate",
-            "region": "US",
+            "region": "USA",
             "year": 2050,
             "parameters": {
                 "investment": {
@@ -2681,9 +2681,9 @@
                             {
                                 "title": "Energy system technology data for the US",
                                 "authors": "Contributors to technology-data. Data source: manual_input_usa.csv",
-                                "url": "https://github.com/PyPSA/technology-data/blob/master/inputs/US/manual_input_usa.csv",
+                                "url": "https://github.com/PyPSA/technology-data/blob/v0.13.4/inputs/US/manual_input_usa.csv",
                                 "url_archive": null,
-                                "url_date": null,
+                                "url_date": "2025-10-20",
                                 "url_date_archive": null
                             }
                         ]
@@ -2701,9 +2701,9 @@
                             {
                                 "title": "Energy system technology data for the US",
                                 "authors": "Contributors to technology-data. Data source: manual_input_usa.csv",
-                                "url": "https://github.com/PyPSA/technology-data/blob/master/inputs/US/manual_input_usa.csv",
+                                "url": "https://github.com/PyPSA/technology-data/blob/v0.13.4/inputs/US/manual_input_usa.csv",
                                 "url_archive": null,
-                                "url_date": null,
+                                "url_date": "2025-10-20",
                                 "url_date_archive": null
                             }
                         ]
@@ -2715,7 +2715,7 @@
             "name": "PEM electrolyzer small size",
             "detailed_technology": "PEM electrolyzer small size",
             "case": "Moderate",
-            "region": "US",
+            "region": "USA",
             "year": 2050,
             "parameters": {
                 "investment": {
@@ -2730,9 +2730,9 @@
                             {
                                 "title": "Energy system technology data for the US",
                                 "authors": "Contributors to technology-data. Data source: manual_input_usa.csv",
-                                "url": "https://github.com/PyPSA/technology-data/blob/master/inputs/US/manual_input_usa.csv",
+                                "url": "https://github.com/PyPSA/technology-data/blob/v0.13.4/inputs/US/manual_input_usa.csv",
                                 "url_archive": null,
-                                "url_date": null,
+                                "url_date": "2025-10-20",
                                 "url_date_archive": null
                             }
                         ]
@@ -2750,9 +2750,9 @@
                             {
                                 "title": "Energy system technology data for the US",
                                 "authors": "Contributors to technology-data. Data source: manual_input_usa.csv",
-                                "url": "https://github.com/PyPSA/technology-data/blob/master/inputs/US/manual_input_usa.csv",
+                                "url": "https://github.com/PyPSA/technology-data/blob/v0.13.4/inputs/US/manual_input_usa.csv",
                                 "url_archive": null,
-                                "url_date": null,
+                                "url_date": "2025-10-20",
                                 "url_date_archive": null
                             }
                         ]
@@ -2764,7 +2764,7 @@
             "name": "SOEC",
             "detailed_technology": "SOEC",
             "case": "Moderate",
-            "region": "US",
+            "region": "USA",
             "year": 2050,
             "parameters": {
                 "investment": {
@@ -2779,9 +2779,9 @@
                             {
                                 "title": "Energy system technology data for the US",
                                 "authors": "Contributors to technology-data. Data source: manual_input_usa.csv",
-                                "url": "https://github.com/PyPSA/technology-data/blob/master/inputs/US/manual_input_usa.csv",
+                                "url": "https://github.com/PyPSA/technology-data/blob/v0.13.4/inputs/US/manual_input_usa.csv",
                                 "url_archive": null,
-                                "url_date": null,
+                                "url_date": "2025-10-20",
                                 "url_date_archive": null
                             }
                         ]
@@ -2799,9 +2799,9 @@
                             {
                                 "title": "Energy system technology data for the US",
                                 "authors": "Contributors to technology-data. Data source: manual_input_usa.csv",
-                                "url": "https://github.com/PyPSA/technology-data/blob/master/inputs/US/manual_input_usa.csv",
+                                "url": "https://github.com/PyPSA/technology-data/blob/v0.13.4/inputs/US/manual_input_usa.csv",
                                 "url_archive": null,
-                                "url_date": null,
+                                "url_date": "2025-10-20",
                                 "url_date_archive": null
                             }
                         ]
@@ -2813,7 +2813,7 @@
             "name": "battery inverter",
             "detailed_technology": "battery inverter",
             "case": "Moderate",
-            "region": "US",
+            "region": "USA",
             "year": 2050,
             "parameters": {
                 "investment": {
@@ -2828,9 +2828,9 @@
                             {
                                 "title": "Energy system technology data for the US",
                                 "authors": "Contributors to technology-data. Data source: manual_input_usa.csv",
-                                "url": "https://github.com/PyPSA/technology-data/blob/master/inputs/US/manual_input_usa.csv",
+                                "url": "https://github.com/PyPSA/technology-data/blob/v0.13.4/inputs/US/manual_input_usa.csv",
                                 "url_archive": null,
-                                "url_date": null,
+                                "url_date": "2025-10-20",
                                 "url_date_archive": null
                             }
                         ]
@@ -2848,9 +2848,9 @@
                             {
                                 "title": "Energy system technology data for the US",
                                 "authors": "Contributors to technology-data. Data source: manual_input_usa.csv",
-                                "url": "https://github.com/PyPSA/technology-data/blob/master/inputs/US/manual_input_usa.csv",
+                                "url": "https://github.com/PyPSA/technology-data/blob/v0.13.4/inputs/US/manual_input_usa.csv",
                                 "url_archive": null,
-                                "url_date": null,
+                                "url_date": "2025-10-20",
                                 "url_date_archive": null
                             }
                         ]
@@ -2862,7 +2862,7 @@
             "name": "battery storage",
             "detailed_technology": "battery storage",
             "case": "Moderate",
-            "region": "US",
+            "region": "USA",
             "year": 2050,
             "parameters": {
                 "investment": {
@@ -2877,9 +2877,9 @@
                             {
                                 "title": "Energy system technology data for the US",
                                 "authors": "Contributors to technology-data. Data source: manual_input_usa.csv",
-                                "url": "https://github.com/PyPSA/technology-data/blob/master/inputs/US/manual_input_usa.csv",
+                                "url": "https://github.com/PyPSA/technology-data/blob/v0.13.4/inputs/US/manual_input_usa.csv",
                                 "url_archive": null,
-                                "url_date": null,
+                                "url_date": "2025-10-20",
                                 "url_date_archive": null
                             }
                         ]
@@ -2897,9 +2897,9 @@
                             {
                                 "title": "Energy system technology data for the US",
                                 "authors": "Contributors to technology-data. Data source: manual_input_usa.csv",
-                                "url": "https://github.com/PyPSA/technology-data/blob/master/inputs/US/manual_input_usa.csv",
+                                "url": "https://github.com/PyPSA/technology-data/blob/v0.13.4/inputs/US/manual_input_usa.csv",
                                 "url_archive": null,
-                                "url_date": null,
+                                "url_date": "2025-10-20",
                                 "url_date_archive": null
                             }
                         ]
@@ -2911,7 +2911,7 @@
             "name": "Alkaline electrolyzer large size",
             "detailed_technology": "Alkaline electrolyzer large size",
             "case": "not_available",
-            "region": "US",
+            "region": "USA",
             "year": 2020,
             "parameters": {
                 "lifetime": {
@@ -2926,9 +2926,9 @@
                             {
                                 "title": "Energy system technology data for the US",
                                 "authors": "Contributors to technology-data. Data source: manual_input_usa.csv",
-                                "url": "https://github.com/PyPSA/technology-data/blob/master/inputs/US/manual_input_usa.csv",
+                                "url": "https://github.com/PyPSA/technology-data/blob/v0.13.4/inputs/US/manual_input_usa.csv",
                                 "url_archive": null,
-                                "url_date": null,
+                                "url_date": "2025-10-20",
                                 "url_date_archive": null
                             }
                         ]
@@ -2940,7 +2940,7 @@
             "name": "Coal-IGCC",
             "detailed_technology": "Coal-IGCC",
             "case": "not_available",
-            "region": "US",
+            "region": "USA",
             "year": 2020,
             "parameters": {
                 "lifetime": {
@@ -2955,9 +2955,9 @@
                             {
                                 "title": "Energy system technology data for the US",
                                 "authors": "Contributors to technology-data. Data source: manual_input_usa.csv",
-                                "url": "https://github.com/PyPSA/technology-data/blob/master/inputs/US/manual_input_usa.csv",
+                                "url": "https://github.com/PyPSA/technology-data/blob/v0.13.4/inputs/US/manual_input_usa.csv",
                                 "url_archive": null,
-                                "url_date": null,
+                                "url_date": "2025-10-20",
                                 "url_date_archive": null
                             }
                         ]
@@ -2975,9 +2975,9 @@
                             {
                                 "title": "Energy system technology data for the US",
                                 "authors": "Contributors to technology-data. Data source: manual_input_usa.csv",
-                                "url": "https://github.com/PyPSA/technology-data/blob/master/inputs/US/manual_input_usa.csv",
+                                "url": "https://github.com/PyPSA/technology-data/blob/v0.13.4/inputs/US/manual_input_usa.csv",
                                 "url_archive": null,
-                                "url_date": null,
+                                "url_date": "2025-10-20",
                                 "url_date_archive": null
                             }
                         ]
@@ -2989,7 +2989,7 @@
             "name": "Fischer-Tropsch",
             "detailed_technology": "Fischer-Tropsch",
             "case": "not_available",
-            "region": "US",
+            "region": "USA",
             "year": 2020,
             "parameters": {
                 "efficiency": {
@@ -3004,9 +3004,9 @@
                             {
                                 "title": "Energy system technology data for the US",
                                 "authors": "Contributors to technology-data. Data source: manual_input_usa.csv",
-                                "url": "https://github.com/PyPSA/technology-data/blob/master/inputs/US/manual_input_usa.csv",
+                                "url": "https://github.com/PyPSA/technology-data/blob/v0.13.4/inputs/US/manual_input_usa.csv",
                                 "url_archive": null,
-                                "url_date": null,
+                                "url_date": "2025-10-20",
                                 "url_date_archive": null
                             }
                         ]
@@ -3016,7 +3016,7 @@
                     "magnitude": 1696429.0,
                     "units": "USD_2022 / megawatt",
                     "carrier": "1 / fischer_tropsch",
-                    "heating_value": "lower_heating_value",
+                    "heating_value": "1 / lower_heating_value",
                     "provenance": null,
                     "note": null,
                     "sources": {
@@ -3024,9 +3024,9 @@
                             {
                                 "title": "Energy system technology data for the US",
                                 "authors": "Contributors to technology-data. Data source: manual_input_usa.csv",
-                                "url": "https://github.com/PyPSA/technology-data/blob/master/inputs/US/manual_input_usa.csv",
+                                "url": "https://github.com/PyPSA/technology-data/blob/v0.13.4/inputs/US/manual_input_usa.csv",
                                 "url_archive": null,
-                                "url_date": null,
+                                "url_date": "2025-10-20",
                                 "url_date_archive": null
                             }
                         ]
@@ -3044,9 +3044,9 @@
                             {
                                 "title": "Energy system technology data for the US",
                                 "authors": "Contributors to technology-data. Data source: manual_input_usa.csv",
-                                "url": "https://github.com/PyPSA/technology-data/blob/master/inputs/US/manual_input_usa.csv",
+                                "url": "https://github.com/PyPSA/technology-data/blob/v0.13.4/inputs/US/manual_input_usa.csv",
                                 "url_archive": null,
-                                "url_date": null,
+                                "url_date": "2025-10-20",
                                 "url_date_archive": null
                             }
                         ]
@@ -3064,9 +3064,9 @@
                             {
                                 "title": "Energy system technology data for the US",
                                 "authors": "Contributors to technology-data. Data source: manual_input_usa.csv",
-                                "url": "https://github.com/PyPSA/technology-data/blob/master/inputs/US/manual_input_usa.csv",
+                                "url": "https://github.com/PyPSA/technology-data/blob/v0.13.4/inputs/US/manual_input_usa.csv",
                                 "url_archive": null,
-                                "url_date": null,
+                                "url_date": "2025-10-20",
                                 "url_date_archive": null
                             }
                         ]
@@ -3084,9 +3084,9 @@
                             {
                                 "title": "Energy system technology data for the US",
                                 "authors": "Contributors to technology-data. Data source: manual_input_usa.csv",
-                                "url": "https://github.com/PyPSA/technology-data/blob/master/inputs/US/manual_input_usa.csv",
+                                "url": "https://github.com/PyPSA/technology-data/blob/v0.13.4/inputs/US/manual_input_usa.csv",
                                 "url_archive": null,
-                                "url_date": null,
+                                "url_date": "2025-10-20",
                                 "url_date_archive": null
                             }
                         ]
@@ -3104,9 +3104,9 @@
                             {
                                 "title": "Energy system technology data for the US",
                                 "authors": "Contributors to technology-data. Data source: manual_input_usa.csv",
-                                "url": "https://github.com/PyPSA/technology-data/blob/master/inputs/US/manual_input_usa.csv",
+                                "url": "https://github.com/PyPSA/technology-data/blob/v0.13.4/inputs/US/manual_input_usa.csv",
                                 "url_archive": null,
-                                "url_date": null,
+                                "url_date": "2025-10-20",
                                 "url_date_archive": null
                             }
                         ]
@@ -3124,9 +3124,9 @@
                             {
                                 "title": "Energy system technology data for the US",
                                 "authors": "Contributors to technology-data. Data source: manual_input_usa.csv",
-                                "url": "https://github.com/PyPSA/technology-data/blob/master/inputs/US/manual_input_usa.csv",
+                                "url": "https://github.com/PyPSA/technology-data/blob/v0.13.4/inputs/US/manual_input_usa.csv",
                                 "url_archive": null,
-                                "url_date": null,
+                                "url_date": "2025-10-20",
                                 "url_date_archive": null
                             }
                         ]
@@ -3138,7 +3138,7 @@
             "name": "NG 2-on-1 Combined Cycle (F-Frame)",
             "detailed_technology": "NG 2-on-1 Combined Cycle (F-Frame)",
             "case": "not_available",
-            "region": "US",
+            "region": "USA",
             "year": 2020,
             "parameters": {
                 "efficiency": {
@@ -3153,9 +3153,9 @@
                             {
                                 "title": "Energy system technology data for the US",
                                 "authors": "Contributors to technology-data. Data source: manual_input_usa.csv",
-                                "url": "https://github.com/PyPSA/technology-data/blob/master/inputs/US/manual_input_usa.csv",
+                                "url": "https://github.com/PyPSA/technology-data/blob/v0.13.4/inputs/US/manual_input_usa.csv",
                                 "url_archive": null,
-                                "url_date": null,
+                                "url_date": "2025-10-20",
                                 "url_date_archive": null
                             }
                         ]
@@ -3167,7 +3167,7 @@
             "name": "PEM electrolyzer small size",
             "detailed_technology": "PEM electrolyzer small size",
             "case": "not_available",
-            "region": "US",
+            "region": "USA",
             "year": 2020,
             "parameters": {
                 "lifetime": {
@@ -3182,9 +3182,9 @@
                             {
                                 "title": "Energy system technology data for the US",
                                 "authors": "Contributors to technology-data. Data source: manual_input_usa.csv",
-                                "url": "https://github.com/PyPSA/technology-data/blob/master/inputs/US/manual_input_usa.csv",
+                                "url": "https://github.com/PyPSA/technology-data/blob/v0.13.4/inputs/US/manual_input_usa.csv",
                                 "url_archive": null,
-                                "url_date": null,
+                                "url_date": "2025-10-20",
                                 "url_date_archive": null
                             }
                         ]
@@ -3196,7 +3196,7 @@
             "name": "SOEC",
             "detailed_technology": "SOEC",
             "case": "not_available",
-            "region": "US",
+            "region": "USA",
             "year": 2020,
             "parameters": {
                 "lifetime": {
@@ -3211,9 +3211,9 @@
                             {
                                 "title": "Energy system technology data for the US",
                                 "authors": "Contributors to technology-data. Data source: manual_input_usa.csv",
-                                "url": "https://github.com/PyPSA/technology-data/blob/master/inputs/US/manual_input_usa.csv",
+                                "url": "https://github.com/PyPSA/technology-data/blob/v0.13.4/inputs/US/manual_input_usa.csv",
                                 "url_archive": null,
-                                "url_date": null,
+                                "url_date": "2025-10-20",
                                 "url_date_archive": null
                             }
                         ]
@@ -3225,7 +3225,7 @@
             "name": "direct air capture",
             "detailed_technology": "direct air capture",
             "case": "not_available",
-            "region": "US",
+            "region": "USA",
             "year": 2020,
             "parameters": {
                 "lifetime": {
@@ -3240,9 +3240,9 @@
                             {
                                 "title": "Energy system technology data for the US",
                                 "authors": "Contributors to technology-data. Data source: manual_input_usa.csv",
-                                "url": "https://github.com/PyPSA/technology-data/blob/master/inputs/US/manual_input_usa.csv",
+                                "url": "https://github.com/PyPSA/technology-data/blob/v0.13.4/inputs/US/manual_input_usa.csv",
                                 "url_archive": null,
-                                "url_date": null,
+                                "url_date": "2025-10-20",
                                 "url_date_archive": null
                             }
                         ]
@@ -3260,9 +3260,9 @@
                             {
                                 "title": "Energy system technology data for the US",
                                 "authors": "Contributors to technology-data. Data source: manual_input_usa.csv",
-                                "url": "https://github.com/PyPSA/technology-data/blob/master/inputs/US/manual_input_usa.csv",
+                                "url": "https://github.com/PyPSA/technology-data/blob/v0.13.4/inputs/US/manual_input_usa.csv",
                                 "url_archive": null,
-                                "url_date": null,
+                                "url_date": "2025-10-20",
                                 "url_date_archive": null
                             }
                         ]
@@ -3280,9 +3280,9 @@
                             {
                                 "title": "Energy system technology data for the US",
                                 "authors": "Contributors to technology-data. Data source: manual_input_usa.csv",
-                                "url": "https://github.com/PyPSA/technology-data/blob/master/inputs/US/manual_input_usa.csv",
+                                "url": "https://github.com/PyPSA/technology-data/blob/v0.13.4/inputs/US/manual_input_usa.csv",
                                 "url_archive": null,
-                                "url_date": null,
+                                "url_date": "2025-10-20",
                                 "url_date_archive": null
                             }
                         ]
@@ -3294,7 +3294,7 @@
             "name": "hydrogen storage compressor",
             "detailed_technology": "hydrogen storage compressor",
             "case": "not_available",
-            "region": "US",
+            "region": "USA",
             "year": 2020,
             "parameters": {
                 "investment": {
@@ -3309,9 +3309,9 @@
                             {
                                 "title": "Energy system technology data for the US",
                                 "authors": "Contributors to technology-data. Data source: manual_input_usa.csv",
-                                "url": "https://github.com/PyPSA/technology-data/blob/master/inputs/US/manual_input_usa.csv",
+                                "url": "https://github.com/PyPSA/technology-data/blob/v0.13.4/inputs/US/manual_input_usa.csv",
                                 "url_archive": null,
-                                "url_date": null,
+                                "url_date": "2025-10-20",
                                 "url_date_archive": null
                             }
                         ]
@@ -3329,9 +3329,9 @@
                             {
                                 "title": "Energy system technology data for the US",
                                 "authors": "Contributors to technology-data. Data source: manual_input_usa.csv",
-                                "url": "https://github.com/PyPSA/technology-data/blob/master/inputs/US/manual_input_usa.csv",
+                                "url": "https://github.com/PyPSA/technology-data/blob/v0.13.4/inputs/US/manual_input_usa.csv",
                                 "url_archive": null,
-                                "url_date": null,
+                                "url_date": "2025-10-20",
                                 "url_date_archive": null
                             }
                         ]
@@ -3349,9 +3349,9 @@
                             {
                                 "title": "Energy system technology data for the US",
                                 "authors": "Contributors to technology-data. Data source: manual_input_usa.csv",
-                                "url": "https://github.com/PyPSA/technology-data/blob/master/inputs/US/manual_input_usa.csv",
+                                "url": "https://github.com/PyPSA/technology-data/blob/v0.13.4/inputs/US/manual_input_usa.csv",
                                 "url_archive": null,
-                                "url_date": null,
+                                "url_date": "2025-10-20",
                                 "url_date_archive": null
                             }
                         ]
@@ -3369,9 +3369,9 @@
                             {
                                 "title": "Energy system technology data for the US",
                                 "authors": "Contributors to technology-data. Data source: manual_input_usa.csv",
-                                "url": "https://github.com/PyPSA/technology-data/blob/master/inputs/US/manual_input_usa.csv",
+                                "url": "https://github.com/PyPSA/technology-data/blob/v0.13.4/inputs/US/manual_input_usa.csv",
                                 "url_archive": null,
-                                "url_date": null,
+                                "url_date": "2025-10-20",
                                 "url_date_archive": null
                             }
                         ]
@@ -3383,7 +3383,7 @@
             "name": "hydrogen storage tank type 1",
             "detailed_technology": "hydrogen storage tank type 1",
             "case": "not_available",
-            "region": "US",
+            "region": "USA",
             "year": 2020,
             "parameters": {
                 "investment": {
@@ -3398,9 +3398,9 @@
                             {
                                 "title": "Energy system technology data for the US",
                                 "authors": "Contributors to technology-data. Data source: manual_input_usa.csv",
-                                "url": "https://github.com/PyPSA/technology-data/blob/master/inputs/US/manual_input_usa.csv",
+                                "url": "https://github.com/PyPSA/technology-data/blob/v0.13.4/inputs/US/manual_input_usa.csv",
                                 "url_archive": null,
-                                "url_date": null,
+                                "url_date": "2025-10-20",
                                 "url_date_archive": null
                             }
                         ]
@@ -3418,9 +3418,9 @@
                             {
                                 "title": "Energy system technology data for the US",
                                 "authors": "Contributors to technology-data. Data source: manual_input_usa.csv",
-                                "url": "https://github.com/PyPSA/technology-data/blob/master/inputs/US/manual_input_usa.csv",
+                                "url": "https://github.com/PyPSA/technology-data/blob/v0.13.4/inputs/US/manual_input_usa.csv",
                                 "url_archive": null,
-                                "url_date": null,
+                                "url_date": "2025-10-20",
                                 "url_date_archive": null
                             }
                         ]
@@ -3438,9 +3438,9 @@
                             {
                                 "title": "Energy system technology data for the US",
                                 "authors": "Contributors to technology-data. Data source: manual_input_usa.csv",
-                                "url": "https://github.com/PyPSA/technology-data/blob/master/inputs/US/manual_input_usa.csv",
+                                "url": "https://github.com/PyPSA/technology-data/blob/v0.13.4/inputs/US/manual_input_usa.csv",
                                 "url_archive": null,
-                                "url_date": null,
+                                "url_date": "2025-10-20",
                                 "url_date_archive": null
                             }
                         ]
@@ -3458,9 +3458,9 @@
                             {
                                 "title": "Energy system technology data for the US",
                                 "authors": "Contributors to technology-data. Data source: manual_input_usa.csv",
-                                "url": "https://github.com/PyPSA/technology-data/blob/master/inputs/US/manual_input_usa.csv",
+                                "url": "https://github.com/PyPSA/technology-data/blob/v0.13.4/inputs/US/manual_input_usa.csv",
                                 "url_archive": null,
-                                "url_date": null,
+                                "url_date": "2025-10-20",
                                 "url_date_archive": null
                             }
                         ]
@@ -3472,7 +3472,7 @@
             "name": "battery inverter",
             "detailed_technology": "battery inverter",
             "case": "not_available",
-            "region": "US",
+            "region": "USA",
             "year": 2022,
             "parameters": {
                 "lifetime": {
@@ -3487,9 +3487,9 @@
                             {
                                 "title": "Energy system technology data for the US",
                                 "authors": "Contributors to technology-data. Data source: manual_input_usa.csv",
-                                "url": "https://github.com/PyPSA/technology-data/blob/master/inputs/US/manual_input_usa.csv",
+                                "url": "https://github.com/PyPSA/technology-data/blob/v0.13.4/inputs/US/manual_input_usa.csv",
                                 "url_archive": null,
-                                "url_date": null,
+                                "url_date": "2025-10-20",
                                 "url_date_archive": null
                             }
                         ]
@@ -3501,7 +3501,7 @@
             "name": "battery storage",
             "detailed_technology": "battery storage",
             "case": "not_available",
-            "region": "US",
+            "region": "USA",
             "year": 2022,
             "parameters": {
                 "lifetime": {
@@ -3516,9 +3516,9 @@
                             {
                                 "title": "Energy system technology data for the US",
                                 "authors": "Contributors to technology-data. Data source: manual_input_usa.csv",
-                                "url": "https://github.com/PyPSA/technology-data/blob/master/inputs/US/manual_input_usa.csv",
+                                "url": "https://github.com/PyPSA/technology-data/blob/v0.13.4/inputs/US/manual_input_usa.csv",
                                 "url_archive": null,
-                                "url_date": null,
+                                "url_date": "2025-10-20",
                                 "url_date_archive": null
                             }
                         ]
@@ -3530,7 +3530,7 @@
             "name": "Coal integrated retrofit 90%-CCS",
             "detailed_technology": "Coal integrated retrofit 90%-CCS",
             "case": "not_available",
-            "region": "US",
+            "region": "USA",
             "year": 2030,
             "parameters": {
                 "capture_rate": {
@@ -3545,9 +3545,9 @@
                             {
                                 "title": "Energy system technology data for the US",
                                 "authors": "Contributors to technology-data. Data source: manual_input_usa.csv",
-                                "url": "https://github.com/PyPSA/technology-data/blob/master/inputs/US/manual_input_usa.csv",
+                                "url": "https://github.com/PyPSA/technology-data/blob/v0.13.4/inputs/US/manual_input_usa.csv",
                                 "url_archive": null,
-                                "url_date": null,
+                                "url_date": "2025-10-20",
                                 "url_date_archive": null
                             }
                         ]
@@ -3565,9 +3565,9 @@
                             {
                                 "title": "Energy system technology data for the US",
                                 "authors": "Contributors to technology-data. Data source: manual_input_usa.csv",
-                                "url": "https://github.com/PyPSA/technology-data/blob/master/inputs/US/manual_input_usa.csv",
+                                "url": "https://github.com/PyPSA/technology-data/blob/v0.13.4/inputs/US/manual_input_usa.csv",
                                 "url_archive": null,
-                                "url_date": null,
+                                "url_date": "2025-10-20",
                                 "url_date_archive": null
                             }
                         ]
@@ -3579,7 +3579,7 @@
             "name": "Coal integrated retrofit 95%-CCS",
             "detailed_technology": "Coal integrated retrofit 95%-CCS",
             "case": "not_available",
-            "region": "US",
+            "region": "USA",
             "year": 2030,
             "parameters": {
                 "capture_rate": {
@@ -3594,9 +3594,9 @@
                             {
                                 "title": "Energy system technology data for the US",
                                 "authors": "Contributors to technology-data. Data source: manual_input_usa.csv",
-                                "url": "https://github.com/PyPSA/technology-data/blob/master/inputs/US/manual_input_usa.csv",
+                                "url": "https://github.com/PyPSA/technology-data/blob/v0.13.4/inputs/US/manual_input_usa.csv",
                                 "url_archive": null,
-                                "url_date": null,
+                                "url_date": "2025-10-20",
                                 "url_date_archive": null
                             }
                         ]
@@ -3614,9 +3614,9 @@
                             {
                                 "title": "Energy system technology data for the US",
                                 "authors": "Contributors to technology-data. Data source: manual_input_usa.csv",
-                                "url": "https://github.com/PyPSA/technology-data/blob/master/inputs/US/manual_input_usa.csv",
+                                "url": "https://github.com/PyPSA/technology-data/blob/v0.13.4/inputs/US/manual_input_usa.csv",
                                 "url_archive": null,
-                                "url_date": null,
+                                "url_date": "2025-10-20",
                                 "url_date_archive": null
                             }
                         ]
@@ -3628,7 +3628,7 @@
             "name": "Coal-95%-CCS",
             "detailed_technology": "Coal-95%-CCS",
             "case": "not_available",
-            "region": "US",
+            "region": "USA",
             "year": 2030,
             "parameters": {
                 "lifetime": {
@@ -3643,9 +3643,9 @@
                             {
                                 "title": "Energy system technology data for the US",
                                 "authors": "Contributors to technology-data. Data source: manual_input_usa.csv",
-                                "url": "https://github.com/PyPSA/technology-data/blob/master/inputs/US/manual_input_usa.csv",
+                                "url": "https://github.com/PyPSA/technology-data/blob/v0.13.4/inputs/US/manual_input_usa.csv",
                                 "url_archive": null,
-                                "url_date": null,
+                                "url_date": "2025-10-20",
                                 "url_date_archive": null
                             }
                         ]
@@ -3663,9 +3663,9 @@
                             {
                                 "title": "Energy system technology data for the US",
                                 "authors": "Contributors to technology-data. Data source: manual_input_usa.csv",
-                                "url": "https://github.com/PyPSA/technology-data/blob/master/inputs/US/manual_input_usa.csv",
+                                "url": "https://github.com/PyPSA/technology-data/blob/v0.13.4/inputs/US/manual_input_usa.csv",
                                 "url_archive": null,
-                                "url_date": null,
+                                "url_date": "2025-10-20",
                                 "url_date_archive": null
                             }
                         ]
@@ -3683,9 +3683,9 @@
                             {
                                 "title": "Energy system technology data for the US",
                                 "authors": "Contributors to technology-data. Data source: manual_input_usa.csv",
-                                "url": "https://github.com/PyPSA/technology-data/blob/master/inputs/US/manual_input_usa.csv",
+                                "url": "https://github.com/PyPSA/technology-data/blob/v0.13.4/inputs/US/manual_input_usa.csv",
                                 "url_archive": null,
-                                "url_date": null,
+                                "url_date": "2025-10-20",
                                 "url_date_archive": null
                             }
                         ]
@@ -3697,7 +3697,7 @@
             "name": "Coal-99%-CCS",
             "detailed_technology": "Coal-99%-CCS",
             "case": "not_available",
-            "region": "US",
+            "region": "USA",
             "year": 2030,
             "parameters": {
                 "lifetime": {
@@ -3712,9 +3712,9 @@
                             {
                                 "title": "Energy system technology data for the US",
                                 "authors": "Contributors to technology-data. Data source: manual_input_usa.csv",
-                                "url": "https://github.com/PyPSA/technology-data/blob/master/inputs/US/manual_input_usa.csv",
+                                "url": "https://github.com/PyPSA/technology-data/blob/v0.13.4/inputs/US/manual_input_usa.csv",
                                 "url_archive": null,
-                                "url_date": null,
+                                "url_date": "2025-10-20",
                                 "url_date_archive": null
                             }
                         ]
@@ -3732,9 +3732,9 @@
                             {
                                 "title": "Energy system technology data for the US",
                                 "authors": "Contributors to technology-data. Data source: manual_input_usa.csv",
-                                "url": "https://github.com/PyPSA/technology-data/blob/master/inputs/US/manual_input_usa.csv",
+                                "url": "https://github.com/PyPSA/technology-data/blob/v0.13.4/inputs/US/manual_input_usa.csv",
                                 "url_archive": null,
-                                "url_date": null,
+                                "url_date": "2025-10-20",
                                 "url_date_archive": null
                             }
                         ]
@@ -3752,9 +3752,9 @@
                             {
                                 "title": "Energy system technology data for the US",
                                 "authors": "Contributors to technology-data. Data source: manual_input_usa.csv",
-                                "url": "https://github.com/PyPSA/technology-data/blob/master/inputs/US/manual_input_usa.csv",
+                                "url": "https://github.com/PyPSA/technology-data/blob/v0.13.4/inputs/US/manual_input_usa.csv",
                                 "url_archive": null,
-                                "url_date": null,
+                                "url_date": "2025-10-20",
                                 "url_date_archive": null
                             }
                         ]
@@ -3766,7 +3766,7 @@
             "name": "Coal-IGCC-90%-CCS",
             "detailed_technology": "Coal-IGCC-90%-CCS",
             "case": "not_available",
-            "region": "US",
+            "region": "USA",
             "year": 2030,
             "parameters": {
                 "lifetime": {
@@ -3781,9 +3781,9 @@
                             {
                                 "title": "Energy system technology data for the US",
                                 "authors": "Contributors to technology-data. Data source: manual_input_usa.csv",
-                                "url": "https://github.com/PyPSA/technology-data/blob/master/inputs/US/manual_input_usa.csv",
+                                "url": "https://github.com/PyPSA/technology-data/blob/v0.13.4/inputs/US/manual_input_usa.csv",
                                 "url_archive": null,
-                                "url_date": null,
+                                "url_date": "2025-10-20",
                                 "url_date_archive": null
                             }
                         ]
@@ -3801,9 +3801,9 @@
                             {
                                 "title": "Energy system technology data for the US",
                                 "authors": "Contributors to technology-data. Data source: manual_input_usa.csv",
-                                "url": "https://github.com/PyPSA/technology-data/blob/master/inputs/US/manual_input_usa.csv",
+                                "url": "https://github.com/PyPSA/technology-data/blob/v0.13.4/inputs/US/manual_input_usa.csv",
                                 "url_archive": null,
-                                "url_date": null,
+                                "url_date": "2025-10-20",
                                 "url_date_archive": null
                             }
                         ]
@@ -3821,9 +3821,9 @@
                             {
                                 "title": "Energy system technology data for the US",
                                 "authors": "Contributors to technology-data. Data source: manual_input_usa.csv",
-                                "url": "https://github.com/PyPSA/technology-data/blob/master/inputs/US/manual_input_usa.csv",
+                                "url": "https://github.com/PyPSA/technology-data/blob/v0.13.4/inputs/US/manual_input_usa.csv",
                                 "url_archive": null,
-                                "url_date": null,
+                                "url_date": "2025-10-20",
                                 "url_date_archive": null
                             }
                         ]
@@ -3835,7 +3835,7 @@
             "name": "Fischer-Tropsch",
             "detailed_technology": "Fischer-Tropsch",
             "case": "not_available",
-            "region": "US",
+            "region": "USA",
             "year": 2030,
             "parameters": {
                 "lifetime": {
@@ -3850,9 +3850,9 @@
                             {
                                 "title": "Energy system technology data for the US",
                                 "authors": "Contributors to technology-data. Data source: manual_input_usa.csv",
-                                "url": "https://github.com/PyPSA/technology-data/blob/master/inputs/US/manual_input_usa.csv",
+                                "url": "https://github.com/PyPSA/technology-data/blob/v0.13.4/inputs/US/manual_input_usa.csv",
                                 "url_archive": null,
-                                "url_date": null,
+                                "url_date": "2025-10-20",
                                 "url_date_archive": null
                             }
                         ]
@@ -3864,7 +3864,7 @@
             "name": "NG 2-on-1 Combined Cycle (F-Frame)",
             "detailed_technology": "NG 2-on-1 Combined Cycle (F-Frame)",
             "case": "not_available",
-            "region": "US",
+            "region": "USA",
             "year": 2030,
             "parameters": {
                 "lifetime": {
@@ -3879,9 +3879,9 @@
                             {
                                 "title": "Energy system technology data for the US",
                                 "authors": "Contributors to technology-data. Data source: manual_input_usa.csv",
-                                "url": "https://github.com/PyPSA/technology-data/blob/master/inputs/US/manual_input_usa.csv",
+                                "url": "https://github.com/PyPSA/technology-data/blob/v0.13.4/inputs/US/manual_input_usa.csv",
                                 "url_archive": null,
-                                "url_date": null,
+                                "url_date": "2025-10-20",
                                 "url_date_archive": null
                             }
                         ]
@@ -3899,9 +3899,9 @@
                             {
                                 "title": "Energy system technology data for the US",
                                 "authors": "Contributors to technology-data. Data source: manual_input_usa.csv",
-                                "url": "https://github.com/PyPSA/technology-data/blob/master/inputs/US/manual_input_usa.csv",
+                                "url": "https://github.com/PyPSA/technology-data/blob/v0.13.4/inputs/US/manual_input_usa.csv",
                                 "url_archive": null,
-                                "url_date": null,
+                                "url_date": "2025-10-20",
                                 "url_date_archive": null
                             }
                         ]
@@ -3913,7 +3913,7 @@
             "name": "NG 2-on-1 Combined Cycle (F-Frame) 95% CCS",
             "detailed_technology": "NG 2-on-1 Combined Cycle (F-Frame) 95% CCS",
             "case": "not_available",
-            "region": "US",
+            "region": "USA",
             "year": 2030,
             "parameters": {
                 "lifetime": {
@@ -3928,9 +3928,9 @@
                             {
                                 "title": "Energy system technology data for the US",
                                 "authors": "Contributors to technology-data. Data source: manual_input_usa.csv",
-                                "url": "https://github.com/PyPSA/technology-data/blob/master/inputs/US/manual_input_usa.csv",
+                                "url": "https://github.com/PyPSA/technology-data/blob/v0.13.4/inputs/US/manual_input_usa.csv",
                                 "url_archive": null,
-                                "url_date": null,
+                                "url_date": "2025-10-20",
                                 "url_date_archive": null
                             }
                         ]
@@ -3948,9 +3948,9 @@
                             {
                                 "title": "Energy system technology data for the US",
                                 "authors": "Contributors to technology-data. Data source: manual_input_usa.csv",
-                                "url": "https://github.com/PyPSA/technology-data/blob/master/inputs/US/manual_input_usa.csv",
+                                "url": "https://github.com/PyPSA/technology-data/blob/v0.13.4/inputs/US/manual_input_usa.csv",
                                 "url_archive": null,
-                                "url_date": null,
+                                "url_date": "2025-10-20",
                                 "url_date_archive": null
                             }
                         ]
@@ -3968,9 +3968,9 @@
                             {
                                 "title": "Energy system technology data for the US",
                                 "authors": "Contributors to technology-data. Data source: manual_input_usa.csv",
-                                "url": "https://github.com/PyPSA/technology-data/blob/master/inputs/US/manual_input_usa.csv",
+                                "url": "https://github.com/PyPSA/technology-data/blob/v0.13.4/inputs/US/manual_input_usa.csv",
                                 "url_archive": null,
-                                "url_date": null,
+                                "url_date": "2025-10-20",
                                 "url_date_archive": null
                             }
                         ]
@@ -3982,7 +3982,7 @@
             "name": "NG 2-on-1 Combined Cycle (F-Frame) 97% CCS",
             "detailed_technology": "NG 2-on-1 Combined Cycle (F-Frame) 97% CCS",
             "case": "not_available",
-            "region": "US",
+            "region": "USA",
             "year": 2030,
             "parameters": {
                 "lifetime": {
@@ -3997,9 +3997,9 @@
                             {
                                 "title": "Energy system technology data for the US",
                                 "authors": "Contributors to technology-data. Data source: manual_input_usa.csv",
-                                "url": "https://github.com/PyPSA/technology-data/blob/master/inputs/US/manual_input_usa.csv",
+                                "url": "https://github.com/PyPSA/technology-data/blob/v0.13.4/inputs/US/manual_input_usa.csv",
                                 "url_archive": null,
-                                "url_date": null,
+                                "url_date": "2025-10-20",
                                 "url_date_archive": null
                             }
                         ]
@@ -4017,9 +4017,9 @@
                             {
                                 "title": "Energy system technology data for the US",
                                 "authors": "Contributors to technology-data. Data source: manual_input_usa.csv",
-                                "url": "https://github.com/PyPSA/technology-data/blob/master/inputs/US/manual_input_usa.csv",
+                                "url": "https://github.com/PyPSA/technology-data/blob/v0.13.4/inputs/US/manual_input_usa.csv",
                                 "url_archive": null,
-                                "url_date": null,
+                                "url_date": "2025-10-20",
                                 "url_date_archive": null
                             }
                         ]
@@ -4037,9 +4037,9 @@
                             {
                                 "title": "Energy system technology data for the US",
                                 "authors": "Contributors to technology-data. Data source: manual_input_usa.csv",
-                                "url": "https://github.com/PyPSA/technology-data/blob/master/inputs/US/manual_input_usa.csv",
+                                "url": "https://github.com/PyPSA/technology-data/blob/v0.13.4/inputs/US/manual_input_usa.csv",
                                 "url_archive": null,
-                                "url_date": null,
+                                "url_date": "2025-10-20",
                                 "url_date_archive": null
                             }
                         ]
@@ -4051,7 +4051,7 @@
             "name": "NG Combined Cycle F-Class integrated retrofit 90%-CCS",
             "detailed_technology": "NG Combined Cycle F-Class integrated retrofit 90%-CCS",
             "case": "not_available",
-            "region": "US",
+            "region": "USA",
             "year": 2030,
             "parameters": {
                 "capture_rate": {
@@ -4066,9 +4066,9 @@
                             {
                                 "title": "Energy system technology data for the US",
                                 "authors": "Contributors to technology-data. Data source: manual_input_usa.csv",
-                                "url": "https://github.com/PyPSA/technology-data/blob/master/inputs/US/manual_input_usa.csv",
+                                "url": "https://github.com/PyPSA/technology-data/blob/v0.13.4/inputs/US/manual_input_usa.csv",
                                 "url_archive": null,
-                                "url_date": null,
+                                "url_date": "2025-10-20",
                                 "url_date_archive": null
                             }
                         ]
@@ -4086,9 +4086,9 @@
                             {
                                 "title": "Energy system technology data for the US",
                                 "authors": "Contributors to technology-data. Data source: manual_input_usa.csv",
-                                "url": "https://github.com/PyPSA/technology-data/blob/master/inputs/US/manual_input_usa.csv",
+                                "url": "https://github.com/PyPSA/technology-data/blob/v0.13.4/inputs/US/manual_input_usa.csv",
                                 "url_archive": null,
-                                "url_date": null,
+                                "url_date": "2025-10-20",
                                 "url_date_archive": null
                             }
                         ]
@@ -4100,7 +4100,7 @@
             "name": "NG Combined Cycle F-Class integrated retrofit 95%-CCS",
             "detailed_technology": "NG Combined Cycle F-Class integrated retrofit 95%-CCS",
             "case": "not_available",
-            "region": "US",
+            "region": "USA",
             "year": 2030,
             "parameters": {
                 "capture_rate": {
@@ -4115,9 +4115,9 @@
                             {
                                 "title": "Energy system technology data for the US",
                                 "authors": "Contributors to technology-data. Data source: manual_input_usa.csv",
-                                "url": "https://github.com/PyPSA/technology-data/blob/master/inputs/US/manual_input_usa.csv",
+                                "url": "https://github.com/PyPSA/technology-data/blob/v0.13.4/inputs/US/manual_input_usa.csv",
                                 "url_archive": null,
-                                "url_date": null,
+                                "url_date": "2025-10-20",
                                 "url_date_archive": null
                             }
                         ]
@@ -4135,9 +4135,9 @@
                             {
                                 "title": "Energy system technology data for the US",
                                 "authors": "Contributors to technology-data. Data source: manual_input_usa.csv",
-                                "url": "https://github.com/PyPSA/technology-data/blob/master/inputs/US/manual_input_usa.csv",
+                                "url": "https://github.com/PyPSA/technology-data/blob/v0.13.4/inputs/US/manual_input_usa.csv",
                                 "url_archive": null,
-                                "url_date": null,
+                                "url_date": "2025-10-20",
                                 "url_date_archive": null
                             }
                         ]
