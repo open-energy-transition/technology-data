@@ -3,11 +3,14 @@
 # SPDX-License-Identifier: MIT
 
 """
-Data parser for the manual_input_usa.csv data set.
+Data parser for manually specified, USA-specific data from the technology-data repository (`manual_input_usa.csv`).
 
 How to run:
     From the repository root, execute:
         python src/technologydata/parsers/manual_input_usa/manual_input_usa.py
+
+This will regenerate the files `src/technologydata/parsers/manual_input_usa/{sources.json|technologies.json}` with the specified options.
+Use the default options to reproduce the file provided with the package.
 
 Configuration options (command-line arguments):
     --num_digits <int>         Number of significant digits to round the values. Default: 4
@@ -69,7 +72,7 @@ def extract_units_carriers_heating_value(
         "t_CO2/MWh_FT": ("t/MWh", "CO2/FT", "LHV"),
         "USD_2022/kWh_H2": ("USD_2022/kWh", "1/H2", "LHV"),
         "MWh_el/MWh_H2": ("MWh/MWh", "el/H2", "LHV"),
-        "USD_2023/t_CO2/h": ("USD_2023/t/h", "1/CO2", "LHV"),
+        "USD_2023/t_CO2/h": ("USD_2023/t/h", "1/CO2", None),
         "MWh_el/t_CO2": ("MWh/t", "el/CO2", "LHV"),
         "MWh_th/t_CO2": ("MWh/t", "thermal/CO2", "LHV"),
     }
