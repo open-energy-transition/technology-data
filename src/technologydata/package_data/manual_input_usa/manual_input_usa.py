@@ -68,7 +68,7 @@ def extract_units_carriers_heating_value(
         "t_CO2/MWh_FT": ("t/MWh", "CO2/FT", "LHV"),
         "USD_2022/kWh_H2": ("USD_2022/kWh", "1/H2", "LHV"),
         "MWh_el/MWh_H2": ("MWh/MWh", "el/H2", "LHV"),
-        "USD_2023/t_CO2/h": ("USD_2023/t/h", "1/CO2", "LHV"),
+        "USD_2023/t_CO2/h": ("USD_2023/t/h", "1/CO2", None),
         "MWh_el/t_CO2": ("MWh/t", "el/CO2", "LHV"),
         "MWh_th/t_CO2": ("MWh/t", "thermal/CO2", "LHV"),
     }
