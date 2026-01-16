@@ -76,4 +76,3 @@ The parser generates the following outputs:
 - `src/technologydata/parsers/manual_input_usa/technologies.json`.
 - `src/technologydata/parsers/manual_input_usa/sources.json`.
 - Optional schema files moved to `src/technologydata/parsers/schemas` when `--export_schema` is used.
-
