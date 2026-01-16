@@ -1,6 +1,6 @@
 # Installation
 
-You can install `technologydata` using **PyPI**. 
+You can install `technologydata` using **PyPI**.
 
 ## Using pip (from PyPI)
 
