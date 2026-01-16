@@ -5,8 +5,8 @@
 cff-version: 1.2.0
 message: "If you use this package, we suggest the following way of citing it."
 title: "technology-data: Data for Energy Systems Models"
-repository: https://github.com/pypsa/technology-data
-version: v2-prototype # TODO: Update automatically using a release script
+repository: https://github.com/open-energy-transition/technology-data
+version: 0.1.0 # Don't touch, will be updated by the release script
 license: MIT
 authors:
   - family-names: Hampp

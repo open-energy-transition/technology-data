@@ -1,7 +1,7 @@
 version = 1
 SPDX-PackageName = "technologydata"
 SPDX-PackageSupplier = "The technology-data authors"
-SPDX-PackageDownloadLocation = "https://github.com/pypsa/technology-data"
+SPDX-PackageDownloadLocation = "https://github.com/open-energy-transition/technology-data"
 
 [[annotations]]
 path = ["uv.lock", "*.yaml", "docs/**",]

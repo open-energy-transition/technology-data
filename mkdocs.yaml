@@ -1,7 +1,7 @@
 site_name: Documentation
 site_url: !ENV READTHEDOCS_CANONICAL_URL
-repo_url: https://github.com/PyPSA/technology-data
-repo_name: PyPSA/technology-data
+repo_url: https://github.com/open-energy-transition/technology-data
+repo_name: open-energy-transition/technology-data
 edit_uri: edit/master/docs/
 
 # Navigation
@@ -154,7 +154,7 @@ plugins:
 - argref:
     autolinks:
     - reference_prefix: ":octicons-git-pull-request-16:"
-      target_url: https://github.com/PyPSA/technology-data/pull/<num>
+      target_url: https://github.com/open-energy-transition/technology-data/pull/<num>
 - social:
     cards_layout_options:
       font_family: Overpass
