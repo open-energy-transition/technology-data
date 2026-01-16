@@ -13,4 +13,3 @@ including unit-ful parameters, currency conversions, inflation adjustment, and t
 
 The goal of this package is to make energy system modelling easier and more efficient,
 automating common tasks and transformations to reduce errors and allowing for easier data exchange between models.
-
