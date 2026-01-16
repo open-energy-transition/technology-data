@@ -143,6 +143,7 @@ def build_technology_collection(
         ["scenario", "year", "technology"]
     ):
         parameters = {}
+        financial_case_for_tech = None
         for _, row in group.iterrows():
             unit, carrier, heating_value = extract_units_carriers_heating_value(
                 row["unit"]
@@ -164,15 +165,21 @@ def build_technology_collection(
             if row["financial_case"] is not None and isinstance(
                 row["financial_case"], str
             ):
-                param_kwargs["provenance"] = str(row["financial_case"])
+                financial_case_for_tech = str(row["financial_case"])
             parameters[row["parameter"]] = Parameter(**param_kwargs)
+
+        # Combine scenario and financial_case for the case attribute
+        case_value = str(scenario)
+        if financial_case_for_tech is not None:
+            case_value = f"{scenario} - {financial_case_for_tech}"
+
         list_techs.append(
             Technology(
                 name=technology,
                 region="USA",
                 year=year,
                 parameters=parameters,
-                case=str(scenario),
+                case=case_value,
                 detailed_technology=technology,
             )
         )

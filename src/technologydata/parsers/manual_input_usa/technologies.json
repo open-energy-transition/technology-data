@@ -3,7 +3,7 @@
         {
             "name": "Alkaline electrolyzer large size",
             "detailed_technology": "Alkaline electrolyzer large size",
-            "case": "Advanced",
+            "case": "Advanced - Market",
             "region": "USA",
             "year": 2020,
             "parameters": {
@@ -12,7 +12,7 @@
                     "units": "USD_2022 / kilowatt",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": "Market",
+                    "provenance": null,
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -32,7 +32,7 @@
                     "units": "percent / year",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": "Market",
+                    "provenance": null,
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -52,7 +52,7 @@
         {
             "name": "PEM electrolyzer small size",
             "detailed_technology": "PEM electrolyzer small size",
-            "case": "Advanced",
+            "case": "Advanced - Market",
             "region": "USA",
             "year": 2020,
             "parameters": {
@@ -61,7 +61,7 @@
                     "units": "USD_2022 / kilowatt",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": "Market",
+                    "provenance": null,
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -81,7 +81,7 @@
                     "units": "percent / year",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": "Market",
+                    "provenance": null,
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -101,7 +101,7 @@
         {
             "name": "SOEC",
             "detailed_technology": "SOEC",
-            "case": "Advanced",
+            "case": "Advanced - Market",
             "region": "USA",
             "year": 2020,
             "parameters": {
@@ -110,7 +110,7 @@
                     "units": "USD_2022 / kilowatt",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": "Market",
+                    "provenance": null,
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -130,7 +130,7 @@
                     "units": "percent / year",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": "Market",
+                    "provenance": null,
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -150,7 +150,7 @@
         {
             "name": "direct air capture",
             "detailed_technology": "direct air capture",
-            "case": "Advanced",
+            "case": "Advanced - Market",
             "region": "USA",
             "year": 2020,
             "parameters": {
@@ -159,7 +159,7 @@
                     "units": "percent / year",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": "Market",
+                    "provenance": null,
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -179,7 +179,7 @@
                     "units": "USD_2023 / hour / metric_ton",
                     "carrier": "1 / carbon_dioxide",
                     "heating_value": null,
-                    "provenance": "Market",
+                    "provenance": null,
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -199,7 +199,7 @@
         {
             "name": "battery inverter",
             "detailed_technology": "battery inverter",
-            "case": "Advanced",
+            "case": "Advanced - Market",
             "region": "USA",
             "year": 2022,
             "parameters": {
@@ -208,7 +208,7 @@
                     "units": "USD_2022 / kilowatt",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": "Market",
+                    "provenance": null,
                     "note": "Includes grid connection and project financing costs; Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -228,7 +228,7 @@
                     "units": "percent / year",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": "Market",
+                    "provenance": null,
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -248,7 +248,7 @@
         {
             "name": "battery storage",
             "detailed_technology": "battery storage",
-            "case": "Advanced",
+            "case": "Advanced - Market",
             "region": "USA",
             "year": 2022,
             "parameters": {
@@ -257,7 +257,7 @@
                     "units": "USD_2022 / kilowatt_hour",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": "Market",
+                    "provenance": null,
                     "note": "Includes grid connection and project financing costs; Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -277,7 +277,7 @@
                     "units": "percent / year",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": "Market",
+                    "provenance": null,
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -297,7 +297,7 @@
         {
             "name": "Alkaline electrolyzer large size",
             "detailed_technology": "Alkaline electrolyzer large size",
-            "case": "Advanced",
+            "case": "Advanced - Market",
             "region": "USA",
             "year": 2030,
             "parameters": {
@@ -306,7 +306,7 @@
                     "units": "USD_2022 / kilowatt",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": "Market",
+                    "provenance": null,
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -326,7 +326,7 @@
                     "units": "percent / year",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": "Market",
+                    "provenance": null,
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -346,7 +346,7 @@
         {
             "name": "PEM electrolyzer small size",
             "detailed_technology": "PEM electrolyzer small size",
-            "case": "Advanced",
+            "case": "Advanced - Market",
             "region": "USA",
             "year": 2030,
             "parameters": {
@@ -355,7 +355,7 @@
                     "units": "USD_2022 / kilowatt",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": "Market",
+                    "provenance": null,
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -375,7 +375,7 @@
                     "units": "percent / year",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": "Market",
+                    "provenance": null,
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -395,7 +395,7 @@
         {
             "name": "SOEC",
             "detailed_technology": "SOEC",
-            "case": "Advanced",
+            "case": "Advanced - Market",
             "region": "USA",
             "year": 2030,
             "parameters": {
@@ -404,7 +404,7 @@
                     "units": "USD_2022 / kilowatt",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": "Market",
+                    "provenance": null,
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -424,7 +424,7 @@
                     "units": "percent / year",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": "Market",
+                    "provenance": null,
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -444,7 +444,7 @@
         {
             "name": "battery inverter",
             "detailed_technology": "battery inverter",
-            "case": "Advanced",
+            "case": "Advanced - Market",
             "region": "USA",
             "year": 2030,
             "parameters": {
@@ -453,7 +453,7 @@
                     "units": "USD_2022 / kilowatt",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": "Market",
+                    "provenance": null,
                     "note": "Includes grid connection and project financing costs; Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -473,7 +473,7 @@
                     "units": "percent / year",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": "Market",
+                    "provenance": null,
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -493,7 +493,7 @@
         {
             "name": "battery storage",
             "detailed_technology": "battery storage",
-            "case": "Advanced",
+            "case": "Advanced - Market",
             "region": "USA",
             "year": 2030,
             "parameters": {
@@ -502,7 +502,7 @@
                     "units": "USD_2022 / kilowatt_hour",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": "Market",
+                    "provenance": null,
                     "note": "Includes grid connection and project financing costs; Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -522,7 +522,7 @@
                     "units": "percent / year",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": "Market",
+                    "provenance": null,
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -542,7 +542,7 @@
         {
             "name": "Alkaline electrolyzer large size",
             "detailed_technology": "Alkaline electrolyzer large size",
-            "case": "Advanced",
+            "case": "Advanced - Market",
             "region": "USA",
             "year": 2040,
             "parameters": {
@@ -551,7 +551,7 @@
                     "units": "USD_2022 / kilowatt",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": "Market",
+                    "provenance": null,
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -571,7 +571,7 @@
         {
             "name": "PEM electrolyzer small size",
             "detailed_technology": "PEM electrolyzer small size",
-            "case": "Advanced",
+            "case": "Advanced - Market",
             "region": "USA",
             "year": 2040,
             "parameters": {
@@ -580,7 +580,7 @@
                     "units": "USD_2022 / kilowatt",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": "Market",
+                    "provenance": null,
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -600,7 +600,7 @@
         {
             "name": "SOEC",
             "detailed_technology": "SOEC",
-            "case": "Advanced",
+            "case": "Advanced - Market",
             "region": "USA",
             "year": 2040,
             "parameters": {
@@ -609,7 +609,7 @@
                     "units": "USD_2022 / kilowatt",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": "Market",
+                    "provenance": null,
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -629,7 +629,7 @@
         {
             "name": "battery inverter",
             "detailed_technology": "battery inverter",
-            "case": "Advanced",
+            "case": "Advanced - Market",
             "region": "USA",
             "year": 2040,
             "parameters": {
@@ -638,7 +638,7 @@
                     "units": "USD_2022 / kilowatt",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": "Market",
+                    "provenance": null,
                     "note": "Includes grid connection and project financing costs; Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -658,7 +658,7 @@
                     "units": "percent / year",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": "Market",
+                    "provenance": null,
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -678,7 +678,7 @@
         {
             "name": "battery storage",
             "detailed_technology": "battery storage",
-            "case": "Advanced",
+            "case": "Advanced - Market",
             "region": "USA",
             "year": 2040,
             "parameters": {
@@ -687,7 +687,7 @@
                     "units": "USD_2022 / kilowatt_hour",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": "Market",
+                    "provenance": null,
                     "note": "Includes grid connection and project financing costs; Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -707,7 +707,7 @@
                     "units": "percent / year",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": "Market",
+                    "provenance": null,
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -727,7 +727,7 @@
         {
             "name": "Alkaline electrolyzer large size",
             "detailed_technology": "Alkaline electrolyzer large size",
-            "case": "Advanced",
+            "case": "Advanced - Market",
             "region": "USA",
             "year": 2050,
             "parameters": {
@@ -736,7 +736,7 @@
                     "units": "USD_2022 / kilowatt",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": "Market",
+                    "provenance": null,
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -756,7 +756,7 @@
                     "units": "percent / year",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": "Market",
+                    "provenance": null,
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -776,7 +776,7 @@
         {
             "name": "PEM electrolyzer small size",
             "detailed_technology": "PEM electrolyzer small size",
-            "case": "Advanced",
+            "case": "Advanced - Market",
             "region": "USA",
             "year": 2050,
             "parameters": {
@@ -785,7 +785,7 @@
                     "units": "USD_2022 / kilowatt",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": "Market",
+                    "provenance": null,
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -805,7 +805,7 @@
                     "units": "percent / year",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": "Market",
+                    "provenance": null,
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -825,7 +825,7 @@
         {
             "name": "SOEC",
             "detailed_technology": "SOEC",
-            "case": "Advanced",
+            "case": "Advanced - Market",
             "region": "USA",
             "year": 2050,
             "parameters": {
@@ -834,7 +834,7 @@
                     "units": "USD_2022 / kilowatt",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": "Market",
+                    "provenance": null,
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -854,7 +854,7 @@
                     "units": "percent / year",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": "Market",
+                    "provenance": null,
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -874,7 +874,7 @@
         {
             "name": "battery inverter",
             "detailed_technology": "battery inverter",
-            "case": "Advanced",
+            "case": "Advanced - Market",
             "region": "USA",
             "year": 2050,
             "parameters": {
@@ -883,7 +883,7 @@
                     "units": "USD_2022 / kilowatt",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": "Market",
+                    "provenance": null,
                     "note": "Includes grid connection and project financing costs; Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -903,7 +903,7 @@
                     "units": "percent / year",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": "Market",
+                    "provenance": null,
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -923,7 +923,7 @@
         {
             "name": "battery storage",
             "detailed_technology": "battery storage",
-            "case": "Advanced",
+            "case": "Advanced - Market",
             "region": "USA",
             "year": 2050,
             "parameters": {
@@ -932,7 +932,7 @@
                     "units": "USD_2022 / kilowatt_hour",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": "Market",
+                    "provenance": null,
                     "note": "Includes grid connection and project financing costs; Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -952,7 +952,7 @@
                     "units": "percent / year",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": "Market",
+                    "provenance": null,
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -972,7 +972,7 @@
         {
             "name": "Alkaline electrolyzer large size",
             "detailed_technology": "Alkaline electrolyzer large size",
-            "case": "Conservative",
+            "case": "Conservative - Market",
             "region": "USA",
             "year": 2020,
             "parameters": {
@@ -981,7 +981,7 @@
                     "units": "USD_2022 / kilowatt",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": "Market",
+                    "provenance": null,
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -1001,7 +1001,7 @@
                     "units": "percent / year",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": "Market",
+                    "provenance": null,
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -1021,7 +1021,7 @@
         {
             "name": "PEM electrolyzer small size",
             "detailed_technology": "PEM electrolyzer small size",
-            "case": "Conservative",
+            "case": "Conservative - Market",
             "region": "USA",
             "year": 2020,
             "parameters": {
@@ -1030,7 +1030,7 @@
                     "units": "USD_2022 / kilowatt",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": "Market",
+                    "provenance": null,
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -1050,7 +1050,7 @@
                     "units": "percent / year",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": "Market",
+                    "provenance": null,
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -1070,7 +1070,7 @@
         {
             "name": "SOEC",
             "detailed_technology": "SOEC",
-            "case": "Conservative",
+            "case": "Conservative - Market",
             "region": "USA",
             "year": 2020,
             "parameters": {
@@ -1079,7 +1079,7 @@
                     "units": "USD_2022 / kilowatt",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": "Market",
+                    "provenance": null,
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -1099,7 +1099,7 @@
                     "units": "percent / year",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": "Market",
+                    "provenance": null,
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -1119,7 +1119,7 @@
         {
             "name": "direct air capture",
             "detailed_technology": "direct air capture",
-            "case": "Conservative",
+            "case": "Conservative - Market",
             "region": "USA",
             "year": 2020,
             "parameters": {
@@ -1128,7 +1128,7 @@
                     "units": "percent / year",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": "Market",
+                    "provenance": null,
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -1148,7 +1148,7 @@
                     "units": "USD_2023 / hour / metric_ton",
                     "carrier": "1 / carbon_dioxide",
                     "heating_value": null,
-                    "provenance": "Market",
+                    "provenance": null,
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -1168,7 +1168,7 @@
         {
             "name": "battery inverter",
             "detailed_technology": "battery inverter",
-            "case": "Conservative",
+            "case": "Conservative - Market",
             "region": "USA",
             "year": 2022,
             "parameters": {
@@ -1177,7 +1177,7 @@
                     "units": "USD_2022 / kilowatt",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": "Market",
+                    "provenance": null,
                     "note": "Includes grid connection and project financing costs; Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -1197,7 +1197,7 @@
                     "units": "percent / year",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": "Market",
+                    "provenance": null,
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -1217,7 +1217,7 @@
         {
             "name": "battery storage",
             "detailed_technology": "battery storage",
-            "case": "Conservative",
+            "case": "Conservative - Market",
             "region": "USA",
             "year": 2022,
             "parameters": {
@@ -1226,7 +1226,7 @@
                     "units": "USD_2022 / kilowatt_hour",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": "Market",
+                    "provenance": null,
                     "note": "Includes grid connection and project financing costs; Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -1246,7 +1246,7 @@
                     "units": "percent / year",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": "Market",
+                    "provenance": null,
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -1266,7 +1266,7 @@
         {
             "name": "Alkaline electrolyzer large size",
             "detailed_technology": "Alkaline electrolyzer large size",
-            "case": "Conservative",
+            "case": "Conservative - Market",
             "region": "USA",
             "year": 2030,
             "parameters": {
@@ -1275,7 +1275,7 @@
                     "units": "USD_2022 / kilowatt",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": "Market",
+                    "provenance": null,
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -1295,7 +1295,7 @@
                     "units": "percent / year",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": "Market",
+                    "provenance": null,
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -1315,7 +1315,7 @@
         {
             "name": "PEM electrolyzer small size",
             "detailed_technology": "PEM electrolyzer small size",
-            "case": "Conservative",
+            "case": "Conservative - Market",
             "region": "USA",
             "year": 2030,
             "parameters": {
@@ -1324,7 +1324,7 @@
                     "units": "USD_2022 / kilowatt",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": "Market",
+                    "provenance": null,
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -1344,7 +1344,7 @@
                     "units": "percent / year",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": "Market",
+                    "provenance": null,
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -1364,7 +1364,7 @@
         {
             "name": "SOEC",
             "detailed_technology": "SOEC",
-            "case": "Conservative",
+            "case": "Conservative - Market",
             "region": "USA",
             "year": 2030,
             "parameters": {
@@ -1373,7 +1373,7 @@
                     "units": "USD_2022 / kilowatt",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": "Market",
+                    "provenance": null,
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -1393,7 +1393,7 @@
                     "units": "percent / year",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": "Market",
+                    "provenance": null,
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -1413,7 +1413,7 @@
         {
             "name": "battery inverter",
             "detailed_technology": "battery inverter",
-            "case": "Conservative",
+            "case": "Conservative - Market",
             "region": "USA",
             "year": 2030,
             "parameters": {
@@ -1422,7 +1422,7 @@
                     "units": "USD_2022 / kilowatt",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": "Market",
+                    "provenance": null,
                     "note": "Includes grid connection and project financing costs; Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -1442,7 +1442,7 @@
                     "units": "percent / year",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": "Market",
+                    "provenance": null,
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -1462,7 +1462,7 @@
         {
             "name": "battery storage",
             "detailed_technology": "battery storage",
-            "case": "Conservative",
+            "case": "Conservative - Market",
             "region": "USA",
             "year": 2030,
             "parameters": {
@@ -1471,7 +1471,7 @@
                     "units": "USD_2022 / kilowatt_hour",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": "Market",
+                    "provenance": null,
                     "note": "Includes grid connection and project financing costs; Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -1491,7 +1491,7 @@
                     "units": "percent / year",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": "Market",
+                    "provenance": null,
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -1511,7 +1511,7 @@
         {
             "name": "Alkaline electrolyzer large size",
             "detailed_technology": "Alkaline electrolyzer large size",
-            "case": "Conservative",
+            "case": "Conservative - Market",
             "region": "USA",
             "year": 2040,
             "parameters": {
@@ -1520,7 +1520,7 @@
                     "units": "USD_2022 / kilowatt",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": "Market",
+                    "provenance": null,
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -1540,7 +1540,7 @@
         {
             "name": "PEM electrolyzer small size",
             "detailed_technology": "PEM electrolyzer small size",
-            "case": "Conservative",
+            "case": "Conservative - Market",
             "region": "USA",
             "year": 2040,
             "parameters": {
@@ -1549,7 +1549,7 @@
                     "units": "USD_2022 / kilowatt",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": "Market",
+                    "provenance": null,
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -1569,7 +1569,7 @@
         {
             "name": "SOEC",
             "detailed_technology": "SOEC",
-            "case": "Conservative",
+            "case": "Conservative - Market",
             "region": "USA",
             "year": 2040,
             "parameters": {
@@ -1578,7 +1578,7 @@
                     "units": "USD_2022 / kilowatt",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": "Market",
+                    "provenance": null,
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -1598,7 +1598,7 @@
         {
             "name": "battery inverter",
             "detailed_technology": "battery inverter",
-            "case": "Conservative",
+            "case": "Conservative - Market",
             "region": "USA",
             "year": 2040,
             "parameters": {
@@ -1607,7 +1607,7 @@
                     "units": "USD_2022 / kilowatt",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": "Market",
+                    "provenance": null,
                     "note": "Includes grid connection and project financing costs; Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -1627,7 +1627,7 @@
                     "units": "percent / year",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": "Market",
+                    "provenance": null,
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -1647,7 +1647,7 @@
         {
             "name": "battery storage",
             "detailed_technology": "battery storage",
-            "case": "Conservative",
+            "case": "Conservative - Market",
             "region": "USA",
             "year": 2040,
             "parameters": {
@@ -1656,7 +1656,7 @@
                     "units": "USD_2022 / kilowatt_hour",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": "Market",
+                    "provenance": null,
                     "note": "Includes grid connection and project financing costs; Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -1676,7 +1676,7 @@
                     "units": "percent / year",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": "Market",
+                    "provenance": null,
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -1696,7 +1696,7 @@
         {
             "name": "Alkaline electrolyzer large size",
             "detailed_technology": "Alkaline electrolyzer large size",
-            "case": "Conservative",
+            "case": "Conservative - Market",
             "region": "USA",
             "year": 2050,
             "parameters": {
@@ -1705,7 +1705,7 @@
                     "units": "USD_2022 / kilowatt",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": "Market",
+                    "provenance": null,
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -1725,7 +1725,7 @@
                     "units": "percent / year",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": "Market",
+                    "provenance": null,
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -1745,7 +1745,7 @@
         {
             "name": "PEM electrolyzer small size",
             "detailed_technology": "PEM electrolyzer small size",
-            "case": "Conservative",
+            "case": "Conservative - Market",
             "region": "USA",
             "year": 2050,
             "parameters": {
@@ -1754,7 +1754,7 @@
                     "units": "USD_2022 / kilowatt",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": "Market",
+                    "provenance": null,
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -1774,7 +1774,7 @@
                     "units": "percent / year",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": "Market",
+                    "provenance": null,
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -1794,7 +1794,7 @@
         {
             "name": "SOEC",
             "detailed_technology": "SOEC",
-            "case": "Conservative",
+            "case": "Conservative - Market",
             "region": "USA",
             "year": 2050,
             "parameters": {
@@ -1803,7 +1803,7 @@
                     "units": "USD_2022 / kilowatt",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": "Market",
+                    "provenance": null,
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -1823,7 +1823,7 @@
                     "units": "percent / year",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": "Market",
+                    "provenance": null,
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -1843,7 +1843,7 @@
         {
             "name": "battery inverter",
             "detailed_technology": "battery inverter",
-            "case": "Conservative",
+            "case": "Conservative - Market",
             "region": "USA",
             "year": 2050,
             "parameters": {
@@ -1852,7 +1852,7 @@
                     "units": "USD_2022 / kilowatt",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": "Market",
+                    "provenance": null,
                     "note": "Includes grid connection and project financing costs; Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -1872,7 +1872,7 @@
                     "units": "percent / year",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": "Market",
+                    "provenance": null,
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -1892,7 +1892,7 @@
         {
             "name": "battery storage",
             "detailed_technology": "battery storage",
-            "case": "Conservative",
+            "case": "Conservative - Market",
             "region": "USA",
             "year": 2050,
             "parameters": {
@@ -1901,7 +1901,7 @@
                     "units": "USD_2022 / kilowatt_hour",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": "Market",
+                    "provenance": null,
                     "note": "Includes grid connection and project financing costs; Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -1921,7 +1921,7 @@
                     "units": "percent / year",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": "Market",
+                    "provenance": null,
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -1941,7 +1941,7 @@
         {
             "name": "Alkaline electrolyzer large size",
             "detailed_technology": "Alkaline electrolyzer large size",
-            "case": "Moderate",
+            "case": "Moderate - Market",
             "region": "USA",
             "year": 2020,
             "parameters": {
@@ -1950,7 +1950,7 @@
                     "units": "USD_2022 / kilowatt",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": "Market",
+                    "provenance": null,
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -1970,7 +1970,7 @@
                     "units": "percent / year",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": "Market",
+                    "provenance": null,
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -1990,7 +1990,7 @@
         {
             "name": "PEM electrolyzer small size",
             "detailed_technology": "PEM electrolyzer small size",
-            "case": "Moderate",
+            "case": "Moderate - Market",
             "region": "USA",
             "year": 2020,
             "parameters": {
@@ -1999,7 +1999,7 @@
                     "units": "USD_2022 / kilowatt",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": "Market",
+                    "provenance": null,
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -2019,7 +2019,7 @@
                     "units": "percent / year",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": "Market",
+                    "provenance": null,
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -2039,7 +2039,7 @@
         {
             "name": "SOEC",
             "detailed_technology": "SOEC",
-            "case": "Moderate",
+            "case": "Moderate - Market",
             "region": "USA",
             "year": 2020,
             "parameters": {
@@ -2048,7 +2048,7 @@
                     "units": "USD_2022 / kilowatt",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": "Market",
+                    "provenance": null,
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -2068,7 +2068,7 @@
                     "units": "percent / year",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": "Market",
+                    "provenance": null,
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -2088,7 +2088,7 @@
         {
             "name": "direct air capture",
             "detailed_technology": "direct air capture",
-            "case": "Moderate",
+            "case": "Moderate - Market",
             "region": "USA",
             "year": 2020,
             "parameters": {
@@ -2097,7 +2097,7 @@
                     "units": "percent / year",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": "Market",
+                    "provenance": null,
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -2117,7 +2117,7 @@
                     "units": "USD_2023 / hour / metric_ton",
                     "carrier": "1 / carbon_dioxide",
                     "heating_value": null,
-                    "provenance": "Market",
+                    "provenance": null,
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -2137,7 +2137,7 @@
         {
             "name": "battery inverter",
             "detailed_technology": "battery inverter",
-            "case": "Moderate",
+            "case": "Moderate - Market",
             "region": "USA",
             "year": 2022,
             "parameters": {
@@ -2146,7 +2146,7 @@
                     "units": "USD_2022 / kilowatt",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": "Market",
+                    "provenance": null,
                     "note": "Includes grid connection and project financing costs; Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -2166,7 +2166,7 @@
                     "units": "percent / year",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": "Market",
+                    "provenance": null,
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -2186,7 +2186,7 @@
         {
             "name": "battery storage",
             "detailed_technology": "battery storage",
-            "case": "Moderate",
+            "case": "Moderate - Market",
             "region": "USA",
             "year": 2022,
             "parameters": {
@@ -2195,7 +2195,7 @@
                     "units": "USD_2022 / kilowatt_hour",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": "Market",
+                    "provenance": null,
                     "note": "Includes grid connection and project financing costs; Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -2215,7 +2215,7 @@
                     "units": "percent / year",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": "Market",
+                    "provenance": null,
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -2235,7 +2235,7 @@
         {
             "name": "Alkaline electrolyzer large size",
             "detailed_technology": "Alkaline electrolyzer large size",
-            "case": "Moderate",
+            "case": "Moderate - Market",
             "region": "USA",
             "year": 2030,
             "parameters": {
@@ -2244,7 +2244,7 @@
                     "units": "USD_2022 / kilowatt",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": "Market",
+                    "provenance": null,
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -2264,7 +2264,7 @@
                     "units": "percent / year",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": "Market",
+                    "provenance": null,
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -2284,7 +2284,7 @@
         {
             "name": "PEM electrolyzer small size",
             "detailed_technology": "PEM electrolyzer small size",
-            "case": "Moderate",
+            "case": "Moderate - Market",
             "region": "USA",
             "year": 2030,
             "parameters": {
@@ -2293,7 +2293,7 @@
                     "units": "USD_2022 / kilowatt",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": "Market",
+                    "provenance": null,
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -2313,7 +2313,7 @@
                     "units": "percent / year",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": "Market",
+                    "provenance": null,
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -2333,7 +2333,7 @@
         {
             "name": "SOEC",
             "detailed_technology": "SOEC",
-            "case": "Moderate",
+            "case": "Moderate - Market",
             "region": "USA",
             "year": 2030,
             "parameters": {
@@ -2342,7 +2342,7 @@
                     "units": "USD_2022 / kilowatt",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": "Market",
+                    "provenance": null,
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -2362,7 +2362,7 @@
                     "units": "percent / year",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": "Market",
+                    "provenance": null,
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -2382,7 +2382,7 @@
         {
             "name": "battery inverter",
             "detailed_technology": "battery inverter",
-            "case": "Moderate",
+            "case": "Moderate - Market",
             "region": "USA",
             "year": 2030,
             "parameters": {
@@ -2391,7 +2391,7 @@
                     "units": "USD_2022 / kilowatt",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": "Market",
+                    "provenance": null,
                     "note": "Includes grid connection and project financing costs; Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -2411,7 +2411,7 @@
                     "units": "percent / year",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": "Market",
+                    "provenance": null,
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -2431,7 +2431,7 @@
         {
             "name": "battery storage",
             "detailed_technology": "battery storage",
-            "case": "Moderate",
+            "case": "Moderate - Market",
             "region": "USA",
             "year": 2030,
             "parameters": {
@@ -2440,7 +2440,7 @@
                     "units": "USD_2022 / kilowatt_hour",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": "Market",
+                    "provenance": null,
                     "note": "Includes grid connection and project financing costs; Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -2460,7 +2460,7 @@
                     "units": "percent / year",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": "Market",
+                    "provenance": null,
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -2480,7 +2480,7 @@
         {
             "name": "Alkaline electrolyzer large size",
             "detailed_technology": "Alkaline electrolyzer large size",
-            "case": "Moderate",
+            "case": "Moderate - Market",
             "region": "USA",
             "year": 2040,
             "parameters": {
@@ -2489,7 +2489,7 @@
                     "units": "USD_2022 / kilowatt",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": "Market",
+                    "provenance": null,
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -2509,7 +2509,7 @@
         {
             "name": "PEM electrolyzer small size",
             "detailed_technology": "PEM electrolyzer small size",
-            "case": "Moderate",
+            "case": "Moderate - Market",
             "region": "USA",
             "year": 2040,
             "parameters": {
@@ -2518,7 +2518,7 @@
                     "units": "USD_2022 / kilowatt",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": "Market",
+                    "provenance": null,
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -2538,7 +2538,7 @@
         {
             "name": "SOEC",
             "detailed_technology": "SOEC",
-            "case": "Moderate",
+            "case": "Moderate - Market",
             "region": "USA",
             "year": 2040,
             "parameters": {
@@ -2547,7 +2547,7 @@
                     "units": "USD_2022 / kilowatt",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": "Market",
+                    "provenance": null,
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -2567,7 +2567,7 @@
         {
             "name": "battery inverter",
             "detailed_technology": "battery inverter",
-            "case": "Moderate",
+            "case": "Moderate - Market",
             "region": "USA",
             "year": 2040,
             "parameters": {
@@ -2576,7 +2576,7 @@
                     "units": "USD_2022 / kilowatt",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": "Market",
+                    "provenance": null,
                     "note": "Includes grid connection and project financing costs; Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -2596,7 +2596,7 @@
                     "units": "percent / year",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": "Market",
+                    "provenance": null,
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -2616,7 +2616,7 @@
         {
             "name": "battery storage",
             "detailed_technology": "battery storage",
-            "case": "Moderate",
+            "case": "Moderate - Market",
             "region": "USA",
             "year": 2040,
             "parameters": {
@@ -2625,7 +2625,7 @@
                     "units": "USD_2022 / kilowatt_hour",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": "Market",
+                    "provenance": null,
                     "note": "Includes grid connection and project financing costs; Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -2645,7 +2645,7 @@
                     "units": "percent / year",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": "Market",
+                    "provenance": null,
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -2665,7 +2665,7 @@
         {
             "name": "Alkaline electrolyzer large size",
             "detailed_technology": "Alkaline electrolyzer large size",
-            "case": "Moderate",
+            "case": "Moderate - Market",
             "region": "USA",
             "year": 2050,
             "parameters": {
@@ -2674,7 +2674,7 @@
                     "units": "USD_2022 / kilowatt",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": "Market",
+                    "provenance": null,
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -2694,7 +2694,7 @@
                     "units": "percent / year",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": "Market",
+                    "provenance": null,
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -2714,7 +2714,7 @@
         {
             "name": "PEM electrolyzer small size",
             "detailed_technology": "PEM electrolyzer small size",
-            "case": "Moderate",
+            "case": "Moderate - Market",
             "region": "USA",
             "year": 2050,
             "parameters": {
@@ -2723,7 +2723,7 @@
                     "units": "USD_2022 / kilowatt",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": "Market",
+                    "provenance": null,
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -2743,7 +2743,7 @@
                     "units": "percent / year",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": "Market",
+                    "provenance": null,
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -2763,7 +2763,7 @@
         {
             "name": "SOEC",
             "detailed_technology": "SOEC",
-            "case": "Moderate",
+            "case": "Moderate - Market",
             "region": "USA",
             "year": 2050,
             "parameters": {
@@ -2772,7 +2772,7 @@
                     "units": "USD_2022 / kilowatt",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": "Market",
+                    "provenance": null,
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -2792,7 +2792,7 @@
                     "units": "percent / year",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": "Market",
+                    "provenance": null,
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -2812,7 +2812,7 @@
         {
             "name": "battery inverter",
             "detailed_technology": "battery inverter",
-            "case": "Moderate",
+            "case": "Moderate - Market",
             "region": "USA",
             "year": 2050,
             "parameters": {
@@ -2821,7 +2821,7 @@
                     "units": "USD_2022 / kilowatt",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": "Market",
+                    "provenance": null,
                     "note": "Includes grid connection and project financing costs; Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -2841,7 +2841,7 @@
                     "units": "percent / year",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": "Market",
+                    "provenance": null,
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -2861,7 +2861,7 @@
         {
             "name": "battery storage",
             "detailed_technology": "battery storage",
-            "case": "Moderate",
+            "case": "Moderate - Market",
             "region": "USA",
             "year": 2050,
             "parameters": {
@@ -2870,7 +2870,7 @@
                     "units": "USD_2022 / kilowatt_hour",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": "Market",
+                    "provenance": null,
                     "note": "Includes grid connection and project financing costs; Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -2890,7 +2890,7 @@
                     "units": "percent / year",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": "Market",
+                    "provenance": null,
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
