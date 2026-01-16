@@ -1,12 +1,5 @@
 # `Source` Class Documentation
 
-<!--
-SPDX-FileCopyrightText: The technology-data authors
-
-SPDX-License-Identifier: MIT
-
--->
-
 ## Overview
 
 The `Source` class in `technologydata` represents bibliographic and web sources, supporting metadata, archiving, and retrieval from the Wayback Machine. It is designed to track provenance, ensure reproducibility, and facilitate the management of references for technology parameters and datasets.

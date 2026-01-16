@@ -1,12 +1,5 @@
 # Growth Models Documentation
 
-<!--
-SPDX-FileCopyrightText: 2025 The technology-data authors
-
-SPDX-License-Identifier: MIT
-
--->
-
 ## Models
 
 Different models can be used to modify assumptions to fit specific scenarios.

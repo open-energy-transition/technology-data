@@ -1,11 +1,5 @@
 # Instructions for contributing to the project
 
-<!--
-SPDX-FileCopyrightText: The technology-data authors
-SPDX-License-Identifier: MIT
-
--->
-
 First of all, thank you for your contributions to `technologydata`!
 
 We enthusiastically invite anyone interested in `technologydata` to share new ideas, provide suggestions, submit bug reports, or contribute code changes.

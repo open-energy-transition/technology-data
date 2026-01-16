@@ -1,7 +1,7 @@
 # `DataPackage` Class Documentation
 
 <!--
-SPDX-FileCopyrightText: The technology-data authors
+SPDX-FileCopyrightText: technologydata contributors
 
 SPDX-License-Identifier: MIT
 

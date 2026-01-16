@@ -1,13 +1,6 @@
 # technologydata
 
 <!--
-SPDX-FileCopyrightText: The technology-data authors
-
-SPDX-License-Identifier: MIT
-
--->
-
-<!--
 
 TODO: Add badges
 **Suggestions:**

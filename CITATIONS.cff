@@ -1,10 +1,10 @@
-# SPDX-FileCopyrightText: The technology-data authors
+# SPDX-FileCopyrightText: technologydata contributors
 #
 # SPDX-License-Identifier: MIT
 
 cff-version: 1.2.0
 message: "If you use this package, we suggest the following way of citing it."
-title: "technology-data: Data for Energy Systems Models"
+title: "technologydata: Data for Energy Systems Models"
 repository: https://github.com/open-energy-transition/technology-data
 version: 0.1.0 # Don't touch, will be updated by the release script
 license: MIT

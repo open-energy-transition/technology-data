@@ -1,12 +1,5 @@
 # `TechnologyCollection` Class Documentation
 
-<!--
-SPDX-FileCopyrightText: The technology-data authors
-
-SPDX-License-Identifier: MIT
-
--->
-
 ## Overview
 
 The `TechnologyCollection` class in `technologydata` represents a collection of `Technology` objects, providing tools for filtering, exporting, currency adjustment, model fitting, and projection. It is designed to manage multiple technology datasets, supporting reproducibility, scenario analysis, and future projections.

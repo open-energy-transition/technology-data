@@ -1,12 +1,5 @@
 # `Parameter` Class Documentation
 
-<!--
-SPDX-FileCopyrightText: The technology-data authors
-
-SPDX-License-Identifier: MIT
-
--->
-
 ## Overview
 
 The `Parameter` class in `technologydata` encapsulates a value, its unit, provenance, notes, sources, and additional attributes required to describe technology parameters, such as carrier and heating value. It is designed for use in energy system modeling workflows, supporting unit handling, currency/inflation adjustments, and provenance tracking.

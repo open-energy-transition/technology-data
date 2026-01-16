@@ -1,7 +1,3 @@
-# SPDX-FileCopyrightText: The technology-data authors
-#
-# SPDX-License-Identifier: MIT
-
 include src/technologydata/utils/*.txt
 include src/technologydata/package_data/dea_energy_storage/*.json
 include src/technologydata/package_data/raw/*

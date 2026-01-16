@@ -1,12 +1,5 @@
 # `Technology` Class Documentation
 
-<!--
-SPDX-FileCopyrightText: The technology-data authors
-
-SPDX-License-Identifier: MIT
-
--->
-
 ## Overview
 
 The `Technology` class in `technologydata` represents a single technology, including its region, year, scenario, and a flexible set of parameters. It provides methods for accessing, modifying, and transforming technology parameters, as well as for currency adjustment and scaling.

@@ -1,12 +1,5 @@
 # `SourceCollection` Class Documentation
 
-<!--
-SPDX-FileCopyrightText: The technology-data authors
-
-SPDX-License-Identifier: MIT
-
--->
-
 ## Overview
 
 The `SourceCollection` class in `technologydata` represents a collection of `Source` objects, providing tools for filtering, exporting, archiving, and data conversion. It is designed to manage multiple bibliographic or web sources, supporting reproducibility and provenance tracking for technology datasets.
