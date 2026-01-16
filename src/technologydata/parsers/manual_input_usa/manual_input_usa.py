@@ -66,7 +66,7 @@ def extract_units_carriers_heating_value(
     """
     # Define conversion dictionary
     special_patterns = {
-        "USD_2022/MW_FT": ("USD_2022/MW", "1/FT", "LHV"),
+        "USD_2022/MW_FT": ("USD_2022/MW", "1/FT", "1/LHV"),
         "MWh_H2/MWh_FT": ("MWh/MWh", "H2/FT", "LHV"),
         "MWh_el/MWh_FT": ("MWh/MWh", "el/FT", "LHV"),
         "t_CO2/MWh_FT": ("t/MWh", "CO2/FT", "LHV"),
@@ -169,7 +169,7 @@ def build_technology_collection(
         list_techs.append(
             Technology(
                 name=technology,
-                region="US",
+                region="USA",
                 year=year,
                 parameters=parameters,
                 case=str(scenario),
