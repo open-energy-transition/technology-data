@@ -1,6 +1,5 @@
 ![technologydata Header Logo](assets/logo/technology_data_logo.png)
 
-
 [![License](https://img.shields.io/pypi/l/pypsa.svg)](https://github.com/PyPSA/pypsa?tab=MIT-1-ov-file)
 [![Discord](https://img.shields.io/discord/911692131440148490?logo=discord)](https://discord.gg/T7YZbnVU)
 
