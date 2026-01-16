@@ -1,4 +1,4 @@
-# SPDX-FileCopyrightText: The technology-data authors
+# SPDX-FileCopyrightText: technologydata contributors
 #
 # SPDX-License-Identifier: MIT
 
@@ -7,7 +7,7 @@ Data parser for the DEA energy storage data set.
 
 How to run:
     From the repository root, execute:
-        python src/technologydata/package_data/dea_energy_storage/dea_energy_storage.py
+        python src/technologydata/parsers/dea_energy_storage/dea_energy_storage.py
 
 Configuration options (command-line arguments):
     --num_digits <int>         Number of significant digits to round the values. Default: 4
@@ -16,7 +16,7 @@ Configuration options (command-line arguments):
     --export_schema            Export the Source/TechnologyCollection schemas. Default: False
 
 Example:
-    python src/technologydata/package_data/dea_energy_storage/dea_energy_storage.py --num_digits 3 --store_source --filter_params
+    python src/technologydata/parsers/dea_energy_storage/dea_energy_storage.py --num_digits 3 --store_source --filter_params
 
 """
 
@@ -36,7 +36,7 @@ from technologydata import (
     Technology,
     TechnologyCollection,
 )
-from technologydata.utils.commons import ArgumentConfig
+from technologydata.parsers.commons import ArgumentConfig, CommonsParser
 
 path_cwd = pathlib.Path.cwd()
 
@@ -495,7 +495,7 @@ if __name__ == "__main__":
         ),
     ]
 
-    input_args = Commons.parse_input_arguments(
+    input_args = CommonsParser.parse_input_arguments(
         additional_arguments=additional_input_args,
         description="Parse the DEA technology storage dataset",
     )
@@ -506,7 +506,7 @@ if __name__ == "__main__":
         path_cwd,
         "src",
         "technologydata",
-        "package_data",
+        "parsers",
         "raw",
         "Technology_datasheet_for_energy_storage.xlsx",
     )
@@ -618,7 +618,7 @@ if __name__ == "__main__":
         path_cwd,
         "src",
         "technologydata",
-        "package_data",
+        "parsers",
         "dea_energy_storage",
     )
     output_technologies_path = pathlib.Path(
@@ -643,7 +643,7 @@ if __name__ == "__main__":
     if input_args.export_schema:
         # Move schema files if they exist
         schema_folder = pathlib.Path(
-            path_cwd, "src", "technologydata", "package_data", "schemas"
+            path_cwd, "src", "technologydata", "parsers", "schemas"
         )
         sources_schema = pathlib.Path(dea_storage_path, "sources.schema.json")
         technologies_schema = pathlib.Path(dea_storage_path, "technologies.schema.json")

@@ -1,4 +1,4 @@
-# SPDX-FileCopyrightText: The technology-data authors
+# SPDX-FileCopyrightText: technologydata contributors
 #
 # SPDX-License-Identifier: MIT
 
@@ -7,14 +7,14 @@ Data parser for the manual_input_usa.csv data set.
 
 How to run:
     From the repository root, execute:
-        python src/technologydata/package_data/manual_input_usa/manual_input_usa.py
+        python src/technologydata/parsers/manual_input_usa/manual_input_usa.py
 
 Configuration options (command-line arguments):
     --num_digits <int>         Number of significant digits to round the values. Default: 4
     --store_source             Store the source object on the Wayback Machine. Default: False
 
 Example:
-    python src/technologydata/package_data/manual_input_usa/manual_input_usa.py --num_digits 3 --store_source
+    python src/technologydata/parsers/manual_input_usa/manual_input_usa.py --num_digits 3 --store_source
 
 """
 
@@ -31,6 +31,7 @@ from technologydata import (
     Technology,
     TechnologyCollection,
 )
+from technologydata.parsers.commons import CommonsParser
 
 path_cwd = pathlib.Path.cwd()
 
@@ -178,7 +179,7 @@ def build_technology_collection(
 
 if __name__ == "__main__":
     # Parse input arguments
-    input_args = Commons.parse_input_arguments(
+    input_args = CommonsParser.parse_input_arguments(
         description="Parse the technology_data manual_input_usa.csv dataset"
     )
     logger.info("Command line arguments parsed.")
@@ -187,7 +188,7 @@ if __name__ == "__main__":
         path_cwd,
         "src",
         "technologydata",
-        "package_data",
+        "parsers",
         "raw",
         "manual_input_usa.csv",
     )
@@ -224,7 +225,7 @@ if __name__ == "__main__":
         path_cwd,
         "src",
         "technologydata",
-        "package_data",
+        "parsers",
         "manual_input_usa",
     )
     output_technologies_path = pathlib.Path(

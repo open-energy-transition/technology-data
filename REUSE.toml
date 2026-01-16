@@ -1,33 +1,28 @@
 version = 1
 SPDX-PackageName = "technologydata"
-SPDX-PackageSupplier = "The technology-data authors"
-SPDX-PackageDownloadLocation = "https://github.com/pypsa/technology-data"
+SPDX-PackageSupplier = "technologydata contributors"
+SPDX-PackageDownloadLocation = "https://github.com/open-energy-transition/technology-data"
 
 [[annotations]]
-path = ["uv.lock", "*.yaml", "docs/**",]
-SPDX-FileCopyrightText = "The technology-data authors"
+path = ["uv.lock", "*.yaml", "docs/**", "*.md", "*.in"]
+SPDX-FileCopyrightText = "technologydata contributors"
 SPDX-License-Identifier = "MIT"
 
 [[annotations]]
 path = ["test/test_data/**"]
-SPDX-FileCopyrightText = "The technology-data authors"
+SPDX-FileCopyrightText = "technologydata contributors"
 SPDX-License-Identifier = "CC-BY-4.0"
 
 [[annotations]]
 path = [
-    "src/technologydata/package_data/raw/Technology_datasheet_for_energy_storage.xlsx"
+    "src/technologydata/parsers/dea_energy_storage/*.json", "src/technologydata/parsers/schemas/*.json", "src/technologydata/parsers/raw/manual_input_usa.csv"
+]
+SPDX-FileCopyrightText = "technologydata contributors"
+SPDX-License-Identifier = "CC-BY-4.0"
+
+[[annotations]]
+path = [
+    "src/technologydata/parsers/raw/Technology_datasheet_for_energy_storage.xlsx"
 ]
 SPDX-FileCopyrightText = "The Danish Energy Agency"
-SPDX-License-Identifier = "CC-BY-4.0"
-
-[[annotations]]
-path = [
-    "src/technologydata/package_data/raw/manual_input_usa.csv"
-]
-SPDX-FileCopyrightText = "The technology-data authors"
-SPDX-License-Identifier = "CC-BY-4.0"
-
-[[annotations]]
-path = ["src/technologydata/package_data/*/*.json"]
-SPDX-FileCopyrightText = "The technology-data authors"
 SPDX-License-Identifier = "CC-BY-4.0"
