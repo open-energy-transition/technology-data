@@ -743,10 +743,7 @@ class TestParameter:
     def test_change_heating_value_multiple_calls(self) -> None:
         """Test conversion when multiple calls are performed and to_heating_value is constant."""
         p = technologydata.Parameter(
-            magnitude=10,
-            units="kW",
-            heating_value="LHV",
-            carrier="natural_gas"
+            magnitude=10, units="kW", heating_value="LHV", carrier="natural_gas"
         )
         p = p.change_heating_value("HHV")
         assert p.units == "kilowatt"
