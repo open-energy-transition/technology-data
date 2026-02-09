@@ -1,10 +1,13 @@
 # SPDX-FileCopyrightText: technologydata contributors
 #
 # SPDX-License-Identifier: MIT
+import pathlib
 from enum import Enum
-from typing import Annotated
+from typing import Annotated, Self
 
 import pydantic
+
+from technologydata import DataPackage
 
 
 class DataSourceName(str, Enum):
@@ -23,3 +26,20 @@ class DataAccessor(pydantic.BaseModel):
     data_version: Annotated[
         str | None, pydantic.Field(description="The version of the data source.")
     ] = None
+
+    @staticmethod
+    def from_package_data() -> Self:
+        """
+        Load the default 'technologies.json' from the package data.
+
+        Returns
+        -------
+        TechnologyCollection
+            An instance of TechnologyCollection initialized with the default data.
+
+        """
+        # This assumes 'technologies.json' is in a 'data' directory
+        # at the same level as the 'src' directory.
+        # Adjust the path as needed for your project structure.
+        data_path = pathlib.Path(__file__).parent.parent.parent / "data" / "technologies.json"
+        return DataPackage.from_json(data_path)
