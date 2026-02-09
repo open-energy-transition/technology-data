@@ -1,13 +1,23 @@
 # SPDX-FileCopyrightText: technologydata contributors
 #
 # SPDX-License-Identifier: MIT
+
+"""Provide a class to access data from a data source."""
+
+import logging
 import pathlib
+import re
 from enum import Enum
-from typing import Annotated, Self
+from typing import Annotated
 
 import pydantic
+from packaging.version import parse
 
 from technologydata import DataPackage
+
+path_cwd = pathlib.Path.cwd()
+
+logger = logging.getLogger(__name__)
 
 
 class DataSourceName(str, Enum):
@@ -18,7 +28,31 @@ class DataSourceName(str, Enum):
 
 
 class DataAccessor(pydantic.BaseModel):
-    """A class to access data from a data source."""
+    """
+    Access data from a versioned data source.
+
+    This class provides a standardized interface to locate and load technology
+    datasets from predefined data sources. It can either load a specific version
+    or automatically determine and load the latest available version.
+
+    Parameters
+    ----------
+    data_source_name : DataSourceName
+        The name of the data source to access, as defined in the
+        `DataSourceName` enumeration.
+    data_version : str, optional
+        The specific version string of the data to load (e.g., "v1.0.0").
+        If not provided, the latest version will be automatically determined
+        and used. Default is None.
+
+    Attributes
+    ----------
+    data_source_name : DataSourceName
+        The name of the data source.
+    data_version : str or None
+        The version of the data source.
+
+    """
 
     data_source_name: Annotated[
         DataSourceName, pydantic.Field(description="The name of the data source.")
@@ -28,18 +62,63 @@ class DataAccessor(pydantic.BaseModel):
     ] = None
 
     @staticmethod
-    def from_package_data() -> Self:
+    def get_latest_version_string(data_source_path_list: list[pathlib.Path]) -> str:
+        """
+        Find the latest version string for the data source.
+
+        Returns
+        -------
+        str
+            The string of the latest version (e.g., 'v10', 'v1.0.0').
+
+        Raises
+        ------
+        FileNotFoundError
+            If the data source directory or valid version directories are not found.
+
+        """
+        version_pattern = re.compile(r"^v(\d+(\.\d+)*)$")
+        versions = []
+        for item in data_source_path_list:
+            if item.is_dir():
+                match = version_pattern.match(item.name)
+                if match:
+                    versions.append(item.name)
+
+        if not versions:
+            raise FileNotFoundError("No valid version directories found.")
+
+        latest_version_str = max(versions, key=lambda v: parse(v[1:]))
+        return latest_version_str
+
+    def access_data(self) -> DataPackage:
         """
         Load the default 'technologies.json' from the package data.
 
         Returns
         -------
-        TechnologyCollection
-            An instance of TechnologyCollection initialized with the default data.
+        DataPackage
+            An instance of DataPackage initialized with the requested data.
 
         """
-        # This assumes 'technologies.json' is in a 'data' directory
-        # at the same level as the 'src' directory.
-        # Adjust the path as needed for your project structure.
-        data_path = pathlib.Path(__file__).parent.parent.parent / "data" / "technologies.json"
+        source_path = pathlib.Path(
+            path_cwd, "src", "technologydata", "parsers", self.data_source_name.value
+        )
+        if not source_path.is_dir():
+            raise FileNotFoundError(f"Data source directory not found: {source_path}")
+
+        source_path_list = [p.name for p in source_path.iterdir() if p.is_dir()]
+
+        if self.data_version and self.data_version in source_path_list:
+            version = self.data_version
+            logger.info(
+                f"Data source directory corresponding to version {self.data_version} found."
+            )
+        else:
+            logger.info(
+                f"Data source version '{self.data_version}' not found. Taking the latest available version."
+            )
+            version = self.get_latest_version_string(list(source_path.iterdir()))
+
+        data_path = pathlib.Path(source_path, version)
         return DataPackage.from_json(data_path)
