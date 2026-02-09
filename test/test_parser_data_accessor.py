@@ -36,7 +36,7 @@ class TestDataAccessor:
     def test_get_latest_version_string_raises_error(
         self, tmp_path: pathlib.Path
     ) -> None:
-        """Check if get_latest_version_string raises FileNotFoundError for no valid versions."""
+        """Test if get_latest_version_string raises FileNotFoundError for no valid versions."""
         (tmp_path / "invalid1").mkdir()
         (tmp_path / "another_invalid").mkdir()
 
@@ -54,7 +54,7 @@ class TestDataAccessor:
     def test_access_data_dea_energy_storage(
         self, version: str | None, expected_length: int
     ) -> None:
-        """Check access_data."""
+        """Test access_data."""
         data_accessor = DataAccessor(
             data_source_name=DataSourceName.DEA_ENERGY_STORAGE, data_version=version
         )
