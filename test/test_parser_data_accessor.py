@@ -83,9 +83,7 @@ class TestDataAccessor:
 
     def test_access_data_dea_energy_storage_validation_new(self) -> None:
         """Test access_data."""
-        data_accessor = DataAccessor(
-            data_source_name="dea_energy", data_version="v10"
-        )
+        data_accessor = DataAccessor(data_source_name="dea_energy", data_version="v10")
         data_package = data_accessor.access_data()
 
         assert data_accessor.data_source_name == DataSourceName.DEA_ENERGY_STORAGE
