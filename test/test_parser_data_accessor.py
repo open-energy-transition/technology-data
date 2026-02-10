@@ -56,7 +56,7 @@ class TestDataAccessor:
     ) -> None:
         """Test access_data."""
         data_accessor = DataAccessor(
-            data_source_name=DataSourceName.DEA_ENERGY_STORAGE, data_version=version
+            data_source_name="dea_energy_storage", data_version=version
         )
         data_package = data_accessor.access_data()
 
@@ -69,28 +69,5 @@ class TestDataAccessor:
 
     def test_access_data_dea_energy_storage_validation(self) -> None:
         """Test access_data."""
-        data_accessor = DataAccessor(
-            data_source_name="dea_energy_storage", data_version="v10"
-        )
-        data_package = data_accessor.access_data()
-
-        assert data_accessor.data_source_name == DataSourceName.DEA_ENERGY_STORAGE
-        assert data_accessor.data_version == "v10"
-        assert data_package is not None
-        assert data_package.technologies is not None
-        assert data_package.sources is not None
-        assert len(data_package.technologies) == 136
-
-    def test_access_data_dea_energy_storage_validation_new(self) -> None:
-        """Test access_data."""
-        data_accessor = DataAccessor(
-            data_source_name="dea_energy", data_version="v10"
-        )
-        data_package = data_accessor.access_data()
-
-        assert data_accessor.data_source_name == DataSourceName.DEA_ENERGY_STORAGE
-        assert data_accessor.data_version == "v10"
-        assert data_package is not None
-        assert data_package.technologies is not None
-        assert data_package.sources is not None
-        assert len(data_package.technologies) == 136
+        with pytest.raises(ValueError):
+            DataAccessor(data_source_name="dea_energy", data_version="v10")

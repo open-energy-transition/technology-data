@@ -69,7 +69,9 @@ class DataAccessor(pydantic.BaseModel):
         try:
             return DataSourceName(v)
         except ValueError:
-            raise ValueError(f"{v} is not a valid DataSourceName. Available options: {[e for e in DataSourceName]}")
+            raise ValueError(
+                f"{v} is not a valid DataSourceName. Available options: {[e for e in DataSourceName]}"
+            )
 
     @staticmethod
     def get_latest_version_string(data_source_path_list: list[pathlib.Path]) -> str:
