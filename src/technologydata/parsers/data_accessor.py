@@ -12,6 +12,7 @@ from typing import Annotated
 
 import pydantic
 from packaging.version import parse
+from pydantic import field_validator
 
 from technologydata import DataPackage
 
@@ -37,7 +38,7 @@ class DataAccessor(pydantic.BaseModel):
 
     Parameters
     ----------
-    data_source_name : DataSourceName
+    data_source_name : str
         The name of the data source to access, as defined in the
         `DataSourceName` enumeration.
     data_version : str, optional
@@ -47,7 +48,7 @@ class DataAccessor(pydantic.BaseModel):
 
     Attributes
     ----------
-    data_source_name : DataSourceName
+    data_source_name : str
         The name of the data source.
     data_version : str or None
         The version of the data source.
@@ -55,11 +56,20 @@ class DataAccessor(pydantic.BaseModel):
     """
 
     data_source_name: Annotated[
-        DataSourceName, pydantic.Field(description="The name of the data source.")
+        str, pydantic.Field(description="The name of the data source.")
     ]
     data_version: Annotated[
         str | None, pydantic.Field(description="The version of the data source.")
     ] = None
+
+    @field_validator("data_source_name", mode="before")
+    @classmethod
+    def _validate_data_source_name(cls, v: str) -> DataSourceName:
+        # Validate if the given string is a valid DataSourceName
+        try:
+            return DataSourceName(v)
+        except ValueError:
+            raise ValueError(f"{v} is not a valid DataSourceName. Available options: {[e for e in DataSourceName]}")
 
     @staticmethod
     def get_latest_version_string(data_source_path_list: list[pathlib.Path]) -> str:
@@ -102,7 +112,7 @@ class DataAccessor(pydantic.BaseModel):
 
         """
         source_path = pathlib.Path(
-            path_cwd, "src", "technologydata", "parsers", self.data_source_name.value
+            path_cwd, "src", "technologydata", "parsers", self.data_source_name
         )
         if not source_path.is_dir():
             raise FileNotFoundError(f"Data source directory not found: {source_path}")
