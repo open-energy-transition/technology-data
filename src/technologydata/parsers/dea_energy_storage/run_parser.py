@@ -75,7 +75,7 @@ if __name__ == "__main__":
         sys.exit(1)
 
     try:
-        tech_collection = dea_parser.parse(
+        dea_parser.parse(
             version=input_args.version,
             input_path=input_data_path,
             num_digits=input_args.num_digits,
@@ -84,9 +84,7 @@ if __name__ == "__main__":
             export_schema=input_args.export_schema,
         )
 
-        logging.info(
-            f"Successfully generated files for version {input_args.version} "
-        )
+        logging.info(f"Successfully generated files for version {input_args.version} ")
 
     except (ValueError, FileNotFoundError, KeyError) as e:
         logging.error(f"An error occurred during parsing: {e}")

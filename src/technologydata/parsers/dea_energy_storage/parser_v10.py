@@ -2,12 +2,14 @@
 #
 # SPDX-License-Identifier: MIT
 
+
+"""Parser for version 10 of the DEA Energy Storage dataset."""
+
 import logging
 import pathlib
 import re
 import typing
 
-import pandas
 import pandas as pd
 import pydantic
 
@@ -63,7 +65,9 @@ class DeaEnergyStorageV10Parser(DeaEnergyStorageParserBase):
 
         # Validate column existence
         required_columns = ["Technology", "par", "val", "year"]
-        missing_columns = [col for col in required_columns if col not in df_cleaned.columns]
+        missing_columns = [
+            col for col in required_columns if col not in df_cleaned.columns
+        ]
         if missing_columns:
             raise ValueError(f"Missing required columns: {missing_columns}")
 
@@ -83,7 +87,7 @@ class DeaEnergyStorageV10Parser(DeaEnergyStorageParserBase):
         df_cleaned = df_cleaned[
             (~df_cleaned["val"].astype(str).str.contains(r"[<>≤≥]", regex=True))
             & (df_cleaned["val"].astype(str).str.contains(r"\d", regex=True))
-            ]
+        ]
 
         return df_cleaned
 
@@ -171,7 +175,9 @@ class DeaEnergyStorageV10Parser(DeaEnergyStorageParserBase):
 
     @staticmethod
     @pydantic.validate_call
-    def _format_val_number(input_value: str, num_decimals: int) -> float | None | typing.Any:
+    def _format_val_number(
+        input_value: str, num_decimals: int
+    ) -> float | None | typing.Any:
         """
         Parse various number formats into a float value.
 
@@ -244,7 +250,6 @@ class DeaEnergyStorageV10Parser(DeaEnergyStorageParserBase):
 
         # Convert to integer
         return int(digits[0]) if digits else None
-
 
     @staticmethod
     @pydantic.validate_call
@@ -385,10 +390,10 @@ class DeaEnergyStorageV10Parser(DeaEnergyStorageParserBase):
 
     @staticmethod
     def _build_technology_collection(
-            dataframe: pd.DataFrame,
-            sources_path: pathlib.Path,
-            store_source: bool = False,
-            output_schema: bool = False,
+        dataframe: pd.DataFrame,
+        sources_path: pathlib.Path,
+        store_source: bool = False,
+        output_schema: bool = False,
     ) -> TechnologyCollection:
         """
         Compute a collection of technologies from a grouped DataFrame.
@@ -444,7 +449,7 @@ class DeaEnergyStorageV10Parser(DeaEnergyStorageParserBase):
             sources = SourceCollection.from_json(sources_path)
 
         for (est, year, ws, technology_name), group in dataframe.groupby(
-                ["est", "year", "ws", "Technology"]
+            ["est", "year", "ws", "Technology"]
         ):
             parameters = {}
             for _, row in group.iterrows():
@@ -467,13 +472,39 @@ class DeaEnergyStorageV10Parser(DeaEnergyStorageParserBase):
         return TechnologyCollection(technologies=list_techs)
 
     def parse(
-            self,
-            input_path: pathlib.Path,
-            num_digits: int,
-            store_source: bool,
-            filter_params: bool,
-            export_schema: bool) -> None:
+        self,
+        input_path: pathlib.Path,
+        num_digits: int,
+        store_source: bool,
+        filter_params: bool,
+        export_schema: bool,
+    ) -> None:
+        """
+        Parse and process version 10 of the DEA Energy Storage dataset.
 
+        This method reads the raw data from an Excel file, cleans and transforms
+        it through a series of steps, and then builds a TechnologyCollection.
+        The processed data is saved to JSON files.
+
+        Parameters
+        ----------
+        input_path : pathlib.Path
+            Path to the raw input data file (Excel).
+        num_digits : int
+            Number of significant digits to round numerical values.
+        store_source : bool
+            If True, stores the source object on the Wayback Machine.
+        filter_params : bool
+            If True, filters the parameters to a predefined allowed set.
+        export_schema : bool
+            If True, exports the Pydantic schema for the data models.
+
+        Returns
+        -------
+        TechnologyCollection
+            A collection of parsed technology data.
+
+        """
         dea_energy_storage_df = pd.read_excel(
             input_path,
             sheet_name="alldata_flat",
@@ -487,18 +518,26 @@ class DeaEnergyStorageV10Parser(DeaEnergyStorageParserBase):
         logger.info("Unnecessary rows dropped.")
 
         # Clean technology (Technology) column
-        cleaned_df["Technology"] = cleaned_df["Technology"].apply(DeaEnergyStorageV10Parser._clean_technology_string)
+        cleaned_df["Technology"] = cleaned_df["Technology"].apply(
+            DeaEnergyStorageV10Parser._clean_technology_string
+        )
 
         # Clean ws column
-        cleaned_df["ws"] = cleaned_df["ws"].apply(DeaEnergyStorageV10Parser._clean_technology_string)
+        cleaned_df["ws"] = cleaned_df["ws"].apply(
+            DeaEnergyStorageV10Parser._clean_technology_string
+        )
         logger.info("`Technology` and `ws` cleaned.")
 
         # Clean year column
-        cleaned_df["year"] = cleaned_df["year"].apply(DeaEnergyStorageV10Parser._extract_year)
+        cleaned_df["year"] = cleaned_df["year"].apply(
+            DeaEnergyStorageV10Parser._extract_year
+        )
         logger.info("`year` column cleaned.")
 
         # Clean parameter (par) column
-        cleaned_df["par"] = cleaned_df["par"].apply(DeaEnergyStorageV10Parser._clean_parameter_string)
+        cleaned_df["par"] = cleaned_df["par"].apply(
+            DeaEnergyStorageV10Parser._clean_parameter_string
+        )
         logger.info("`par` column cleaned.")
 
         # Complete missing units based on parameter names and replace incorrect units.
@@ -524,11 +563,11 @@ class DeaEnergyStorageV10Parser(DeaEnergyStorageParserBase):
 
         # Replace "MEUR_2020" with "EUR_2020" and multiply val by 1_000_000
         mask_meur = cleaned_df["unit"].str.contains("MEUR_2020")
-        cleaned_df.loc[mask_meur, "unit"] = cleaned_df.loc[mask_meur, "unit"].str.replace(
-            "MEUR_2020", "EUR_2020"
-        )
+        cleaned_df.loc[mask_meur, "unit"] = cleaned_df.loc[
+            mask_meur, "unit"
+        ].str.replace("MEUR_2020", "EUR_2020")
         cleaned_df.loc[mask_meur, "val"] = (
-                cleaned_df.loc[mask_meur, "val"] * 1_000_000.0
+            cleaned_df.loc[mask_meur, "val"] * 1_000_000.0
         ).round(num_digits)
 
         # Replace "kEUR_2020" with "EUR_2020" and multiply val by 1_000
@@ -537,7 +576,7 @@ class DeaEnergyStorageV10Parser(DeaEnergyStorageParserBase):
             mask_lower_keur, "unit"
         ].str.replace("kEUR_2020", "EUR_2020")
         cleaned_df.loc[mask_lower_keur, "val"] = (
-                cleaned_df.loc[mask_lower_keur, "val"] * 1_000.0
+            cleaned_df.loc[mask_lower_keur, "val"] * 1_000.0
         ).round(num_digits)
 
         # Replace "KEUR_2020" with "EUR_2020" and multiply val by 1_000
@@ -546,15 +585,17 @@ class DeaEnergyStorageV10Parser(DeaEnergyStorageParserBase):
             mask_upper_keur, "unit"
         ].str.replace("KEUR_2020", "EUR_2020")
         cleaned_df.loc[mask_upper_keur, "val"] = (
-                cleaned_df.loc[mask_upper_keur, "val"] * 1_000.0
+            cleaned_df.loc[mask_upper_keur, "val"] * 1_000.0
         ).round(num_digits)
 
         # Replace "mol/s/m/MPa1/2" with "mol/s/m/Pa" and multiply val by 1_000_000
         mask_mols = cleaned_df["unit"].str.contains("mol/s/m/MPa1/2")
-        cleaned_df.loc[mask_mols, "unit"] = cleaned_df.loc[mask_mols, "unit"].str.replace(
-            "mol/s/m/MPa1/2", "mol/s/m/Pa"
+        cleaned_df.loc[mask_mols, "unit"] = cleaned_df.loc[
+            mask_mols, "unit"
+        ].str.replace("mol/s/m/MPa1/2", "mol/s/m/Pa")
+        cleaned_df.loc[mask_mols, "val"] = (
+            cleaned_df.loc[mask_mols, "val"] * 1_000_000.0
         )
-        cleaned_df.loc[mask_mols, "val"] = cleaned_df.loc[mask_mols, "val"] * 1_000_000.0
 
         # Replace, in column `par`, `energy storage capacity for one unit` and `tank volume of example` with `capacity`
         mask_capacity = cleaned_df["par"].isin(
@@ -566,7 +607,9 @@ class DeaEnergyStorageV10Parser(DeaEnergyStorageParserBase):
         cleaned_df.loc[mask_capacity, "par"] = "capacity"
 
         # Clean est column
-        cleaned_df["est"] = cleaned_df["est"].apply(DeaEnergyStorageV10Parser._clean_est_string)
+        cleaned_df["est"] = cleaned_df["est"].apply(
+            DeaEnergyStorageV10Parser._clean_est_string
+        )
         logger.info("`est` column cleaned.")
 
         # Drop unnecessary columns
@@ -574,7 +617,9 @@ class DeaEnergyStorageV10Parser(DeaEnergyStorageParserBase):
         cleaned_df = cleaned_df.drop(columns=columns_to_drop, errors="ignore")
         logger.info("Unnecessary columns dropped.")
 
-        filtered_df = DeaEnergyStorageV10Parser._filter_parameters(cleaned_df, filter_params)
+        filtered_df = DeaEnergyStorageV10Parser._filter_parameters(
+            cleaned_df, filter_params
+        )
 
         # Build TechnologyCollection
         dea_storage_path = pathlib.Path(
@@ -609,7 +654,9 @@ class DeaEnergyStorageV10Parser(DeaEnergyStorageParserBase):
                 path_cwd, "src", "technologydata", "parsers", "schemas"
             )
             sources_schema = pathlib.Path(dea_storage_path, "sources.schema.json")
-            technologies_schema = pathlib.Path(dea_storage_path, "technologies.schema.json")
+            technologies_schema = pathlib.Path(
+                dea_storage_path, "technologies.schema.json"
+            )
 
             schema_folder.mkdir(parents=True, exist_ok=True)
 

@@ -6,41 +6,66 @@
 
 import logging
 import pathlib
-from typing import Type
 
-from technologydata import TechnologyCollection
 from technologydata.parsers.dea_energy_storage.base import DeaEnergyStorageParserBase
-from technologydata.parsers.dea_energy_storage.parser_v10 import DeaEnergyStorageV10Parser
+from technologydata.parsers.dea_energy_storage.parser_v10 import (
+    DeaEnergyStorageV10Parser,
+)
 
 
 class DeaEnergyStorageParser:
     """
     Main parser for the DEA Energy Storage dataset.
+
     Dispatches to version-specific parser implementations.
     """
 
     def __init__(self) -> None:
-        """Initializes the parser and maps versions to parser classes."""
-        self._parsers: dict[str, Type[DeaEnergyStorageParserBase]] = {
+        """Initialize the parser and maps versions to parser classes."""
+        self._parsers: dict[str, type[DeaEnergyStorageParserBase]] = {
             "v10": DeaEnergyStorageV10Parser,
             # "v11": DeaEnergyStorageV11Parser, # Add new versions here
         }
 
     def get_supported_versions(self) -> list[str]:
-        """Returns a list of supported dataset versions."""
+        """Return a list of supported dataset versions."""
         return list(self._parsers.keys())
 
     def parse(
         self,
         version: str,
         input_path: pathlib.Path,
-        num_digits: int = 4,
-        store_source: bool = False,
-        filter_params: bool = False,
-        export_schema: bool = False,
-    ) -> TechnologyCollection:
+        num_digits: int,
+        store_source: bool,
+        filter_params: bool,
+        export_schema: bool,
+    ) -> None:
         """
-        Parses the specified version of the DEA Energy Storage dataset.
+        Parse the specified version of the DEA Energy Storage dataset.
+
+        This method selects the appropriate parser for the given version and
+        delegates the parsing task to it.
+
+        Parameters
+        ----------
+        version : str
+            The version of the dataset to parse (e.g., 'v10').
+        input_path : pathlib.Path
+            Path to the raw input data file.
+        num_digits : int, optional
+            Number of significant digits to round the values, by default 4.
+        store_source : bool, optional
+            If True, stores the source object on the Wayback Machine, by default False.
+        filter_params : bool, optional
+            If True, filters the parameters stored in the output, by default False.
+        export_schema : bool, optional
+            If True, exports the Pydantic schema for the data models, by default False.
+
+        Raises
+        ------
+        ValueError
+            If the specified version is not supported.
+
         """
         if version not in self._parsers:
             raise ValueError(
