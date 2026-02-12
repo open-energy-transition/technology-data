@@ -108,6 +108,12 @@ class CommonsParser:
                 action="store_true",
                 help="Store_source, store the source object on the wayback machine. Default: false",
             ),
+            ArgumentConfig(
+                name="--version",
+                arg_type=str,
+                default="v10",
+                help="Version of the dataset to parse. Default: v10",
+            ),
         ]
 
         # Combine default and additional arguments
