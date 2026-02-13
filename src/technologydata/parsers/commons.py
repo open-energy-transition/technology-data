@@ -114,6 +114,12 @@ class CommonsParser:
                 default="v10",
                 help="Version of the dataset to parse. Default: v10",
             ),
+            ArgumentConfig(
+                name="--input_file_name",
+                arg_type=str,
+                help="Name of the dataset file to parse. Default: None",
+                required=True,
+            ),
         ]
 
         # Combine default and additional arguments

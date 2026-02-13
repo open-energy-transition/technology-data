@@ -10,14 +10,15 @@ How to run:
         python src/technologydata/parsers/dea_energy_storage/dea_energy_storage.py
 
 Configuration options (command-line arguments):
-    --version <str>            Version of the dataset to parse. Default: "v10"
-    --num_digits <int>         Number of significant digits to round the values. Default: 4
-    --store_source             Store the source object on the Wayback Machine. Default: False
-    --filter_params            Filter the parameters stored to technologies.json. Default: False
-    --export_schema            Export the Source/TechnologyCollection schemas. Default: False
+    --input_file_name <str>            Name of the data set file to parse.
+    --version <str>                          Version of the dataset to parse. Default: "v10"
+    --num_digits <int>                    Number of significant digits to round the values. Default: 4
+    --store_source                          Store the source object on the Wayback Machine. Default: False
+    --filter_params                          Filter the parameters stored to technologies.json. Default: False
+    --export_schema                      Export the Source/TechnologyCollection schemas. Default: False
 
 Example:
-    python src/technologydata/parsers/dea_energy_storage/dea_energy_storage.py --version v10 --num_digits 3 --store_source --filter_params
+    python src/technologydata/parsers/dea_energy_storage/dea_energy_storage.py --input_file_name file_name --version v10 --num_digits 3 --store_source --filter_params
 
 """
 
@@ -61,8 +62,10 @@ if __name__ == "__main__":
         "technologydata",
         "parsers",
         "raw",
-        "Technology_datasheet_for_energy_storage.xlsx",
+        input_args.input_file_name,
     )
+
+    logger.info(f"Input data path set to: {input_data_path}")
 
     # --- Initialize and run the parser ---
     dea_parser = DeaEnergyStorageParser()

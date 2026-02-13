@@ -373,7 +373,6 @@ class DeaEnergyStorageV10Parser(DeaEnergyStorageParserBase):
             "discharge efficiency",
             "capacity",
         }
-        print("filter_flag", filter_flag)
         if filter_flag:
             # Filter the DataFrame based on the allowed set
             df_filtered = dataframe[dataframe["par"].isin(allowed_set)].reset_index(

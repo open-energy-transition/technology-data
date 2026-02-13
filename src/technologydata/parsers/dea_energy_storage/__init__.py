@@ -76,7 +76,9 @@ class DeaEnergyStorageParser:
         parser_class = self._parsers[version]
         parser_instance = parser_class()
 
-        logging.info(f"Parsing DEA Energy Storage dataset version {version}...")
+        logging.info(
+            f"Parsing DEA Energy Storage dataset version {version} using {parser_class.__name__}"
+        )
         return parser_instance.parse(
             input_path=input_path,
             num_digits=num_digits,
