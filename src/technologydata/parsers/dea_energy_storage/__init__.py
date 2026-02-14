@@ -89,4 +89,4 @@ class DeaEnergyStorageParser:
 
 
 # Make the main parser class available for import from the module
-__all__ = ["DeaEnergyStorageParser"]
+__all__ = ["DeaEnergyStorageParser", "DeaEnergyStorageV10Parser"]
