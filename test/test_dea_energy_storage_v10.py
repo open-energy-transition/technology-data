@@ -30,7 +30,10 @@ class TestDEAEnergyStorage:
         self, input_string: str, expected_string: str
     ) -> None:
         """Check if the clean_parameter_string works as expected."""
-        assert DeaEnergyStorageV10Parser._clean_parameter_string(input_string) == expected_string
+        assert (
+            DeaEnergyStorageV10Parser._clean_parameter_string(input_string)
+            == expected_string
+        )
 
     def test_drop_invalid_rows(self) -> None:
         """Check if the drop_invalid_rows works as expected."""
@@ -58,7 +61,9 @@ class TestDEAEnergyStorage:
                 "year": ["nearly 2020", "2024"],
             }
         )
-        output_dataframe = DeaEnergyStorageV10Parser._drop_invalid_rows(input_dataframe).reset_index(drop=True)
+        output_dataframe = DeaEnergyStorageV10Parser._drop_invalid_rows(
+            input_dataframe
+        ).reset_index(drop=True)
         comparison_df = output_dataframe.compare(expected_dataframe)
         assert comparison_df.empty
 
@@ -215,6 +220,8 @@ class TestDEAEnergyStorage:
             }
         )
         sources_path = pathlib.Path(tmp_path, "sources.json")
-        tech_collection = DeaEnergyStorageV10Parser._build_technology_collection(dataframe, sources_path)
+        tech_collection = DeaEnergyStorageV10Parser._build_technology_collection(
+            dataframe, sources_path
+        )
         assert len(tech_collection.technologies) == 1
         assert "specific_investment" in tech_collection.technologies[0].parameters
