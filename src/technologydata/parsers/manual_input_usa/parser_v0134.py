@@ -17,7 +17,6 @@ from technologydata import (
     Technology,
     TechnologyCollection,
 )
-from technologydata.parsers.commons import CommonsParser
 from technologydata.parsers.data_parser_base import ParserBase
 
 path_cwd = pathlib.Path.cwd()
@@ -72,10 +71,10 @@ class ManualInputUSAV0134Parser(ParserBase):
 
     @staticmethod
     def _build_technology_collection(
-            dataframe: pandas.DataFrame,
-            sources_path: pathlib.Path,
-            store_source: bool = False,
-            output_schema: bool = False,
+        dataframe: pandas.DataFrame,
+        sources_path: pathlib.Path,
+        store_source: bool = False,
+        output_schema: bool = False,
     ) -> TechnologyCollection:
         """
         Compute a collection of technologies from a grouped DataFrame.
@@ -136,8 +135,10 @@ class ManualInputUSAV0134Parser(ParserBase):
             parameters = {}
             financial_case_for_tech = None
             for _, row in group.iterrows():
-                unit, carrier, heating_value = ManualInputUSAV0134Parser._extract_units_carriers_heating_value(
-                    row["unit"]
+                unit, carrier, heating_value = (
+                    ManualInputUSAV0134Parser._extract_units_carriers_heating_value(
+                        row["unit"]
+                    )
                 )
                 param_kwargs = {
                     "magnitude": row["value"],
@@ -211,10 +212,7 @@ class ManualInputUSAV0134Parser(ParserBase):
             A collection of parsed technology data.
 
         """
-
-        manual_input_usa_input_path = pathlib.Path(
-            input_path
-        )
+        manual_input_usa_input_path = pathlib.Path(input_path)
 
         manual_input_usa_df = pandas.read_csv(
             manual_input_usa_input_path, dtype=str, na_values="None"
@@ -232,7 +230,9 @@ class ManualInputUSAV0134Parser(ParserBase):
         manual_input_usa_df.loc[mask_per_unit, "value"] = (
             manual_input_usa_df.loc[mask_per_unit, "value"] * 100.0
         ).round(num_digits)
-        logger.info("`per unit` replaced by `%`. Corresponding value multiplied by 100.")
+        logger.info(
+            "`per unit` replaced by `%`. Corresponding value multiplied by 100."
+        )
 
         # Include currency_year in unit if applicable
         manual_input_usa_df["unit"] = manual_input_usa_df.apply(
@@ -261,7 +261,10 @@ class ManualInputUSAV0134Parser(ParserBase):
         )
 
         tech_col = ManualInputUSAV0134Parser._build_technology_collection(
-            manual_input_usa_df, output_sources_path, store_source=store_source, output_schema=export_schema
+            manual_input_usa_df,
+            output_sources_path,
+            store_source=store_source,
+            output_schema=export_schema,
         )
 
         logger.info("TechnologyCollection object instantiated.")
