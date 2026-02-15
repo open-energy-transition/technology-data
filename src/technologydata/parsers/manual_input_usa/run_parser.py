@@ -51,7 +51,7 @@ if __name__ == "__main__":
     # Parse input arguments
     input_args = CommonsParser.parse_input_arguments(
         additional_arguments=additional_input_args,
-        description="Parse the technology_data manual_input_usa.csv dataset"
+        description="Parse the technology_data manual_input_usa.csv dataset",
     )
     logger.info("Command line arguments parsed.")
 
