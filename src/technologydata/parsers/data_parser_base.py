@@ -2,14 +2,14 @@
 #
 # SPDX-License-Identifier: MIT
 
-"""Abstract base class for a specific version of the DEA parser."""
+"""Abstract base class for a specific version of the data parser."""
 
 import abc
 import pathlib
 
 
-class DeaEnergyStorageParserBase(abc.ABC):
-    """Abstract base class for a specific version of the DEA parser."""
+class ParserBase(abc.ABC):
+    """Abstract base class for a specific version of the data parser."""
 
     @abc.abstractmethod
     def parse(
@@ -21,7 +21,7 @@ class DeaEnergyStorageParserBase(abc.ABC):
         export_schema: bool,
     ) -> None:
         """
-        Parse a specific version of the DEA Energy Storage dataset.
+        Parse a specific version of a dataset.
 
         Parameters
         ----------

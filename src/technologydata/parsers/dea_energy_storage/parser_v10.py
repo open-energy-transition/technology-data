@@ -21,14 +21,14 @@ from technologydata import (
     Technology,
     TechnologyCollection,
 )
-from technologydata.parsers.dea_energy_storage.base import DeaEnergyStorageParserBase
+from technologydata.parsers.data_parser_base import ParserBase
 
 path_cwd = pathlib.Path.cwd()
 
 logger = logging.getLogger(__name__)
 
 
-class DeaEnergyStorageV10Parser(DeaEnergyStorageParserBase):
+class DeaEnergyStorageV10Parser(ParserBase):
     """Parser for v10 of the DEA Energy Storage dataset."""
 
     @staticmethod

@@ -7,7 +7,7 @@
 import logging
 import pathlib
 
-from technologydata.parsers.dea_energy_storage.base import DeaEnergyStorageParserBase
+from technologydata.parsers.data_parser_base import ParserBase
 from technologydata.parsers.dea_energy_storage.parser_v10 import (
     DeaEnergyStorageV10Parser,
 )
@@ -22,7 +22,7 @@ class DeaEnergyStorageParser:
 
     def __init__(self) -> None:
         """Initialize the parser and maps versions to parser classes."""
-        self._parsers: dict[str, type[DeaEnergyStorageParserBase]] = {
+        self._parsers: dict[str, type[ParserBase]] = {
             "v10": DeaEnergyStorageV10Parser,
             # "v11": DeaEnergyStorageV11Parser, # Add new versions here
         }
