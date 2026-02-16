@@ -71,3 +71,35 @@ class TestDataAccessor:
         """Test access_data."""
         with pytest.raises(ValueError):
             DataAccessor(data_source_name="dea_energy", data_version="v10")
+
+    def test_parse_and_access_data_dea_energy_storage(self) -> None:
+        """Test access_data."""
+        data_accessor = DataAccessor(
+            data_source_name="dea_energy_storage", data_version="v10"
+        )
+        file_name = "Technology_datasheet_for_energy_storage.xlsx"
+        data_accessor.run_parser(file_name, num_digits=3, filter_params=True)
+        data_package = data_accessor.access_data()
+
+        assert data_accessor.data_source_name == DataSourceName.DEA_ENERGY_STORAGE
+        assert data_accessor.data_version == "v10"
+        assert data_package is not None
+        assert data_package.technologies is not None
+        assert data_package.sources is not None
+        assert len(data_package.technologies) == 136
+
+    def test_parse_and_access_data_manual_input_usa(self) -> None:
+        """Test access_data."""
+        data_accessor = DataAccessor(
+            data_source_name="manual_input_usa", data_version="v0.13.4"
+        )
+        file_name = "manual_input_usa.csv"
+        data_accessor.run_parser(file_name, num_digits=3)
+        data_package = data_accessor.access_data()
+
+        assert data_accessor.data_source_name == DataSourceName.MANUAL_INPUT_USA
+        assert data_accessor.data_version == "v0.13.4"
+        assert data_package is not None
+        assert data_package.technologies is not None
+        assert data_package.sources is not None
+        assert len(data_package.technologies) == 85

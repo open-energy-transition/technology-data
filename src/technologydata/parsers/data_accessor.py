@@ -7,6 +7,7 @@
 import logging
 import pathlib
 import re
+import sys
 from enum import Enum
 from typing import Annotated
 
@@ -15,6 +16,8 @@ from packaging.version import parse
 from pydantic import field_validator
 
 from technologydata import DataPackage
+from technologydata.parsers.dea_energy_storage import DeaEnergyStorageParser
+from technologydata.parsers.manual_input_usa import ManualInputUsaParser
 
 path_cwd = pathlib.Path.cwd()
 
@@ -134,3 +137,87 @@ class DataAccessor(pydantic.BaseModel):
 
         data_path = pathlib.Path(source_path, version)
         return DataPackage.from_json(data_path)
+
+    def run_parser(
+        self,
+        input_file_name: str,
+        num_digits: int = 4,
+        store_source: bool = False,
+        filter_params: bool = False,
+        export_schema: bool = False,
+    ) -> None:
+        """
+        Run the parser for the specified data source and version.
+
+        This method locates the appropriate parser for the given data source
+        and version, and executes it to generate the technology data package.
+
+        Parameters
+        ----------
+        input_file_name : str
+            The name of the input file in the 'raw' directory.
+        num_digits : int, optional
+            Number of significant digits to round the values. Default is 4.
+        store_source : bool, optional
+            Store the source object on the Wayback Machine. Default is False.
+        filter_params : bool, optional
+            Filter the parameters stored to technologies.json. Default is False.
+        export_schema : bool, optional
+            Export the Source/TechnologyCollection schemas. Default is False.
+
+        Raises
+        ------
+        ValueError
+            If the specified data source or version is not supported.
+        FileNotFoundError
+            If the required input data file is not found.
+
+        """
+        parser: DeaEnergyStorageParser | ManualInputUsaParser
+
+        if self.data_source_name == DataSourceName.DEA_ENERGY_STORAGE:
+            parser = DeaEnergyStorageParser()
+        elif self.data_source_name == DataSourceName.MANUAL_INPUT_USA:
+            parser = ManualInputUsaParser()
+        else:
+            raise ValueError(
+                f"Unsupported data source: {self.data_source_name}. "
+                f"Supported data sources are: {[e for e in DataSourceName]}"
+            )
+
+        # Read the raw data
+        input_data_path = pathlib.Path(
+            path_cwd,
+            "src",
+            "technologydata",
+            "parsers",
+            "raw",
+            input_file_name,
+        )
+
+        logger.info(f"Input data path set to: {input_data_path}")
+
+        if self.data_version not in parser.get_supported_versions():
+            logging.error(
+                f"Version '{self.data_version}' is not supported. "
+                f"Supported versions: {parser.get_supported_versions()}"
+            )
+            sys.exit(1)
+
+        try:
+            parser.parse(
+                version=self.data_version,
+                input_path=input_data_path,
+                num_digits=num_digits,
+                store_source=store_source,
+                filter_params=filter_params,
+                export_schema=export_schema,
+            )
+
+            logging.info(
+                f"Successfully generated files for version {self.data_version} "
+            )
+
+        except (ValueError, FileNotFoundError, KeyError) as e:
+            logging.error(f"An error occurred during parsing: {e}")
+            sys.exit(1)
