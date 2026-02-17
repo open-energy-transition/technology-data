@@ -51,11 +51,11 @@ The `ManualInputUSAV0134Parser` is a concrete implementation that handles versio
 
 -   **Data Loading**: Reads data from the specified CSV file.
 -   **Data Cleaning**:
-    -   Handles missing values in the `scenario` column.
-    -   Converts `per unit` to `%` and adjusts the corresponding values.
-    -   Includes `currency_year` in the `unit` column where applicable.
+  -   Handles missing values in the `scenario` column.
+  -   Converts `per unit` to `%` and adjusts the corresponding values.
+  -   Includes `currency_year` in the `unit` column where applicable.
 -   **Data Transformation**:
-    -   Extracts standardized units, carriers, and heating values from complex unit strings using the `_extract_units_carriers_heating_value` method.
+  -   Extracts standardized units, carriers, and heating values from complex unit strings using the `_extract_units_carriers_heating_value` method.
 -   **Object Creation**: Builds a `TechnologyCollection` from the processed data using the `_build_technology_collection` method.
 -   **Output Generation**: Exports the final `TechnologyCollection` and `SourceCollection` to JSON files.
 
@@ -69,7 +69,7 @@ The `parse` method orchestrates the entire parsing process for the `v0.13.4` dat
 -   `num_digits` (`int`): Number of significant digits for rounding numerical values.
 -   `archive_source` (`bool`): If `True`, archives the data source on the Wayback Machine.
 -   `**kwargs`:
-    -   `export_schema` (`bool`): If `True`, exports the Pydantic schema for the data models.
+  -   `export_schema` (`bool`): If `True`, exports the Pydantic schema for the data models.
 
 The processed data is saved to `technologies.json` and `sources.json` in the `src/technologydata/parsers/manual_input_usa/v0.13.4/` directory.
 

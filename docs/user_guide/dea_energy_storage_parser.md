@@ -51,12 +51,12 @@ The `DeaEnergyStorageV10Parser` is a concrete implementation that handles versio
 
 -   **Data Loading**: Reads data from the specified Excel file (`alldata_flat` sheet).
 -   **Data Cleaning**:
-    -   Removes invalid or incomplete rows.
-    -   Cleans and standardizes technology names, parameters, and units.
-    -   Extracts and formats year values.
+  -   Removes invalid or incomplete rows.
+  -   Cleans and standardizes technology names, parameters, and units.
+  -   Extracts and formats year values.
 -   **Data Transformation**:
-    -   Converts currency units (e.g., `MEUR_2020` to `EUR_2020`) and adjusts values accordingly.
-    -   Standardizes parameter names (e.g., maps `energy storage capacity for one unit` to `capacity`).
+  -   Converts currency units (e.g., `MEUR_2020` to `EUR_2020`) and adjusts values accordingly.
+  -   Standardizes parameter names (e.g., maps `energy storage capacity for one unit` to `capacity`).
 -   **Object Creation**: Builds a `TechnologyCollection` from the processed data.
 -   **Output Generation**: Exports the final `TechnologyCollection` and `SourceCollection` to JSON files.
 
@@ -70,8 +70,8 @@ The `parse` method orchestrates the entire parsing process for the `v10` dataset
 -   `num_digits` (`int`): Number of significant digits for rounding numerical values.
 -   `archive_source` (`bool`): If `True`, archives the data source on the Wayback Machine.
 -   `**kwargs`:
-    -   `filter_params` (`bool`): If `True`, filters parameters to a predefined allowed set.
-    -   `export_schema` (`bool`): If `True`, exports the Pydantic schema for the data models.
+  -   `filter_params` (`bool`): If `True`, filters parameters to a predefined allowed set.
+  -   `export_schema` (`bool`): If `True`, exports the Pydantic schema for the data models.
 
 The processed data is saved to `technologies.json` and `sources.json` in the `src/technologydata/parsers/dea_energy_storage/v10/` directory.
 
