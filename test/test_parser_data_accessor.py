@@ -58,7 +58,7 @@ class TestDataAccessor:
         data_accessor = DataAccessor(
             data_source_name="dea_energy_storage", data_version=version
         )
-        data_package = data_accessor.access_data()
+        data_package = data_accessor.load()
 
         assert data_accessor.data_source_name == DataSourceName.DEA_ENERGY_STORAGE
         assert data_accessor.data_version == version

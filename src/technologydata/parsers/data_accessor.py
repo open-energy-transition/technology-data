@@ -103,7 +103,7 @@ class DataAccessor(pydantic.BaseModel):
         latest_version_str = max(versions, key=lambda v: parse(v[1:]))
         return latest_version_str
 
-    def access_data(self) -> DataPackage:
+    def load(self) -> DataPackage:
         """
         Load the default 'technologies.json' from the package data.
 
