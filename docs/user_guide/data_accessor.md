@@ -32,8 +32,8 @@ from technologydata.parsers.data_accessor import DataAccessor
 
 # Create an accessor for a specific version
 accessor_v1 = DataAccessor(
-    data_source_name="manual_input_usa",
-    data_version="v1.0.0"
+    data_source="manual_input_usa",
+    version="v1.0.0"
 )
 
 # Create an accessor that will use the latest version
