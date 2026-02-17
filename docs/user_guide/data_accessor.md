@@ -25,15 +25,15 @@ It is designed to work with a specific directory structure where datasets are or
 
 ### Creating a DataAccessor
 
-To use the `DataAccessor`, you first create an instance, specifying the `data_source_name`. You can optionally provide a `data_version`.
+To use the `DataAccessor`, you first create an instance, specifying the `data_source_name`. You can optionally provide a `data_version`. If no version is specified, the latest available version for this dataset is used.
 
 ```python
 from technologydata.parsers.data_accessor import DataAccessor
 
 # Create an accessor for a specific version
 accessor_v1 = DataAccessor(
-    data_source_name="manual_input_usa",
-    data_version="v1.0.0"
+    data_source="manual_input_usa",
+    version="v1.0.0"
 )
 
 # Create an accessor that will use the latest version
