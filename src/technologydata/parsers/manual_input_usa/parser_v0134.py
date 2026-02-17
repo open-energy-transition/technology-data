@@ -184,7 +184,7 @@ class ManualInputUSAV0134Parser(ParserBase):
         input_path: pathlib.Path,
         num_digits: int,
         archive_source: bool,
-        **kwargs: Any ,
+        **kwargs: Any,
     ) -> None:
         """
         Parse and process version 0.13.4 of the manual_input_usa.csv dataset.

@@ -175,9 +175,7 @@ class DeaEnergyStorageV10Parser(ParserBase):
 
     @staticmethod
     @pydantic.validate_call
-    def _format_val_number(
-        input_value: str, num_decimals: int
-    ) -> float | None | Any:
+    def _format_val_number(input_value: str, num_decimals: int) -> float | None | Any:
         """
         Parse various number formats into a float value.
 
