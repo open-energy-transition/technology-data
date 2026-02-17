@@ -104,9 +104,9 @@ class CommonsParser:
                 help="Number of significant digits to round the values.",
             ),
             ArgumentConfig(
-                name="--store_source",
+                name="--archive_source",
                 action="store_true",
-                help="Store_source, store the source object on the wayback machine. Default: false",
+                help="Archive_source, store the source object on the wayback machine. Default: false",
             ),
             ArgumentConfig(
                 name="--version",
