@@ -49,13 +49,11 @@ class TestDataAccessor:
 
     def test_access_data_dea_energy_storage(self) -> None:
         """Test load data for dea_energy_storage."""
-        data_accessor = DataAccessor(
-            data_source_name="dea_energy_storage", data_version="v10"
-        )
+        data_accessor = DataAccessor(data_source="dea_energy_storage", version="v10")
         data_package = data_accessor.load()
 
-        assert data_accessor.data_source_name == DataSourceName.DEA_ENERGY_STORAGE
-        assert data_accessor.data_version == "v10"
+        assert data_accessor.data_source == DataSourceName.DEA_ENERGY_STORAGE
+        assert data_accessor.version == "v10"
         assert data_package is not None
         assert data_package.technologies is not None
         assert data_package.sources is not None
@@ -64,19 +62,17 @@ class TestDataAccessor:
     def test_access_data_dea_energy_storage_validation(self) -> None:
         """Test load data for dea_energy_storage with a wrong data set name."""
         with pytest.raises(ValueError):
-            DataAccessor(data_source_name="dea_energy", data_version="v10")
+            DataAccessor(data_source="dea_energy", version="v10")
 
     def test_parse_and_access_data_dea_energy_storage(self) -> None:
         """Test parse and load data for dea_energy_storage."""
-        data_accessor = DataAccessor(
-            data_source_name="dea_energy_storage", data_version="v10"
-        )
+        data_accessor = DataAccessor(data_source="dea_energy_storage", version="v10")
         file_name = "Technology_datasheet_for_energy_storage.xlsx"
-        data_accessor.run_parser(file_name, num_digits=3, filter_params=True)
+        data_accessor.parse(file_name, num_digits=3, filter_params=True)
         data_package = data_accessor.load()
 
-        assert data_accessor.data_source_name == DataSourceName.DEA_ENERGY_STORAGE
-        assert data_accessor.data_version == "v10"
+        assert data_accessor.data_source == DataSourceName.DEA_ENERGY_STORAGE
+        assert data_accessor.version == "v10"
         assert data_package is not None
         assert data_package.technologies is not None
         assert data_package.sources is not None
@@ -84,19 +80,17 @@ class TestDataAccessor:
 
     def test_parse_and_access_data_manual_input_usa(self) -> None:
         """Test parse and load data for manual_input_usa.csv."""
-        data_accessor = DataAccessor(
-            data_source_name="manual_input_usa", data_version="v0.13.4"
-        )
+        data_accessor = DataAccessor(data_source="manual_input_usa", version="v0.13.4")
         file_name = "manual_input_usa.csv"
-        data_accessor.run_parser(file_name, num_digits=3)
+        data_accessor.parse(file_name, num_digits=3)
         data_package = data_accessor.load()
 
-        assert data_accessor.data_source_name == DataSourceName.MANUAL_INPUT_USA
-        assert data_accessor.data_version == "v0.13.4"
+        assert data_accessor.data_source == DataSourceName.MANUAL_INPUT_USA
+        assert data_accessor.version == "v0.13.4"
         assert data_package is not None
         assert data_package.technologies is not None
         assert data_package.sources is not None
-            assert len(data_package.technologies) == 85
+        assert len(data_package.technologies) == 85
 
     def test_load_raises_value_error_for_invalid_version(self) -> None:
         """Test if load raises ValueError for an invalid version."""
@@ -104,6 +98,4 @@ class TestDataAccessor:
             ValueError,
             match="Data source version 'v11' not found. The latest available version is v10.",
         ):
-            DataAccessor(
-                data_source_name="dea_energy_storage", data_version="v11"
-            ).load()
+            DataAccessor(data_source="dea_energy_storage", version="v11").load()

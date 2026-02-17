@@ -6,6 +6,7 @@
 
 import logging
 import pathlib
+from typing import Any
 
 import pandas
 
@@ -73,7 +74,7 @@ class ManualInputUSAV0134Parser(ParserBase):
     def _build_technology_collection(
         dataframe: pandas.DataFrame,
         sources_path: pathlib.Path,
-        store_source: bool = False,
+        archive_source: bool = False,
         output_schema: bool = False,
     ) -> TechnologyCollection:
         """
@@ -97,8 +98,8 @@ class ManualInputUSAV0134Parser(ParserBase):
             - 'financial_case': Technology financial case
         sources_path: pathlib.Path
             Output path for storing the SourceCollection object
-        store_source: Optional[bool]
-            Flag to decide whether to store the source object on the Wayback Machine. Default False.
+        archive_source: Optional[bool]
+            Flag to decide whether to archive the source object on the Wayback Machine. Default False.
         output_schema : Optional[bool]
             Flag to decide whether to export the source collection schema. Default False.
 
@@ -117,7 +118,7 @@ class ManualInputUSAV0134Parser(ParserBase):
         """
         list_techs = []
 
-        if store_source:
+        if archive_source:
             source = Source(
                 title="Energy system technology data for the US",
                 authors="Contributors to technology-data. Data source: manual_input_usa.csv",
@@ -182,12 +183,11 @@ class ManualInputUSAV0134Parser(ParserBase):
         self,
         input_path: pathlib.Path,
         num_digits: int,
-        store_source: bool,
-        filter_params: bool,
-        export_schema: bool,
+        archive_source: bool,
+        **kwargs: Any ,
     ) -> None:
         """
-        Parse and process version 10 of the DEA Energy Storage dataset.
+        Parse and process version 0.13.4 of the manual_input_usa.csv dataset.
 
         This method reads the raw data from an Excel file, cleans and transforms
         it through a series of steps, and then builds a TechnologyCollection.
@@ -199,12 +199,11 @@ class ManualInputUSAV0134Parser(ParserBase):
             Path to the raw input data file (Excel).
         num_digits : int
             Number of significant digits to round numerical values.
-        store_source : bool
-            If True, stores the source object on the Wayback Machine.
-        filter_params : bool
-            If True, filters the parameters to a predefined allowed set.
-        export_schema : bool
-            If True, exports the Pydantic schema for the data models.
+        archive_source : bool
+            If True, archives the source object on the Wayback Machine.
+        **kwargs : bool
+            export_schema : bool
+                If True, exports the Pydantic schema for the data models.
 
         Returns
         -------
@@ -212,6 +211,8 @@ class ManualInputUSAV0134Parser(ParserBase):
             A collection of parsed technology data.
 
         """
+        export_schema = kwargs.get("export_schema", False)
+
         manual_input_usa_input_path = pathlib.Path(input_path)
 
         manual_input_usa_df = pandas.read_csv(
@@ -263,7 +264,7 @@ class ManualInputUSAV0134Parser(ParserBase):
         tech_col = ManualInputUSAV0134Parser._build_technology_collection(
             manual_input_usa_df,
             output_sources_path,
-            store_source=store_source,
+            archive_source=archive_source,
             output_schema=export_schema,
         )
 

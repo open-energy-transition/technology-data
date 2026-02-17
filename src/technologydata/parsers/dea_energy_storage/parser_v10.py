@@ -8,7 +8,7 @@
 import logging
 import pathlib
 import re
-import typing
+from typing import Any
 
 import pandas as pd
 import pydantic
@@ -109,9 +109,9 @@ class DeaEnergyStorageV10Parser(ParserBase):
 
         Examples
         --------
-        >>> clean_parameter_string("- Charge efficiency [%]")
+        >>> DeaEnergyStorageV10Parser._clean_parameter_string("- Charge efficiency [%]")
         charge efficiency
-        >>> clean_parameter_string("Energy storage capacity for one unit [MWh)")
+        >>> DeaEnergyStorageV10Parser._clean_parameter_string("Energy storage capacity for one unit [MWh)")
         energy storage capacity for one unit
 
         """
@@ -160,9 +160,9 @@ class DeaEnergyStorageV10Parser(ParserBase):
 
         Examples
         --------
-        >>> clean_technology_string("143a Rock-based Carnot battery")
+        >>> DeaEnergyStorageV10Parser._clean_technology_string("143a Rock-based Carnot battery")
         rock-based carnot battery
-        >>> clean_technology_string("Pit Thermal Energy Storage [PTES]")
+        >>> DeaEnergyStorageV10Parser._clean_technology_string("Pit Thermal Energy Storage [PTES]")
         pit thermal energy storage [ptes]
 
         """
@@ -177,7 +177,7 @@ class DeaEnergyStorageV10Parser(ParserBase):
     @pydantic.validate_call
     def _format_val_number(
         input_value: str, num_decimals: int
-    ) -> float | None | typing.Any:
+    ) -> float | None | Any:
         """
         Parse various number formats into a float value.
 
@@ -202,9 +202,9 @@ class DeaEnergyStorageV10Parser(ParserBase):
 
         Examples
         --------
-        >>> format_val_number("1,1")
+        >>> DeaEnergyStorageV10Parser._format_val_number("1,1")
         1.1
-        >>> format_val_numer("2.84×10-27")
+        >>> DeaEnergyStorageV10Parser._format_val_number("2.84×10-27")
         2.84e-27
 
         """
@@ -241,7 +241,7 @@ class DeaEnergyStorageV10Parser(ParserBase):
 
         Examples
         --------
-        >>> extract_year('uncertainty (2050)')
+        >>> DeaEnergyStorageV10Parser._extract_year('uncertainty (2050)')
         2050
 
         """
@@ -269,9 +269,9 @@ class DeaEnergyStorageV10Parser(ParserBase):
 
         Examples
         --------
-        >>> clean_est_string("Lower")
+        >>> DeaEnergyStorageV10Parser._clean_est_string("Lower")
         lower
-        >>> clean_est_string("ctrl")
+        >>> DeaEnergyStorageV10Parser._clean_est_string("ctrl")
         control
 
         """
@@ -391,7 +391,7 @@ class DeaEnergyStorageV10Parser(ParserBase):
     def _build_technology_collection(
         dataframe: pd.DataFrame,
         sources_path: pathlib.Path,
-        store_source: bool = False,
+        archive_source: bool = False,
         output_schema: bool = False,
     ) -> TechnologyCollection:
         """
@@ -414,8 +414,8 @@ class DeaEnergyStorageV10Parser(ParserBase):
             - 'unit': Parameter units
         sources_path: pathlib.Path
             Output path for storing the SourceCollection object
-        store_source: Optional[bool]
-            Flag to decide whether to store the source object on the Wayback Machine. Default False.
+        archive_source: Optional[bool]
+            Flag to decide whether to archive the source object on the Wayback Machine. Default False.
         output_schema : Optional[bool]
             Flag to decide whether to export the source collection schema. Default False.
 
@@ -434,7 +434,7 @@ class DeaEnergyStorageV10Parser(ParserBase):
         """
         list_techs = []
 
-        if store_source:
+        if archive_source:
             source = Source(
                 title="Technology Data for Energy storage (May 2025)",
                 authors="Danish Energy Agency",
@@ -474,9 +474,8 @@ class DeaEnergyStorageV10Parser(ParserBase):
         self,
         input_path: pathlib.Path,
         num_digits: int,
-        store_source: bool,
-        filter_params: bool,
-        export_schema: bool,
+        archive_source: bool,
+        **kwargs: Any,
     ) -> None:
         """
         Parse and process version 10 of the DEA Energy Storage dataset.
@@ -491,12 +490,13 @@ class DeaEnergyStorageV10Parser(ParserBase):
             Path to the raw input data file (Excel).
         num_digits : int
             Number of significant digits to round numerical values.
-        store_source : bool
-            If True, stores the source object on the Wayback Machine.
-        filter_params : bool
-            If True, filters the parameters to a predefined allowed set.
-        export_schema : bool
-            If True, exports the Pydantic schema for the data models.
+        archive_source : bool
+            If True, archives the source object on the Wayback Machine.
+        **kwargs : bool
+            filter_params : bool
+                If True, filters the parameters to a predefined allowed set.
+            export_schema : bool
+                If True, exports the Pydantic schema for the data models.
 
         Returns
         -------
@@ -504,6 +504,9 @@ class DeaEnergyStorageV10Parser(ParserBase):
             A collection of parsed technology data.
 
         """
+        filter_params = kwargs.get("filter_params", False)
+        export_schema = kwargs.get("export_schema", False)
+
         dea_energy_storage_df = pd.read_excel(
             input_path,
             sheet_name="alldata_flat",
@@ -640,7 +643,7 @@ class DeaEnergyStorageV10Parser(ParserBase):
         tech_col = DeaEnergyStorageV10Parser._build_technology_collection(
             filtered_df,
             output_sources_path,
-            store_source=store_source,
+            archive_source=archive_source,
             output_schema=export_schema,
         )
         logger.info("TechnologyCollection object instantiated.")

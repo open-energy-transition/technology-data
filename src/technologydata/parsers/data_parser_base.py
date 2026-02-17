@@ -6,6 +6,7 @@
 
 import abc
 import pathlib
+from typing import Any
 
 
 class ParserBase(abc.ABC):
@@ -16,9 +17,8 @@ class ParserBase(abc.ABC):
         self,
         input_path: pathlib.Path,
         num_digits: int,
-        store_source: bool,
-        filter_params: bool,
-        export_schema: bool,
+        archive_source: bool,
+        **kwargs: Any,
     ) -> None:
         """
         Parse a specific version of a dataset.
@@ -29,12 +29,13 @@ class ParserBase(abc.ABC):
             Path to the raw input data file.
         num_digits : int
             Number of significant digits to round the values.
-        store_source : bool
-            If True, store the source object on the Wayback Machine.
-        filter_params : bool
-            If True, filter the parameters stored in the output.
-        export_schema : bool
-            If True, export the Pydantic schema for the data models.
+        archive_source : bool
+            If True, archive the source object on the Wayback Machine.
+        **kwargs : Any
+            filter_params : bool, optional
+                If True, filter the parameters stored in the output.
+            export_schema : bool, optional
+                If True, export the Pydantic schema for the data models.
 
         """
         raise NotImplementedError

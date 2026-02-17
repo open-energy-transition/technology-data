@@ -36,7 +36,7 @@ class ManualInputUsaParser:
         version: str,
         input_path: pathlib.Path,
         num_digits: int,
-        store_source: bool,
+        archive_source: bool,
         filter_params: bool,
         export_schema: bool,
     ) -> None:
@@ -54,8 +54,8 @@ class ManualInputUsaParser:
             Path to the raw input data file.
         num_digits : int, optional
             Number of significant digits to round the values, by default 4.
-        store_source : bool, optional
-            If True, stores the source object on the Wayback Machine, by default False.
+        archive_source : bool, optional
+            If True, archives the source object on the Wayback Machine, by default False.
         filter_params : bool, optional
             If True, filters the parameters stored in the output, by default False.
         export_schema : bool, optional
@@ -82,7 +82,7 @@ class ManualInputUsaParser:
         return parser_instance.parse(
             input_path=input_path,
             num_digits=num_digits,
-            store_source=store_source,
+            archive_source=archive_source,
             filter_params=filter_params,
             export_schema=export_schema,
         )
