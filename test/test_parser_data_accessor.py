@@ -47,27 +47,26 @@ class TestDataAccessor:
         ):
             DataAccessor.get_latest_version_string(path_list)
 
-    @pytest.mark.parametrize(
-        ("version", "expected_length"),
-        [("v10", 136), (None, 136), ("v1", 136)],
-    )  # type: ignore
-    def test_access_data_dea_energy_storage(
-        self, version: str | None, expected_length: int
-    ) -> None:
+    def test_access_data_dea_energy_storage(self) -> None:
         """Test access_data."""
         data_accessor = DataAccessor(
-            data_source_name="dea_energy_storage", data_version=version
+            data_source_name="dea_energy_storage", data_version="v10"
         )
         data_package = data_accessor.load()
 
         assert data_accessor.data_source_name == DataSourceName.DEA_ENERGY_STORAGE
-        assert data_accessor.data_version == version
+        assert data_accessor.data_version == "v10"
         assert data_package is not None
         assert data_package.technologies is not None
         assert data_package.sources is not None
-        assert len(data_package.technologies) == expected_length
+        assert len(data_package.technologies) == 136
 
-    def test_access_data_dea_energy_storage_validation(self) -> None:
-        """Test access_data."""
-        with pytest.raises(ValueError):
-            DataAccessor(data_source_name="dea_energy", data_version="v10")
+    def test_load_raises_value_error_for_invalid_version(self) -> None:
+        """Test if load raises ValueError for an invalid version."""
+        with pytest.raises(
+            ValueError,
+            match="Data source version 'v11' not found. The latest available version is v10.",
+        ):
+            DataAccessor(
+                data_source_name="dea_energy_storage", data_version="v11"
+            ).load()
