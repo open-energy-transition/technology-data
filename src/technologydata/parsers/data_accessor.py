@@ -106,7 +106,7 @@ class DataAccessor(pydantic.BaseModel):
         latest_version_str = max(versions, key=lambda v: parse(v[1:]))
         return latest_version_str
 
-    def access_data(self) -> DataPackage:
+    def load(self) -> DataPackage:
         """
         Load the default 'technologies.json' from the package data.
 
@@ -114,6 +114,13 @@ class DataAccessor(pydantic.BaseModel):
         -------
         DataPackage
             An instance of DataPackage initialized with the requested data.
+
+        Raises
+        ------
+        FileNotFoundError
+            If the data source directory or the specified version directory is not found.
+        ValueError
+            If the specified version is not found. The user is notified of  the latest available version.
 
         """
         source_path = pathlib.Path(
@@ -130,10 +137,10 @@ class DataAccessor(pydantic.BaseModel):
                 f"Data source directory corresponding to version {self.data_version} found."
             )
         else:
-            logger.info(
-                f"Data source version '{self.data_version}' not found. Taking the latest available version."
-            )
             version = self.get_latest_version_string(list(source_path.iterdir()))
+            raise ValueError(
+                f"Data source version '{self.data_version}' not found. The latest available version is {version}."
+            )
 
         data_path = pathlib.Path(source_path, version)
         return DataPackage.from_json(data_path)

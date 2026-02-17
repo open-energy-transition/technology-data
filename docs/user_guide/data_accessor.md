@@ -25,20 +25,20 @@ It is designed to work with a specific directory structure where datasets are or
 
 ### Creating a DataAccessor
 
-To use the `DataAccessor`, you first create an instance, specifying the `data_source_name`. You can optionally provide a `data_version`.
+To use the `DataAccessor`, you first create an instance, specifying the `data_source_name`. You can optionally provide a `data_version`. If no version is specified, the latest available version for this dataset is used.
 
 ```python
 from technologydata.parsers.data_accessor import DataAccessor
 
 # Create an accessor for a specific version
 accessor_v1 = DataAccessor(
-    data_source_name="manual_input_usa",
-    data_version="v1.0.0"
+    data_source="manual_input_usa",
+    version="v1.0.0"
 )
 
 # Create an accessor that will use the latest version
 accessor_latest = DataAccessor(
-    data_source_name="dea_energy_storage"
+    data_source="dea_energy_storage"
 )
 ```
 
@@ -50,11 +50,11 @@ The directory structure is expected to be: `src/technologydata/parsers/<data_sou
 
 #### Loading a Specific Version
 
-If `data_version` was specified during instantiation, `access_data()` will look for that exact version.
+If `data_version` was specified during instantiation, `load()` will look for that exact version.
 
 ```python
 # Assuming the path .../parsers/manual_input_usa/v1.0.0/ exists
-dp_v1 = accessor_v1.access_data()
+dp_v1 = accessor_v1.load()
 
 # dp_v1 is now a DataPackage object containing the data from v1.0.0
 print(type(dp_v1))
@@ -68,7 +68,7 @@ If `data_version` is not provided or not found, `access_data()` automatically id
 ```python
 # Assuming .../parsers/dea_energy_storage/ contains version directories like 'v1', 'v2'
 # The accessor will load data from the latest version found (e.g., 'v2')
-dp_latest = accessor_latest.access_data()
+dp_latest = accessor_latest.load()
 
 print(type(dp_latest))
 # <class 'technologydata.datapackage.DataPackage'>
@@ -81,6 +81,5 @@ Please refer to the [API documentation](../api/data_accessor.md) for detailed in
 ## Limitations & Notes
 
 -   **Directory Structure**: The `DataAccessor` expects a specific directory structure within the project: `src/technologydata/parsers/<data_source_name>/<version>/`. It will not find data located elsewhere.
--   **Working Directory**: The path resolution is relative to the current working directory (`pathlib.Path.cwd()`). This means you should run your scripts from the root of the repository for the paths to resolve correctly.
 -   **Version Naming**: Version directories must be prefixed with a `v` and follow a pattern that can be parsed by `packaging.version` (e.g., `v1`, `v2.0`, `v1.0.1-alpha`). Directories that do not match this pattern will be ignored when searching for the latest version.
 -   **Target Data**: The class is designed to load a `DataPackage` from a folder. See the `DataPackage` documentation for more details on the expected contents of that folder (i.e., `technologies.json`).
