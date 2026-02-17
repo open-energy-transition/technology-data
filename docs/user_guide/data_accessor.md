@@ -89,4 +89,4 @@ Please refer to the [API documentation](../api/data_accessor.md) for detailed in
 
 -   **Directory Structure**: The `DataAccessor` expects a specific directory structure within the project: `src/technologydata/parsers/<data_source_name>/<version>/`. It will not find data located elsewhere.
 -   **Version Naming**: Version directories must be prefixed with a `v` and follow a pattern that can be parsed by `packaging.version` (e.g., `v1`, `v2.0`, `v1.0.1-alpha`). Directories that do not match this pattern will be ignored when searching for the latest version.
--   **Target Data**: The `load()` method is designed to load a `DataPackage` from a folder. See the [DataPackage](datapackage.md) documentation for more details on the expected contents of that folder (i.e.,`technologies.json`).
+-   **Target Data**: The `load()` method is designed to load a `DataPackage` from a folder. See the [DataPackage](./datapackage.md) documentation for more details on the expected contents of that folder (i.e.,`technologies.json`).
