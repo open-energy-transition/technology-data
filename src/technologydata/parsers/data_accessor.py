@@ -39,7 +39,7 @@ class DataAccessor(pydantic.BaseModel):
     datasets from predefined data sources. It can either load a specific version
     or automatically determine and load the latest available version.
 
-    Parameters
+    Attributes
     ----------
     data_source : str
         The name of the data source to access, as defined in the
@@ -48,13 +48,6 @@ class DataAccessor(pydantic.BaseModel):
         The specific version string of the data to load (e.g., "v1.0.0").
         If not provided, the latest version will be automatically determined
         and used. Default is None.
-
-    Attributes
-    ----------
-    data_source : str
-        The name of the data source.
-    version : str or None
-        The version of the data source.
 
     """
 
