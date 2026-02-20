@@ -9,6 +9,9 @@ SPDX-License-Identifier: MIT
 
 ## Overview
 
+!!! note
+    This example refers specifically to **version 10** (`v10`) of the DEA Energy Storage dataset. Details such as file names, sheet structure, and parser behaviour may differ for other versions.
+
 The Danish Energy Agency (DEA) data parser demonstrates a full data-cleaning and transformation pipeline for converting raw tabular data into the `technologydata` schema files `technologies.json` and `sources.json`. The parser is implemented in `src/technologydata/parsers/dea_energy_storage/`.
 
 ## Dataset Description

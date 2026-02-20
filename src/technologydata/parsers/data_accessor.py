@@ -136,7 +136,8 @@ class DataAccessor(pydantic.BaseModel):
             )
 
         data_path = pathlib.Path(source_path, version)
-        return DataPackage.from_json(data_path)
+        dp = DataPackage.from_json(self.data_source, self.version, data_path)
+        return dp
 
     def parse(
         self,

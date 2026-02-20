@@ -34,8 +34,8 @@ nav:
   - Use Cases: user_guide/design.md
 
 - Examples:
-  - Danish Energy Agency Parser: examples/dea_storage.md
-  - Manual Input USA Parser: examples/manual_input_usa.md
+  - Danish Energy Agency Parser (version 10): examples/dea_storage_v10.md
+  - Manual Input USA Parser (version 0.13.4): examples/manual_input_usa_v0134.md
 
 - API Reference:
   - Data Package: api/datapackage.md

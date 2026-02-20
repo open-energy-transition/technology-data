@@ -57,6 +57,8 @@ class TestDataAccessor:
         assert data_package is not None
         assert data_package.technologies is not None
         assert data_package.sources is not None
+        assert data_package.name == "dea_energy_storage"
+        assert data_package.version == "v10"
         assert len(data_package.technologies) == 136
 
     def test_access_data_dea_energy_storage_validation(self) -> None:
@@ -76,6 +78,8 @@ class TestDataAccessor:
         assert data_package is not None
         assert data_package.technologies is not None
         assert data_package.sources is not None
+        assert data_package.name == "dea_energy_storage"
+        assert data_package.version == "v10"
         assert len(data_package.technologies) == 136
 
     def test_parse_and_access_data_manual_input_usa(self) -> None:
@@ -90,6 +94,8 @@ class TestDataAccessor:
         assert data_package is not None
         assert data_package.technologies is not None
         assert data_package.sources is not None
+        assert data_package.name == "manual_input_usa"
+        assert data_package.version == "v0.13.4"
         assert len(data_package.technologies) == 85
 
     def test_load_raises_value_error_for_invalid_version(self) -> None:

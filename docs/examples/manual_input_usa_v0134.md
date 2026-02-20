@@ -9,6 +9,9 @@ SPDX-License-Identifier: MIT
 
 ## Overview
 
+!!! note
+    This example refers specifically to **version 0.13.4** (`v0134`) of the Manual Input USA dataset.
+
 The Manual Input USA data parser demonstrates a data-cleaning and transformation pipeline for converting manually curated, USA-specific tabular data into the `technologydata` schema files `technologies.json` and `sources.json`. The parser is implemented in `src/technologydata/parsers/manual_input_usa/`.
 
 ## Dataset Description
