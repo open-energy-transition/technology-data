@@ -13,7 +13,7 @@ from typing import Annotated
 
 import pydantic
 from packaging.version import parse
-from pydantic import field_validator
+from pydantic import Field, field_validator
 
 from technologydata import DataPackage
 from technologydata.parsers.dea_energy_storage import DeaEnergyStorageParser
@@ -51,19 +51,16 @@ class DataAccessor(pydantic.BaseModel):
 
     """
 
-    data_source: Annotated[
-        str, pydantic.Field(description="The name of the data source.")
-    ]
+    data_source: Annotated[str, Field(description="The name of the data source.")]
     version: Annotated[
-        str | None, pydantic.Field(description="The version of the data source.")
+        str | None, Field(description="The version of the data source.")
     ] = None
     data_path: Annotated[
         pathlib.Path,
-        pydantic.Field(
-            default=path_cwd / "src" / "technologydata" / "parsers",
+        Field(
             description="The base directory path where data sources are located.",
         ),
-    ]
+    ] = pathlib.Path(path_cwd, "src", "technologydata", "parsers")
 
     @staticmethod
     def ensure_path_exists(input_data_path: pathlib.Path) -> None:
@@ -153,7 +150,9 @@ class DataAccessor(pydantic.BaseModel):
         # Ensure the data path exists before attempting to load data
         DataAccessor.ensure_path_exists(self.data_path)
 
-        source_path_list = [p.name for p in self.data_path.iterdir() if p.is_dir()]
+        source_path = pathlib.Path(self.data_path, self.data_source)
+
+        source_path_list = [p.name for p in source_path.iterdir() if p.is_dir()]
 
         if self.version and self.version in source_path_list:
             version = self.version
@@ -161,12 +160,12 @@ class DataAccessor(pydantic.BaseModel):
                 f"Data source directory corresponding to version {self.version} found."
             )
         else:
-            version = self.get_latest_version_string(list(self.data_path.iterdir()))
+            version = self.get_latest_version_string(list(source_path.iterdir()))
             raise ValueError(
                 f"Data source version '{self.version}' not found. The latest available version is {version}."
             )
 
-        data_path = pathlib.Path(self.data_path, version)
+        data_path = pathlib.Path(source_path, version)
         dp = DataPackage.from_json(self.data_source, self.version, data_path)
         return dp
 
