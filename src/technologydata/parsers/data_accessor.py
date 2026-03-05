@@ -57,6 +57,39 @@ class DataAccessor(pydantic.BaseModel):
     version: Annotated[
         str | None, pydantic.Field(description="The version of the data source.")
     ] = None
+    data_path: Annotated[
+        pathlib.Path,
+        pydantic.Field(
+            default=path_cwd / "src" / "technologydata" / "parsers",
+            description="The base directory path where data sources are located.",
+        ),
+    ]
+
+    @staticmethod
+    def ensure_path_exists(input_data_path: pathlib.Path) -> None:
+        """
+        Ensure the provided data directory exists, creating it if necessary.
+
+        Creates the data directory and any parent directories as needed. If the
+        directory already exists, no action is taken.
+
+        Parameters
+        ----------
+        input_data_path : pathlib.Path
+             The base directory path where data sources are located.
+
+        Returns
+        -------
+        None
+
+        Notes
+        -----
+        This method uses `mkdir(parents=True, exist_ok=True)` to safely create
+        the directory structure without raising an error if the directory
+        already exists.
+        """
+        if not input_data_path.is_dir():
+            input_data_path.mkdir(parents=True, exist_ok=True)
 
     @field_validator("data_source", mode="before")
     @classmethod
@@ -116,13 +149,11 @@ class DataAccessor(pydantic.BaseModel):
             If the specified version is not found. The user is notified of  the latest available version.
 
         """
-        source_path = pathlib.Path(
-            path_cwd, "src", "technologydata", "parsers", self.data_source
-        )
-        if not source_path.is_dir():
-            raise FileNotFoundError(f"Data source directory not found: {source_path}")
 
-        source_path_list = [p.name for p in source_path.iterdir() if p.is_dir()]
+        # Ensure the data path exists before attempting to load data
+        DataAccessor.ensure_path_exists(self.data_path)
+
+        source_path_list = [p.name for p in self.data_path.iterdir() if p.is_dir()]
 
         if self.version and self.version in source_path_list:
             version = self.version
@@ -130,12 +161,12 @@ class DataAccessor(pydantic.BaseModel):
                 f"Data source directory corresponding to version {self.version} found."
             )
         else:
-            version = self.get_latest_version_string(list(source_path.iterdir()))
+            version = self. get_latest_version_string(list(self.data_path.iterdir()))
             raise ValueError(
                 f"Data source version '{self.version}' not found. The latest available version is {version}."
             )
 
-        data_path = pathlib.Path(source_path, version)
+        data_path = pathlib.Path(self.data_path, version)
         dp = DataPackage.from_json(self.data_source, self.version, data_path)
         return dp
 
@@ -174,6 +205,7 @@ class DataAccessor(pydantic.BaseModel):
             If the required input data file is not found.
 
         """
+
         parser: DeaEnergyStorageParser | ManualInputUsaParser
 
         if self.data_source == DataSourceName.DEA_ENERGY_STORAGE:
@@ -187,15 +219,12 @@ class DataAccessor(pydantic.BaseModel):
             )
 
         # Read the raw data
-        input_data_path = pathlib.Path(
-            path_cwd,
-            "src",
-            "technologydata",
-            "parsers",
+        input_path = pathlib.Path(
+            self. data_path,
             "raw",
-            input_file_name,
         )
-
+        DataAccessor.ensure_path_exists(input_path)
+        input_data_path = pathlib.Path(input_path, input_file_name)
         logger.info(f"Input data path set to: {input_data_path}")
 
         if self.version not in parser.get_supported_versions():
