@@ -87,6 +87,7 @@ class DataAccessor(pydantic.BaseModel):
         This method uses `mkdir(parents=True, exist_ok=True)` to safely create
         the directory structure without raising an error if the directory
         already exists.
+
         """
         if not input_data_path.is_dir():
             input_data_path.mkdir(parents=True, exist_ok=True)
@@ -149,7 +150,6 @@ class DataAccessor(pydantic.BaseModel):
             If the specified version is not found. The user is notified of  the latest available version.
 
         """
-
         # Ensure the data path exists before attempting to load data
         DataAccessor.ensure_path_exists(self.data_path)
 
@@ -161,7 +161,7 @@ class DataAccessor(pydantic.BaseModel):
                 f"Data source directory corresponding to version {self.version} found."
             )
         else:
-            version = self. get_latest_version_string(list(self.data_path.iterdir()))
+            version = self.get_latest_version_string(list(self.data_path.iterdir()))
             raise ValueError(
                 f"Data source version '{self.version}' not found. The latest available version is {version}."
             )
@@ -205,7 +205,6 @@ class DataAccessor(pydantic.BaseModel):
             If the required input data file is not found.
 
         """
-
         parser: DeaEnergyStorageParser | ManualInputUsaParser
 
         if self.data_source == DataSourceName.DEA_ENERGY_STORAGE:
@@ -220,7 +219,7 @@ class DataAccessor(pydantic.BaseModel):
 
         # Read the raw data
         input_path = pathlib.Path(
-            self. data_path,
+            self.data_path,
             "raw",
         )
         DataAccessor.ensure_path_exists(input_path)
