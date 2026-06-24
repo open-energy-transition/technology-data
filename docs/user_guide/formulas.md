@@ -1,0 +1,326 @@
+# Parameter Formula System
+
+Many techno-economic parameters are not independent — they are related by well-known
+engineering or financial relationships. For example, the Equivalent Annual Cost (EAC)
+of a technology can be computed from its specific investment cost, discount rate (WACC),
+and economic lifetime. Conversely, if the EAC is known and the lifetime is not, the
+same relationship can be used to recover the lifetime.
+
+The formula system lets you register these relationships once and then use them in
+**any direction**: whichever parameter is missing is derived automatically from the
+others. No re-implementation is needed per direction — a single registration covers all
+of them.
+
+## Example
+
+The Equivalent Annual Costs of a technology is the cost of owning and operating the technology over its lifetime, expressed on an annual basis.
+It is linked to the specific investment cost, WACC, and lifetime of the technology via the annuity factor:
+
+$$
+\text{EAC} = \text{specific investment} \cdot \frac{\text{WACC}}{1 - (1 + \text{WACC})^{-\text{lifetime}}}
+$$
+
+Given a technology with the three parameters known, we can use the formula system to calculate the EAC for us:
+
+```python
+import technologydata as td
+
+# Three parameters are known
+tech = td.Technology(
+    name="Electrolysis",
+    detailed_technology="PEM",
+    case="base",
+    region="DEU",
+    year=2030,
+    parameters={
+        "specific_investment": td.Parameter(magnitude=1000.0, units="USD_2020/kW"),
+        "wacc":                td.Parameter(magnitude=0.07,   units="dimensionless"),
+        "lifetime":            td.Parameter(magnitude=20.0,   units="year"),
+    }
+)
+
+# Calculate EAC from the three inputs (forward direction)
+tech = tech.calculate_parameters("eac")
+print(tech.parameters["eac"]) # ≈ 94.4 USD_2020/kilowatt/year
+```
+
+This also works in reverse:
+If we know the EAC, specific investment, and WACC, we can calculate the lifetime:
+
+```python
+tech = td.Technology(
+    name="Electrolysis",
+    detailed_technology="PEM",
+    case="base",
+    region="DEU",
+    year=2030,
+    parameters={
+        "specific_investment": td.Parameter(magnitude=1000.0, units="USD_2020/kW"),
+        "wacc":                td.Parameter(magnitude=0.07,   units="dimensionless"),
+        "eac":                 td.Parameter(magnitude=94.4,   units="USD_2020/kW/year"),
+    }
+)
+# Derive lifetime from EAC instead (reverse direction — same formula)
+tech = tech.calculate_parameters("lifetime")
+print(tech.parameters["lifetime"])  # ≈ 20.0 years
+```
+
+---
+
+## Basic Usage
+
+### Deriving a single parameter
+
+The functionality is not strictly tied to `Technology` objects.
+The formula system is tied to `Parameter` objects, of which you can pass one or multiple for calculation to the function `formula_registry.calculate`:
+
+```python
+params = {
+    "specific_investment": td.Parameter(magnitude=1000.0, units="USD_2020/kW"),
+    "wacc":                td.Parameter(magnitude=0.07,   units="dimensionless"),
+    "lifetime":            td.Parameter(magnitude=20.0,   units="year"),
+}
+eac = td.formula_registry.calculate("eac", params)
+```
+
+The result of the calculation is a new `Parameter` object with `magnitude`, `units`, and `provenance` (set to the
+formula name that produced it).
+
+### Checking whether a parameter can be derived
+
+The system automatically checks whether sufficient inputs are present to calculate the requested parameter and raises a `ValueError` if not.
+You can manually check whether a parameter can be derived with `formula_registry.can_calculate`:
+
+```python
+td.formula_registry.can_calculate("eac", params)   # True - all inputs present
+td.formula_registry.can_calculate("wacc", params)  # False - WACC is transcendental
+```
+
+### Integration with `Technology` objects
+
+[`Technology.calculate_parameters`][technologydata.technology.Technology.calculate_parameters]
+wraps the registry so you can derive parameters directly on a `Technology` object.
+It always returns a **new** `Technology` instance; the original is never mutated.
+
+```python
+tech = td.Technology(
+    name="Electrolysis",
+    detailed_technology="PEM",
+    case="base",
+    region="DEU",
+    year=2030,
+    parameters={
+        "specific_investment": td.Parameter(magnitude=800.0, units="USD_2020/kW"),
+        "wacc":                td.Parameter(magnitude=0.06,  units="dimensionless"),
+        "lifetime":            td.Parameter(magnitude=25.0,  units="year"),
+    },
+)
+
+# Derive a single parameter
+tech_with_eac = tech.calculate_parameters("eac")
+
+# Derive a multiple parameters at once
+tech_with_eac = tech.calculate_parameters(["eac", "annuity_factor"])
+
+# Derive everything that can be derived automatically
+tech_full = tech.calculate_parameters()
+```
+
+Parameters that already present in the technology object are not overwritten by the calculation, even if they are inconsistent with the derived value.
+If you want to force a recalculation of an existing parameter, remove it from the `parameters` dictionary first:
+
+```python
+tech = tech.remove_parameters("eac")
+tech = tech.calculate_parameters("eac")  # now recalculated
+```
+
+Derived parameters from intermediate steps are immediately available to subsequent
+calculations within the same call, e.g. the automatic calculation above calculates the `annuity_factor` and adds it to the object and then the calculation of the `eac` uses it via the `eac_via_annuity_factor` formula.
+
+---
+
+## Advanced Usage
+
+### Automatic selection of formulas
+
+Sometimes you may have multiple formulas available that can calculate the same parameter.
+The registry chooses in this order:
+
+1. An explicitly requested formula via `formula_name=`.
+2. The first applicable formula marked `default=True`.
+3. The first other applicable formula in registration order.
+
+If more than one formula is marked as the default for a target, the one that was
+registered first and is applicable wins.
+
+If no formula can apply, a `ValueError` is raised that lists every registered formula
+and which of its inputs are missing.
+
+### Selecting a specific formula
+
+You can specify a specific formula to use with `formula_name=`:
+
+```python
+# Use the default formula (i.e. eac_annuity)
+eac = td.formula_registry.calculate("eac", params)
+
+# Specify a specific formula to use (e.g. eac_via_annuity_factor)
+tech_alt = tech.calculate_parameters(
+    targets=["eac"],
+    formula_names={"eac": "eac_via_annuity_factor"},
+)
+```
+
+### Currency handling
+
+The formula system operates does not support mixed curencies in a single calculation.
+Before a calculation a check is performned that every currency-bearing input uses the same currency *and* currency year (e.g. all `USD_2020`, or all `EUR_2022`).
+
+If the currencies are inconsistent, a `ValueError` is raised immediately:
+
+```python
+params_bad = {
+    "specific_investment": td.Parameter(magnitude=1000.0, units="USD_2020/kW"),
+    "wacc":                td.Parameter(magnitude=0.07,   units="dimensionless"),
+    "lifetime":            td.Parameter(magnitude=20.0,   units="year"),
+    "eac":                 td.Parameter(magnitude=94.4,   units="USD_2022/kW/year"),
+}
+td.formula_registry.calculate("specific_investment", params_bad)
+# ValueError: Currency mismatch in formula 'eac_annuity':
+#   'eac' uses USD_2022, 'specific_investment' uses USD_2020.
+#   Harmonise all currency parameters to the same currency and year
+#   (e.g. call .to_currency('USD_2020', country=...)) before using this formula.
+```
+
+To fix this, harmonise currencies first.
+
+The currency for the result is **inherited automatically** from the inputs.
+If all inputs use `EUR_2022`, the calculated parameter will also be in `EUR_2022`.
+
+### Registering custom formulas
+
+You can add your own formulas to the system and use for calculations.
+There are two options available:
+
+1. Extend the built-in registry `formula_registry` directly, which makes your formula available globally.
+2. Create a separate `FormulaLinkRegistry` instance, which keeps your formulas isolated from the built-in ones.
+   This also allows you to have multiple isolated registries with different formulas in the same program.
+
+```python
+from technologydata.formulas import FormulaLinkRegistry, formula_registry
+from technologydata.parameter import Parameter
+
+# Option 1: extend the global built-in registry
+formula_registry.register(
+    name="lcoe_simplified",
+    parameters=["lcoe", "eac", "fixed_om", "full_load_hours"],
+    expr_str="lcoe - (eac + fixed_om) / full_load_hours",
+    units={
+        "lcoe":            "/MWh",
+        "eac":             "/kW/year",
+        "fixed_om":        "/kW/year",
+        "full_load_hours": "hour/year",
+    },
+)
+
+# Option 2: isolated registry
+my_reg = FormulaLinkRegistry()
+my_reg.register(
+    name="my_formula",
+    parameters=["x", "y", "z"],
+    expr_str="x - y * z",
+    units={"x": "dimensionless", "y": "dimensionless", "z": "dimensionless"},
+    default=True,
+)
+result = my_reg.calculate("x", {
+    "y": Parameter(magnitude=3.0, units="dimensionless"),
+    "z": Parameter(magnitude=4.0, units="dimensionless"),
+})
+print(result.magnitude)  # 12.0
+```
+
+---
+
+## Implementation Details
+
+### How it works
+
+A [`FormulaLink`][technologydata.formulas.FormulaLink] stores a **SymPy expression string** set to zero (e.g. `"eac - sic*wacc/(1-(1+wacc)**(-lifetime))"`) along with the list of participant parameter names and unit metadata.
+When asked to solve for a target, it:
+
+1. Maps each parameter name to a positional SymPy symbol (`_p0`, `_p1`, ...) so that names with spaces or other non-identifier characters are supported.
+2. Applies a **symbolic-first** strategy: solves the expression with abstract symbols, then substitutes the numeric values into the resulting formula. This is significantly faster than working with floating-point numbers directly.
+3. Falls back to **numeric substitution** if the symbolic step yields no result - substitutes the known values first, then calls the solver on the simplified expression.
+
+The [`FormulaLinkRegistry`][technologydata.formulas.FormulaLinkRegistry] indexes each
+`FormulaLink` under every parameter it involves.
+
+### Formula selection
+
+When multiple formulas are registered for the same parameter, the registry selects one following this priority:
+
+| Priority | Condition |
+|----------|-----------|
+| 1 | A specific formula name was requested via `formula_name=` |
+| 2 | Default-flagged formula (`default=True`) whose inputs are all present |
+| 3 | First other registered formula whose inputs are all present in the order they were registered |
+
+### Units convention # TODO this is weird. Why is it necessary? Can't pint handle the units automatically?
+
+Formulas are registered with a `units` dictionary that holds the **non-currency portion** of each parameter's unit string:
+
+| Pattern | Meaning | Example |
+|---------|---------|---------|
+| Starts with `"/"` | Currency-bearing; currency is prepended from inputs | `"/kW/year"` → `"USD_2020/kW/year"` |
+| Empty string `""` | Currency only (e.g. absolute monetary amount) | `""` → `"USD_2020"` |
+| Does not start with `"/"` | Purely physical or dimensionless; used verbatim | `"year"`, `"dimensionless"` |
+
+!!! note "Physical unit consistency"
+    The formula system does not perform dimensional analysis across mixed
+    physical units. The registered unit string defines what the result *label*
+    should be, not a conversion factor.
+
+### Limitations
+
+**Transcendental equations** — Some variables cannot be isolated algebraically.
+For example, WACC appears both linearly and as an exponent base in the annuity
+formula, making it transcendental. Attempting to solve for such a variable raises a
+`ValueError`. A 5-second timeout (Unix/Linux) prevents SymPy from hanging indefinitely
+on these cases. The affected variable is noted in the built-in formulas reference below.
+
+**Multiple real solutions** — When SymPy returns multiple solutions, the system prefers
+positive real values (physical parameters are non-negative by convention) and takes the
+first one.
+
+---
+
+## Built-in Formulas Reference
+
+### Capital cost
+
+| Formula name | Parameters | Notes |
+|---|---|---|
+| `annuity_factor` | `annuity_factor`, `wacc`, `lifetime` | WACC not analytically solvable |
+| `eac_annuity` *(default for `eac`)* | `eac`, `specific_investment`, `wacc`, `lifetime` | WACC not analytically solvable |
+| `eac_via_annuity_factor` | `eac`, `specific_investment`, `annuity_factor` | Requires pre-computed annuity factor |
+| `eac_simple` | `eac`, `total_investment_cost`, `lifetime` | Ignores time-value of money |
+| `total_investment_from_specific` | `total_investment_cost`, `specific_investment`, `capacity` | Ensure consistent power units |
+
+### Operations & maintenance
+
+| Formula name | Parameters | Notes |
+|---|---|---|
+| `fixed_om_from_fraction` | `fixed_om`, `specific_investment`, `fixed_om_fraction` | Fraction is dimensionless (e.g. 0.03 for 3 %/year) |
+
+### Efficiency
+
+| Formula name | Parameters | Notes |
+|---|---|---|
+| `roundtrip_efficiency` | `roundtrip_efficiency`, `charge_efficiency`, `discharge_efficiency` | All solvable in every direction |
+
+### Variable cost
+
+| Formula name | Parameters | Notes |
+|---|---|---|
+| `fuel_variable_cost` | `fuel_variable_cost`, `fuel_cost`, `efficiency` | Fuel cost and variable cost must be in same energy unit |
+| `co2_cost` | `co2_cost`, `co2_price`, `co2_intensity` | `co2_intensity` in t/MWh of output energy |

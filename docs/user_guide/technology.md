@@ -128,9 +128,31 @@ scaled_tech = tech.adjust_scale(1.1)
 
 Please refer to the [API documentation](../api/technology.md) for detailed information on the `Technology` class methods and attributes.
 
-## Notes
+### Calculating Derived Parameters
 
-- **Parameter Calculation**: The method for calculating missing or derived parameters is a placeholder and not yet implemented.
-- **Region and Scale Adjustment**: Methods for region and scale adjustment are placeholders.
-- **Consistency Checking**: Only checks for the presence of required parameters; does not validate values.
-- **Type Checking**: The class uses Pydantic for validation and type enforcement.
+Use the formula registry to automatically derive missing parameters. See
+[Formula System](formulas.md) for the full reference.
+
+```python
+from technologydata.technology import Technology
+from technologydata.parameter import Parameter
+
+tech = Technology(
+    name="Solar PV",
+    detailed_technology="Crystalline Silicon",
+    case="Base",
+    region="DEU",
+    year=2020,
+    parameters={
+        "specific_investment": Parameter(magnitude=1000, units="EUR_2020/kW"),
+        "wacc":                Parameter(magnitude=0.06, units="dimensionless"),
+        "lifetime":            Parameter(magnitude=25,   units="year"),
+    }
+)
+
+# Derive EAC automatically
+tech_derived = tech.calculate_parameters("eac")
+
+# Derive all derivable parameters at once
+tech_full = tech.calculate_parameters()
+```
