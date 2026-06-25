@@ -398,6 +398,33 @@ class TestParameter:
             param_h2 / param_ch4
         ).carrier == param_h2._pint_carrier / param_ch4._pint_carrier
 
+    def test_parameter_currency_compatibility(self) -> None:
+        """Test that arithmetic is permitted for matching currencies and years."""
+        param_kw = technologydata.Parameter(magnitude=1, units="USD_2020/kW")
+        param_mw = technologydata.Parameter(magnitude=0.001, units="USD_2020/MW")
+
+        # Both operands are equal after unit conversion and use the same currency-year.
+        added = param_kw + param_mw
+        subtracted = param_kw - param_mw
+
+        assert isinstance(added, technologydata.Parameter)
+        assert isinstance(subtracted, technologydata.Parameter)
+        assert added.units == "USD_2020 / kilowatt"
+        assert added.magnitude == pytest.approx(2)
+        assert subtracted.units == "USD_2020 / kilowatt"
+        assert subtracted.magnitude == pytest.approx(0)
+
+    def test_parameter_currency_incompatibility(self) -> None:
+        """Test that arithmetic is blocked for different currency years."""
+        param_2020 = technologydata.Parameter(magnitude=1, units="USD_2020/kW")
+        param_2021 = technologydata.Parameter(magnitude=1, units="USD_2021/kW")
+
+        with pytest.raises(ValueError, match="different currencies or currency years"):
+            param_2020 + param_2021
+
+        with pytest.raises(ValueError, match="different currencies or currency years"):
+            param_2020 - param_2021
+
     def test_parameter_equality(self) -> None:
         """Test equality comparison of Parameter objects."""
         # Create two identical parameters
