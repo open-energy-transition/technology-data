@@ -21,12 +21,13 @@ It is designed to work with a specific directory structure where datasets are or
 - **Parsing Interface**: Provides a `parse()` method to run the appropriate parser for a given data source and version to generate the data files.
 - **Error Handling**: Raises `FileNotFoundError` if the specified data source or version directories cannot be found, and `ValueError` for unsupported sources or versions.
 - **Seamless Integration**: The `load()` method returns a `DataPackage` object, ready for use with other components of the `technologydata` library.
+- **Path Safety Helper**: Provides `ensure_path_exists()` to create missing directories (including parents) safely.
 
 ## Usage Examples
 
 ### Creating a DataAccessor
 
-To use the `DataAccessor`, you first create an instance, specifying the `data_source_name`. You can optionally provide a `data_version`. If no version is specified, the latest available version for this dataset is used.
+To use `DataAccessor`, create an instance with `data_source`. You can also provide `version` and optionally override `data_path`.
 
 ```python
 from technologydata.parsers.data_accessor import DataAccessor
@@ -87,6 +88,7 @@ Please refer to the [API documentation](../api/data_accessor.md) for detailed in
 
 ## Limitations & Notes
 
--   **Directory Structure**: The `DataAccessor` expects a specific directory structure within the project: `src/technologydata/parsers/<data_source_name>/<version>/`. It will not find data located elsewhere.
+-   **Directory Structure**: The `DataAccessor` expects a specific directory structure within the project: `src/technologydata/parsers/<data_source_name>/<version>/ unless `data_path` is overridden.
 -   **Version Naming**: Version directories must be prefixed with a `v` and follow a pattern that can be parsed by `packaging.version` (e.g., `v1`, `v2.0`, `v1.0.1-alpha`). Directories that do not match this pattern will be ignored when searching for the latest version.
 -   **Target Data**: The `load()` method is designed to load a `DataPackage` from a folder. See the [DataPackage](./datapackage.md) documentation for more details on the expected contents of that folder (i.e.,`technologies.json`).
+- **Input Location for Parse**: `parse()` expects `input_file_name` under `data_path/raw/`.

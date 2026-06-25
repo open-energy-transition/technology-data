@@ -72,15 +72,15 @@ The virtual environment can be "activated" to make its packages available:
 
 === "macOS and Linux"
 
-    ```bash
-    source .venv/bin/activate
-    ```
+```bash
+source .venv/bin/activate
+```
 
 === "Windows"
 
-    ```pwsh-session
-    PS> .venv\Scripts\activate
-    ```
+```pwsh-session
+PS> .venv\Scripts\activate
+```
 
 To exit a virtual environment, use the `deactivate` command:
 
@@ -175,7 +175,7 @@ The documentation is generated with [MkDocs](https://www.mkdocs.org/). The docum
 !!! note
     If you are not familiar with Markdown, consult the following [quick guide](https://www.markdownguide.org/basic-syntax/).
 
-MkDocs offers the possibility to start a built-in development server to preview the documentation as you work on it.  To start the development server run:
+MkDocs offers the possibility to start a built-in development server to preview the documentation as you work on it. To start the development server run:
 
 ### Building the documentation locally
 
