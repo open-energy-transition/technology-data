@@ -115,7 +115,6 @@ class DataPackage(pydantic.BaseModel):
         data_package = cls(
             name=name,
             version=version,
-            path=path_to_folder,
             technologies=technologies,
         )
 

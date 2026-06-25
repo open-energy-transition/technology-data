@@ -48,6 +48,9 @@ class DataAccessor(pydantic.BaseModel):
         The specific version string of the data to load (e.g., "v1.0.0").
         If not provided, the latest version will be automatically determined
         and used. Default is None.
+    data_path : pathlib.Path, optional
+        The path to the data source directory. If not provided, the default
+        path will be used.
 
     """
 
