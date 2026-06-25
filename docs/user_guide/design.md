@@ -61,6 +61,7 @@ Below follow central use cases that we want to serve with `technologydata`.
 ### 🧾 UC-001: Screen techno-economic inputs for validity and completeness
 
 #### 🧑‍💻 Actor(s)
+
 - **Primary**: Energy System Modeller, Programmer
 - **Secondary**: Energy Analyst (if reviewing pre-screened data)
 
@@ -69,6 +70,7 @@ Below follow central use cases that we want to serve with `technologydata`.
 Detect and correct inconsistencies or omissions in techno-economic input data, ensuring it adheres to the package's schema and parameter constraints.
 
 #### 📚 Pre-conditions
+
 - Python environment with `technologydata` installed
 - Input data provided as:
   - JSON (conforming to data schema)
@@ -77,6 +79,7 @@ Detect and correct inconsistencies or omissions in techno-economic input data, e
 - Users are familiar with the structure of `Technology`, `Parameter`, and `Source` classes
 
 #### 🚦 Trigger
+
 - Instantiation of one or more `Technology` object with user-provided or pre-compiled data
 - Manual invocation of validation or consistency-check method
 
@@ -108,6 +111,7 @@ Detect and correct inconsistencies or omissions in techno-economic input data, e
   - User is able to complete missing fields to the `Technology` object
 
 #### ✅ Post-conditions
+
 - One or more `Technology` objects validated and completed with all parameters that can be derived, or
 - Errors on schema-violations and Warning about inconsistencies are logged.
 
@@ -156,6 +160,7 @@ tech = Technology(
 ### 🧾 UC-002: Harmonize multiple input datasets
 
 #### 🧑‍💻 Actor(s)
+
 - **Primary**: Energy System Modeller, Energy Analyst
 - **Secondary**: Data Engineer
 
@@ -164,11 +169,13 @@ tech = Technology(
 Enable the user to bring multiple techno-economic datasets to a common basis (currency, year, units) using explicit, user-invoked transformation methods, so that they can be compared or combined.
 
 #### 📚 Pre-conditions
+
 - Python environment with `technologydata` installed
 - One or more Technology objects loaded as `DataPackage` or `TechnologyCollection` objects
 - User is familiar with available transformation methods (e.g., `adjust_currency`, `adjust_scale`, `adjust_region`)
 
 #### 🚦 Trigger
+
 - User loads multiple datasets and wishes to harmonize them for comparison or integration
 
 #### 🧵 Main Flow
@@ -192,6 +199,7 @@ Enable the user to bring multiple techno-economic datasets to a common basis (cu
 - **Partial harmonization**: User can harmonize only a subset of parameters.
 
 #### ✅ Post-conditions
+
 - All datasets are harmonized to the user-specified conventions, e.g. currency, currency year, units.
 
 #### 🧪 Sample Input/Output
@@ -228,6 +236,7 @@ dp1.technologies = dp1.technologies.adjust_units(parameter="specific-investment"
 ### 🧾 UC-003: Transform assumptions into model-ready formats
 
 #### 🧑‍💻 Actor(s)
+
 - **Primary**: Energy System Modeller, Programmer
 
 #### 🎯 Goal
@@ -235,10 +244,12 @@ dp1.technologies = dp1.technologies.adjust_units(parameter="specific-investment"
 Allow the user to derive and access all model-relevant parameters (e.g., EAC, specific investment) from harmonized data, ready for direct use in energy system models such as PyPSA-Eur.
 
 #### 📚 Pre-conditions
+
 - One `Technology` object or multiple in a `TechnologyCollection` or `DataPackage` available
 - User knows which parameters are required for the target model
 
 #### 🚦 Trigger
+
 - User wants to prepare data for model input, e.g., for PyPSA-Eur
 
 #### 🧵 Main Flow
@@ -258,6 +269,7 @@ Allow the user to derive and access all model-relevant parameters (e.g., EAC, sp
 - **Calculation error**: System logs the error and aborts the calculation.
 
 #### ✅ Post-conditions
+
 - All required model parameters are present and accessible in the `Technology` objects, ready for export or direct use.
 
 #### 🧪 Sample Input/Output
@@ -283,6 +295,7 @@ tech["EAC"].value  # Access the calculated EAC parameter value
 ### 🧾 UC-004: Compare techno-economic indicators across datasets
 
 #### 🧑‍💻 Actor(s)
+
 - **Primary**: Energy Analyst, Energy System Modeller
 
 #### 🎯 Goal
@@ -290,10 +303,12 @@ tech["EAC"].value  # Access the calculated EAC parameter value
 Enable the user to systematically compare key techno-economic parameters (e.g., CAPEX, OPEX, efficiency) across multiple harmonized datasets in a tabular format.
 
 #### 📚 Pre-conditions
+
 - Two or more `Technology` objects available as `TechnologyCollection` or `DataPackage` objects
 - User knows which parameters and technologies to compare
 
 #### 🚦 Trigger
+
 - User wants to compare indicators across datasets for quality control, reporting, or analysis
 
 #### 🧵 Main Flow
@@ -308,6 +323,7 @@ Enable the user to systematically compare key techno-economic parameters (e.g., 
 - **Manually created comparison**: User can manually create a comparison table by selecting specific parameters and technologies individually through their `.values` attributes.
 
 #### ✅ Post-conditions
+
 - Tabular comparison of selected parameters across datasets is available for review and export.
 
 #### 🧪 Sample Input/Output
@@ -338,6 +354,7 @@ techs["lifetime"].values  # Access lifetime values across technologies
 ### 🧾 UC-005: Audit data provenance and transformation trace
 
 #### 🧑‍💻 Actor(s)
+
 - **Primary**: Energy System Modeller
 - **Secondary**: Energy Analyst
 
@@ -346,9 +363,11 @@ techs["lifetime"].values  # Access lifetime values across technologies
 Allow the user to trace the origin and transformation history of each data point, enabling transparency and reproducibility.
 
 #### 📚 Pre-conditions
+
 - Data loaded and/or transformed using `technologydata`
 
 #### 🚦 Trigger
+
 - User requests provenance or transformation history for a specific parameter, object or Collection.
 
 #### 🧵 Main Flow
@@ -364,10 +383,11 @@ Allow the user to trace the origin and transformation history of each data point
 
 #### 🔁 Alternate Flows
 
-- **Manually changed information**: If the user made manual changes at some point, then the system only  notifies and provides trace over what was done by the package; User changes are not tracked.
+- **Manually changed information**: If the user made manual changes at some point, then the system only notifies and provides trace over what was done by the package; User changes are not tracked.
 - **Requesting provenance for a Technology or TechnologyCollection**: The user can access the provenance information for all parameters of a Technology or TechnologyCollection by exporting it to a DataFrame or JSON.
 
 #### ✅ Post-conditions
+
 - User has access to a detailed provenance and transformation trace for any data point.
 - Reports or logs can be exported for documentation.
 

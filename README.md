@@ -18,7 +18,7 @@ A Python package to manage techno-economic assumptions for energy system models.
 It provides a structured way to store, retrieve, and manipulate data related to various technologies used in energy systems,
 including unit-ful parameters, currency conversions, inflation adjustment, and temporal modelling.
 
-The package currently includes a pre-parsed dataset from the DEA's Technology Catalogue focusing on energy storage technologies and a dedicated parser (see [here](docs/examples/dea_storage.md)).  In the future it will include other common public data sources such NREL's ATB.
+The package currently includes a pre-parsed dataset from the DEA's Technology Catalogue focusing on energy storage technologies and a dedicated parser (see [here](docs/examples/dea_storage.md)). In the future it will include other common public data sources such NREL's ATB.
 
 The goal of this package is to make energy system modelling easier and more efficient,
 automating common tasks and transformations to reduce errors and allowing for easier data exchange between models.

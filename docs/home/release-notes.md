@@ -11,6 +11,6 @@
     ``pip install git+https://github.com/open-energy-transition/technology-data``.
 -->
 
-### Release v0.1.0
+## Release v0.1.0
 
 First version of the new `technologydata` prototype.

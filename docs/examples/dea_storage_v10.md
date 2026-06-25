@@ -95,6 +95,7 @@ parser_accessor.parse(
 ```
 
 The `parse` method accepts the following arguments:
+
 - `input_file_name` (str): The name of the raw data file located in `src/technologydata/parsers/raw/`.
 - `num_digits` (int, default 4): Number of decimals for rounding numeric values.
 - `archive_source` (bool, default False): Whether to store the source on the Wayback Machine.
