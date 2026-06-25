@@ -9,7 +9,6 @@ import logging
 import pathlib
 import re
 import sys
-import tempfile
 from typing import Annotated
 
 import pydantic
