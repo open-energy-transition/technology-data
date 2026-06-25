@@ -16,7 +16,7 @@ The Manual Input USA data parser demonstrates a data-cleaning and transformation
 
 ## Dataset Description
 
-The original dataset is a manually curated CSV file containing USA-specific technology parameters available at this [link](https://github.com/PyPSA/technology-data/blob/v0.13.4/inputs/US/manual_input_usa.csv). The raw source file is included in the repository at `src/technologydata/parsers/raw/manual_input_usa.csv`.
+The original dataset is a manually curated CSV file containing USA-specific technology parameters available from the [PyPSA technology-data repository](https://github.com/PyPSA/technology-data/blob/v0.13.4/inputs/US/manual_input_usa.csv). The raw source file is included in the repository at `src/technologydata/parsers/raw/manual_input_usa.csv`.
 
 The dataset is in CSV format and includes a flat table of technology parameters for various energy technologies relevant to the USA context. Columns include `technology`, `parameter`, `year`, `value`, `unit`, `currency_year`, `source`, `further_description`, `financial_case`, and `scenario`. Rows are individual parameter records (parameter value + unit + context) for technologies with different scenarios and financial cases.
 

@@ -19,7 +19,7 @@ logger = logging.getLogger(__name__)
 all_currency_codes = set(get_iso3_to_currency_codes().values())
 
 
-class DateFormatEnum(str, enum.Enum):
+class DateFormatEnum(enum.StrEnum):
     """
     Enum for date formats used in different sources.
 

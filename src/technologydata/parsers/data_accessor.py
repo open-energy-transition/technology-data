@@ -4,11 +4,11 @@
 
 """Provide a class to access data from a data source."""
 
+import enum
 import logging
 import pathlib
 import re
 import sys
-from enum import Enum
 from typing import Annotated
 
 import pydantic
@@ -24,7 +24,7 @@ path_cwd = pathlib.Path.cwd()
 logger = logging.getLogger(__name__)
 
 
-class DataSourceName(str, Enum):
+class DataSourceName(enum.StrEnum):
     """An enumeration of available data sources."""
 
     DEA_ENERGY_STORAGE = "dea_energy_storage"
