@@ -6,12 +6,12 @@ The `ManualInputUsaParser` is responsible for parsing data from the `manual_inpu
 
 The main parser, `ManualInputUsaParser`, acts as a dispatcher that selects the appropriate version-specific parser based on the user's request.
 
-### Key Features:
+### Key Features
 
 -   **Version Dispatching**: Dynamically selects the correct parser for a given dataset version (e.g., `v0.13.4`).
 -   **Supported Versions**: Provides a method to get a list of all supported dataset versions.
 
-### Usage:
+### Usage
 
 While it is possible to use the parser directly, the recommended way to access the data is through the `DataAccessor` class, which provides a higher-level interface and handles the parsing process internally. See the [Data Accessor](./data_accessor.md) documentation for more details.
 
@@ -47,7 +47,7 @@ manual_input_parser.parse(
 
 The `ManualInputUSAV0134Parser` is a concrete implementation that handles version `v0.13.4` of the `manual_input_usa.csv` dataset. It inherits from `ParserBase` and contains the logic for reading, cleaning, and transforming the raw data.
 
-### Key Responsibilities:
+### Key Responsibilities
 
 -   **Data Loading**: Reads data from the specified CSV file.
 -   **Data Cleaning**:
