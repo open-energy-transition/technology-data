@@ -4,18 +4,18 @@
 
 """Provide a class to access data from a data source."""
 
+import enum
 import logging
 import pathlib
 import re
 import sys
 import tempfile
-from enum import Enum
 from typing import Annotated
 
 import pydantic
 import requests
 from packaging.version import parse
-from pydantic import field_validator
+from pydantic import Field, field_validator
 
 from technologydata import DataPackage
 from technologydata.parsers.dea_energy_storage import DeaEnergyStorageParser
@@ -26,7 +26,7 @@ path_cwd = pathlib.Path.cwd()
 logger = logging.getLogger(__name__)
 
 
-class DataSourceName(str, Enum):
+class DataSourceName(enum.StrEnum):
     """An enumeration of available data sources."""
 
     DEA_ENERGY_STORAGE = "dea_energy_storage"
@@ -51,25 +51,49 @@ class DataAccessor(pydantic.BaseModel):
         The specific version string of the data to load (e.g., "v1.0.0").
         If not provided, the latest version will be automatically determined
         and used. Default is None.
-
-    Examples
-    --------
-    >>> # Load from local storage
-    >>> accessor = DataAccessor(data_source="dea_energy_storage", version="v10")
-    >>> dp = accessor.load()
-
-    >>> # Download from URL
-    >>> accessor = DataAccessor(data_source="dea_energy_storage", version="v1.0")
-    >>> dp = accessor.download("https://example.com/data")
+    data_path : pathlib.Path, optional
+        The path to the data source directory. If not provided, the default
+        path will be used.
 
     """
 
-    data_source: Annotated[
-        str, pydantic.Field(description="The name of the data source.")
-    ]
+    data_source: Annotated[str, Field(description="The name of the data source.")]
     version: Annotated[
-        str | None, pydantic.Field(description="The version of the data source.")
+        str | None, Field(description="The version of the data source.")
     ] = None
+    data_path: Annotated[
+        pathlib.Path,
+        Field(
+            description="The base directory path where data sources are located.",
+        ),
+    ] = pathlib.Path(path_cwd, "src", "technologydata", "parsers")
+
+    @staticmethod
+    def ensure_path_exists(input_data_path: pathlib.Path) -> None:
+        """
+        Ensure the provided data directory exists, creating it if necessary.
+
+        Creates the data directory and any parent directories as needed. If the
+        directory already exists, no action is taken.
+
+        Parameters
+        ----------
+        input_data_path : pathlib.Path
+             The base directory path where data sources are located.
+
+        Returns
+        -------
+        None
+
+        Notes
+        -----
+        This method uses `mkdir(parents=True, exist_ok=True)` to safely create
+        the directory structure without raising an error if the directory
+        already exists.
+
+        """
+        if not input_data_path.is_dir():
+            input_data_path.mkdir(parents=True, exist_ok=True)
 
     @field_validator("data_source", mode="before")
     @classmethod
@@ -129,11 +153,10 @@ class DataAccessor(pydantic.BaseModel):
             If the specified version is not found. The user is notified of  the latest available version.
 
         """
-        source_path = pathlib.Path(
-            path_cwd, "src", "technologydata", "parsers", self.data_source
-        )
-        if not source_path.is_dir():
-            raise FileNotFoundError(f"Data source directory not found: {source_path}")
+        # Ensure the data path exists before attempting to load data
+        DataAccessor.ensure_path_exists(self.data_path)
+
+        source_path = pathlib.Path(self.data_path, self.data_source)
 
         source_path_list = [p.name for p in source_path.iterdir() if p.is_dir()]
 
@@ -275,15 +298,12 @@ class DataAccessor(pydantic.BaseModel):
             )
 
         # Read the raw data
-        input_data_path = pathlib.Path(
-            path_cwd,
-            "src",
-            "technologydata",
-            "parsers",
+        input_path = pathlib.Path(
+            self.data_path,
             "raw",
-            input_file_name,
         )
-
+        DataAccessor.ensure_path_exists(input_path)
+        input_data_path = pathlib.Path(input_path, input_file_name)
         logger.info(f"Input data path set to: {input_data_path}")
 
         if self.version not in parser.get_supported_versions():

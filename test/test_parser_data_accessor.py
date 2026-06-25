@@ -107,6 +107,13 @@ class TestDataAccessor:
         ):
             DataAccessor(data_source="dea_energy_storage", version="v11").load()
 
+    def test_ensure_path_exists_is_idempotent(self, tmp_path: pathlib.Path) -> None:
+        """Test ensure_path_exists is idempotent."""
+        target = pathlib.Path(tmp_path, "test_directory")
+        DataAccessor.ensure_path_exists(target)
+        assert target.exists()
+        assert target.is_dir()
+
     def test_download(self) -> None:
         """Test downloading a DataPackage from URL by mocking HTTP requests."""
         # Read the test JSON files
