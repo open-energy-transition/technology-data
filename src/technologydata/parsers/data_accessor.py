@@ -8,10 +8,12 @@ import logging
 import pathlib
 import re
 import sys
+import tempfile
 from enum import Enum
 from typing import Annotated
 
 import pydantic
+import requests
 from packaging.version import parse
 from pydantic import field_validator
 
@@ -37,7 +39,8 @@ class DataAccessor(pydantic.BaseModel):
 
     This class provides a standardized interface to locate and load technology
     datasets from predefined data sources. It can either load a specific version
-    or automatically determine and load the latest available version.
+    from local storage, automatically determine and load the latest available
+    version, or download data from a remote URL.
 
     Attributes
     ----------
@@ -48,6 +51,16 @@ class DataAccessor(pydantic.BaseModel):
         The specific version string of the data to load (e.g., "v1.0.0").
         If not provided, the latest version will be automatically determined
         and used. Default is None.
+
+    Examples
+    --------
+    >>> # Load from local storage
+    >>> accessor = DataAccessor(data_source="dea_energy_storage", version="v10")
+    >>> dp = accessor.load()
+
+    >>> # Download from URL
+    >>> accessor = DataAccessor(data_source="dea_energy_storage", version="v1.0")
+    >>> dp = accessor.download("https://example.com/data")
 
     """
 
@@ -138,6 +151,81 @@ class DataAccessor(pydantic.BaseModel):
         data_path = pathlib.Path(source_path, version)
         dp = DataPackage.from_json(self.data_source, self.version, data_path)
         return dp
+
+    def download(self, base_url: str) -> DataPackage:
+        """
+        Download and load technology data from a remote URL.
+
+        This method downloads technologies.json and sources.json files from the
+        specified base URL and loads them into a DataPackage instance. The sources.json
+        file is optional; if not found, sources will be extracted from technologies.
+
+        Parameters
+        ----------
+        base_url : str
+            Base URL where the JSON files are hosted. The method will attempt to download
+            technologies.json and sources.json from this location. The URL should point
+            to the directory containing these files.
+
+        Returns
+        -------
+        DataPackage
+            An instance of DataPackage initialized with the downloaded data.
+
+        Raises
+        ------
+        requests.HTTPError
+            If the HTTP request to download technologies.json fails.
+        requests.ConnectionError
+            If there is a network connectivity issue.
+
+        Examples
+        --------
+        >>> accessor = DataAccessor(data_source="dea_energy_storage", version="v1.0")
+        >>> dp = accessor.download("https://example.com/data")
+
+        """
+        # Ensure base_url ends with /
+        if not base_url.endswith("/"):
+            base_url += "/"
+
+        # Create a temporary directory to store downloaded files
+        with tempfile.TemporaryDirectory() as temp_dir:
+            temp_path = pathlib.Path(temp_dir)
+
+            # Download technologies.json
+            technologies_url = f"{base_url}technologies.json"
+            technologies_path = temp_path / "technologies.json"
+
+            logger.info(f"Downloading technologies.json from {technologies_url}")
+            response = requests.get(technologies_url, timeout=30)
+            response.raise_for_status()
+
+            with open(technologies_path, "w", encoding="utf-8") as f:
+                f.write(response.text)
+
+            # Download sources.json (optional)
+            sources_url = f"{base_url}sources.json"
+            sources_path = temp_path / "sources.json"
+
+            try:
+                logger.info(f"Downloading sources.json from {sources_url}")
+                response = requests.get(sources_url, timeout=30)
+                response.raise_for_status()
+
+                with open(sources_path, "w", encoding="utf-8") as f:
+                    f.write(response.text)
+            except requests.HTTPError:
+                logger.warning(
+                    f"sources.json not found at {sources_url}, will extract from technologies"
+                )
+
+            # Load using DataPackage.from_json
+            data_package = DataPackage.from_json(
+                name=self.data_source, version=self.version, path_to_folder=temp_path
+            )
+
+            return data_package
 
     def parse(
         self,
