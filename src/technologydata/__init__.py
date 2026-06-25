@@ -5,6 +5,8 @@
 """technologydata: A package for managing and analyzing technology data used for energy system models."""
 
 from technologydata.datapackage import DataPackage
+from technologydata.equations import Equation, EquationRegistry
+from technologydata.default_equations import equation_registry  # also registers built-in equations
 from technologydata.parameter import Parameter
 from technologydata.source import Source
 from technologydata.source_collection import SourceCollection
@@ -20,12 +22,16 @@ from technologydata.utils.units import (
     hvreg,
     ureg,
 )
+import technologydata.default_equations as _default_equations  # noqa: F401
 
 __all__ = [
     "Commons",
     "DateFormatEnum",
     "DataPackage",
     "FileExtensionEnum",
+    "Equation",
+    "EquationRegistry",
+    "equation_registry",
     "Parameter",
     "Source",
     "SourceCollection",

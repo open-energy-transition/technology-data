@@ -1,3 +1,3 @@
-::: technologydata.formulas.FormulaLink
+::: technologydata.formulas.Equation
 
-::: technologydata.formulas.FormulaLinkRegistry
+::: technologydata.formulas.EquationRegistry

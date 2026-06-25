@@ -72,7 +72,7 @@ print(tech.parameters["lifetime"])  # ≈ 20.0 years
 ### Deriving a single parameter
 
 The functionality is not strictly tied to `Technology` objects.
-The formula system is tied to `Parameter` objects, of which you can pass one or multiple for calculation to the function `formula_registry.calculate`:
+The formula system is tied to `Parameter` objects, of which you can pass one or multiple for calculation to the function `equation_registry.calculate`:
 
 ```python
 params = {
@@ -80,7 +80,7 @@ params = {
     "wacc":                td.Parameter(magnitude=0.07,   units="dimensionless"),
     "lifetime":            td.Parameter(magnitude=20.0,   units="year"),
 }
-eac = td.formula_registry.calculate("eac", params)
+eac = td.equation_registry.calculate("eac", params)
 ```
 
 The result of the calculation is a new `Parameter` object with `magnitude`, `units`, and `provenance` (set to the
@@ -89,11 +89,11 @@ formula name that produced it).
 ### Checking whether a parameter can be derived
 
 The system automatically checks whether sufficient inputs are present to calculate the requested parameter and raises a `ValueError` if not.
-You can manually check whether a parameter can be derived with `formula_registry.can_calculate`:
+You can manually check whether a parameter can be derived with `equation_registry.can_calculate`:
 
 ```python
-td.formula_registry.can_calculate("eac", params)   # True - all inputs present
-td.formula_registry.can_calculate("wacc", params)  # False - WACC is transcendental
+td.equation_registry.can_calculate("eac", params)   # True - all inputs present
+td.equation_registry.can_calculate("wacc", params)  # False - WACC is transcendental
 ```
 
 ### Integration with `Technology` objects
@@ -146,7 +146,7 @@ calculations within the same call, e.g. the automatic calculation above calculat
 Sometimes you may have multiple formulas available that can calculate the same parameter.
 The registry chooses in this order:
 
-1. An explicitly requested formula via `formula_name=`.
+1. An explicitly requested formula via `equation_name=`.
 2. The first applicable formula marked `default=True`.
 3. The first other applicable formula in registration order.
 
@@ -158,16 +158,16 @@ and which of its inputs are missing.
 
 ### Selecting a specific formula
 
-You can specify a specific formula to use with `formula_name=`:
+You can specify a specific formula to use with `equation_name=`:
 
 ```python
 # Use the default formula (i.e. eac_annuity)
-eac = td.formula_registry.calculate("eac", params)
+eac = td.equation_registry.calculate("eac", params)
 
 # Specify a specific formula to use (e.g. eac_via_annuity_factor)
 tech_alt = tech.calculate_parameters(
     targets=["eac"],
-    formula_names={"eac": "eac_via_annuity_factor"},
+    equation_names={"eac": "eac_via_annuity_factor"},
 )
 ```
 
@@ -185,7 +185,7 @@ params_bad = {
     "lifetime":            td.Parameter(magnitude=20.0,   units="year"),
     "eac":                 td.Parameter(magnitude=94.4,   units="USD_2022/kW/year"),
 }
-td.formula_registry.calculate("specific_investment", params_bad)
+td.equation_registry.calculate("specific_investment", params_bad)
 # ValueError: Currency mismatch in formula 'eac_annuity':
 #   'eac' uses USD_2022, 'specific_investment' uses USD_2020.
 #   Harmonise all currency parameters to the same currency and year
@@ -202,39 +202,31 @@ If all inputs use `EUR_2022`, the calculated parameter will also be in `EUR_2022
 You can add your own formulas to the system and use for calculations.
 There are two options available:
 
-1. Extend the built-in registry `formula_registry` directly, which makes your formula available globally.
-2. Create a separate `FormulaLinkRegistry` instance, which keeps your formulas isolated from the built-in ones.
+1. Extend the built-in registry `equation_registry` directly, which makes your formula available globally.
+2. Create a separate `EquationRegistry` instance, which keeps your formulas isolated from the built-in ones.
    This also allows you to have multiple isolated registries with different formulas in the same program.
 
 ```python
-from technologydata.formulas import FormulaLinkRegistry, formula_registry
-from technologydata.parameter import Parameter
+import technologydata as td
 
 # Option 1: extend the global built-in registry
-formula_registry.register(
+td.equation_registry.register(
     name="lcoe_simplified",
     parameters=["lcoe", "eac", "fixed_om", "full_load_hours"],
     expr_str="lcoe - (eac + fixed_om) / full_load_hours",
-    units={
-        "lcoe":            "/MWh",
-        "eac":             "/kW/year",
-        "fixed_om":        "/kW/year",
-        "full_load_hours": "hour/year",
-    },
 )
 
 # Option 2: isolated registry
-my_reg = FormulaLinkRegistry()
+my_reg = td.EquationRegistry()
 my_reg.register(
     name="my_formula",
     parameters=["x", "y", "z"],
     expr_str="x - y * z",
-    units={"x": "dimensionless", "y": "dimensionless", "z": "dimensionless"},
     default=True,
 )
 result = my_reg.calculate("x", {
-    "y": Parameter(magnitude=3.0, units="dimensionless"),
-    "z": Parameter(magnitude=4.0, units="dimensionless"),
+    "y": td.Parameter(magnitude=3.0, units="dimensionless"),
+    "z": td.Parameter(magnitude=4.0, units="dimensionless"),
 })
 print(result.magnitude)  # 12.0
 ```
@@ -245,15 +237,15 @@ print(result.magnitude)  # 12.0
 
 ### How it works
 
-A [`FormulaLink`][technologydata.formulas.FormulaLink] stores a **SymPy expression string** set to zero (e.g. `"eac - sic*wacc/(1-(1+wacc)**(-lifetime))"`) along with the list of participant parameter names and unit metadata.
+A [`Equation`][technologydata.formulas.Equation] stores a **SymPy expression string** set to zero (e.g. `"eac - sic*wacc/(1-(1+wacc)**(-lifetime))"`) along with the list of participant parameter names.
 When asked to solve for a target, it:
 
 1. Maps each parameter name to a positional SymPy symbol (`_p0`, `_p1`, ...) so that names with spaces or other non-identifier characters are supported.
-2. Applies a **symbolic-first** strategy: solves the expression with abstract symbols, then substitutes the numeric values into the resulting formula. This is significantly faster than working with floating-point numbers directly.
-3. Falls back to **numeric substitution** if the symbolic step yields no result - substitutes the known values first, then calls the solver on the simplified expression.
+2. Applies a **symbolic-first** strategy: solves the expression with abstract symbols and produces a callable via `sympy.lambdify`. The known parameters are then passed as `pint` Quantity objects, so units are propagated automatically through Python's arithmetic operators.
+3. Falls back to **numeric substitution** if the symbolic step yields no result — substitutes the known values first, then calls the solver on the simplified expression.
 
-The [`FormulaLinkRegistry`][technologydata.formulas.FormulaLinkRegistry] indexes each
-`FormulaLink` under every parameter it involves.
+The [`EquationRegistry`][technologydata.formulas.EquationRegistry] indexes each
+`Equation` under every parameter it involves.
 
 ### Formula selection
 
@@ -261,24 +253,20 @@ When multiple formulas are registered for the same parameter, the registry selec
 
 | Priority | Condition |
 |----------|-----------|
-| 1 | A specific formula name was requested via `formula_name=` |
+| 1 | A specific formula name was requested via `equation_name=` |
 | 2 | Default-flagged formula (`default=True`) whose inputs are all present |
 | 3 | First other registered formula whose inputs are all present in the order they were registered |
 
-### Units convention # TODO this is weird. Why is it necessary? Can't pint handle the units automatically?
+### Units
 
-Formulas are registered with a `units` dictionary that holds the **non-currency portion** of each parameter's unit string:
+Units are propagated automatically using the `pint` Quantity objects that each `Parameter` carries.
+The lambdified SymPy solution is evaluated with these Quantities as inputs, so the result inherits consistent units without any annotation on the formula itself.
 
-| Pattern | Meaning | Example |
-|---------|---------|---------|
-| Starts with `"/"` | Currency-bearing; currency is prepended from inputs | `"/kW/year"` → `"USD_2020/kW/year"` |
-| Empty string `""` | Currency only (e.g. absolute monetary amount) | `""` → `"USD_2020"` |
-| Does not start with `"/"` | Purely physical or dimensionless; used verbatim | `"year"`, `"dimensionless"` |
+There are two limitations to be aware of:
 
-!!! note "Physical unit consistency"
-    The formula system does not perform dimensional analysis across mixed
-    physical units. The registered unit string defines what the result *label*
-    should be, not a conversion factor.
+- **Exponent parameters**: Parameters that appear only in exponent positions (e.g. `lifetime` in `(1+wacc)**(-lifetime)`) are passed as plain magnitudes. Raising a Quantity to a dimensioned power is physically undefined, and in all real-world formulas such a parameter is a dimensionless count. This means formulas where the output dimension (e.g. `/year`) would only come from an exponent-position parameter — such as `eac_annuity` — will not carry that dimension in the result. Use `eac_simple` (which divides by `lifetime` directly) if the `/year` unit on EAC is important.
+
+- **Transcendental functions**: When the SymPy solution contains a transcendental function (e.g. `log`) applied to a Quantity with physical units, evaluation falls back to magnitude-only, and the result will have `units=None`.
 
 ### Limitations
 

@@ -90,23 +90,56 @@ class Technology(pydantic.BaseModel):
         missing = [p for p in required if p not in self.parameters]
         return len(missing) == 0
 
-    def calculate_parameters(self, parameters: Any | None = None) -> Self:
+    def calculate_parameters(
+        self,
+        targets: str | list[str] | None = None,
+        equation_names: dict[str, str] | None = None,
+    ) -> Self:
         """
-        Calculate missing or derived parameters.
+        Derive missing parameters using registered equations.
 
         Parameters
         ----------
-        parameters : Optional[Any]
-            List of parameter names to calculate, or "<missing>" for all missing.
+        targets : str or list of str, optional
+            Parameter names to derive. If ``None``, all parameters that can be
+            derived from currently available parameters (and are not already
+            present) are calculated automatically.
+        equation_names : dict of str to str, optional
+            Mapping of parameter name to equation name, used to override the
+            default equation for specific targets
+            (e.g. ``{"eac": "eac_simple"}``).
 
         Returns
         -------
         Technology
-            A new Technology object with calculated parameters.
+            A new Technology instance with the derived parameters added.
 
+        Raises
+        ------
+        ValueError
+            If a requested target has no applicable equation, required parameters
+            are missing, or input currencies are inconsistent.
         """
-        # Placeholder: implement calculation logic as needed
-        return self
+        from technologydata.default_equations import equation_registry
+
+        new_params: dict[str, Parameter] = dict(self.parameters)
+
+        if targets is None:
+            targets = [
+                p
+                for p in equation_registry._formulas
+                if p not in new_params and equation_registry.can_calculate(p, new_params)
+            ]
+        elif isinstance(targets, str):
+            targets = [targets]
+
+        for target in targets:
+            equation_name = equation_names.get(target) if equation_names else None
+            new_params[target] = equation_registry.calculate(
+                target, new_params, equation_name
+            )
+
+        return self.model_copy(update={"parameters": new_params})
 
     def to_currency(
         self,
