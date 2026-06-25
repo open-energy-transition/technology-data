@@ -30,11 +30,9 @@ falls back to magnitudes and the result is returned with ``units=None``.
 
 Currency consistency check
 --------------------------
-Before any computation, all input parameters that carry a currency unit
-(detected via ``extract_currency_units``) must share the same currency *and*
-year (e.g. ``USD_2020``). If they do not, a ``ValueError`` is raised
-immediately. Harmonising with ``Parameter.to_currency()`` is left to the
-caller.
+Before any computation, only the parameters required by the selected equation
+are checked. Among those, parameters that carry a currency unit must share the
+same currency and currency year. If they do not, a ``ValueError`` is raised.
 
 Solving strategy
 ----------------
@@ -172,32 +170,6 @@ class Equation:
             return False
         return all(p in available for p in self.parameters if p != target)
 
-    def _check_currency_consistency(self, params: dict[str, Parameter]) -> None:
-        """
-        Validate that all currency-bearing input parameters share the same currency.
-
-        Raises
-        ------
-        ValueError
-            If two or more inputs carry different currencies or currency years.
-        """
-        currencies: dict[str, str] = {}
-        for name, param in params.items():
-            if param.units is None:
-                continue
-            found = extract_currency_units(param.units)
-            if found:
-                currencies[name] = found[0]
-
-        unique = set(currencies.values())
-        if len(unique) > 1:
-            details = ", ".join(f"'{n}' uses {c}" for n, c in sorted(currencies.items()))
-            raise ValueError(
-                f"Currency mismatch in formula '{self.name}': {details}. "
-                "Harmonise all currency parameters to the same currency and year "
-                "(e.g. call .to_currency('USD_2020', country=...)) before using this formula."
-            )
-
     def solve_for(self, target: str, params: dict[str, Parameter]) -> Parameter:
         """
         Solve the formula for *target* given the remaining parameters.
@@ -227,9 +199,6 @@ class Equation:
         """
         from technologydata.parameter import Parameter as Param
 
-        # Fast-fail before the expensive SymPy computation
-        self._check_currency_consistency(params)
-
         # Map each parameter to a positional symbol (_p0, _p1, …) so that
         # parameter names with spaces or other non-identifier characters work
         # transparently. Replace longest names first to avoid partial matches
@@ -241,8 +210,18 @@ class Equation:
             safe_expr = safe_expr.replace(p, f"_p{param_idx[p]}")
         expr = sp.sympify(safe_expr)
 
-        input_params = [p for p in params if p in syms]
+        # Only parameters required for solving this target are relevant.
+        input_params = [p for p in self.parameters if p != target and p in params]
         input_syms = [syms[p] for p in input_params]
+
+        # Fast-fail on unit compatibility:
+        # Only allow parameters with the same currency and currency year to be used together
+        currency_inputs = [
+            p for p in input_params if extract_currency_units(params[p]._pint_quantity.units)
+        ]
+        for i, reference in enumerate(currency_inputs):
+            for other in currency_inputs[i + 1 :]:
+                params[reference]._check_parameter_compatibility(params[other])
 
         # Step 1: solve symbolically, evaluate via pint arithmetic.
         # Using lambdify + pint Quantities propagates units automatically.

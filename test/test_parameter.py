@@ -401,7 +401,7 @@ class TestParameter:
     def test_parameter_currency_compatibility(self) -> None:
         """Test that arithmetic is permitted for matching currencies and years."""
         param_kw = technologydata.Parameter(magnitude=1, units="USD_2020/kW")
-        param_mw = technologydata.Parameter(magnitude=0.001, units="USD_2020/MW")
+        param_mw = technologydata.Parameter(magnitude=1000, units="USD_2020/MW")
 
         # Both operands are equal after unit conversion and use the same currency-year.
         added = param_kw + param_mw

@@ -82,28 +82,28 @@ class TestCurrencyConsistency:
     def _link(self) -> Equation:
         return Equation(
             name="test",
-            parameters=["a", "b"],
-            expr_str="a - b",
+            parameters=["a", "b", "c"],
+            expr_str="a - b - c",
         )
 
-    def test_consistent_currency_year_passes(self) -> None:
+    def test_required_matching_currency_years_pass(self) -> None:
         params = {
-            "a": Parameter(magnitude=1.0, units="USD_2020/kW"),
             "b": Parameter(magnitude=1.0, units="USD_2020/kW"),
+            "c": Parameter(magnitude=2.0, units="USD_2020/kW"),
         }
-        # Should not raise
-        self._link()._check_currency_consistency(params)
+        result = self._link().solve_for("a", params)
+        assert result.magnitude == pytest.approx(3.0)
+        assert "USD_2020" in (result.units or "")
 
-    def test_no_currency_params_does_not_raise(self) -> None:
+    def test_no_currency_required_params_does_not_raise(self) -> None:
         params = {
-            "a": Parameter(magnitude=1.0, units="dimensionless"),
             "b": Parameter(magnitude=0.5, units="year"),
+            "c": Parameter(magnitude=0.5, units="year"),
         }
-        # Should not raise
-        self._link()._check_currency_consistency(params)
+        result = self._link().solve_for("a", params)
+        assert result.magnitude == pytest.approx(1.0)
 
-    def test_mixed_with_non_currency_param_passes(self) -> None:
-        # One currency-bearing, one plain — should not raise
+    def test_mixed_with_non_currency_required_param_passes(self) -> None:
         link = Equation(
             name="test",
             parameters=["a", "b", "c"],
@@ -113,31 +113,38 @@ class TestCurrencyConsistency:
             "b": Parameter(magnitude=1000.0, units="USD_2020/kW"),
             "c": Parameter(magnitude=0.07, units="dimensionless"),
         }
-        link._check_currency_consistency(params)
+        result = link.solve_for("a", params)
+        assert result.magnitude == pytest.approx(70.0)
+        assert "USD_2020" in (result.units or "")
 
-    def test_mismatched_currency_years_raises(self) -> None:
+    def test_required_mismatched_currency_years_raises(self) -> None:
         params = {
-            "a": Parameter(magnitude=1.0, units="USD_2020/kW"),
-            "b": Parameter(magnitude=1.0, units="USD_2022/kW"),
+            "b": Parameter(magnitude=1.0, units="USD_2020/kW"),
+            "c": Parameter(magnitude=1.0, units="USD_2022/kW"),
         }
-        with pytest.raises(ValueError, match="Currency mismatch"):
-            self._link()._check_currency_consistency(params)
+        with pytest.raises(ValueError, match="different currencies or currency years"):
+            self._link().solve_for("a", params)
 
-    def test_mismatched_currencies_raises(self) -> None:
+    def test_required_mismatched_currencies_raises(self) -> None:
         params = {
-            "a": Parameter(magnitude=1.0, units="USD_2020/kW"),
-            "b": Parameter(magnitude=1.0, units="EUR_2020/kW"),
+            "b": Parameter(magnitude=1.0, units="USD_2020/kW"),
+            "c": Parameter(magnitude=1.0, units="EUR_2020/kW"),
         }
-        with pytest.raises(ValueError, match="Currency mismatch"):
-            self._link()._check_currency_consistency(params)
+        with pytest.raises(ValueError, match="different currencies or currency years"):
+            self._link().solve_for("a", params)
 
-    def test_error_message_suggests_to_currency(self) -> None:
+    def test_extra_non_required_currency_param_is_ignored(self) -> None:
         params = {
-            "a": Parameter(magnitude=1.0, units="USD_2020/kW"),
-            "b": Parameter(magnitude=1.0, units="EUR_2020/kW"),
+            "b": Parameter(magnitude=2.0, units="USD_2020/kW"),
+            # `x` is unrelated to this equation and should not be validated.
+            "x": Parameter(magnitude=1.0, units="EUR_2020/kW"),
         }
-        with pytest.raises(ValueError, match="to_currency"):
-            self._link()._check_currency_consistency(params)
+        result = Equation(
+            name="test",
+            parameters=["a", "b"],
+            expr_str="a - b",
+        ).solve_for("a", params)
+        assert result.magnitude == pytest.approx(2.0)
 
 
 # ---------------------------------------------------------------------------
@@ -625,13 +632,14 @@ class TestTechnologyCalculateParameters:
             _EAC_SIMPLE_EXPECTED, rel=1e-6
         )
 
-    def test_currency_mismatch_raises(self) -> None:
+    def test_unrelated_currency_mismatch_is_ignored(self) -> None:
         params = {
             "specific_investment": Parameter(magnitude=1000.0, units="USD_2020/kW"),
             "wacc": Parameter(magnitude=0.07, units="dimensionless"),
             "lifetime": Parameter(magnitude=20.0, units="year"),
-            # Different currency year on a parameter that shares the formula
-            "eac": Parameter(magnitude=94.0, units="USD_2022/kW/year"),
+            # Different currency year on a parameter that is not required by
+            # the selected equation and should therefore be ignored.
+            "total_investment_cost": Parameter(magnitude=2000.0, units="USD_2022/kW"),
         }
         tech = Technology(
             name="electrolyzer",
@@ -641,8 +649,12 @@ class TestTechnologyCalculateParameters:
             year=2030,
             parameters=params,
         )
-        with pytest.raises(ValueError, match="Currency mismatch"):
-            tech.calculate_parameters(targets=["specific_investment"])
+        result = tech.calculate_parameters(
+            targets=["eac"], equation_names={"eac": "eac_annuity"}
+        )
+        assert result.parameters["eac"].magnitude == pytest.approx(
+            _EAC_ANNUITY_EXPECTED, rel=1e-6
+        )
 
     def test_chained_calculation(self) -> None:
         """Derive annuity_factor first, then eac — both in a single call."""
