@@ -5,11 +5,14 @@
 """Test the DataAccessor class."""
 
 import pathlib
-from unittest.mock import MagicMock, patch
+from collections.abc import Callable
+from typing import Any
 
 import pytest
 
 from technologydata.parsers.data_accessor import DataAccessor, DataSourceName
+
+path_cwd = pathlib.Path.cwd()
 
 
 class TestDataAccessor:
@@ -114,57 +117,34 @@ class TestDataAccessor:
         assert target.exists()
         assert target.is_dir()
 
-    def test_download(self) -> None:
+    def test_download(
+        self, load_json: Callable[[pathlib.Path], Any], tmp_path: pathlib.Path
+    ) -> None:
         """Test downloading a DataPackage from URL by mocking HTTP requests."""
-        # Read the test JSON files
-        path_cwd = pathlib.Path.cwd()
-        technologies_file = pathlib.Path(
-            path_cwd,
-            "test",
-            "test_data",
-            "solar_photovoltaics_example",
-            "technologies.json",
+        base_url = (
+            "https://raw.githubusercontent.com/open-energy-transition/technology-data/"
         )
-        sources_file = pathlib.Path(
-            path_cwd,
-            "test",
-            "test_data",
-            "solar_photovoltaics_example",
-            "sources.json",
+        branch = "prototype-2/"
+        target_url = "src/technologydata/parsers/manual_input_usa/v0.13.4"
+        url = base_url + branch + target_url
+        data_accessor = DataAccessor(
+            data_source="manual_input_usa", version="v0.13.4", data_path=tmp_path
         )
-
-        with open(technologies_file, encoding="utf-8") as f:
-            technologies_json = f.read()
-
-        with open(sources_file, encoding="utf-8") as f:
-            sources_json = f.read()
-
-        # Mock the requests.get function
-        def mock_get(url: str, timeout: int) -> MagicMock:  # noqa: ANN401, ARG001
-            mock_response = MagicMock()
-            mock_response.raise_for_status = MagicMock()
-
-            if url.endswith("technologies.json"):
-                mock_response.text = technologies_json
-            elif url.endswith("sources.json"):
-                mock_response.text = sources_json
-            else:
-                mock_response.raise_for_status.side_effect = Exception("Not found")
-
-            return mock_response
-
-        # Test with mocked requests
-        with patch(
-            "technologydata.parsers.data_accessor.requests.get", side_effect=mock_get
-        ):
-            data_accessor = DataAccessor(
-                data_source="dea_energy_storage", version="v1.0"
-            )
-            data_package = data_accessor.download("https://example.com/data")
-
-            assert data_package is not None
-            assert data_package.name == "dea_energy_storage"
-            assert data_package.version == "v1.0"
-            assert data_package.technologies is not None
-            assert data_package.sources is not None
-            assert len(data_package.sources) == 2
+        dp = data_accessor.download(url)
+        assert dp is not None
+        assert dp.sources is not None
+        assert dp.technologies is not None
+        assert dp.name == "manual_input_usa"
+        assert dp.version == "v0.13.4"
+        assert len(dp.sources) == 1
+        assert len(dp.technologies) == 85
+        sources_reference_path = pathlib.Path(path_cwd, target_url, "sources.json")
+        technologies_reference_path = pathlib.Path(
+            path_cwd, target_url, "technologies.json"
+        )
+        sources_reference = load_json(sources_reference_path)
+        technologies_reference = load_json(technologies_reference_path)
+        sources_download = load_json(pathlib.Path(tmp_path, "sources.json"))
+        technologies_download = load_json(pathlib.Path(tmp_path, "technologies.json"))
+        assert sources_reference == sources_download
+        assert technologies_reference == technologies_download
