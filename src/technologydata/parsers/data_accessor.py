@@ -39,7 +39,7 @@ class DataAccessor(pydantic.BaseModel):
 
     This class provides a standardized interface to locate and load technology
     datasets from predefined data sources. It can either load a specific version
-    from local storage, automatically determine and load the latest available
+    from the local storage, automatically determining and loading the latest available
     version, or download data from a remote URL.
 
     Attributes
@@ -212,43 +212,40 @@ class DataAccessor(pydantic.BaseModel):
         if not base_url.endswith("/"):
             base_url += "/"
 
-        # Create a temporary directory to store downloaded files
-        with tempfile.TemporaryDirectory() as temp_dir:
-            temp_path = pathlib.Path(temp_dir)
+        # Download technologies.json
+        technologies_url = f"{base_url}technologies.json"
+        sources_url = f"{base_url}sources.json"
+        technologies_path = pathlib.Path(self.data_path, "technologies.json")
+        sources_path = pathlib.Path(self.data_path, "sources.json")
 
-            # Download technologies.json
-            technologies_url = f"{base_url}technologies.json"
-            technologies_path = temp_path / "technologies.json"
-
+        try:
             logger.info(f"Downloading technologies.json from {technologies_url}")
             response = requests.get(technologies_url, timeout=30)
             response.raise_for_status()
 
             with open(technologies_path, "w", encoding="utf-8") as f:
                 f.write(response.text)
+        except requests.HTTPError as e:
+            logger.error(f"Failed to download technologies.json: {e}")
+            raise
 
-            # Download sources.json (optional)
-            sources_url = f"{base_url}sources.json"
-            sources_path = temp_path / "sources.json"
+        try:
+            logger.info(f"Downloading sources.json from {sources_url}")
+            response = requests.get(sources_url, timeout=30)
+            response.raise_for_status()
 
-            try:
-                logger.info(f"Downloading sources.json from {sources_url}")
-                response = requests.get(sources_url, timeout=30)
-                response.raise_for_status()
+            with open(sources_path, "w", encoding="utf-8") as f:
+                f.write(response.text)
+        except requests.HTTPError as e:
+            logger.error(f"Failed to download sources.json: {e}")
+            raise
 
-                with open(sources_path, "w", encoding="utf-8") as f:
-                    f.write(response.text)
-            except requests.HTTPError:
-                logger.warning(
-                    f"sources.json not found at {sources_url}, will extract from technologies"
-                )
+        # Load using DataPackage.from_json
+        data_package = DataPackage.from_json(
+            name=self.data_source, version=self.version, path_to_folder=self.data_path
+        )
 
-            # Load using DataPackage.from_json
-            data_package = DataPackage.from_json(
-                name=self.data_source, version=self.version, path_to_folder=temp_path
-            )
-
-            return data_package
+        return data_package
 
     def parse(
         self,
