@@ -4,7 +4,7 @@ SPDX-PackageSupplier = "technologydata contributors"
 SPDX-PackageDownloadLocation = "https://github.com/open-energy-transition/technology-data"
 
 [[annotations]]
-path = ["uv.lock", "*.yaml", "docs/**", "*.md", "*.in", ".claude/settings.local.json"]
+path = ["uv.lock", "*.yaml", "docs/**", "*.md", "*.in"]
 SPDX-FileCopyrightText = "technologydata contributors"
 SPDX-License-Identifier = "MIT"
 
