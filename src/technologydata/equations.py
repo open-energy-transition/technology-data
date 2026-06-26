@@ -214,15 +214,6 @@ class Equation:
         input_params = [p for p in self.parameters if p != target and p in params]
         input_syms = [syms[p] for p in input_params]
 
-        # Fast-fail on unit compatibility:
-        # Only allow parameters with the same currency and currency year to be used together
-        currency_inputs = [
-            p for p in input_params if extract_currency_units(params[p]._pint_quantity.units)
-        ]
-        for i, reference in enumerate(currency_inputs):
-            for other in currency_inputs[i + 1 :]:
-                params[reference]._check_parameter_compatibility(params[other])
-
         # Step 1: solve symbolically, evaluate via pint arithmetic.
         # Using lambdify + pint Quantities propagates units automatically.
         # Symbolic solving is significantly faster than working with floats.

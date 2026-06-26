@@ -117,22 +117,6 @@ class TestCurrencyConsistency:
         assert result.magnitude == pytest.approx(70.0)
         assert "USD_2020" in (result.units or "")
 
-    def test_required_mismatched_currency_years_raises(self) -> None:
-        params = {
-            "b": Parameter(magnitude=1.0, units="USD_2020/kW"),
-            "c": Parameter(magnitude=1.0, units="USD_2022/kW"),
-        }
-        with pytest.raises(ValueError, match="different currencies or currency years"):
-            self._link().solve_for("a", params)
-
-    def test_required_mismatched_currencies_raises(self) -> None:
-        params = {
-            "b": Parameter(magnitude=1.0, units="USD_2020/kW"),
-            "c": Parameter(magnitude=1.0, units="EUR_2020/kW"),
-        }
-        with pytest.raises(ValueError, match="different currencies or currency years"):
-            self._link().solve_for("a", params)
-
     def test_extra_non_required_currency_param_is_ignored(self) -> None:
         params = {
             "b": Parameter(magnitude=2.0, units="USD_2020/kW"),
