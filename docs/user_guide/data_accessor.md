@@ -18,9 +18,10 @@ It is designed to work with a specific directory structure where datasets are or
 - **Data Source Selection**: Easily specify which dataset to load using the `DataSourceName` enumeration.
 - **Version Management**: Load a specific version of a dataset or automatically detect and use the latest available version.
 - **Standardized Loading**: Loads a `DataPackage` from a versioned folder, which is expected to contain `technologies.json` and optionally `sources.json`.
+- **Remote Data Download**: Download and load technology data directly from remote URLs using the `download()` method.
 - **Parsing Interface**: Provides a `parse()` method to run the appropriate parser for a given data source and version to generate the data files.
 - **Error Handling**: Raises `FileNotFoundError` if the specified data source or version directories cannot be found, and `ValueError` for unsupported sources or versions.
-- **Seamless Integration**: The `load()` method returns a `DataPackage` object, ready for use with other components of the `technologydata` library.
+- **Seamless Integration**: The `load()` and `download()` methods return a `DataPackage` object, ready for use with other components of the `technologydata` library.
 - **Path Safety Helper**: Provides `ensure_path_exists()` to create missing directories (including parents) safely.
 
 ## Usage Examples
@@ -60,6 +61,37 @@ dp_v1 = accessor_v1.load()
 print(type(dp_v1))
 # <class 'technologydata.datapackage.DataPackage'>
 ```
+
+### Downloading Data from Remote URLs
+
+The `download()` method enables you to download and load technology data directly from a remote URL. This is useful when you want to access datasets hosted on external servers without manually downloading files.
+
+```python
+from technologydata.parsers.data_accessor import DataAccessor
+
+# Create an accessor for remote data
+remote_accessor = DataAccessor(
+    data_source="dea_energy_storage",
+    version="v10"
+)
+
+# Download and load data from a remote URL
+base_url = "https://example.com/data/dea_energy_storage/v10/"
+dp_remote = remote_accessor.download(base_url)
+
+# dp_remote is now a DataPackage object containing the downloaded data
+print(type(dp_remote))
+# <class 'technologydata.datapackage.DataPackage'>
+```
+
+The `download()` method will:
+
+1. Download `technologies.json` from the specified base URL
+2. Attempt to download `sources.json` (optional - if not found, sources will be extracted from technologies)
+3. Save the files to the configured data path
+4. Load and return a `DataPackage` object
+
+**Note**: The base URL should point to the directory containing the JSON files. The method will automatically append the file names to construct the full URLs.
 
 ### Parsing Raw Data
 
