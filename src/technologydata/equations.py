@@ -2,7 +2,8 @@
 #
 # SPDX-License-Identifier: MIT
 
-"""Equation and EquationRegistry for bidirectional parameter linking via equations in SymPy.
+"""
+Equation and EquationRegistry for bidirectional parameter linking via equations in SymPy.
 
 Design
 ------
@@ -67,8 +68,6 @@ import signal as _signal
 from typing import TYPE_CHECKING
 
 import sympy as sp
-
-from technologydata.utils.units import extract_currency_units
 
 if TYPE_CHECKING:
     from technologydata.parameter import Parameter
@@ -150,6 +149,7 @@ class Equation:
     default : bool
         If ``True``, this equation is preferred over others that also cover
         the same target when no equation name is specified explicitly.
+
     """
 
     def __init__(
@@ -196,6 +196,7 @@ class Equation:
             If currencies are inconsistent across the inputs, or if SymPy
             cannot find a closed-form analytical solution within the timeout
             budget (see module-level ``_SOLVE_TIMEOUT_SECONDS``).
+
         """
         from technologydata.parameter import Parameter as Param
 
@@ -229,7 +230,8 @@ class Equation:
             f = sp.lambdify(input_syms, sym_sol, modules="math")
 
             input_values = [
-                params[p].magnitude if syms[p] in exponent_syms
+                params[p].magnitude
+                if syms[p] in exponent_syms
                 else params[p]._pint_quantity
                 for p in input_params
             ]
@@ -316,7 +318,7 @@ class EquationRegistry:
         parameters : list of str
             All parameter names that participate in this equation.
         eq_str : str
-            The equation as string representation equal to zero, i.e. LHS of the 
+            The equation as string representation equal to zero, i.e. LHS of the
             equation with $LHS = 0$. The equation must contain the parameter names
             exactly as listed in `parameters` (including any spaces).
         default : bool, optional
@@ -324,8 +326,8 @@ class EquationRegistry:
             when multiple equations can be used to calculate the same parameter.
             If multiple equations are marked as default, the order of registration
             (last registered, first used) is used to determine which equation to use.
-        """
 
+        """
         # Setup the equation
         formula = Equation(
             name=name,
@@ -351,7 +353,7 @@ class EquationRegistry:
         1. The equation explicitly requested by `equation_name`
         2. Default-flagged equations (`default=True`) whose inputs are all present
            in their order of registration.
-        3. Any other registered equation whose inputs are all present in their 
+        3. Any other registered equation whose inputs are all present in their
            order of registration.
 
         Parameters
@@ -369,12 +371,12 @@ class EquationRegistry:
         Raises
         ------
         KeyError
-            If the equation requested by `equation_name` is not registered. 
+            If the equation requested by `equation_name` is not registered.
         ValueError
-            If there is no equation registered that allows for calculation of the 
+            If there is no equation registered that allows for calculation of the
             `target` parameter with the provided `params`.
-        """
 
+        """
         # All possible registered equations for the target parameter
         candidates = self._equations.get(target, [])
 
@@ -382,10 +384,8 @@ class EquationRegistry:
         if not candidates:
             raise ValueError(f"No equation registered for parameter '{target}'.")
 
-
         # Selection by equation_name
         if equation_name is not None:
-
             # Find the requested equation
             named = [f for f in candidates if f.name == equation_name]
             if not named:
@@ -416,8 +416,7 @@ class EquationRegistry:
         )
         raise ValueError(
             f"No equation for parameter '{target}' can be used with the provided parameters.\n"
-            f"Available equations for '{target}' are:\n"
-            + missing_params_in_equations
+            f"Available equations for '{target}' are:\n" + missing_params_in_equations
         )
 
     def calculate(
@@ -449,6 +448,7 @@ class EquationRegistry:
         -------
         Parameter
             The calculated parameter.
+
         """
         equation = self.get_equation(target, params, equation_name)
         return equation.solve_for(target, params)
@@ -469,7 +469,9 @@ class EquationRegistry:
         -------
         bool
             `True` if any registered formula can solve for `target`, else `False`.
+
         """
         return any(
-            equation.can_solve_for(target, params) for equation in self._equations.get(target, [])
+            equation.can_solve_for(target, params)
+            for equation in self._equations.get(target, [])
         )

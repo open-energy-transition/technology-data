@@ -2,7 +2,8 @@
 #
 # SPDX-License-Identifier: MIT
 
-"""Global equation registry and built-in equation definitions.
+"""
+Global equation registry and built-in equation definitions.
 
 The module-level ``equation_registry`` instance is the single shared registry
 that the ``technologydata`` package uses by default.  Importing this module

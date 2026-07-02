@@ -7,8 +7,8 @@
 import pytest
 
 import technologydata  # noqa: F401 — ensures default_formulas are registered
-from technologydata.equations import Equation, EquationRegistry
 from technologydata.default_equations import equation_registry
+from technologydata.equations import Equation, EquationRegistry
 from technologydata.parameter import Parameter
 from technologydata.technology import Technology
 
@@ -308,7 +308,9 @@ class TestFixedOm:
 
     def test_backward_fraction(self) -> None:
         params = {
-            "fixed_om": Parameter(magnitude=self._FOM_EXPECTED, units="USD_2020/kW/year"),
+            "fixed_om": Parameter(
+                magnitude=self._FOM_EXPECTED, units="USD_2020/kW/year"
+            ),
             "specific_investment": self._SIC,
         }
         result = equation_registry.calculate("fixed_om_fraction", params)
@@ -316,7 +318,9 @@ class TestFixedOm:
 
     def test_backward_specific_investment(self) -> None:
         params = {
-            "fixed_om": Parameter(magnitude=self._FOM_EXPECTED, units="USD_2020/kW/year"),
+            "fixed_om": Parameter(
+                magnitude=self._FOM_EXPECTED, units="USD_2020/kW/year"
+            ),
             "fixed_om_fraction": self._FRACTION,
         }
         result = equation_registry.calculate("specific_investment", params)
@@ -341,7 +345,9 @@ class TestRoundtripEfficiency:
 
     def test_backward_charge_efficiency(self) -> None:
         params = {
-            "roundtrip_efficiency": Parameter(magnitude=self._RT_EXPECTED, units="dimensionless"),
+            "roundtrip_efficiency": Parameter(
+                magnitude=self._RT_EXPECTED, units="dimensionless"
+            ),
             "discharge_efficiency": self._DE,
         }
         result = equation_registry.calculate("charge_efficiency", params)
@@ -349,7 +355,9 @@ class TestRoundtripEfficiency:
 
     def test_backward_discharge_efficiency(self) -> None:
         params = {
-            "roundtrip_efficiency": Parameter(magnitude=self._RT_EXPECTED, units="dimensionless"),
+            "roundtrip_efficiency": Parameter(
+                magnitude=self._RT_EXPECTED, units="dimensionless"
+            ),
             "charge_efficiency": self._CE,
         }
         result = equation_registry.calculate("discharge_efficiency", params)
@@ -374,7 +382,9 @@ class TestFuelVariableCost:
 
     def test_backward_efficiency(self) -> None:
         params = {
-            "fuel_variable_cost": Parameter(magnitude=self._FVC_EXPECTED, units="USD_2020/MWh"),
+            "fuel_variable_cost": Parameter(
+                magnitude=self._FVC_EXPECTED, units="USD_2020/MWh"
+            ),
             "fuel_cost": self._FUEL_COST,
         }
         result = equation_registry.calculate("efficiency", params)
@@ -383,7 +393,9 @@ class TestFuelVariableCost:
 
     def test_backward_fuel_cost(self) -> None:
         params = {
-            "fuel_variable_cost": Parameter(magnitude=self._FVC_EXPECTED, units="USD_2020/MWh"),
+            "fuel_variable_cost": Parameter(
+                magnitude=self._FVC_EXPECTED, units="USD_2020/MWh"
+            ),
             "efficiency": self._EFF,
         }
         result = equation_registry.calculate("fuel_cost", params)
@@ -409,7 +421,9 @@ class TestCo2Cost:
 
     def test_backward_co2_price(self) -> None:
         params = {
-            "co2_cost": Parameter(magnitude=self._CO2_COST_EXPECTED, units="USD_2020/MWh"),
+            "co2_cost": Parameter(
+                magnitude=self._CO2_COST_EXPECTED, units="USD_2020/MWh"
+            ),
             "co2_intensity": self._CO2_INTENSITY,
         }
         result = equation_registry.calculate("co2_price", params)
@@ -418,7 +432,9 @@ class TestCo2Cost:
 
     def test_backward_co2_intensity(self) -> None:
         params = {
-            "co2_cost": Parameter(magnitude=self._CO2_COST_EXPECTED, units="USD_2020/MWh"),
+            "co2_cost": Parameter(
+                magnitude=self._CO2_COST_EXPECTED, units="USD_2020/MWh"
+            ),
             "co2_price": self._CO2_PRICE,
         }
         result = equation_registry.calculate("co2_intensity", params)
@@ -450,7 +466,9 @@ class TestFormulaSelection:
 
     def test_unknown_equation_name_raises(self) -> None:
         with pytest.raises(KeyError, match="No equation named"):
-            equation_registry.calculate("eac", EAC_ANNUITY_PARAMS, equation_name="bogus")
+            equation_registry.calculate(
+                "eac", EAC_ANNUITY_PARAMS, equation_name="bogus"
+            )
 
     def test_named_formula_with_missing_params_raises(self) -> None:
         with pytest.raises(ValueError, match="missing parameters"):
@@ -490,7 +508,10 @@ class TestCanCalculate:
         )
 
     def test_returns_false_for_unknown_target(self) -> None:
-        assert equation_registry.can_calculate("unknown_param", EAC_ANNUITY_PARAMS) is False
+        assert (
+            equation_registry.can_calculate("unknown_param", EAC_ANNUITY_PARAMS)
+            is False
+        )
 
 
 # ---------------------------------------------------------------------------
