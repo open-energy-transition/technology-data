@@ -218,7 +218,9 @@ class DataAccessor(pydantic.BaseModel):
             technologies_path = pathlib.Path(
                 self.data_path, self.data_source, self.version, "technologies.json"
             )
-            sources_path = pathlib.Path(self.data_path, self.version, "sources.json")
+            sources_path = pathlib.Path(
+                self.data_path, self.data_source, self.version, "sources.json"
+            )
         else:
             technologies_path = pathlib.Path(
                 self.data_path, self.data_source, "technologies.json"
@@ -226,6 +228,10 @@ class DataAccessor(pydantic.BaseModel):
             sources_path = pathlib.Path(
                 self.data_path, self.data_source, "sources.json"
             )
+
+        # Ensure parent directories exist
+        self.ensure_path_exists(technologies_path.parent)
+        self.ensure_path_exists(sources_path.parent)
 
         try:
             logger.info(f"Downloading technologies.json from {technologies_url}")
@@ -250,8 +256,16 @@ class DataAccessor(pydantic.BaseModel):
             raise
 
         # Load using DataPackage.from_json
+        # Construct path to folder containing the downloaded files
+        if self.version:
+            path_to_folder = pathlib.Path(
+                self.data_path, self.data_source, self.version
+            )
+        else:
+            path_to_folder = pathlib.Path(self.data_path, self.data_source)
+
         data_package = DataPackage.from_json(
-            name=self.data_source, version=self.version, path_to_folder=self.data_path
+            name=self.data_source, version=self.version, path_to_folder=path_to_folder
         )
 
         return data_package

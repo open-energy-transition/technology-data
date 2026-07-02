@@ -125,7 +125,9 @@ class TestDataAccessor:
             "https://raw.githubusercontent.com/open-energy-transition/technology-data/"
         )
         branch = "prototype-2/"
-        target_url = "src/technologydata/parsers/manual_input_usa/v0.13.4"
+        data_source = DataSourceName.MANUAL_INPUT_USA
+        version = "v0.13.4"
+        target_url = f"src/technologydata/parsers/{data_source}/{version}/"
         url = base_url + branch + target_url
         data_accessor = DataAccessor(
             data_source="manual_input_usa", version="v0.13.4", data_path=tmp_path
@@ -144,7 +146,11 @@ class TestDataAccessor:
         )
         sources_reference = load_json(sources_reference_path)
         technologies_reference = load_json(technologies_reference_path)
-        sources_download = load_json(pathlib.Path(tmp_path, "sources.json"))
-        technologies_download = load_json(pathlib.Path(tmp_path, "technologies.json"))
+        sources_download = load_json(
+            pathlib.Path(tmp_path, data_source, version, "sources.json")
+        )
+        technologies_download = load_json(
+            pathlib.Path(tmp_path, data_source, version, "technologies.json")
+        )
         assert sources_reference == sources_download
         assert technologies_reference == technologies_download
