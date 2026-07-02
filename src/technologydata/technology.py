@@ -127,7 +127,7 @@ class Technology(pydantic.BaseModel):
         if targets is None:
             targets = [
                 p
-                for p in equation_registry._formulas
+                for p in equation_registry._equations
                 if p not in new_params and equation_registry.can_calculate(p, new_params)
             ]
         elif isinstance(targets, str):

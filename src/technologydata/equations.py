@@ -143,7 +143,7 @@ class Equation:
         All parameter names that participate in the equation. Names may contain
         spaces or other characters — they are mapped to positional SymPy symbols
         internally and never passed to SymPy's parser directly.
-    expr_str : str
+    eq_str : str
         SymPy-parseable expression string. Parameter names must appear exactly
         as listed in *parameters* (including any spaces). The expression is set
         to zero, so ``"a - b*c"`` represents the relationship ``a = b*c``.
@@ -156,12 +156,12 @@ class Equation:
         self,
         name: str,
         parameters: list[str],
-        expr_str: str,
+        eq_str: str,
         default: bool = False,
     ) -> None:
         self.name = name
         self.parameters = parameters
-        self.expr_str = expr_str
+        self.expr_str = eq_str
         self.default = default
 
     def can_solve_for(self, target: str, available: dict[str, Parameter]) -> bool:
@@ -283,59 +283,60 @@ class Equation:
 
 class EquationRegistry:
     """
-    Registry for :class:`Equation` objects.
+    Registry to make :class:`Equation` available for parameter omni-directional computation.
 
-    Each equation is indexed under every parameter it involves, so the registry
-    can answer "which equations can I use to derive parameter X?" without
-    knowing upfront which direction the equation will be applied.
+    Each equation in the registry is registered for every parameter it involves.
+    This way the registry can determine the select the equations suitable for
+    calculating a parameter without knowing beforehand which equation to use.
 
-    Multiple equations can cover the same parameter (e.g. two different methods
-    for computing EAC). One equation per parameter can be flagged as the
-    default; when no explicit choice is made the default is tried first.
+    Multiple equations can be associated with the same parameter,
+    e.g. two different methods for computing EAC.
+    A default equation per parameter can be set, which is used when no explicit choice is made.
     """
 
     def __init__(self) -> None:
-        self._formulas: dict[str, list[Equation]] = {}
+        self._equations: dict[str, list[Equation]] = {}
 
     def register(
         self,
         name: str,
         parameters: list[str],
-        expr_str: str,
+        eq_str: str,
         default: bool = False,
     ) -> None:
         """
         Register an equation linking a set of parameters.
 
-        All names in *parameters* are indexed to this equation so it can be
-        discovered when solving for any of them.
+        All the `parameters` are indexed to this equation for equation discovery.
 
         Parameters
         ----------
         name : str
-            Unique equation name. Used for explicit selection via
-            ``equation_name=`` and appears in the ``provenance`` field of
-            derived :class:`~technologydata.parameter.Parameter` objects.
+            Unique equation name to identify the equation.
         parameters : list of str
-            All parameter names that participate in this equation. Names may
-            contain spaces; they are matched against the expression string by
-            direct substitution before SymPy parsing.
-        expr_str : str
-            SymPy-parseable string representing the equation set to zero.
+            All parameter names that participate in this equation.
+        eq_str : str
+            The equation as string representation equal to zero, i.e. LHS of the 
+            equation with $LHS = 0$. The equation must contain the parameter names
+            exactly as listed in `parameters` (including any spaces).
         default : bool, optional
-            If ``True``, prefer this equation over non-default alternatives
-            when multiple equations can apply for the same target. Only one
-            equation per group of overlapping equations should be marked as
-            default; the last registration wins if more than one is.
+            If ``True`` this equation is preferred over other equations
+            when multiple equations can be used to calculate the same parameter.
+            If multiple equations are marked as default, the order of registration
+            (last registered, first used) is used to determine which equation to use.
         """
+
+        # Setup the equation
         formula = Equation(
             name=name,
             parameters=parameters,
-            expr_str=expr_str,
+            eq_str=eq_str,
             default=default,
         )
+
+        # Register the equation in the registry for each parameter it involves
         for param in parameters:
-            self._formulas.setdefault(param, []).append(formula)
+            self._equations.setdefault(param, []).append(formula)
 
     def get_equation(
         self,
@@ -344,54 +345,79 @@ class EquationRegistry:
         equation_name: str | None = None,
     ) -> Equation:
         """
-        Return the best applicable :class:`Equation` for *target*.
+        Return the best applicable :class:`Equation` for the `target` parameter.
 
         Selection priority:
+        1. The equation explicitly requested by `equation_name`
+        2. Default-flagged equations (`default=True`) whose inputs are all present
+           in their order of registration.
+        3. Any other registered equation whose inputs are all present in their 
+           order of registration.
 
-        1. An equation explicitly requested by name via *equation_name*.
-        2. Default-flagged equations (``default=True``) whose inputs are all present.
-        3. Any other registered equation whose inputs are all present.
+        Parameters
+        ----------
+        target : str
+            The name of the parameter to derive. Must match the name in the registered equation.
+        params : dict
+            Known parameter values, possible participants of the equation.
+            Must contain all parameters except `target`.
+            Used to determine eligible equations for calculating the `target`.
+        equation_name : str, optional
+            Name of a specific equation variant to use.
+            If not provided, an applicable equation is selected automatically.
 
         Raises
         ------
+        KeyError
+            If the equation requested by `equation_name` is not registered. 
         ValueError
-            If the requested equation does not exist or cannot apply, or if
-            no registered equation can apply with the given parameters.
+            If there is no equation registered that allows for calculation of the 
+            `target` parameter with the provided `params`.
         """
-        candidates = self._formulas.get(target, [])
 
+        # All possible registered equations for the target parameter
+        candidates = self._equations.get(target, [])
+
+        # Fail fast
+        if not candidates:
+            raise ValueError(f"No equation registered for parameter '{target}'.")
+
+
+        # Selection by equation_name
         if equation_name is not None:
+
+            # Find the requested equation
             named = [f for f in candidates if f.name == equation_name]
             if not named:
-                raise ValueError(
+                raise KeyError(
                     f"No equation named '{equation_name}' registered for '{target}'."
                 )
+
+            # Check if all required parameters are available for this equation
             f = named[0]
             if not f.can_solve_for(target, params):
                 missing = [p for p in f.parameters if p != target and p not in params]
                 raise ValueError(
-                    f"Equation '{equation_name}' cannot solve for '{target}': "
-                    f"missing parameters: {missing}."
+                    f"Equation '{equation_name}' cannot solve for '{target}' because "
+                    f"of missing parameters: {missing}."
                 )
             return f
 
-        # Sort so default=True equations come first; stable sort preserves
-        # registration order within each group.
-        for f in sorted(candidates, key=lambda f: not f.default):
+        # Selection by available parameters and by default flags
+        # Sort so default=True equations come first;
+        # sort such that the registration order within each group is preserved
+        for f in sorted(candidates, key=lambda f: f.default, reverse=True):
             if f.can_solve_for(target, params):
                 return f
 
-        if not candidates:
-            raise ValueError(f"No equation registered for parameter '{target}'.")
-
-        per_equation = "\n".join(
-            f"  '{f.name}': missing "
-            f"{[p for p in f.parameters if p != target and p not in params]}"
+        missing_params_in_equations = "\n".join(
+            f" * '{f.name}': provided params = {[p for p in f.parameters if p != target and p in params]}, missing params = {[p for p in f.parameters if p != target and p not in params]}"
             for f in candidates
         )
         raise ValueError(
-            f"No equation for '{target}' can be applied with the available parameters:\n"
-            + per_equation
+            f"No equation for parameter '{target}' can be used with the provided parameters.\n"
+            f"Available equations for '{target}' are:\n"
+            + missing_params_in_equations
         )
 
     def calculate(
@@ -401,28 +427,49 @@ class EquationRegistry:
         equation_name: str | None = None,
     ) -> Parameter:
         """
-        Derive *target* using the best applicable (or named) equation.
+        Calculate the `target` parameter using the available equations in the registry.
+
+        If `equation_name` is provided, the corresponding equation is used. Otherwise,
+        the registry automatically selects an applicable equation based on the provided parameters.
+
+        Information on the equation used and calculation performed is recorded in the `provenance`
+        attribute of the returned :class:`Parameter`.
 
         Parameters
         ----------
         target : str
             The parameter to derive.
         params : dict
-            Known parameter values.
+            Names of the known parameters and their corresponding :class:`Parameter` values.
         equation_name : str, optional
-            Name of a specific equation variant to use.
+            Name of a specific equation to use for the calculation. If not provided, an applicable
+            equation is selected automatically.
 
         Returns
         -------
         Parameter
-            The derived parameter with magnitude, units, and ``provenance``
-            set to the equation name.
+            The calculated parameter.
         """
         equation = self.get_equation(target, params, equation_name)
         return equation.solve_for(target, params)
 
     def can_calculate(self, target: str, params: dict[str, Parameter]) -> bool:
-        """Return ``True`` if any registered formula can solve for *target*."""
+        """
+        Check if the registry has an equation that can calculate the `target` parameter
+        using the provided parameters.
+
+        Parameters
+        ----------
+        target : str
+            The parameter to calculate.
+        params : dict
+            Names of the known parameters and their corresponding :class:`Parameter` values.
+
+        Returns
+        -------
+        bool
+            `True` if any registered formula can solve for `target`, else `False`.
+        """
         return any(
-            f.can_solve_for(target, params) for f in self._formulas.get(target, [])
+            equation.can_solve_for(target, params) for equation in self._equations.get(target, [])
         )

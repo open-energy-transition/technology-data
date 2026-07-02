@@ -49,7 +49,7 @@ equation_registry = EquationRegistry()
 equation_registry.register(
     name="annuity_factor",
     parameters=["annuity_factor", "wacc", "lifetime"],
-    expr_str="annuity_factor - wacc / (1 - (1 + wacc)**(-lifetime))",
+    eq_str="annuity_factor - wacc / (1 - (1 + wacc)**(-lifetime))",
     default=True,
 )
 
@@ -60,7 +60,7 @@ equation_registry.register(
 equation_registry.register(
     name="eac_via_annuity_factor",
     parameters=["eac", "specific_investment", "annuity_factor"],
-    expr_str="eac - specific_investment * annuity_factor",
+    eq_str="eac - specific_investment * annuity_factor",
 )
 
 # EAC computed directly from the three underlying variables in a single step.
@@ -72,7 +72,7 @@ equation_registry.register(
 equation_registry.register(
     name="eac_annuity",
     parameters=["eac", "specific_investment", "wacc", "lifetime"],
-    expr_str="eac - specific_investment * wacc / (1 - (1 + wacc)**(-lifetime))",
+    eq_str="eac - specific_investment * wacc / (1 - (1 + wacc)**(-lifetime))",
     default=True,
 )
 
@@ -83,7 +83,7 @@ equation_registry.register(
 equation_registry.register(
     name="eac_simple",
     parameters=["eac", "total_investment_cost", "lifetime"],
-    expr_str="eac - total_investment_cost / lifetime",
+    eq_str="eac - total_investment_cost / lifetime",
 )
 
 # Converts between specific investment (per unit capacity) and absolute total
@@ -94,7 +94,7 @@ equation_registry.register(
 equation_registry.register(
     name="total_investment_from_specific",
     parameters=["total_investment_cost", "specific_investment", "capacity"],
-    expr_str="total_investment_cost - specific_investment * capacity",
+    eq_str="total_investment_cost - specific_investment * capacity",
     default=True,
 )
 
@@ -107,7 +107,7 @@ equation_registry.register(
 equation_registry.register(
     name="fixed_om_from_fraction",
     parameters=["fixed_om", "specific_investment", "fixed_om_fraction"],
-    expr_str="fixed_om - specific_investment * fixed_om_fraction",
+    eq_str="fixed_om - specific_investment * fixed_om_fraction",
     default=True,
 )
 
@@ -120,7 +120,7 @@ equation_registry.register(
 equation_registry.register(
     name="roundtrip_efficiency",
     parameters=["roundtrip_efficiency", "charge_efficiency", "discharge_efficiency"],
-    expr_str="roundtrip_efficiency - charge_efficiency * discharge_efficiency",
+    eq_str="roundtrip_efficiency - charge_efficiency * discharge_efficiency",
     default=True,
 )
 
@@ -135,7 +135,7 @@ equation_registry.register(
 equation_registry.register(
     name="fuel_variable_cost",
     parameters=["fuel_variable_cost", "fuel_cost", "efficiency"],
-    expr_str="fuel_variable_cost - fuel_cost / efficiency",
+    eq_str="fuel_variable_cost - fuel_cost / efficiency",
     default=True,
 )
 
@@ -148,6 +148,6 @@ equation_registry.register(
 equation_registry.register(
     name="co2_cost",
     parameters=["co2_cost", "co2_price", "co2_intensity"],
-    expr_str="co2_cost - co2_price * co2_intensity",
+    eq_str="co2_cost - co2_price * co2_intensity",
     default=True,
 )

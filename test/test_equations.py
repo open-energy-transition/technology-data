@@ -45,7 +45,7 @@ class TestEquationCanSolveFor:
         link = Equation(
             name="test",
             parameters=["a", "b", "c"],
-            expr_str="a - b - c",
+            eq_str="a - b - c",
         )
         params = {
             "b": Parameter(magnitude=1.0, units="dimensionless"),
@@ -57,7 +57,7 @@ class TestEquationCanSolveFor:
         link = Equation(
             name="test",
             parameters=["a", "b"],
-            expr_str="a - b",
+            eq_str="a - b",
         )
         params = {"a": Parameter(magnitude=1.0, units="dimensionless")}
         assert link.can_solve_for("x", params) is False
@@ -66,7 +66,7 @@ class TestEquationCanSolveFor:
         link = Equation(
             name="test",
             parameters=["a", "b", "c"],
-            expr_str="a - b - c",
+            eq_str="a - b - c",
         )
         # c is missing
         params = {"b": Parameter(magnitude=1.0, units="dimensionless")}
@@ -83,7 +83,7 @@ class TestCurrencyConsistency:
         return Equation(
             name="test",
             parameters=["a", "b", "c"],
-            expr_str="a - b - c",
+            eq_str="a - b - c",
         )
 
     def test_required_matching_currency_years_pass(self) -> None:
@@ -107,7 +107,7 @@ class TestCurrencyConsistency:
         link = Equation(
             name="test",
             parameters=["a", "b", "c"],
-            expr_str="a - b * c",
+            eq_str="a - b * c",
         )
         params = {
             "b": Parameter(magnitude=1000.0, units="USD_2020/kW"),
@@ -126,7 +126,7 @@ class TestCurrencyConsistency:
         result = Equation(
             name="test",
             parameters=["a", "b"],
-            expr_str="a - b",
+            eq_str="a - b",
         ).solve_for("a", params)
         assert result.magnitude == pytest.approx(2.0)
 
@@ -449,7 +449,7 @@ class TestFormulaSelection:
         assert result.provenance == "eac_simple"
 
     def test_unknown_equation_name_raises(self) -> None:
-        with pytest.raises(ValueError, match="No equation named"):
+        with pytest.raises(KeyError, match="No equation named"):
             equation_registry.calculate("eac", EAC_ANNUITY_PARAMS, equation_name="bogus")
 
     def test_named_formula_with_missing_params_raises(self) -> None:
@@ -506,7 +506,7 @@ class TestCustomRegistry:
         reg.register(
             name="ohms_law",
             parameters=["voltage", "current", "resistance"],
-            expr_str="voltage - current * resistance",
+            eq_str="voltage - current * resistance",
         )
         params = {
             "current": Parameter(magnitude=2.0, units="ampere"),
@@ -522,7 +522,7 @@ class TestCustomRegistry:
         reg.register(
             name="ohms_law",
             parameters=["voltage", "current", "resistance"],
-            expr_str="voltage - current * resistance",
+            eq_str="voltage - current * resistance",
         )
         params = {
             "voltage": Parameter(magnitude=10.0, units="volt"),
@@ -541,7 +541,7 @@ class TestCustomRegistry:
         reg.register(
             name="simple_product",
             parameters=["unit cost", "quantity", "total cost"],
-            expr_str="total cost - unit cost * quantity",
+            eq_str="total cost - unit cost * quantity",
         )
         params = {
             "unit cost": Parameter(magnitude=800.0, units="USD_2020/kW"),
