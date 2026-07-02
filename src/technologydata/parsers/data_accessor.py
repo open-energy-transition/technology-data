@@ -214,8 +214,18 @@ class DataAccessor(pydantic.BaseModel):
         # Download technologies.json
         technologies_url = f"{base_url}technologies.json"
         sources_url = f"{base_url}sources.json"
-        technologies_path = pathlib.Path(self.data_path, "technologies.json")
-        sources_path = pathlib.Path(self.data_path, "sources.json")
+        if self.version:
+            technologies_path = pathlib.Path(
+                self.data_path, self.data_source, self.version, "technologies.json"
+            )
+            sources_path = pathlib.Path(self.data_path, self.version, "sources.json")
+        else:
+            technologies_path = pathlib.Path(
+                self.data_path, self.data_source, "technologies.json"
+            )
+            sources_path = pathlib.Path(
+                self.data_path, self.data_source, "sources.json"
+            )
 
         try:
             logger.info(f"Downloading technologies.json from {technologies_url}")
