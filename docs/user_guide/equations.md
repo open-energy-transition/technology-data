@@ -116,6 +116,24 @@ eac_equations = td.equation_registry.list_equations(target="eac")
 If a target has no registered equations, `list_equations(target=...)` raises
 a `ValueError`.
 
+### REPL representation of equations
+
+`Equation` objects provide a compact REPL representation via `repr(...)`.
+The representation includes equation name, parameters (in original order),
+equation string, and default flag.
+
+Long equation strings are truncated for readability in interactive sessions.
+
+```python
+eq = td.Equation(
+    name="my_equation",
+    parameters=["a", "b", "c"],
+    eq_str="a - b - c",
+)
+print(repr(eq))
+# Equation(name='my_equation', parameters=['a', 'b', 'c'], eq_str='a - b - c', default=False)
+```
+
 ### Integration with `Technology` objects
 
 [`Technology.calculate_parameters`][technologydata.technology.Technology.calculate_parameters]

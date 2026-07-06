@@ -84,6 +84,7 @@ class EquationSummary(TypedDict):
 # budget is intentionally generous to handle slow-but-solvable cases while
 # still catching transcendental equations that would otherwise hang forever.
 _SOLVE_TIMEOUT_SECONDS = 5
+_EQUATION_REPR_MAX_EXPR_LENGTH = 80
 
 def _solve_with_timeout(expr: sp.Expr, symbol: sp.Symbol) -> list[sp.Expr]:
     """
@@ -142,6 +143,21 @@ class Equation:
         self.parameters = parameters
         self.expr_str = eq_str
         self.default = default
+
+    def __repr__(self) -> str:
+        """Return a concise human-readable representation for REPL usage."""
+        expr = self.expr_str
+        if len(expr) > _EQUATION_REPR_MAX_EXPR_LENGTH:
+            expr = expr[: _EQUATION_REPR_MAX_EXPR_LENGTH - 3] + "..."
+
+        return (
+            "Equation("
+            f"name={self.name!r}, "
+            f"parameters={self.parameters!r}, "
+            f"eq_str={expr!r}, "
+            f"default={self.default!r}"
+            ")"
+        )
 
     def can_solve_for(self, target: str, available: dict[str, Parameter]) -> bool:
         """

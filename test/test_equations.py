@@ -73,6 +73,49 @@ class TestEquationCanSolveFor:
         assert link.can_solve_for("a", params) is False
 
 
+class TestEquationRepr:
+    def test_repr_includes_core_fields(self) -> None:
+        equation = Equation(
+            name="simple",
+            parameters=["target", "input_a", "input_b"],
+            eq_str="target - input_a - input_b",
+            default=True,
+        )
+
+        rep = repr(equation)
+
+        assert rep.startswith("Equation(")
+        assert "name='simple'" in rep
+        assert "parameters=['target', 'input_a', 'input_b']" in rep
+        assert "eq_str='target - input_a - input_b'" in rep
+        assert "default=True" in rep
+
+    def test_repr_preserves_parameter_order(self) -> None:
+        equation = Equation(
+            name="ordered",
+            parameters=["z", "x", "y"],
+            eq_str="z - x - y",
+        )
+
+        rep = repr(equation)
+
+        assert "parameters=['z', 'x', 'y']" in rep
+
+    def test_repr_truncates_long_expression(self) -> None:
+        long_expr = "x - " + " + ".join(f"p{i}" for i in range(100))
+        equation = Equation(
+            name="long",
+            parameters=["x", "p0"],
+            eq_str=long_expr,
+        )
+
+        rep = repr(equation)
+
+        assert "eq_str='" in rep
+        assert "...'" in rep
+        assert long_expr not in rep
+
+
 # ---------------------------------------------------------------------------
 # Currency consistency checks
 # ---------------------------------------------------------------------------
