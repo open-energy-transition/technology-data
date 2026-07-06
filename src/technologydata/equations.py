@@ -64,8 +64,8 @@ from __future__ import annotations
 # → parameter.py → import technologydata (circular).
 from typing import TYPE_CHECKING
 
-import sympy as sp
 import overdue
+import sympy as sp
 
 if TYPE_CHECKING:
     from technologydata.parameter import Parameter
@@ -75,6 +75,7 @@ if TYPE_CHECKING:
 # budget is intentionally generous to handle slow-but-solvable cases while
 # still catching transcendental equations that would otherwise hang forever.
 _SOLVE_TIMEOUT_SECONDS = 5
+
 
 def _solve_with_timeout(expr: sp.Expr, symbol: sp.Symbol) -> list[sp.Expr]:
     """
@@ -104,7 +105,7 @@ class Equation:
     Parameters
     ----------
     name : str
-        Unique name given to this equation. Used to identify the equation in 
+        Unique name given to this equation. Used to identify the equation in
         a equation registry and for tracking `Parameter` provenance information.
     parameters : list of str
         The names of all parameters that participate in the equation. Names must be
@@ -144,13 +145,13 @@ class Equation:
             The parameter to check.
         available : dict
             Known parameter values.
-        
+
         Returns
         -------
         bool
             `True` if the equation can solve for `target`, else `False`.
+
         """
-        
         if target not in self.parameters:
             # Equation is not related to the target parameter
             return False
@@ -181,6 +182,7 @@ class Equation:
         ------
         ValueError
             If SymPy cannot find a closed-form analytical solution.
+
         """
         from technologydata.parameter import Parameter
 
