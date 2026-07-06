@@ -1805,6 +1805,15 @@ wheels = [
 ]
 
 [[package]]
+name = "overdue"
+version = "0.1.5"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/0f/28/7a099f4f699c23b0b7701a9901325b4fd1c3812bb45be9438f97a16d25ed/overdue-0.1.5.tar.gz", hash = "sha256:6781da739f802d904f4a0d404824f315c5cb1911b309f7a6d4b5f465374cd2da", size = 13240, upload-time = "2024-12-17T19:20:19.272Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/53/01/2a14f0d4e9777452f444fbb96dabc8abedf482ae140a1e22a05baab05813/overdue-0.1.5-py3-none-any.whl", hash = "sha256:3ece13e9f7ef8636b9c906143b9573a333ef81953e38d870b4e0732c0d7ce063", size = 3523, upload-time = "2024-12-17T19:20:16.977Z" },
+]
+
+[[package]]
 name = "packaging"
 version = "25.0"
 source = { registry = "https://pypi.org/simple" }
@@ -3036,6 +3045,7 @@ dependencies = [
     { name = "frozendict" },
     { name = "hdx-python-country" },
     { name = "mypy" },
+    { name = "overdue" },
     { name = "pandas" },
     { name = "pint" },
     { name = "pydantic" },
@@ -3084,6 +3094,7 @@ requires-dist = [
     { name = "frozendict", specifier = ">=2.4.6" },
     { name = "hdx-python-country", specifier = ">=3.9.6" },
     { name = "mypy", specifier = ">=1.15.0" },
+    { name = "overdue", specifier = ">=0.1.5" },
     { name = "pandas", specifier = ">=2.2.3" },
     { name = "pint", specifier = ">=0.24.4" },
     { name = "pydantic", specifier = ">=2.11.7" },
