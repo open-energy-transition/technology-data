@@ -49,11 +49,9 @@ base), the solver follows this two-step strategy:
    the known numeric values first, then call solve on the simplified expression.
    This can succeed in cases where SymPy's heuristics prefer concrete numbers.
 
-Both steps are wrapped in a SIGALRM-based timeout (Unix/Linux only). If SymPy
-does not return within ``_SOLVE_TIMEOUT_SECONDS`` the call is cancelled and
-treated as "no solution found". On platforms without SIGALRM (Windows) the
-timeout is silently skipped and transcendental equations may hang — this is
-considered acceptable given the primary deployment target.
+The solving is wrapped in a timeout using `overdue` to prevent the system
+from hanging indefinitely on difficult equations. If no SymPy solution is found
+within `_SOLVE_TIMEOUT_SECONDS` the call is cancelled and an error raised.
 """
 
 from __future__ import annotations
@@ -63,10 +61,10 @@ from __future__ import annotations
 # `Parameter` in type hints without importing it at module load time, which
 # would create a circular import: __init__.py → technology.py → formulas.py
 # → parameter.py → import technologydata (circular).
-import signal as _signal
 from typing import TYPE_CHECKING
 
 import sympy as sp
+import overdue
 
 from technologydata.utils.units import extract_currency_units
 
@@ -79,43 +77,12 @@ if TYPE_CHECKING:
 # still catching transcendental equations that would otherwise hang forever.
 _SOLVE_TIMEOUT_SECONDS = 5
 
-# SIGALRM is only available on Unix/Linux. On Windows the timeout degrades
-# gracefully to a no-op (users may experience hangs on transcendental eqs).
-_HAS_SIGALRM = hasattr(_signal, "SIGALRM")
-
-
-class _SolveTimeout(Exception):
-    """Raised by the SIGALRM handler when SymPy exceeds the solve budget."""
-
-
 def _solve_with_timeout(expr: sp.Expr, symbol: sp.Symbol) -> list[sp.Expr]:
     """
-    Call ``sp.solve(expr, symbol)`` with a SIGALRM timeout.
-
-    Returns an empty list if the solver exceeds ``_SOLVE_TIMEOUT_SECONDS`` or
-    raises any internal SymPy exception (e.g. ``NotImplementedError``).
+    Call `sp.solve(expr, symbol)` with a timeout to prevent hanging on transcendental equations.
     """
-    if not _HAS_SIGALRM:
-        # Fallback for Windows: no timeout, user must avoid transcendental eqs
-        try:
-            return sp.solve(expr, symbol)  # type: ignore[return-value]
-        except Exception:  # noqa: BLE001
-            return []
-
-    def _handler(signum: int, frame: object) -> None:  # noqa: ARG001
-        raise _SolveTimeout()
-
-    old_handler = _signal.signal(_signal.SIGALRM, _handler)  # type: ignore[attr-defined]
-    _signal.alarm(_SOLVE_TIMEOUT_SECONDS)  # type: ignore[attr-defined]
-    try:
-        return sp.solve(expr, symbol)  # type: ignore[return-value]
-    except _SolveTimeout:
-        return []
-    except Exception:  # noqa: BLE001
-        return []
-    finally:
-        _signal.alarm(0)  # type: ignore[attr-defined]
-        _signal.signal(_signal.SIGALRM, old_handler)  # type: ignore[attr-defined]
+    with overdue.timeout_set_to(_SOLVE_TIMEOUT_SECONDS, raise_exception=True):
+        return sp.solve(expr, symbol)
 
 
 def _get_exponent_symbols(expr: sp.Expr) -> set[sp.Symbol]:
@@ -129,26 +96,29 @@ def _get_exponent_symbols(expr: sp.Expr) -> set[sp.Symbol]:
 
 class Equation:
     """
-    A symbolic equation linking multiple parameters bidirectionally.
+    A symbolic equation linking multiple parameters.
 
-    The equation is expressed as a SymPy-parseable string equal to zero
-    (e.g. ``"eac - sic*wacc/(1-(1+wacc)**(-lifetime))"``) and can be solved
-    for any of its participating parameters given the others.
+    The equation is expressed as a string equal to zero.
+    Sympy is used to solve the equation for any of its participating parameters
+    given the others.
 
     Parameters
     ----------
     name : str
-        Unique name for this equation variant, used for explicit selection.
+        Unique name given to this equation. Used to identify the equation in 
+        a equation registry and for tracking `Parameter` provenance information.
     parameters : list of str
-        All parameter names that participate in the equation. Names may contain
-        spaces or other characters — they are mapped to positional SymPy symbols
-        internally and never passed to SymPy's parser directly.
+        The names of all parameters that participate in the equation. Names must be
+        exactly the same as those used in the equation string.
+        Internally they are not passed directly to SymPy's parser, i.e. are not subject
+        to the naming restriction of SymPy identifiers.
     eq_str : str
-        SymPy-parseable expression string. Parameter names must appear exactly
-        as listed in *parameters* (including any spaces). The expression is set
-        to zero, so ``"a - b*c"`` represents the relationship ``a = b*c``.
+        The equation string, using SymPy-compatible syntax. Parameter names must appear
+        exactly as listed in `parameters` and may include spaces or other special characters,
+        they are not directly passed on to SymPy's parser and can therefore be arbitrary strings.
+        The expression is set to zero, so `"a - b*c"` represents the relationship ``a = b*c``.
     default : bool
-        If ``True``, this equation is preferred over others that also cover
+        If `True`, this equation is preferred over others that also cover
         the same target when no equation name is specified explicitly.
     """
 
@@ -165,44 +135,65 @@ class Equation:
         self.default = default
 
     def can_solve_for(self, target: str, available: dict[str, Parameter]) -> bool:
-        """Return ``True`` if every parameter except *target* is in *available*."""
-        if target not in self.parameters:
-            return False
-        return all(p in available for p in self.parameters if p != target)
-
-    def solve_for(self, target: str, params: dict[str, Parameter]) -> Parameter:
         """
-        Solve the formula for *target* given the remaining parameters.
+        Check if an equation can solve for `target` parameter with the provided `available` parameters.
 
         Parameters
         ----------
         target : str
-            The parameter to derive.
+            The parameter to check.
+        available : dict
+            Known parameter values.
+        
+        Returns
+        -------
+        bool
+            `True` if the equation can solve for `target`, else `False`.
+        """
+        
+        if target not in self.parameters:
+            # Equation is not related to the target parameter
+            return False
+        else:
+            # Check if all other parameters in the equation are available for solving
+            return all(p in available for p in self.parameters if p != target)
+
+    def solve_for(self, target: str, params: dict[str, Parameter]) -> Parameter:
+        """
+        Solve the equation for the `target` parameter given the remaining parameters.
+
+        Parameters
+        ----------
+        target : str
+            The parameter to solve for.
         params : dict
-            Known parameter values — every participant except *target*.
+            Known parameter values, i.e. all other equation participants except the `target`.
 
         Returns
         -------
         Parameter
-            The derived parameter with magnitude, units, and provenance set.
-            Units are propagated automatically from the input pint Quantities.
-            Parameters that appear in exponent positions are evaluated using
-            their magnitudes only (pint cannot raise a quantity to a dimensioned
-            power); their physical unit label does not flow into the result.
+            The calculated parameter including provenance information.
+            Unit information from parameters that appear as an exponent are evaluated using
+            their magnitudes only as pint cannot raise a quantity to a dimensioned power;
+            their physical unit label does not flow into the result.
 
         Raises
         ------
         ValueError
-            If currencies are inconsistent across the inputs, or if SymPy
-            cannot find a closed-form analytical solution within the timeout
-            budget (see module-level ``_SOLVE_TIMEOUT_SECONDS``).
+            If SymPy cannot find a closed-form analytical solution.
         """
-        from technologydata.parameter import Parameter as Param
+        from technologydata.parameter import Parameter
 
-        # Map each parameter to a positional symbol (_p0, _p1, …) so that
-        # parameter names with spaces or other non-identifier characters work
-        # transparently. Replace longest names first to avoid partial matches
-        # (e.g. "investment cost" replaced before "cost").
+        # Map each parameter to a positional symbol (_p0, _p1, ..) to allow for arbitrary
+        # parameter names (including spaces) that are not valid Python identifiers for SymPy.
+        # Replace longest names first to avoid partial matches
+        # Test before to make sure there are no parameters called _p\d+ that would be replaced by accident
+        if any(p.startswith("_p") and p[2:].isdigit() for p in self.parameters):
+            raise ValueError(
+                f"Equation '{self.name}' has parameters that conflict with internal symbol naming: {self.parameters}. "
+                "Parameter names cannot start with '_p' followed by digits."
+            )
+
         param_idx = {p: i for i, p in enumerate(self.parameters)}
         syms = {p: sp.Symbol(f"_p{param_idx[p]}") for p in self.parameters}
         safe_expr = self.expr_str
@@ -278,7 +269,7 @@ class Equation:
         magnitude, raw_result = (positive or results)[0]
 
         result_units = str(raw_result.units) if hasattr(raw_result, "units") else None
-        return Param(magnitude=magnitude, units=result_units, provenance=self.name)
+        return Parameter(magnitude=magnitude, units=result_units, provenance=self.name)
 
 
 class EquationRegistry:
@@ -473,3 +464,8 @@ class EquationRegistry:
         return any(
             equation.can_solve_for(target, params) for equation in self._equations.get(target, [])
         )
+
+
+# TODO add function list_equations
+# TODO equation rearrangement / "solve for" caching
+# TODO consistency check with equations
