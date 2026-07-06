@@ -62,13 +62,22 @@ from __future__ import annotations
 # `Parameter` in type hints without importing it at module load time, which
 # would create a circular import: __init__.py → technology.py → formulas.py
 # → parameter.py → import technologydata (circular).
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, TypedDict
 
 import sympy as sp
 import overdue
 
 if TYPE_CHECKING:
     from technologydata.parameter import Parameter
+
+
+class EquationSummary(TypedDict):
+    """Serializable summary of a registered equation."""
+
+    name: str
+    parameters: list[str]
+    eq_str: str
+    default: bool
 
 # Seconds to wait for SymPy before declaring "no analytical solution".
 # Most tractable algebraic solutions complete in well under a second; this
@@ -284,10 +293,22 @@ class EquationRegistry:
     Multiple equations can be associated with the same parameter,
     e.g. two different methods for computing EAC.
     A default equation per parameter can be set, which is used when no explicit choice is made.
+
+    Attributes
+    ----------
+    _equations_by_parameter : dict[str, list[Equation]]
+        Index from parameter name to all equations that include this parameter.
+        Used for equation discovery when solving for a target parameter.
+    _equations_by_name : dict[str, Equation]
+        Index from unique equation name to the corresponding equation object.
+        Used for uniqueness checks and global equation listing.
     """
 
     def __init__(self) -> None:
-        self._equations: dict[str, list[Equation]] = {}
+        # Parameter-centric index used by get_equation/can_calculate.
+        self._equations_by_parameter: dict[str, list[Equation]] = {}
+        # Name-centric index used for uniqueness checks and full registry listing.
+        self._equations_by_name: dict[str, Equation] = {}
 
     def register(
         self,
@@ -318,6 +339,9 @@ class EquationRegistry:
             (last registered, first used) is used to determine which equation to use.
 
         """
+        if name in self._equations_by_name:
+            raise ValueError(f"Equation name '{name}' is already registered.")
+
         # Setup the equation
         formula = Equation(
             name=name,
@@ -325,10 +349,50 @@ class EquationRegistry:
             eq_str=eq_str,
             default=default,
         )
+        self._equations_by_name[name] = formula
 
         # Register the equation in the registry for each parameter it involves
         for param in parameters:
-            self._equations.setdefault(param, []).append(formula)
+            self._equations_by_parameter.setdefault(param, []).append(formula)
+
+    def list_equations(self, target: str | None = None) -> list[EquationSummary]:
+        """
+        List registered equations as serializable summaries.
+
+        Parameters
+        ----------
+        target : str, optional
+            If provided, only equations registered for this target parameter
+            are returned.
+
+        Returns
+        -------
+        list[EquationSummary]
+            Equation summaries sorted alphabetically by equation name,
+            case-insensitive.
+
+        Raises
+        ------
+        ValueError
+            If `target` is provided but no equation is registered for it.
+
+        """
+        if target is None:
+            equations = list(self._equations_by_name.values())
+        else:
+            equations = self._equations_by_parameter.get(target, [])
+            if not equations:
+                raise ValueError(f"No equation registered for parameter '{target}'.")
+
+        return [
+            {
+                "name": equation.name,
+                "parameters": equation.parameters,
+                "eq_str": equation.expr_str,
+                "default": equation.default,
+            }
+            for equation in sorted(equations, key=lambda eq: eq.name.lower())
+        ]
 
     def get_equation(
         self,
@@ -368,7 +432,7 @@ class EquationRegistry:
 
         """
         # All possible registered equations for the target parameter
-        candidates = self._equations.get(target, [])
+        candidates = self._equations_by_parameter.get(target, [])
 
         # Fail fast
         if not candidates:
@@ -463,10 +527,5 @@ class EquationRegistry:
         """
         return any(
             equation.can_solve_for(target, params)
-            for equation in self._equations.get(target, [])
+            for equation in self._equations_by_parameter.get(target, [])
         )
-
-
-# TODO add function list_equations
-# TODO equation rearrangement / "solve for" caching
-# TODO consistency check with equations

@@ -96,6 +96,26 @@ td.equation_registry.can_calculate("eac", params)   # True - all inputs present
 td.equation_registry.can_calculate("wacc", params)  # False - WACC is transcendental
 ```
 
+### Listing registered equations
+
+You can inspect equations in a registry via `list_equations()`.
+The result is a serializable list of dictionaries sorted alphabetically by
+equation name (case-insensitive):
+
+```python
+all_equations = td.equation_registry.list_equations()
+print(all_equations[0])
+# {'name': 'annuity_factor',
+#  'parameters': ['annuity_factor', 'wacc', 'lifetime'],
+#  'eq_str': 'annuity_factor - wacc / (1 - (1 + wacc)**(-lifetime))',
+#  'default': True}
+
+eac_equations = td.equation_registry.list_equations(target="eac")
+```
+
+If a target has no registered equations, `list_equations(target=...)` raises
+a `ValueError`.
+
 ### Integration with `Technology` objects
 
 [`Technology.calculate_parameters`][technologydata.technology.Technology.calculate_parameters]

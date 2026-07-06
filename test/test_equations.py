@@ -585,6 +585,57 @@ class TestCustomRegistry:
 
 
 # ---------------------------------------------------------------------------
+# list_equations
+# ---------------------------------------------------------------------------
+
+
+class TestListEquations:
+    def test_list_equations_empty_registry(self) -> None:
+        reg = EquationRegistry()
+        assert reg.list_equations() == []
+
+    def test_list_equations_sorted_case_insensitive(self) -> None:
+        reg = EquationRegistry()
+        reg.register("beta", ["x", "y"], "x - y")
+        reg.register("Alpha", ["a", "b"], "a - b", default=True)
+        reg.register("gamma", ["g", "h"], "g - h")
+
+        listed = reg.list_equations()
+
+        assert [entry["name"] for entry in listed] == ["Alpha", "beta", "gamma"]
+        assert listed[0] == {
+            "name": "Alpha",
+            "parameters": ["a", "b"],
+            "eq_str": "a - b",
+            "default": True,
+        }
+
+    def test_list_equations_for_target(self) -> None:
+        reg = EquationRegistry()
+        reg.register("z_from_xy", ["z", "x", "y"], "z - x - y")
+        reg.register("z_from_k", ["z", "k"], "z - k", default=True)
+        reg.register("other", ["q", "r"], "q - r")
+
+        listed = reg.list_equations(target="z")
+
+        assert [entry["name"] for entry in listed] == ["z_from_k", "z_from_xy"]
+
+    def test_list_equations_unknown_target_raises(self) -> None:
+        reg = EquationRegistry()
+        reg.register("z_from_xy", ["z", "x", "y"], "z - x - y")
+
+        with pytest.raises(ValueError, match="No equation registered"):
+            reg.list_equations(target="missing_target")
+
+    def test_register_duplicate_equation_name_raises(self) -> None:
+        reg = EquationRegistry()
+        reg.register("dup_name", ["a", "b"], "a - b")
+
+        with pytest.raises(ValueError, match="already registered"):
+            reg.register("dup_name", ["x", "y"], "x - y")
+
+
+# ---------------------------------------------------------------------------
 # Technology.calculate_parameters integration
 # ---------------------------------------------------------------------------
 
