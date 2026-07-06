@@ -226,13 +226,14 @@ class TestAnnuityFactor:
 
     def test_backward_wacc_no_analytical_solution(self) -> None:
         # WACC appears in a transcendental position (both linearly and as an
-        # exponent base), so SymPy cannot find a closed-form solution.
+        # exponent base), so SymPy cannot find a closed-form solution and does not support
+        # this type of equation
         af = equation_registry.calculate("annuity_factor", self._PARAMS)
         params = {
             "annuity_factor": af,
             "lifetime": self._PARAMS["lifetime"],
         }
-        with pytest.raises(ValueError, match="no analytical solution"):
+        with pytest.raises(NotImplementedError):
             equation_registry.calculate("wacc", params, equation_name="annuity_factor")
 
     def test_eac_via_annuity_factor_matches_direct_formula(self) -> None:
