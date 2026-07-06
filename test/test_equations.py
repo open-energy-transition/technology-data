@@ -7,6 +7,7 @@
 import pytest
 
 import technologydata  # noqa: F401 — ensures default_formulas are registered
+import technologydata.equations as equations_module
 from technologydata.default_equations import equation_registry
 from technologydata.equations import Equation, EquationRegistry
 from technologydata.parameter import Parameter
@@ -114,6 +115,74 @@ class TestEquationRepr:
         assert "eq_str='" in rep
         assert "...'" in rep
         assert long_expr not in rep
+
+
+class TestEquationCaching:
+    def test_symbolic_solutions_precomputed_on_registration(self, monkeypatch: pytest.MonkeyPatch) -> None:
+        calls = {"count": 0}
+
+        def fake_solve_with_timeout(expr: object, symbol: object) -> list[object]:
+            calls["count"] += 1
+            return []
+
+        monkeypatch.setattr(equations_module, "_solve_with_timeout", fake_solve_with_timeout)
+
+        Equation(
+            name="precompute",
+            parameters=["a", "b", "c"],
+            eq_str="a - b - c",
+        )
+
+        assert calls["count"] == 3
+
+    def test_solve_for_uses_cached_symbolic_solution(self, monkeypatch: pytest.MonkeyPatch) -> None:
+        equation = Equation(
+            name="cached_linear",
+            parameters=["a", "b"],
+            eq_str="a - b",
+        )
+
+        # Any new call to _solve_with_timeout during solve_for would indicate
+        # that symbolic caching is not used.
+        def fail_if_called(expr: object, symbol: object) -> list[object]:
+            raise AssertionError("_solve_with_timeout should not be called during solve_for")
+
+        monkeypatch.setattr(equations_module, "_solve_with_timeout", fail_if_called)
+
+        result = equation.solve_for(
+            "a", {"b": Parameter(magnitude=2.0, units="dimensionless")}
+        )
+
+        assert result.magnitude == pytest.approx(2.0)
+
+    def test_unsolved_target_skips_symbolic_step_per_call(self, monkeypatch: pytest.MonkeyPatch) -> None:
+        equation = Equation(
+            name="annuity",
+            parameters=["annuity_factor", "wacc", "lifetime"],
+            eq_str="annuity_factor - wacc / (1 - (1 + wacc)**(-lifetime))",
+        )
+
+        calls = {"total": 0, "symbolic": 0}
+
+        def fake_solve_with_timeout(expr: object, symbol: object) -> list[object]:
+            calls["total"] += 1
+            # Symbolic step would still contain multiple free symbols.
+            if len(expr.free_symbols) > 1:  # type: ignore[attr-defined]
+                calls["symbolic"] += 1
+            raise NotImplementedError
+
+        monkeypatch.setattr(equations_module, "_solve_with_timeout", fake_solve_with_timeout)
+
+        af = Parameter(magnitude=_AF_EXPECTED, units="dimensionless")
+        lifetime = Parameter(magnitude=20.0, units="year")
+
+        with pytest.raises(NotImplementedError):
+            equation.solve_for("wacc", {"annuity_factor": af, "lifetime": lifetime})
+        with pytest.raises(NotImplementedError):
+            equation.solve_for("wacc", {"annuity_factor": af, "lifetime": lifetime})
+
+        assert calls["symbolic"] == 0
+        assert calls["total"] == 2
 
 
 # ---------------------------------------------------------------------------

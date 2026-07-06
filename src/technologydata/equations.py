@@ -144,6 +144,35 @@ class Equation:
         self.expr_str = eq_str
         self.default = default
 
+        # Validate names once and build the internal symbolic representation once.
+        if any(p.startswith("_p") and p[2:].isdigit() for p in self.parameters):
+            raise ValueError(
+                f"Equation '{self.name}' has parameters that conflict with internal symbol naming: {self.parameters}. "
+                "Parameter names cannot start with '_p' followed by digits."
+            )
+
+        self._param_idx = {p: i for i, p in enumerate(self.parameters)}
+        self._symbols_by_parameter = {
+            p: sp.Symbol(f"_p{self._param_idx[p]}") for p in self.parameters
+        }
+
+        safe_expr = self.expr_str
+        for p in sorted(self.parameters, key=len, reverse=True):
+            safe_expr = safe_expr.replace(p, f"_p{self._param_idx[p]}")
+        self._expr = sp.sympify(safe_expr)
+
+        # Precompute symbolic solutions for each target once at registration.
+        # Targets with no symbolic solution are cached as an empty tuple.
+        self._symbolic_solutions_by_target: dict[str, tuple[sp.Expr, ...]] = {}
+        for target in self.parameters:
+            try:
+                solutions = _solve_with_timeout(
+                    self._expr, self._symbols_by_parameter[target]
+                )
+            except Exception:  # noqa: BLE001
+                solutions = []
+            self._symbolic_solutions_by_target[target] = tuple(solutions)
+
     def __repr__(self) -> str:
         """Return a concise human-readable representation for REPL usage."""
         expr = self.expr_str
@@ -209,31 +238,15 @@ class Equation:
         """
         from technologydata.parameter import Parameter
 
-        # Map each parameter to a positional symbol (_p0, _p1, ..) to allow for arbitrary
-        # parameter names (including spaces) that are not valid Python identifiers for SymPy.
-        # Replace longest names first to avoid partial matches
-        # Test before to make sure there are no parameters called _p\d+ that would be replaced by accident
-        if any(p.startswith("_p") and p[2:].isdigit() for p in self.parameters):
-            raise ValueError(
-                f"Equation '{self.name}' has parameters that conflict with internal symbol naming: {self.parameters}. "
-                "Parameter names cannot start with '_p' followed by digits."
-            )
-
-        param_idx = {p: i for i, p in enumerate(self.parameters)}
-        syms = {p: sp.Symbol(f"_p{param_idx[p]}") for p in self.parameters}
-        safe_expr = self.expr_str
-        for p in sorted(self.parameters, key=len, reverse=True):
-            safe_expr = safe_expr.replace(p, f"_p{param_idx[p]}")
-        expr = sp.sympify(safe_expr)
-
         # Only parameters required for solving this target are relevant.
         input_params = [p for p in self.parameters if p != target and p in params]
-        input_syms = [syms[p] for p in input_params]
+        input_syms = [self._symbols_by_parameter[p] for p in input_params]
 
         # Step 1: solve symbolically, evaluate via pint arithmetic.
         # Using lambdify + pint Quantities propagates units automatically.
         # Symbolic solving is significantly faster than working with floats.
-        symbolic_solutions = _solve_with_timeout(expr, syms[target])
+        symbolic_solutions = self._symbolic_solutions_by_target.get(target, ())
+        has_symbolic_solution = bool(symbolic_solutions)
         results: list[tuple[float, object]] = []
 
         for sym_sol in symbolic_solutions:
@@ -246,7 +259,7 @@ class Equation:
 
             input_values = [
                 params[p].magnitude
-                if syms[p] in exponent_syms
+                if self._symbols_by_parameter[p] in exponent_syms
                 else params[p]._pint_quantity
                 for p in input_params
             ]
@@ -271,16 +284,33 @@ class Equation:
         if not results:
             # Step 2: substitute magnitudes first, then solve. This can succeed
             # when SymPy's heuristics prefer concrete numbers over abstract symbols.
-            subs_mag = {syms[p]: params[p].magnitude for p in params if p in syms}
-            for sol in _solve_with_timeout(expr.subs(subs_mag), syms[target]):
-                try:
-                    mag = float(sol)
-                    if mag == mag:
-                        results.append((mag, mag))
-                except (TypeError, ValueError):
-                    pass
+            subs_mag = {
+                self._symbols_by_parameter[p]: params[p].magnitude
+                for p in params
+                if p in self._symbols_by_parameter
+            }
+            try:
+                for sol in _solve_with_timeout(
+                    self._expr.subs(subs_mag), self._symbols_by_parameter[target]
+                ):
+                    try:
+                        mag = float(sol)
+                        if mag == mag:
+                            results.append((mag, mag))
+                    except (TypeError, ValueError):
+                        pass
+            except Exception as exc:  # noqa: BLE001
+                if not has_symbolic_solution:
+                    raise NotImplementedError(
+                        f"Formula '{self.name}' cannot solve for '{target}' analytically."
+                    ) from exc
+                raise
 
         if not results:
+            if not has_symbolic_solution:
+                raise NotImplementedError(
+                    f"Formula '{self.name}' cannot solve for '{target}' analytically."
+                )
             raise ValueError(
                 f"Formula '{self.name}' has no analytical solution for '{target}' "
                 "with the given parameter values. "

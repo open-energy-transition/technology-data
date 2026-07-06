@@ -134,6 +134,16 @@ print(repr(eq))
 # Equation(name='my_equation', parameters=['a', 'b', 'c'], eq_str='a - b - c', default=False)
 ```
 
+### Equation solve caching
+
+Symbolic solutions are precomputed and cached when an equation is registered.
+This means repeated calculations for the same equation target do not run the
+same symbolic solve step again.
+
+If no symbolic solution exists for a target, that information is also cached.
+In that case, each calculation skips symbolic solving for that target and uses
+the numeric fallback directly with the provided values.
+
 ### Integration with `Technology` objects
 
 [`Technology.calculate_parameters`][technologydata.technology.Technology.calculate_parameters]
