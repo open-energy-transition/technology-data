@@ -12,7 +12,6 @@ from pydantic import BaseModel, Field, PrivateAttr
 
 import technologydata
 from technologydata.source_collection import SourceCollection
-from technologydata.utils.units import extract_currency_units
 
 logger = logging.getLogger(__name__)
 

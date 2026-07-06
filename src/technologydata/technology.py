@@ -4,7 +4,7 @@
 
 """Technology class for representing a technology with parameters and transformation methods."""
 
-from typing import Annotated, Any, Self
+from typing import Annotated, Self
 
 import pydantic
 
@@ -119,6 +119,7 @@ class Technology(pydantic.BaseModel):
         ValueError
             If a requested target has no applicable equation, required parameters
             are missing, or input currencies are inconsistent.
+
         """
         from technologydata.default_equations import equation_registry
 
@@ -128,7 +129,8 @@ class Technology(pydantic.BaseModel):
             targets = [
                 p
                 for p in equation_registry._equations
-                if p not in new_params and equation_registry.can_calculate(p, new_params)
+                if p not in new_params
+                and equation_registry.can_calculate(p, new_params)
             ]
         elif isinstance(targets, str):
             targets = [targets]
