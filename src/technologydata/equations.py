@@ -401,7 +401,7 @@ class EquationRegistry:
             equation with $LHS = 0$. The equation must contain the parameter names
             exactly as listed in `parameters` (including any spaces).
         priority : int, optional
-            Priority used when multiple equations can solve the same target.
+            Priority used when multiple equations can solve for the same target.
             Higher values are preferred. Defaults to ``0``.
         overwrite : bool, optional
             If ``True`` and an equation with the same name already exists,
