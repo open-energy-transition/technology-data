@@ -302,16 +302,25 @@ The built-in default equations are now loaded from a YAML file in
 That file declares a YAML language server schema for editor tooltip support.
 my_reg.register(
     name="my_formula",
-    parameters=["x", "y", "z"],
-    expr_str="x - y * z",
-    priority=1,
+
+```text
+parameters=["x", "y", "z"],
+expr_str="x - y * z",
+priority=1,
+```
+
 )
 result = my_reg.calculate("x", {
     "y": td.Parameter(magnitude=3.0, units="dimensionless"),
-    "z": td.Parameter(magnitude=4.0, units="dimensionless"),
-})
-print(result.magnitude)  # 12.0
+
+```text
+"z": td.Parameter(magnitude=4.0, units="dimensionless"),
 ```
+
+})
+print(result.magnitude) # 12.0
+
+```text
 
 ---
 
@@ -394,3 +403,4 @@ first one.
 |---|---|---|
 | `fuel_variable_cost` | `fuel_variable_cost`, `fuel_cost`, `efficiency` | Fuel cost and variable cost must be in same energy unit |
 | `co2_cost` | `co2_cost`, `co2_price`, `co2_intensity` | `co2_intensity` in t/MWh of output energy |
+```

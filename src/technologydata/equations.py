@@ -66,9 +66,9 @@ import pathlib
 from collections.abc import Sequence
 from typing import TYPE_CHECKING, TypedDict
 
+import overdue
 import pydantic
 import sympy as sp
-import overdue
 import yaml
 
 if TYPE_CHECKING:
@@ -94,12 +94,14 @@ class EquationConfig(pydantic.BaseModel):
     priority: int = pydantic.Field(default=0, ge=0)
     description: str | None = None
 
+
 # Seconds to wait for SymPy before declaring "no analytical solution".
 # Most tractable algebraic solutions complete in well under a second; this
 # budget is intentionally generous to handle slow-but-solvable cases while
 # still catching transcendental equations that would otherwise hang forever.
 _SOLVE_TIMEOUT_SECONDS = 5
 _EQUATION_REPR_MAX_EXPR_LENGTH = 80
+
 
 def _solve_with_timeout(expr: sp.Expr, symbol: sp.Symbol) -> list[sp.Expr]:
     """
@@ -129,7 +131,7 @@ class Equation:
     Parameters
     ----------
     name : str
-        Unique name given to this equation. Used to identify the equation in 
+        Unique name given to this equation. Used to identify the equation in
         a equation registry and for tracking `Parameter` provenance information.
     parameters : list of str
         The names of all parameters that participate in the equation. Names must be
@@ -218,13 +220,13 @@ class Equation:
             The parameter to check.
         available : dict
             Known parameter values.
-        
+
         Returns
         -------
         bool
             `True` if the equation can solve for `target`, else `False`.
+
         """
-        
         if target not in self.parameters:
             # Equation is not related to the target parameter
             return False
@@ -255,6 +257,7 @@ class Equation:
         ------
         ValueError
             If SymPy cannot find a closed-form analytical solution.
+
         """
         from technologydata.parameter import Parameter
 
@@ -368,6 +371,7 @@ class EquationRegistry:
     _equations_by_name : dict[str, Equation]
         Index from unique equation name to the corresponding equation object.
         Used for uniqueness checks and global equation listing.
+
     """
 
     def __init__(self) -> None:
@@ -511,7 +515,7 @@ class EquationRegistry:
     def from_yaml(
         cls,
         yaml_files: str | pathlib.Path | Sequence[str | pathlib.Path],
-    ) -> "EquationRegistry":
+    ) -> EquationRegistry:
         """
         Create a new registry initialized from one or more YAML files.
 
@@ -519,12 +523,12 @@ class EquationRegistry:
         ----------
         yaml_files : str | pathlib.Path | Sequence[str | pathlib.Path]
             Path(s) to YAML file(s) containing equation definitions.
-        
+
         Returns
         -------
         EquationRegistry
             A new instance of EquationRegistry with equations loaded from the specified YAML files.
-        
+
         """
         registry = cls()
         registry.load_from_yaml(yaml_files=yaml_files, overwrite=False)

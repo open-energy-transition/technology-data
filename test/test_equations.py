@@ -120,14 +120,18 @@ class TestEquationRepr:
 
 
 class TestEquationCaching:
-    def test_symbolic_solutions_precomputed_on_registration(self, monkeypatch: pytest.MonkeyPatch) -> None:
+    def test_symbolic_solutions_precomputed_on_registration(
+        self, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
         calls = {"count": 0}
 
         def fake_solve_with_timeout(expr: object, symbol: object) -> list[object]:
             calls["count"] += 1
             return []
 
-        monkeypatch.setattr(equations_module, "_solve_with_timeout", fake_solve_with_timeout)
+        monkeypatch.setattr(
+            equations_module, "_solve_with_timeout", fake_solve_with_timeout
+        )
 
         Equation(
             name="precompute",
@@ -137,7 +141,9 @@ class TestEquationCaching:
 
         assert calls["count"] == 3
 
-    def test_solve_for_uses_cached_symbolic_solution(self, monkeypatch: pytest.MonkeyPatch) -> None:
+    def test_solve_for_uses_cached_symbolic_solution(
+        self, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
         equation = Equation(
             name="cached_linear",
             parameters=["a", "b"],
@@ -147,7 +153,9 @@ class TestEquationCaching:
         # Any new call to _solve_with_timeout during solve_for would indicate
         # that symbolic caching is not used.
         def fail_if_called(expr: object, symbol: object) -> list[object]:
-            raise AssertionError("_solve_with_timeout should not be called during solve_for")
+            raise AssertionError(
+                "_solve_with_timeout should not be called during solve_for"
+            )
 
         monkeypatch.setattr(equations_module, "_solve_with_timeout", fail_if_called)
 
@@ -157,7 +165,9 @@ class TestEquationCaching:
 
         assert result.magnitude == pytest.approx(2.0)
 
-    def test_unsolved_target_skips_symbolic_step_per_call(self, monkeypatch: pytest.MonkeyPatch) -> None:
+    def test_unsolved_target_skips_symbolic_step_per_call(
+        self, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
         equation = Equation(
             name="annuity",
             parameters=["annuity_factor", "wacc", "lifetime"],
@@ -173,7 +183,9 @@ class TestEquationCaching:
                 calls["symbolic"] += 1
             raise NotImplementedError
 
-        monkeypatch.setattr(equations_module, "_solve_with_timeout", fake_solve_with_timeout)
+        monkeypatch.setattr(
+            equations_module, "_solve_with_timeout", fake_solve_with_timeout
+        )
 
         af = Parameter(magnitude=_AF_EXPECTED, units="dimensionless")
         lifetime = Parameter(magnitude=20.0, units="year")
@@ -799,7 +811,9 @@ class TestEquationYamlLoading:
 
         assert [item["name"] for item in reg.list_equations()] == ["eq_a", "eq_b"]
 
-    def test_load_from_yaml_conflicting_name_raises(self, tmp_path: pathlib.Path) -> None:
+    def test_load_from_yaml_conflicting_name_raises(
+        self, tmp_path: pathlib.Path
+    ) -> None:
         file_a = tmp_path / "a.yaml"
         file_b = tmp_path / "b.yaml"
         file_a.write_text(
