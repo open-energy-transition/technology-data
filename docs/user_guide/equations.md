@@ -195,10 +195,10 @@ Sometimes you may have multiple formulas available that can calculate the same p
 The registry chooses in this order:
 
 1. An explicitly requested formula via `equation_name=`.
-2. The first applicable formula marked `default=True`.
-3. The first other applicable formula in registration order.
+2. The applicable formula with the highest `priority` value.
+3. If multiple formulas have the same priority, the first registered one.
 
-If more than one formula is marked as the default for a target, the one that was
+If multiple formulas have equal priority for a target, the one that was
 registered first and is applicable wins.
 
 If no formula can apply, a `ValueError` is raised that lists every registered formula
@@ -266,11 +266,45 @@ td.equation_registry.register(
 
 # Option 2: isolated registry
 my_reg = td.EquationRegistry()
+
+### Loading equations from YAML files
+
+Equation registries can be populated from YAML files with a list of equation
+definitions at the root.
+
+Each entry supports:
+
+- `name`: equation name
+- `parameters`: list of parameter names
+- `eq_str`: equation string (equal to zero)
+- `priority` (optional): non-negative integer, default `0`
+- `description` (optional): arbitrary free-text metadata
+
+```python
+reg = td.EquationRegistry()
+reg.load_from_yaml("my_equations.yaml")
+
+# Load multiple files
+reg.load_from_yaml(["base.yaml", "extensions.yaml"])
+
+# Replace an existing equation name intentionally
+reg.load_from_yaml("override.yaml", overwrite=True)
+
+# Or create a fresh registry from YAML directly
+reg2 = td.EquationRegistry.from_yaml(["base.yaml", "extensions.yaml"])
+```
+
+By default (`overwrite=False`), loading fails if a file defines an equation
+name that already exists with a different definition.
+
+The built-in default equations are now loaded from a YAML file in
+`src/technologydata/equations_data/default_equations.yaml`.
+That file declares a YAML language server schema for editor tooltip support.
 my_reg.register(
     name="my_formula",
     parameters=["x", "y", "z"],
     expr_str="x - y * z",
-    default=True,
+    priority=1,
 )
 result = my_reg.calculate("x", {
     "y": td.Parameter(magnitude=3.0, units="dimensionless"),
@@ -302,8 +336,8 @@ When multiple formulas are registered for the same parameter, the registry selec
 | Priority | Condition |
 |----------|-----------|
 | 1 | A specific formula name was requested via `equation_name=` |
-| 2 | Default-flagged formula (`default=True`) whose inputs are all present |
-| 3 | First other registered formula whose inputs are all present in the order they were registered |
+| 2 | Highest-priority formula whose inputs are all present |
+| 3 | For equal priority, first registered formula whose inputs are all present |
 
 ### Units
 
@@ -337,7 +371,7 @@ first one.
 | Formula name | Parameters | Notes |
 |---|---|---|
 | `annuity_factor` | `annuity_factor`, `wacc`, `lifetime` | WACC not analytically solvable |
-| `eac_annuity` *(default for `eac`)* | `eac`, `specific_investment`, `wacc`, `lifetime` | WACC not analytically solvable |
+| `eac_annuity` *(highest priority for `eac`)* | `eac`, `specific_investment`, `wacc`, `lifetime` | WACC not analytically solvable |
 | `eac_via_annuity_factor` | `eac`, `specific_investment`, `annuity_factor` | Requires pre-computed annuity factor |
 | `eac_simple` | `eac`, `total_investment_cost`, `lifetime` | Ignores time-value of money |
 | `total_investment_from_specific` | `total_investment_cost`, `specific_investment`, `capacity` | Ensure consistent power units |

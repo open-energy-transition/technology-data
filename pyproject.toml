@@ -39,6 +39,7 @@ dependencies = [
     "scipy>=1.16.1",
     "overdue>=0.1.5",
     "sympy>=1.13",
+    "pyyaml>=6.0.2",
 ]
 
 [project.urls]
@@ -108,6 +109,9 @@ version_scheme = "no-guess-dev"
 [tool.setuptools.packages.find]
 where = ["src"]
 include = ["technologydata"]
+
+[tool.setuptools.package-data]
+technologydata = ["equations_data/*.yaml", "equations_data/*.json"]
 
 # code coverage settings
 [tool.coverage.run]

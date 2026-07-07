@@ -62,10 +62,14 @@ from __future__ import annotations
 # `Parameter` in type hints without importing it at module load time, which
 # would create a circular import: __init__.py → technology.py → formulas.py
 # → parameter.py → import technologydata (circular).
+import pathlib
+from collections.abc import Sequence
 from typing import TYPE_CHECKING, TypedDict
 
+import pydantic
 import sympy as sp
 import overdue
+import yaml
 
 if TYPE_CHECKING:
     from technologydata.parameter import Parameter
@@ -77,7 +81,18 @@ class EquationSummary(TypedDict):
     name: str
     parameters: list[str]
     eq_str: str
-    default: bool
+    priority: int
+    description: str | None
+
+
+class EquationConfig(pydantic.BaseModel):
+    """Schema for one equation entry loaded from YAML."""
+
+    name: str
+    parameters: list[str]
+    eq_str: str
+    priority: int = pydantic.Field(default=0, ge=0)
+    description: str | None = None
 
 # Seconds to wait for SymPy before declaring "no analytical solution".
 # Most tractable algebraic solutions complete in well under a second; this
@@ -126,9 +141,9 @@ class Equation:
         exactly as listed in `parameters` and may include spaces or other special characters,
         they are not directly passed on to SymPy's parser and can therefore be arbitrary strings.
         The expression is set to zero, so `"a - b*c"` represents the relationship ``a = b*c``.
-    default : bool
-        If `True`, this equation is preferred over others that also cover
-        the same target when no equation name is specified explicitly.
+    priority : int
+        Priority used when multiple equations can solve the same target.
+        Higher values are preferred. Defaults to ``0``.
 
     """
 
@@ -137,12 +152,16 @@ class Equation:
         name: str,
         parameters: list[str],
         eq_str: str,
-        default: bool = False,
+        priority: int = 0,
+        description: str | None = None,
     ) -> None:
         self.name = name
         self.parameters = parameters
         self.expr_str = eq_str
-        self.default = default
+        if priority < 0:
+            raise ValueError("Equation priority must be >= 0.")
+        self.priority = priority
+        self.description = description
 
         # Validate names once and build the internal symbolic representation once.
         if any(p.startswith("_p") and p[2:].isdigit() for p in self.parameters):
@@ -184,7 +203,8 @@ class Equation:
             f"name={self.name!r}, "
             f"parameters={self.parameters!r}, "
             f"eq_str={expr!r}, "
-            f"default={self.default!r}"
+            f"priority={self.priority!r}, "
+            f"description={self.description!r}"
             ")"
         )
 
@@ -338,7 +358,7 @@ class EquationRegistry:
 
     Multiple equations can be associated with the same parameter,
     e.g. two different methods for computing EAC.
-    A default equation per parameter can be set, which is used when no explicit choice is made.
+    Equation selection can be influenced by assigning per-equation priorities.
 
     Attributes
     ----------
@@ -361,7 +381,9 @@ class EquationRegistry:
         name: str,
         parameters: list[str],
         eq_str: str,
-        default: bool = False,
+        priority: int = 0,
+        overwrite: bool = False,
+        description: str | None = None,
     ) -> None:
         """
         Register an equation linking a set of parameters.
@@ -378,28 +400,135 @@ class EquationRegistry:
             The equation as string representation equal to zero, i.e. LHS of the
             equation with $LHS = 0$. The equation must contain the parameter names
             exactly as listed in `parameters` (including any spaces).
-        default : bool, optional
-            If ``True`` this equation is preferred over other equations
-            when multiple equations can be used to calculate the same parameter.
-            If multiple equations are marked as default, the order of registration
-            (last registered, first used) is used to determine which equation to use.
+        priority : int, optional
+            Priority used when multiple equations can solve the same target.
+            Higher values are preferred. Defaults to ``0``.
+        overwrite : bool, optional
+            If ``True`` and an equation with the same name already exists,
+            the existing equation is replaced.
+        description : str, optional
+            Optional free-text description for documentation or context.
 
         """
-        if name in self._equations_by_name:
-            raise ValueError(f"Equation name '{name}' is already registered.")
+        existing = self._equations_by_name.get(name)
+        if existing is not None:
+            same_definition = (
+                existing.parameters == parameters
+                and existing.expr_str == eq_str
+                and existing.priority == priority
+                and existing.description == description
+            )
+            if same_definition:
+                return
+
+            if not overwrite:
+                raise ValueError(
+                    f"Equation name '{name}' already exists with a different definition. "
+                    "Set overwrite=True to replace it."
+                )
+
+            self._remove_equation(name)
 
         # Setup the equation
         formula = Equation(
             name=name,
             parameters=parameters,
             eq_str=eq_str,
-            default=default,
+            priority=priority,
+            description=description,
         )
         self._equations_by_name[name] = formula
 
         # Register the equation in the registry for each parameter it involves
         for param in parameters:
             self._equations_by_parameter.setdefault(param, []).append(formula)
+
+    def _remove_equation(self, name: str) -> None:
+        """Remove one equation by name from all internal indexes."""
+        equation = self._equations_by_name.pop(name)
+        for param in equation.parameters:
+            equations = self._equations_by_parameter.get(param)
+            if equations is None:
+                continue
+            self._equations_by_parameter[param] = [
+                current for current in equations if current.name != name
+            ]
+            if not self._equations_by_parameter[param]:
+                del self._equations_by_parameter[param]
+
+    def load_from_yaml(
+        self,
+        yaml_files: str | pathlib.Path | Sequence[str | pathlib.Path],
+        overwrite: bool = False,
+    ) -> None:
+        """
+        Load equation definitions from one or multiple YAML files.
+
+        Parameters
+        ----------
+        yaml_files : str | pathlib.Path | Sequence[str | pathlib.Path]
+            Path(s) to YAML file(s) containing equation definitions.
+        overwrite : bool, optional
+            If ``True``, allow replacing existing equations with the same name.
+            Defaults to ``False``.
+
+        Raises
+        ------
+        ValueError
+            If the YAML content is not a list of equation definitions or
+            if conflicting equation names are found and ``overwrite=False``.
+
+        """
+        if isinstance(yaml_files, (str, pathlib.Path)):
+            files = [yaml_files]
+        else:
+            files = list(yaml_files)
+
+        for file in files:
+            path = pathlib.Path(file)
+            with path.open("r", encoding="utf-8") as handle:
+                payload = yaml.safe_load(handle)
+
+            if payload is None:
+                continue
+            if not isinstance(payload, list):
+                raise ValueError(
+                    f"YAML file '{path}' must contain a list of equations at the root."
+                )
+
+            for raw_entry in payload:
+                config = EquationConfig.model_validate(raw_entry)
+                self.register(
+                    name=config.name,
+                    parameters=config.parameters,
+                    eq_str=config.eq_str,
+                    priority=config.priority,
+                    overwrite=overwrite,
+                    description=config.description,
+                )
+
+    @classmethod
+    def from_yaml(
+        cls,
+        yaml_files: str | pathlib.Path | Sequence[str | pathlib.Path],
+    ) -> "EquationRegistry":
+        """
+        Create a new registry initialized from one or more YAML files.
+
+        Parameters
+        ----------
+        yaml_files : str | pathlib.Path | Sequence[str | pathlib.Path]
+            Path(s) to YAML file(s) containing equation definitions.
+        
+        Returns
+        -------
+        EquationRegistry
+            A new instance of EquationRegistry with equations loaded from the specified YAML files.
+        
+        """
+        registry = cls()
+        registry.load_from_yaml(yaml_files=yaml_files, overwrite=False)
+        return registry
 
     def list_equations(self, target: str | None = None) -> list[EquationSummary]:
         """
@@ -435,7 +564,8 @@ class EquationRegistry:
                 "name": equation.name,
                 "parameters": equation.parameters,
                 "eq_str": equation.expr_str,
-                "default": equation.default,
+                "priority": equation.priority,
+                "description": equation.description,
             }
             for equation in sorted(equations, key=lambda eq: eq.name.lower())
         ]
@@ -451,10 +581,8 @@ class EquationRegistry:
 
         Selection priority:
         1. The equation explicitly requested by `equation_name`
-        2. Default-flagged equations (`default=True`) whose inputs are all present
-           in their order of registration.
-        3. Any other registered equation whose inputs are all present in their
-           order of registration.
+          2. Higher-priority equations whose inputs are all present.
+          3. For equal priority, earlier registration order.
 
         Parameters
         ----------
@@ -503,10 +631,9 @@ class EquationRegistry:
                 )
             return f
 
-        # Selection by available parameters and by default flags
-        # Sort so default=True equations come first;
-        # sort such that the registration order within each group is preserved
-        for f in sorted(candidates, key=lambda f: f.default, reverse=True):
+        # Selection by available parameters and equation priority.
+        # Higher priority first; stable sort preserves registration order on ties.
+        for f in sorted(candidates, key=lambda f: f.priority, reverse=True):
             if f.can_solve_for(target, params):
                 return f
 

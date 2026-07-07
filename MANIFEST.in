@@ -1,4 +1,6 @@
 include src/technologydata/utils/*.txt
+include src/technologydata/equations_data/*.yaml
+include src/technologydata/equations_data/*.json
 include src/technologydata/parsers/dea_energy_storage/v10/*.json
 include src/technologydata/parsers/manual_input_usa/v0.13.4/*.json
 include src/technologydata/parsers/raw/*

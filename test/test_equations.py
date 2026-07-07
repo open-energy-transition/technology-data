@@ -4,6 +4,8 @@
 
 """Tests for Equation, EquationRegistry, and Technology.calculate_parameters."""
 
+import pathlib
+
 import pytest
 
 import technologydata  # noqa: F401 — ensures default_formulas are registered
@@ -80,7 +82,7 @@ class TestEquationRepr:
             name="simple",
             parameters=["target", "input_a", "input_b"],
             eq_str="target - input_a - input_b",
-            default=True,
+            priority=2,
         )
 
         rep = repr(equation)
@@ -89,7 +91,7 @@ class TestEquationRepr:
         assert "name='simple'" in rep
         assert "parameters=['target', 'input_a', 'input_b']" in rep
         assert "eq_str='target - input_a - input_b'" in rep
-        assert "default=True" in rep
+        assert "priority=2" in rep
 
     def test_repr_preserves_parameter_order(self) -> None:
         equation = Equation(
@@ -709,7 +711,7 @@ class TestListEquations:
     def test_list_equations_sorted_case_insensitive(self) -> None:
         reg = EquationRegistry()
         reg.register("beta", ["x", "y"], "x - y")
-        reg.register("Alpha", ["a", "b"], "a - b", default=True)
+        reg.register("Alpha", ["a", "b"], "a - b", priority=2)
         reg.register("gamma", ["g", "h"], "g - h")
 
         listed = reg.list_equations()
@@ -719,13 +721,14 @@ class TestListEquations:
             "name": "Alpha",
             "parameters": ["a", "b"],
             "eq_str": "a - b",
-            "default": True,
+            "priority": 2,
+            "description": None,
         }
 
     def test_list_equations_for_target(self) -> None:
         reg = EquationRegistry()
         reg.register("z_from_xy", ["z", "x", "y"], "z - x - y")
-        reg.register("z_from_k", ["z", "k"], "z - k", default=True)
+        reg.register("z_from_k", ["z", "k"], "z - k", priority=2)
         reg.register("other", ["q", "r"], "q - r")
 
         listed = reg.list_equations(target="z")
@@ -743,8 +746,163 @@ class TestListEquations:
         reg = EquationRegistry()
         reg.register("dup_name", ["a", "b"], "a - b")
 
-        with pytest.raises(ValueError, match="already registered"):
+        with pytest.raises(ValueError, match="different definition"):
             reg.register("dup_name", ["x", "y"], "x - y")
+
+
+class TestEquationYamlLoading:
+    def test_load_from_yaml_single_file(self, tmp_path: pathlib.Path) -> None:
+        yaml_file = tmp_path / "equations.yaml"
+        yaml_file.write_text(
+            "\n".join(
+                [
+                    "- name: test_sum",
+                    "  parameters: [z, x, y]",
+                    "  eq_str: z - x - y",
+                    "  priority: 3",
+                ]
+            ),
+            encoding="utf-8",
+        )
+
+        reg = EquationRegistry()
+        reg.load_from_yaml(yaml_file)
+
+        listed = reg.list_equations()
+        assert len(listed) == 1
+        assert listed[0]["name"] == "test_sum"
+        assert listed[0]["priority"] == 3
+        assert listed[0]["description"] is None
+
+    def test_load_from_yaml_multiple_files(self, tmp_path: pathlib.Path) -> None:
+        file_a = tmp_path / "a.yaml"
+        file_b = tmp_path / "b.yaml"
+        file_a.write_text(
+            """
+- name: eq_a
+  parameters: [a, b]
+  eq_str: a - b
+""".strip(),
+            encoding="utf-8",
+        )
+        file_b.write_text(
+            """
+- name: eq_b
+  parameters: [x, y]
+  eq_str: x - y
+""".strip(),
+            encoding="utf-8",
+        )
+
+        reg = EquationRegistry()
+        reg.load_from_yaml([file_a, file_b])
+
+        assert [item["name"] for item in reg.list_equations()] == ["eq_a", "eq_b"]
+
+    def test_load_from_yaml_conflicting_name_raises(self, tmp_path: pathlib.Path) -> None:
+        file_a = tmp_path / "a.yaml"
+        file_b = tmp_path / "b.yaml"
+        file_a.write_text(
+            """
+- name: same
+  parameters: [a, b]
+  eq_str: a - b
+""".strip(),
+            encoding="utf-8",
+        )
+        file_b.write_text(
+            """
+- name: same
+  parameters: [x, y]
+  eq_str: x - y
+""".strip(),
+            encoding="utf-8",
+        )
+
+        reg = EquationRegistry()
+        reg.load_from_yaml(file_a)
+
+        with pytest.raises(ValueError, match="different definition"):
+            reg.load_from_yaml(file_b)
+
+    def test_load_from_yaml_overwrite_replaces(self, tmp_path: pathlib.Path) -> None:
+        file_a = tmp_path / "a.yaml"
+        file_b = tmp_path / "b.yaml"
+        file_a.write_text(
+            """
+- name: same
+  parameters: [a, b]
+  eq_str: a - b
+""".strip(),
+            encoding="utf-8",
+        )
+        file_b.write_text(
+            "\n".join(
+                [
+                    "- name: same",
+                    "  parameters: [z, x, y]",
+                    "  eq_str: z - x - y",
+                    "  priority: 4",
+                ]
+            ),
+            encoding="utf-8",
+        )
+
+        reg = EquationRegistry()
+        reg.load_from_yaml(file_a)
+        reg.load_from_yaml(file_b, overwrite=True)
+
+        listed = reg.list_equations()
+        assert len(listed) == 1
+        assert listed[0]["name"] == "same"
+        assert listed[0]["parameters"] == ["z", "x", "y"]
+        assert listed[0]["priority"] == 4
+
+    def test_from_yaml_factory(self, tmp_path: pathlib.Path) -> None:
+        yaml_file = tmp_path / "factory.yaml"
+        yaml_file.write_text(
+            """
+- name: factory_eq
+  parameters: [a, b]
+  eq_str: a - b
+""".strip(),
+            encoding="utf-8",
+        )
+
+        reg = EquationRegistry.from_yaml(yaml_file)
+        assert [entry["name"] for entry in reg.list_equations()] == ["factory_eq"]
+
+    def test_register_with_description(self) -> None:
+        reg = EquationRegistry()
+        reg.register(
+            name="described_eq",
+            parameters=["a", "b"],
+            eq_str="a - b",
+            description="Arbitrary context",
+        )
+
+        listed = reg.list_equations()
+        assert listed[0]["name"] == "described_eq"
+        assert listed[0]["description"] == "Arbitrary context"
+
+    def test_load_from_yaml_description(self, tmp_path: pathlib.Path) -> None:
+        yaml_file = tmp_path / "described.yaml"
+        yaml_file.write_text(
+            "\n".join(
+                [
+                    "- name: with_description",
+                    "  parameters: [a, b]",
+                    "  eq_str: a - b",
+                    "  description: free-text details",
+                ]
+            ),
+            encoding="utf-8",
+        )
+
+        reg = EquationRegistry.from_yaml(yaml_file)
+        listed = reg.list_equations()
+        assert listed[0]["name"] == "with_description"
+        assert listed[0]["description"] == "free-text details"
 
 
 # ---------------------------------------------------------------------------
