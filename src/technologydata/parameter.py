@@ -5,6 +5,7 @@
 """Parameter class for encapsulating a value, its unit, provenance, notes, and sources."""
 
 import logging
+import math
 from typing import Annotated, Self
 
 import pint
@@ -146,6 +147,50 @@ class Parameter(BaseModel):
             note=self.note,
             sources=self.sources,
         )  # type: ignore
+
+    def isclose(
+        self,
+        other: Self,
+        rtol: float = 1e-6,
+        atol: float = 1e-9,
+    ) -> bool:
+        """
+        Check whether another parameter is numerically and contextually consistent.
+
+        Consistency means:
+        - same carrier
+        - same heating value
+        - compatible units (or both unitless)
+        - numerically close magnitudes after unit harmonization
+        """
+        if self.carrier != other.carrier:
+            return False
+
+        if self.heating_value != other.heating_value:
+            return False
+
+        if self.units is None and other.units is None:
+            return math.isclose(
+                self.magnitude,
+                other.magnitude,
+                rel_tol=rtol,
+                abs_tol=atol,
+            )
+
+        if self.units is None or other.units is None:
+            return False
+
+        try:
+            other_in_self_units = other.to(self.units)
+        except Exception:
+            return False
+
+        return math.isclose(
+            self.magnitude,
+            other_in_self_units.magnitude,
+            rel_tol=rtol,
+            abs_tol=atol,
+        )
 
     def to_currency(
         self, target_currency: str, country: str, source: str = "worldbank"

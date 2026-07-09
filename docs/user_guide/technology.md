@@ -9,7 +9,8 @@ The `Technology` class in `technologydata` represents a single technology, inclu
 - **Flexible Parameter Storage**: Stores technology parameters as a dictionary mapping names to `Parameter` objects.
 - **Region, Year, and Scenario**: Tracks metadata for each technology, including `region`, `year`, `case`, and `detailed technology` name.
 - **Parameter Access**: Supports dictionary-like access and assignment for parameters.
-- **Consistency Checking**: Checks for completeness and consistency of required parameters.
+- **Consistency Checking**: Checks selected parameters against registered
+    equations and returns a per-equation status dictionary.
 - **Parameter Calculation**: Placeholder for calculating missing or derived parameters.
 - **Currency Adjustment**: Harmonizes all technology parameters to a target currency, including inflation and exchange rates.
 - **Region and Scale Adjustment**: Placeholder methods for adjusting technology parameters to a different region or scaling values.
@@ -78,8 +79,25 @@ tech = Technology(
     }
 )
 
-is_consistent = tech.check_consistency()
-print(is_consistent)  # True if all required parameters are present
+status = tech.check_consistency(parameters=["eac"])
+print(status)
+# {
+#   "eac_via_annuity_factor": True,
+#   "eac_annuity": "missing parameters",
+#   "eac_simple": "missing parameters",
+# }
+
+# If parameters is omitted, all parameters present on the technology are checked.
+all_status = tech.check_consistency()
+
+# You can provide a custom equation registry. If omitted, the default registry is used.
+# status_custom = tech.check_consistency(parameters=["eac"], equations=my_registry)
+
+# You can control numeric tolerance for floating-point comparisons.
+status_relaxed = tech.check_consistency(parameters=["eac"], rtol=1e-5, atol=1e-8)
+
+# Values are compared via Parameter.isclose(...), which checks
+# magnitude closeness and matching units/carrier/heating value compatibility.
 ```
 
 ### Adjusting Currency

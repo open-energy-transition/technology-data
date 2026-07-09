@@ -4,11 +4,17 @@
 
 """Technology class for representing a technology with parameters and transformation methods."""
 
-from typing import Annotated, Self
+from collections.abc import Sequence
+from typing import TYPE_CHECKING, Annotated, Literal, Self
 
 import pydantic
 
 from technologydata.parameter import Parameter
+
+if TYPE_CHECKING:
+    from technologydata.equations import EquationRegistry
+
+ConsistencyStatus = bool | Literal["missing parameters", "inapplicable"]
 
 
 class Technology(pydantic.BaseModel):
@@ -75,20 +81,95 @@ class Technology(pydantic.BaseModel):
         """
         self.parameters[key] = value
 
-    def check_consistency(self) -> bool:
+    def check_consistency(
+        self,
+        parameters: Sequence[str] | None = None,
+        equations: "EquationRegistry | None" = None,
+        rtol: float = 1e-6,
+        atol: float = 1e-9,
+    ) -> dict[str, ConsistencyStatus]:
         """
-        Check for consistency and completeness of parameters.
+        Check equation-level consistency for selected parameters.
+
+        If ``parameters`` is given, only equations linked to those parameters
+        are checked and other parameters are ignored. If ``parameters`` is
+        ``None``, all parameters present on this technology are checked.
+
+        If ``equations`` is not provided, the package default registry
+        is used.
+
+        Returns a mapping from equation name to status:
+
+        - ``True`` if values are consistent with the equation.
+        - ``False`` if values violate the equation.
+        - ``"missing parameters"`` if some required equation parameters are
+          present but not all.
+        - ``"inapplicable"`` if none of the equation parameters are present.
 
         Returns
         -------
-        bool
-            True if consistent, False otherwise.
+        dict[str, ConsistencyStatus]
+            Consistency status per checked equation.
 
         """
-        # Example: check required parameters
-        required = ["specific_investment", "investment", "lifetime"]
-        missing = [p for p in required if p not in self.parameters]
-        return len(missing) == 0
+        if equations is None:
+            from technologydata.default_equations import equation_registry as default_registry
+
+            equations = default_registry
+
+        checked_names = tuple(parameters or self.parameters.keys())
+        checked_set = set(checked_names)
+
+        # Keep one anchor target parameter per equation so each equation is
+        # evaluated exactly once while still respecting the user's filter.
+        equations_to_check: dict[str, tuple[object, str]] = {}
+        for target in checked_names:
+            for equation in equations._equations_by_parameter.get(target, []):
+                if equation.name not in equations_to_check:
+                    equations_to_check[equation.name] = (equation, target)
+
+        available_params = dict(self.parameters)
+
+        result: dict[str, ConsistencyStatus] = {}
+        for equation_name, (equation, target) in equations_to_check.items():
+            present_count = sum(1 for name in equation.parameters if name in available_params)
+
+            if present_count == 0:
+                result[equation_name] = "inapplicable"
+                continue
+
+            if present_count < len(equation.parameters):
+                result[equation_name] = "missing parameters"
+                continue
+
+            if target not in available_params:
+                result[equation_name] = "missing parameters"
+                continue
+
+            known_params = {
+                name: available_params[name]
+                for name in equation.parameters
+                if name != target
+            }
+
+            try:
+                expected = equations.calculate(
+                    target,
+                    known_params,
+                    equation_name=equation_name,
+                )
+            except Exception:
+                result[equation_name] = False
+                continue
+
+            observed = available_params[target]
+            result[equation_name] = observed.isclose(
+                expected,
+                rtol=rtol,
+                atol=atol,
+            )
+
+        return result
 
     def calculate_parameters(
         self,

@@ -577,6 +577,37 @@ class TestParameter:
 
         assert param == param
 
+    def test_is_consistent_with_true_after_unit_conversion(self) -> None:
+        """Parameters can be consistent even when units differ but are convertible."""
+        observed = technologydata.Parameter(magnitude=1000.0, units="USD_2020/kW")
+        expected = technologydata.Parameter(magnitude=1.0, units="USD_2020/W")
+
+        assert observed.isclose(expected)
+
+    def test_is_consistent_with_false_for_carrier_mismatch(self) -> None:
+        """Carrier mismatch makes parameters inconsistent."""
+        observed = technologydata.Parameter(magnitude=1.0, units="kWh", carrier="H2")
+        expected = technologydata.Parameter(magnitude=1.0, units="kWh", carrier="el")
+
+        assert not observed.isclose(expected)
+
+    def test_is_consistent_with_false_for_heating_value_mismatch(self) -> None:
+        """Heating value mismatch makes parameters inconsistent."""
+        observed = technologydata.Parameter(
+            magnitude=1.0,
+            units="kWh",
+            carrier="H2",
+            heating_value="LHV",
+        )
+        expected = technologydata.Parameter(
+            magnitude=1.0,
+            units="kWh",
+            carrier="H2",
+            heating_value="HHV",
+        )
+
+        assert not observed.isclose(expected)
+
     @pytest.mark.parametrize(
         "example_parameter",
         [
