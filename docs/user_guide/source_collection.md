@@ -18,8 +18,7 @@ The `SourceCollection` class in `technologydata` represents a collection of `Sou
 ### Creating a SourceCollection
 
 ```python
-from technologydata.source import Source
-from technologydata.source_collection import SourceCollection
+from technologydata import Source, SourceCollection
 
 src1 = Source(title="Source One", authors="Author A", url="http://example.com/1")
 src2 = Source(title="Source Two", authors="Author B", url="http://example.com/2")
@@ -29,8 +28,7 @@ collection = SourceCollection(sources=[src1, src2])
 ### Filtering Sources
 
 ```python
-from technologydata.source import Source
-from technologydata.source_collection import SourceCollection
+from technologydata import Source, SourceCollection
 
 src1 = Source(title="Source One", authors="Author A", url="http://example.com/1")
 src2 = Source(title="Source Two", authors="Author B", url="http://example.com/2")
@@ -43,8 +41,7 @@ print(filtered)  # SourceCollection with sources matching the patterns
 ### Exporting to CSV
 
 ```python
-from technologydata.source import Source
-from technologydata.source_collection import SourceCollection
+from technologydata import Source, SourceCollection
 
 src1 = Source(title="Source One", authors="Author A", url="http://example.com/1")
 src2 = Source(title="Source Two", authors="Author B", url="http://example.com/2")
@@ -58,8 +55,7 @@ collection.to_csv(path_or_buf="sources.csv")
 ```python
 import pathlib
 
-from technologydata.source import Source
-from technologydata.source_collection import SourceCollection
+from technologydata import Source, SourceCollection
 
 src1 = Source(title="Source One", authors="Author A", url="http://example.com/1")
 src2 = Source(title="Source Two", authors="Author B", url="http://example.com/2")
@@ -73,8 +69,7 @@ collection.to_json(file_path=pathlib.Path("sources.json"))
 ```python
 import pathlib
 
-from technologydata.source import Source
-from technologydata.source_collection import SourceCollection
+from technologydata import Source, SourceCollection
 
 src1 = Source(title="Source One", authors="Author A", url="http://example.com/1")
 src2 = Source(title="Source Two", authors="Author B", url="http://example.com/2")

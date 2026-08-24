@@ -19,8 +19,7 @@ The `Technology` class in `technologydata` represents a single technology, inclu
 ### Creating a Technology
 
 ```python
-from technologydata.technology import Technology
-from technologydata.parameter import Parameter
+from technologydata import Technology, Parameter
 
 tech = Technology(
     name="Solar PV",
@@ -38,8 +37,7 @@ tech = Technology(
 ### Accessing and Setting Parameters
 
 ```python
-from technologydata.technology import Technology
-from technologydata.parameter import Parameter
+from technologydata import Technology, Parameter
 
 tech = Technology(
     name="Solar PV",
@@ -63,8 +61,7 @@ tech["efficiency"] = Parameter(magnitude=0.18, units=None)
 ### Checking Consistency
 
 ```python
-from technologydata.technology import Technology
-from technologydata.parameter import Parameter
+from technologydata import Technology, Parameter
 
 tech = Technology(
     name="Solar PV",
@@ -85,8 +82,7 @@ print(is_consistent)  # True if all required parameters are present
 ### Adjusting Currency
 
 ```python
-from technologydata.technology import Technology
-from technologydata.parameter import Parameter
+from technologydata import Technology, Parameter
 
 tech = Technology(
     name="Solar PV",
@@ -106,8 +102,7 @@ converted_tech = tech.to_currency("USD_2025", source="worldbank")
 ### Scaling Parameters
 
 ```python
-from technologydata.technology import Technology
-from technologydata.parameter import Parameter
+from technologydata import Technology, Parameter
 
 tech = Technology(
     name="Solar PV",

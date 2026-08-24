@@ -19,8 +19,7 @@ The `TechnologyCollection` class in `technologydata` represents a collection of 
 ### Creating a TechnologyCollection
 
 ```python
-from technologydata.technology import Technology
-from technologydata.technology_collection import TechnologyCollection
+from technologydata import Technology, TechnologyCollection
 
 tech1 = Technology(name="Tech1", region="DEU", year=2020, case="Base", detailed_technology="Solar PV", parameters={})
 tech2 = Technology(name="Tech2", region="DEU", year=2021, case="Base", detailed_technology="Wind", parameters={})
@@ -30,8 +29,7 @@ collection = TechnologyCollection(technologies=[tech1, tech2])
 ### Filtering Technologies
 
 ```python
-from technologydata.technology import Technology
-from technologydata.technology_collection import TechnologyCollection
+from technologydata import Technology, TechnologyCollection
 
 tech1 = Technology(name="Tech1", region="DEU", year=2020, case="Base", detailed_technology="Solar PV", parameters={})
 tech2 = Technology(name="Tech2", region="DEU", year=2021, case="Base", detailed_technology="Wind", parameters={})
@@ -44,8 +42,7 @@ print(filtered)  # TechnologyCollection with matching technologies
 ### Exporting to CSV
 
 ```python
-from technologydata.technology import Technology
-from technologydata.technology_collection import TechnologyCollection
+from technologydata import Technology, TechnologyCollection
 
 tech1 = Technology(name="Tech1", region="DEU", year=2020, case="Base", detailed_technology="Solar PV", parameters={})
 tech2 = Technology(name="Tech2", region="DEU", year=2021, case="Base", detailed_technology="Wind", parameters={})
@@ -58,8 +55,7 @@ collection.to_csv(path_or_buf="technologies.csv")
 
 ```python
 import pathlib
-from technologydata.technology import Technology
-from technologydata.technology_collection import TechnologyCollection
+from technologydata import Technology, TechnologyCollection
 
 tech1 = Technology(name="Tech1", region="DEU", year=2020, case="Base", detailed_technology="Solar PV", parameters={})
 tech2 = Technology(name="Tech2", region="DEU", year=2021, case="Base", detailed_technology="Wind", parameters={})
@@ -71,8 +67,7 @@ collection.to_json(file_path=pathlib.Path("technologies.json"))
 ### Currency Adjustment
 
 ```python
-from technologydata.technology import Technology
-from technologydata.technology_collection import TechnologyCollection
+from technologydata import Technology, TechnologyCollection
 
 tech1 = Technology(name="Tech1", region="DEU", year=2020, case="Base", detailed_technology="Solar PV", parameters={})
 tech2 = Technology(name="Tech2", region="DEU", year=2021, case="Base", detailed_technology="Wind", parameters={})
@@ -83,9 +78,8 @@ converted = collection.to_currency("USD_2025", source="worldbank")
 ### Fitting a Growth Model
 
 ```python
+from technologydata import Technology, TechnologyCollection
 from technologydata.technologies.growth_models import LinearGrowth
-from technologydata.technology import Technology
-from technologydata.technology_collection import TechnologyCollection
 
 tech1 = Technology(name="Tech1", region="DEU", year=2020, case="Base", detailed_technology="Solar PV", parameters={})
 tech2 = Technology(name="Tech2", region="DEU", year=2021, case="Base", detailed_technology="Wind", parameters={})
@@ -97,9 +91,8 @@ fitted_model = collection.fit(parameter="installed capacity", model=LinearGrowth
 ### Projecting Parameters
 
 ```python
+from technologydata import Technology, TechnologyCollection
 from technologydata.technologies.growth_models import LinearGrowth
-from technologydata.technology import Technology
-from technologydata.technology_collection import TechnologyCollection
 
 tech1 = Technology(name="Tech1", region="DEU", year=2020, case="Base", detailed_technology="Solar PV", parameters={})
 tech2 = Technology(name="Tech2", region="DEU", year=2021, case="Base", detailed_technology="Wind", parameters={})
