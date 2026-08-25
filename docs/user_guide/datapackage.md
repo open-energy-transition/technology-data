@@ -97,8 +97,7 @@ The `sources` attribute of the `DataPackage` can be automatically populated by e
 In this context, `extracting` means scanning the `TechnologyCollection` for all `Source` references that appear in the technology parameters, and aggregating them into a single `SourceCollection`. The extraction process yields a collection of unique sources, by removing duplicates based on all source attributes.
 
 ```python
-from technologydata.datapackage import DataPackage
-from technologydata.technology_collection import TechnologyCollection
+from technologydata import DataPackage, TechnologyCollection
 
 # Create a DataPackage with existing collections
 dp = DataPackage(
