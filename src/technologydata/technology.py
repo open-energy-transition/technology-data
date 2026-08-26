@@ -5,7 +5,7 @@
 """Technology class for representing a technology with parameters and transformation methods."""
 
 from collections.abc import Sequence
-from typing import TYPE_CHECKING, Annotated, Literal, Self
+from typing import TYPE_CHECKING, Annotated, Self
 
 import pydantic
 
@@ -13,8 +13,6 @@ from technologydata.parameter import Parameter
 
 if TYPE_CHECKING:
     from technologydata.equations import EquationRegistry
-
-ConsistencyStatus = bool | Literal["missing parameters", "inapplicable"]
 
 
 class Technology(pydantic.BaseModel):
@@ -87,7 +85,7 @@ class Technology(pydantic.BaseModel):
         equations: "EquationRegistry | None" = None,
         rtol: float = 1e-6,
         atol: float = 1e-9,
-    ) -> dict[str, ConsistencyStatus]:
+    ) -> dict[str, str]:
         """
         Check equation-level consistency for selected parameters.
 
@@ -102,23 +100,61 @@ class Technology(pydantic.BaseModel):
 
         - ``True`` if values are consistent with the equation.
         - ``False`` if values violate the equation.
-        - ``"missing parameters"`` if some required equation parameters are
-          present but not all.
-        - ``"inapplicable"`` if none of the equation parameters are present.
+        - ``"missing parameters"`` followed by the list of missing parameters to
+          evaluate the equation, e.g. ``"missing parameters: ['wacc', 'lifetime']"``.
+        - ``"inapplicable"`` if none of the equations parameters are present, followed
+          by the list of these missing parameters, e.g.
+          ``"inapplicable: ['specific_investment', 'annuity_factor']"``.
+
+        Only equations that share at least one parameter with the checked
+        parameter set appear in the result. If ``parameters`` is given
+        explicitly and names a parameter with no registered equation at all,
+        a :class:`ValueError` is raised.
+
+        Parameters
+        ----------
+        parameters: list[str] (optional)
+            The parameters to check for consistency. If None are specified,
+            all parameters of the Technology are considered.
+        equations: EquationRegistry (optional)
+            A registry of equations to check against.
+            Defaults to technologydata.equation_registry.
+        rtol: float (optional)
+            Relative tolerance to use for checking consistency of the parameters.
+        atol: float (optional)
+            Absolute tolerance to use for checking consistency of the parameters.
+
+
 
         Returns
         -------
-        dict[str, ConsistencyStatus]
+        dict[str, str]
             Consistency status per checked equation.
+
+        Raises
+        ------
+        ValueError
+            If ``parameters`` is given explicitly and includes a name for
+            which no equation is registered.
 
         """
         if equations is None:
-            from technologydata.default_equations import equation_registry as default_registry
+            from technologydata.default_equations import (
+                equation_registry as default_registry,
+            )
 
             equations = default_registry
 
         checked_names = tuple(parameters or self.parameters.keys())
-        checked_set = set(checked_names)
+
+        if parameters is not None:
+            unknown = [
+                name
+                for name in checked_names
+                if name not in equations._equations_by_parameter
+            ]
+            if unknown:
+                raise ValueError(f"No equation registered for parameter(s): {unknown}.")
 
         # Keep one anchor target parameter per equation so each equation is
         # evaluated exactly once while still respecting the user's filter.
@@ -130,20 +166,28 @@ class Technology(pydantic.BaseModel):
 
         available_params = dict(self.parameters)
 
-        result: dict[str, ConsistencyStatus] = {}
+        result: dict[str, str] = {}
         for equation_name, (equation, target) in equations_to_check.items():
-            present_count = sum(1 for name in equation.parameters if name in available_params)
+            supporting_params = [name for name in equation.parameters if name != target]
+            present_supporting = [
+                name for name in supporting_params if name in available_params
+            ]
 
-            if present_count == 0:
-                result[equation_name] = "inapplicable"
+            if not present_supporting:
+                missing = [
+                    name for name in equation.parameters if name not in available_params
+                ]
+                result[equation_name] = f"inapplicable: {missing}"
                 continue
 
-            if present_count < len(equation.parameters):
-                result[equation_name] = "missing parameters"
-                continue
-
-            if target not in available_params:
-                result[equation_name] = "missing parameters"
+            if (
+                len(present_supporting) < len(supporting_params)
+                or target not in available_params
+            ):
+                missing = [
+                    name for name in equation.parameters if name not in available_params
+                ]
+                result[equation_name] = f"missing parameters: {missing}"
                 continue
 
             known_params = {

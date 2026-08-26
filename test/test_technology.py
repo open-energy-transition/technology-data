@@ -6,6 +6,8 @@
 
 import pathlib
 
+import pytest
+
 import technologydata
 from technologydata.equations import EquationRegistry
 
@@ -297,8 +299,14 @@ class TestTechnology:
 
         status = tech.check_consistency(parameters=["eac"])
         assert status["eac_via_annuity_factor"] is True
-        assert status["eac_annuity"] == "missing parameters"
-        assert status["eac_simple"] == "missing parameters"
+        assert status["eac_annuity"] == "missing parameters: ['wacc', 'lifetime']"
+        # None of eac_simple's supporting parameters (total_investment_cost,
+        # lifetime) are present, so it is inapplicable rather than merely
+        # missing some parameters.
+        assert (
+            status["eac_simple"]
+            == "inapplicable: ['total_investment_cost', 'lifetime']"
+        )
 
     def test_check_consistency_marks_equation_violation_false(self) -> None:
         """Mark an equation as False when all inputs are present but values disagree."""
@@ -341,9 +349,60 @@ class TestTechnology:
         )
 
         status = tech.check_consistency(parameters=["eac"])
-        assert status["eac_via_annuity_factor"] == "inapplicable"
-        assert status["eac_annuity"] == "inapplicable"
-        assert status["eac_simple"] == "inapplicable"
+        assert (
+            status["eac_via_annuity_factor"]
+            == "inapplicable: ['eac', 'specific_investment', 'annuity_factor']"
+        )
+        assert (
+            status["eac_annuity"]
+            == "inapplicable: ['eac', 'specific_investment', 'wacc', 'lifetime']"
+        )
+        assert (
+            status["eac_simple"]
+            == "inapplicable: ['eac', 'total_investment_cost', 'lifetime']"
+        )
+
+    def test_check_consistency_marks_inapplicable_with_default_parameters(self) -> None:
+        """
+        Mark an equation inapplicable even without an explicit `parameters` filter.
+
+        A technology's own present parameters always include the equation's
+        target, so "inapplicable" only shows up if it is based on whether the
+        equation's *other* (supporting) parameters are present, not on the
+        target itself.
+        """
+        tech = technologydata.Technology(
+            name="Solar photovoltaics",
+            detailed_technology="Si-HC",
+            case="example-scenario",
+            region="DEU",
+            year=2022,
+            parameters={
+                "eac": technologydata.Parameter(magnitude=100, units="EUR_2020/kW"),
+            },
+        )
+
+        status = tech.check_consistency()
+        assert (
+            status["eac_via_annuity_factor"]
+            == "inapplicable: ['specific_investment', 'annuity_factor']"
+        )
+
+    def test_check_consistency_raises_for_unknown_parameter(self) -> None:
+        """Raise a clear error when an explicitly requested parameter has no equation."""
+        tech = technologydata.Technology(
+            name="Solar photovoltaics",
+            detailed_technology="Si-HC",
+            case="example-scenario",
+            region="DEU",
+            year=2022,
+            parameters={
+                "capacity": technologydata.Parameter(magnitude=10, units="MW"),
+            },
+        )
+
+        with pytest.raises(ValueError, match="No equation registered for parameter"):
+            tech.check_consistency(parameters=["not_a_real_parameter"])
 
     def test_check_consistency_ignores_unselected_parameters(self) -> None:
         """Ignore parameters outside the requested consistency-check subset."""

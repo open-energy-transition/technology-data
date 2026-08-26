@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: technologydata contributors
+#
+# SPDX-License-Identifier: MIT
+
 # yaml-language-server: $schema=default_equations.schema.json
 
 - name: annuity_factor

@@ -61,12 +61,29 @@ investment = tech["specific_investment"]
 tech["efficiency"] = Parameter(magnitude=0.18, units=None)
 ```
 
-### Checking Consistency
+### Calculating Parameters and checking consistency
+
+Parameters of a `Technology` can be related to each other and derived through known equations.
+A good example are total capacity, total investment costs and specific investment costs, where the specific costs are just the total costs divided by the total capacity.
+
+Instead of manually writing out the equation each time and calculating the parameters manually, you can add equations that related parameters to each other and then have `technologydata` calculate missing parameters automatically.
+
+`technologydata` can also use the equations to check whether existing parameters are consistent with each other, i.e. whether they fulfill the relationship described by the equations.
+
+Let's take a look at an example:
 
 ```python
-from technologydata.technology import Technology
-from technologydata.parameter import Parameter
+from technologydata import Technology, Parameter, equation_registry
 
+print(equation_registry.list_equations())
+```
+
+The `equation_registry` contains the equations that you can work with.
+Some equations are provided by default and you can modify the registry to suit your needs, remove or add equations, or load your own registry from a `yaml` file all together.
+
+Starting with our known technology:
+
+```python
 tech = Technology(
     name="Solar PV",
     detailed_technology="Crystalline Silicon",
@@ -74,31 +91,53 @@ tech = Technology(
     region="DEU",
     year=2020,
     parameters={
-        "specific_investment": Parameter(magnitude=1000, units="EUR_2020/kW"),
-        "lifetime": Parameter(magnitude=25, units="year"),
+        "specific_investment": Parameter(magnitude=1, units="EUR_2020/kW"),
+        "total_investment": Parameter(magnitude=1_000, units="EUR_2020"),
     }
 )
+```
 
-status = tech.check_consistency(parameters=["eac"])
+Let's calculate the `capacity` for this installation:
+
+```python
+tech = tech.calculate("capacity")
+tech.parameters["capacity"]
+# 1000 kW
+```
+
+The calculate parameter is automatically added to the technology object.
+
+We can check whether the parameters of the Technology object are consistent with the equations.
+In this case we have derived one parameter using the other two, so they should be consistent:
+
+```python
+status = tech.check_consistency()
 print(status)
 # {
-#   "eac_via_annuity_factor": True,
-#   "eac_annuity": "missing parameters",
-#   "eac_simple": "missing parameters",
+#   "total_investment_from_specific": True,
+#   ...
 # }
-
-# If parameters is omitted, all parameters present on the technology are checked.
-all_status = tech.check_consistency()
-
-# You can provide a custom equation registry. If omitted, the default registry is used.
-# status_custom = tech.check_consistency(parameters=["eac"], equations=my_registry)
-
-# You can control numeric tolerance for floating-point comparisons.
-status_relaxed = tech.check_consistency(parameters=["eac"], rtol=1e-5, atol=1e-8)
-
-# Values are compared via Parameter.isclose(...), which checks
-# magnitude closeness and matching units/carrier/heating value compatibility.
 ```
+
+The consistency check will flag equations that are consistent with the parameters of the technology with `True` and those that aren't with `False`.
+It will check against all the equations in the registry.
+If there are equations for which only some but not all parameters are present, it will notify about these equations as `"missing parameters"` and equations for which no parameter is present will be labelled as `"inapplicable"`.
+If we change the value of one of the parameters to be inconsistent with the others, e.g.
+
+```python
+tech.parameters["capacity"].magnitude = 5
+
+# Check for consistency again
+status = tech.check_consistency()
+print(status)
+# {
+#   "total_investment_from_specific": False,
+#   ...
+# }
+```
+
+The inconsistency will be reported and flagged.
+Since it is not possible to determine which parameters are right or wrong, it will not highlight a specific parameter as "inconsistent".
 
 ### Adjusting Currency
 
