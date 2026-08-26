@@ -40,6 +40,7 @@ dependencies = [
     "overdue>=0.1.5",
     "sympy>=1.13",
     "pyyaml>=6.0.2",
+    "types-pyyaml>=6.0.12.20260815",
 ]
 
 [project.urls]
