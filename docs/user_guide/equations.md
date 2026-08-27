@@ -204,7 +204,7 @@ Parameters that already present in the technology object are not overwritten by 
 If you want to force a recalculation of an existing parameter, remove it from the `parameters` dictionary first:
 
 ```python
-del tech.parameters["eac"]
+tech.parameters.pop("eac")
 tech = tech.calculate_parameters("eac")  # now recalculated
 ```
 
