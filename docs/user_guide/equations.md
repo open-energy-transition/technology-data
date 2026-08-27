@@ -423,4 +423,6 @@ first one.
 |---|---|---|
 | `fuel_variable_cost` | `fuel_variable_cost`, `fuel_cost`, `efficiency` | Fuel cost and variable cost must be in same energy unit |
 | `co2_cost` | `co2_cost`, `co2_price`, `co2_intensity` | `co2_intensity` in t/MWh of output energy |
+
+```text
 ```
