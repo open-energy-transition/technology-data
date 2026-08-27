@@ -28,7 +28,7 @@ class TestParameter:
             units="USD_2020/kW",
             carrier="H2",
             heating_value="LHV",
-            provenance="literature",
+            provenance=["literature"],
             note="Estimated",
             sources=technologydata.SourceCollection(
                 sources=[
@@ -41,7 +41,7 @@ class TestParameter:
         )
         assert param.magnitude == 1000
         assert param.units == "USD_2020 / kilowatt"
-        assert param.provenance == "literature"
+        assert param.provenance == ["literature"]
         assert param.note == "Estimated"
         assert param.sources is not None
 
@@ -154,7 +154,7 @@ class TestParameter:
             units="USD_2020/kW",
             carrier="H2",
             heating_value="LHV",
-            provenance="literature",
+            provenance=["literature"],
             note="Estimated",
         )
         # Change magnitude and units
@@ -310,7 +310,7 @@ class TestParameter:
             units="USD_2020/kW",
             carrier="H2",
             heating_value="LHV",
-            provenance="literature",
+            provenance=["literature"],
             note="Estimated",
         )
 
@@ -433,7 +433,7 @@ class TestParameter:
             units="USD_2020/kW",
             carrier="H2",
             heating_value="LHV",
-            provenance="literature",
+            provenance=["literature"],
             note="Estimated",
             sources=technologydata.SourceCollection(
                 sources=[
@@ -449,7 +449,7 @@ class TestParameter:
             units="USD_2020/kW",
             carrier="H2",
             heating_value="LHV",
-            provenance="literature",
+            provenance=["literature"],
             note="Estimated",
             sources=technologydata.SourceCollection(
                 sources=[
@@ -503,8 +503,8 @@ class TestParameter:
 
     def test_parameter_equality_different_provenance(self) -> None:
         """Test that parameters with different provenance are not equal."""
-        param1 = technologydata.Parameter(magnitude=1000, provenance="literature")
-        param2 = technologydata.Parameter(magnitude=1000, provenance="expert_estimate")
+        param1 = technologydata.Parameter(magnitude=1000, provenance=["literature"])
+        param2 = technologydata.Parameter(magnitude=1000, provenance=["expert_estimate"])
 
         assert param1 != param2
         assert param2 != param1
@@ -571,7 +571,7 @@ class TestParameter:
             units="USD_2020/kW",
             carrier="H2",
             heating_value="LHV",
-            provenance="literature",
+            provenance=["literature"],
             note="Estimated",
         )
 
@@ -616,7 +616,7 @@ class TestParameter:
                 "parameter_units": "USD_2020/kW",
                 "parameter_carrier": "H2",
                 "parameter_heating_value": "LHV",
-                "parameter_provenance": "literature",
+                "parameter_provenance": ["literature"],
                 "parameter_note": "Estimated",
                 "parameter_sources": [
                     technologydata.Source(title="title", authors="authors")
@@ -715,7 +715,7 @@ class TestParameter:
             units="kg",
             carrier="H2",
             heating_value="LHV",
-            provenance="test",
+            provenance=["test"],
             note="note",
         )
         result = param**2

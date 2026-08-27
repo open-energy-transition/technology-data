@@ -348,7 +348,18 @@ class Equation:
         magnitude, raw_result = (positive or results)[0]
 
         result_units = str(raw_result.units) if hasattr(raw_result, "units") else None
-        return Parameter(magnitude=magnitude, units=result_units, provenance=self.name)
+
+        input_values = "\n".join(f"  {p} = {params[p]}" for p in input_params)
+        provenance_entry = (
+            f"Calculated from other parameters using formula '{self.name}': "
+            f"{self.expr_str} = 0\n"
+            f"Input values:\n{input_values}"
+        )
+        return Parameter(
+            magnitude=magnitude,
+            units=result_units,
+            provenance=[provenance_entry],
+        )
 
 
 class EquationRegistry:

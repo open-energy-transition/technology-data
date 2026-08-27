@@ -29,13 +29,13 @@ class TestTechnology:
                 "investment": technologydata.Parameter(
                     magnitude=500,
                     units="EUR_2022/kW",
-                    provenance="Industry report",
+                    provenance=["Industry report"],
                     note="Average overnight cost",
                 ),
                 "lifetime": technologydata.Parameter(
                     magnitude=25,
                     units="years",
-                    provenance="Literature",
+                    provenance=["Literature"],
                 ),
             },
         )
@@ -60,18 +60,18 @@ class TestTechnology:
                 "investment": technologydata.Parameter(
                     magnitude=500,
                     units="EUR_2022/kW",
-                    provenance="Industry report",
+                    provenance=["Industry report"],
                     note="Average overnight cost",
                 ),
                 "fixed_om": technologydata.Parameter(
                     magnitude=10,
                     units="EUR_2022/kW/year",
-                    provenance="Literature",
+                    provenance=["Literature"],
                 ),
                 "lifetime": technologydata.Parameter(
                     magnitude=25,
                     units="years",
-                    provenance="Literature",
+                    provenance=["Literature"],
                 ),
             },
         )
@@ -127,7 +127,7 @@ class TestTechnology:
                 "investment": technologydata.Parameter(
                     magnitude=1200,
                     units="EUR_2020/kW",
-                    provenance="Industry data",
+                    provenance=["Industry data"],
                 ),
             },
         )
@@ -181,7 +181,7 @@ class TestTechnology:
                     magnitude=500,
                     units="EUR_2022/kW",
                     carrier="electricity",
-                    provenance="Industry report",
+                    provenance=["Industry report"],
                     note="Average overnight cost",
                     sources=technologydata.SourceCollection(
                         sources=[

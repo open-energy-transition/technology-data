@@ -157,7 +157,7 @@ def example_parameter(request: pytest.FixtureRequest) -> technologydata.Paramete
         units=request.param.get("parameter_units"),
         carrier=request.param.get("parameter_carrier"),
         heating_value=request.param.get("parameter_heating_value"),
-        provenance=request.param.get("parameter_provenance"),
+        provenance=request.param.get("parameter_provenance", []),
         note=request.param.get("parameter_note"),
         sources=technologydata.SourceCollection(sources=source_list),
     )

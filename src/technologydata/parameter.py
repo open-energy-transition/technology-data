@@ -31,8 +31,8 @@ class Parameter(BaseModel):
         The energy carrier.
     heating_value : Optional[str]
         The heating value type.
-    provenance : Optional[str]
-        Description of the data's provenance.
+    provenance : list[str]
+        Ordered history of human-readable descriptions of the data's provenance.
     note : Optional[str]
         Additional notes about the parameter.
     sources : Optional[SourceCollection]
@@ -52,9 +52,14 @@ class Parameter(BaseModel):
         str | None,
         Field(description="Heating value type for energy carriers ('LHV' or 'HHV')."),
     ] = None
-    provenance: Annotated[str | None, Field(description="The data's provenance.")] = (
-        None
-    )
+    provenance: Annotated[
+        list[str],
+        Field(
+            description="Ordered history of human-readable descriptions of how this "
+            "parameter's value was derived, e.g. sourced from literature, parsed from "
+            "a file, or calculated from a formula."
+        ),
+    ] = []
     note: Annotated[str | None, Field(description="Additional notes.")] = None
     sources: Annotated[
         SourceCollection,
@@ -474,8 +479,7 @@ class Parameter(BaseModel):
             units=new_quantity.units,
             carrier=self.carrier,
             heating_value=self.heating_value,
-            provenance=(self.provenance or "")
-            + (other.provenance or ""),  # TODO make nicer
+            provenance=self.provenance + other.provenance,
             note=(self.note or "") + (other.note or ""),  # TODO make nicer
             sources=SourceCollection(
                 sources=(self.sources.sources + other.sources.sources)
@@ -509,8 +513,7 @@ class Parameter(BaseModel):
             units=str(new_quantity.units),
             carrier=self.carrier,
             heating_value=self.heating_value,
-            provenance=(self.provenance or "")
-            + (other.provenance or ""),  # TODO make nicer
+            provenance=self.provenance + other.provenance,
             note=(self.note or "") + (other.note or ""),  # TODO make nicer
             sources=SourceCollection(
                 sources=(self.sources.sources + other.sources.sources)
@@ -578,8 +581,7 @@ class Parameter(BaseModel):
             units=str(new_quantity.units),
             carrier=new_carrier,
             heating_value=new_heating_value,
-            provenance=(self.provenance or "")
-            + (other.provenance or ""),  # TODO make nicer
+            provenance=self.provenance + other.provenance,
             note=(self.note or "") + (other.note or ""),  # TODO make nicer
             sources=SourceCollection(
                 sources=(self.sources.sources + other.sources.sources)
@@ -646,8 +648,7 @@ class Parameter(BaseModel):
             units=str(new_quantity.units),
             carrier=str(new_carrier),
             heating_value=str(new_heating_value),
-            provenance=(self.provenance or "")
-            + (other.provenance or ""),  # TODO make nicer
+            provenance=self.provenance + other.provenance,
             note=(self.note or "") + (other.note or ""),  # TODO make nicer
             sources=SourceCollection(
                 sources=(self.sources.sources + other.sources.sources)

@@ -275,7 +275,15 @@ class TestEacAnnuity:
 
     def test_forward_eac_provenance(self) -> None:
         result = equation_registry.calculate("eac", EAC_ANNUITY_PARAMS)
-        assert result.provenance == "eac_annuity"
+        assert len(result.provenance) == 1
+        entry = result.provenance[0]
+        assert "calculated from other parameters" in entry.lower()
+        assert "formula 'eac_annuity'" in entry
+        equation = equation_registry.get_equation("eac", EAC_ANNUITY_PARAMS)
+        assert equation.expr_str in entry
+        for name, param in EAC_ANNUITY_PARAMS.items():
+            assert name in entry
+            assert str(param) in entry
 
     def test_backward_specific_investment(self) -> None:
         eac = equation_registry.calculate("eac", EAC_ANNUITY_PARAMS)
@@ -307,7 +315,8 @@ class TestEacSimple:
             "eac", EAC_SIMPLE_PARAMS, equation_name="eac_simple"
         )
         assert result.magnitude == pytest.approx(_EAC_SIMPLE_EXPECTED)
-        assert result.provenance == "eac_simple"
+        assert len(result.provenance) == 1
+        assert "formula 'eac_simple'" in result.provenance[0]
         # eac_simple divides by lifetime directly, so pint gives /year correctly
         assert "kilowatt" in result.units
         assert "year" in result.units
@@ -338,7 +347,8 @@ class TestAnnuityFactor:
         result = equation_registry.calculate("annuity_factor", self._PARAMS)
         assert result.magnitude == pytest.approx(_AF_EXPECTED, rel=1e-6)
         assert result.units == "dimensionless"
-        assert result.provenance == "annuity_factor"
+        assert len(result.provenance) == 1
+        assert "formula 'annuity_factor'" in result.provenance[0]
 
     def test_backward_lifetime(self) -> None:
         # Solving for lifetime requires log(); pint falls back to magnitudes.
@@ -576,20 +586,20 @@ class TestCo2Cost:
 class TestFormulaSelection:
     def test_default_formula_chosen_when_not_specified(self) -> None:
         result = equation_registry.calculate("eac", EAC_ANNUITY_PARAMS)
-        assert result.provenance == "eac_annuity"
+        assert "formula 'eac_annuity'" in result.provenance[0]
 
     def test_explicit_equation_name_overrides_default(self) -> None:
         result = equation_registry.calculate(
             "eac", EAC_SIMPLE_PARAMS, equation_name="eac_simple"
         )
-        assert result.provenance == "eac_simple"
+        assert "formula 'eac_simple'" in result.provenance[0]
 
     def test_fallback_to_applicable_when_default_cannot_apply(self) -> None:
         # Only total_investment_cost + lifetime available:
         # eac_annuity is default but requires sic/wacc/lifetime — cannot apply.
         # eac_simple can apply.
         result = equation_registry.calculate("eac", EAC_SIMPLE_PARAMS)
-        assert result.provenance == "eac_simple"
+        assert "formula 'eac_simple'" in result.provenance[0]
 
     def test_unknown_equation_name_raises(self) -> None:
         with pytest.raises(KeyError, match="No equation named"):

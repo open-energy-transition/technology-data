@@ -436,7 +436,7 @@ class TechnologyCollection(pydantic.BaseModel):
                             deep=True,
                             update={
                                 "magnitude": param_value,
-                                "provenance": f"Projected to {to_year} using {model}.",
+                                "provenance": [f"Projected to {to_year} using {model}."],
                                 "note": None,  # Clear any existing note
                                 "sources": None,  # Clear any existing sources
                             },

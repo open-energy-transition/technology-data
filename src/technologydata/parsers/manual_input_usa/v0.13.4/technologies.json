@@ -12,7 +12,7 @@
                     "units": "USD_2022 / kilowatt",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": null,
+                    "provenance": [],
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -32,7 +32,7 @@
                     "units": "percent / year",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": null,
+                    "provenance": [],
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -61,7 +61,7 @@
                     "units": "USD_2022 / kilowatt",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": null,
+                    "provenance": [],
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -81,7 +81,7 @@
                     "units": "percent / year",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": null,
+                    "provenance": [],
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -110,7 +110,7 @@
                     "units": "USD_2022 / kilowatt",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": null,
+                    "provenance": [],
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -130,7 +130,7 @@
                     "units": "percent / year",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": null,
+                    "provenance": [],
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -159,7 +159,7 @@
                     "units": "percent / year",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": null,
+                    "provenance": [],
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -179,7 +179,7 @@
                     "units": "USD_2023 / hour / metric_ton",
                     "carrier": "1 / carbon_dioxide",
                     "heating_value": null,
-                    "provenance": null,
+                    "provenance": [],
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -208,7 +208,7 @@
                     "units": "USD_2022 / kilowatt",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": null,
+                    "provenance": [],
                     "note": "Includes grid connection and project financing costs; Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -228,7 +228,7 @@
                     "units": "percent / year",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": null,
+                    "provenance": [],
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -257,7 +257,7 @@
                     "units": "USD_2022 / kilowatt_hour",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": null,
+                    "provenance": [],
                     "note": "Includes grid connection and project financing costs; Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -277,7 +277,7 @@
                     "units": "percent / year",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": null,
+                    "provenance": [],
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -306,7 +306,7 @@
                     "units": "USD_2022 / kilowatt",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": null,
+                    "provenance": [],
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -326,7 +326,7 @@
                     "units": "percent / year",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": null,
+                    "provenance": [],
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -355,7 +355,7 @@
                     "units": "USD_2022 / kilowatt",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": null,
+                    "provenance": [],
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -375,7 +375,7 @@
                     "units": "percent / year",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": null,
+                    "provenance": [],
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -404,7 +404,7 @@
                     "units": "USD_2022 / kilowatt",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": null,
+                    "provenance": [],
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -424,7 +424,7 @@
                     "units": "percent / year",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": null,
+                    "provenance": [],
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -453,7 +453,7 @@
                     "units": "USD_2022 / kilowatt",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": null,
+                    "provenance": [],
                     "note": "Includes grid connection and project financing costs; Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -473,7 +473,7 @@
                     "units": "percent / year",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": null,
+                    "provenance": [],
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -502,7 +502,7 @@
                     "units": "USD_2022 / kilowatt_hour",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": null,
+                    "provenance": [],
                     "note": "Includes grid connection and project financing costs; Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -522,7 +522,7 @@
                     "units": "percent / year",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": null,
+                    "provenance": [],
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -551,7 +551,7 @@
                     "units": "USD_2022 / kilowatt",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": null,
+                    "provenance": [],
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -580,7 +580,7 @@
                     "units": "USD_2022 / kilowatt",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": null,
+                    "provenance": [],
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -609,7 +609,7 @@
                     "units": "USD_2022 / kilowatt",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": null,
+                    "provenance": [],
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -638,7 +638,7 @@
                     "units": "USD_2022 / kilowatt",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": null,
+                    "provenance": [],
                     "note": "Includes grid connection and project financing costs; Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -658,7 +658,7 @@
                     "units": "percent / year",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": null,
+                    "provenance": [],
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -687,7 +687,7 @@
                     "units": "USD_2022 / kilowatt_hour",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": null,
+                    "provenance": [],
                     "note": "Includes grid connection and project financing costs; Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -707,7 +707,7 @@
                     "units": "percent / year",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": null,
+                    "provenance": [],
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -736,7 +736,7 @@
                     "units": "USD_2022 / kilowatt",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": null,
+                    "provenance": [],
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -756,7 +756,7 @@
                     "units": "percent / year",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": null,
+                    "provenance": [],
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -785,7 +785,7 @@
                     "units": "USD_2022 / kilowatt",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": null,
+                    "provenance": [],
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -805,7 +805,7 @@
                     "units": "percent / year",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": null,
+                    "provenance": [],
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -834,7 +834,7 @@
                     "units": "USD_2022 / kilowatt",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": null,
+                    "provenance": [],
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -854,7 +854,7 @@
                     "units": "percent / year",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": null,
+                    "provenance": [],
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -883,7 +883,7 @@
                     "units": "USD_2022 / kilowatt",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": null,
+                    "provenance": [],
                     "note": "Includes grid connection and project financing costs; Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -903,7 +903,7 @@
                     "units": "percent / year",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": null,
+                    "provenance": [],
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -932,7 +932,7 @@
                     "units": "USD_2022 / kilowatt_hour",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": null,
+                    "provenance": [],
                     "note": "Includes grid connection and project financing costs; Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -952,7 +952,7 @@
                     "units": "percent / year",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": null,
+                    "provenance": [],
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -981,7 +981,7 @@
                     "units": "USD_2022 / kilowatt",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": null,
+                    "provenance": [],
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -1001,7 +1001,7 @@
                     "units": "percent / year",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": null,
+                    "provenance": [],
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -1030,7 +1030,7 @@
                     "units": "USD_2022 / kilowatt",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": null,
+                    "provenance": [],
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -1050,7 +1050,7 @@
                     "units": "percent / year",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": null,
+                    "provenance": [],
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -1079,7 +1079,7 @@
                     "units": "USD_2022 / kilowatt",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": null,
+                    "provenance": [],
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -1099,7 +1099,7 @@
                     "units": "percent / year",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": null,
+                    "provenance": [],
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -1128,7 +1128,7 @@
                     "units": "percent / year",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": null,
+                    "provenance": [],
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -1148,7 +1148,7 @@
                     "units": "USD_2023 / hour / metric_ton",
                     "carrier": "1 / carbon_dioxide",
                     "heating_value": null,
-                    "provenance": null,
+                    "provenance": [],
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -1177,7 +1177,7 @@
                     "units": "USD_2022 / kilowatt",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": null,
+                    "provenance": [],
                     "note": "Includes grid connection and project financing costs; Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -1197,7 +1197,7 @@
                     "units": "percent / year",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": null,
+                    "provenance": [],
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -1226,7 +1226,7 @@
                     "units": "USD_2022 / kilowatt_hour",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": null,
+                    "provenance": [],
                     "note": "Includes grid connection and project financing costs; Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -1246,7 +1246,7 @@
                     "units": "percent / year",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": null,
+                    "provenance": [],
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -1275,7 +1275,7 @@
                     "units": "USD_2022 / kilowatt",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": null,
+                    "provenance": [],
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -1295,7 +1295,7 @@
                     "units": "percent / year",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": null,
+                    "provenance": [],
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -1324,7 +1324,7 @@
                     "units": "USD_2022 / kilowatt",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": null,
+                    "provenance": [],
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -1344,7 +1344,7 @@
                     "units": "percent / year",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": null,
+                    "provenance": [],
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -1373,7 +1373,7 @@
                     "units": "USD_2022 / kilowatt",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": null,
+                    "provenance": [],
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -1393,7 +1393,7 @@
                     "units": "percent / year",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": null,
+                    "provenance": [],
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -1422,7 +1422,7 @@
                     "units": "USD_2022 / kilowatt",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": null,
+                    "provenance": [],
                     "note": "Includes grid connection and project financing costs; Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -1442,7 +1442,7 @@
                     "units": "percent / year",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": null,
+                    "provenance": [],
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -1471,7 +1471,7 @@
                     "units": "USD_2022 / kilowatt_hour",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": null,
+                    "provenance": [],
                     "note": "Includes grid connection and project financing costs; Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -1491,7 +1491,7 @@
                     "units": "percent / year",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": null,
+                    "provenance": [],
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -1520,7 +1520,7 @@
                     "units": "USD_2022 / kilowatt",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": null,
+                    "provenance": [],
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -1549,7 +1549,7 @@
                     "units": "USD_2022 / kilowatt",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": null,
+                    "provenance": [],
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -1578,7 +1578,7 @@
                     "units": "USD_2022 / kilowatt",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": null,
+                    "provenance": [],
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -1607,7 +1607,7 @@
                     "units": "USD_2022 / kilowatt",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": null,
+                    "provenance": [],
                     "note": "Includes grid connection and project financing costs; Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -1627,7 +1627,7 @@
                     "units": "percent / year",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": null,
+                    "provenance": [],
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -1656,7 +1656,7 @@
                     "units": "USD_2022 / kilowatt_hour",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": null,
+                    "provenance": [],
                     "note": "Includes grid connection and project financing costs; Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -1676,7 +1676,7 @@
                     "units": "percent / year",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": null,
+                    "provenance": [],
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -1705,7 +1705,7 @@
                     "units": "USD_2022 / kilowatt",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": null,
+                    "provenance": [],
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -1725,7 +1725,7 @@
                     "units": "percent / year",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": null,
+                    "provenance": [],
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -1754,7 +1754,7 @@
                     "units": "USD_2022 / kilowatt",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": null,
+                    "provenance": [],
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -1774,7 +1774,7 @@
                     "units": "percent / year",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": null,
+                    "provenance": [],
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -1803,7 +1803,7 @@
                     "units": "USD_2022 / kilowatt",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": null,
+                    "provenance": [],
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -1823,7 +1823,7 @@
                     "units": "percent / year",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": null,
+                    "provenance": [],
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -1852,7 +1852,7 @@
                     "units": "USD_2022 / kilowatt",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": null,
+                    "provenance": [],
                     "note": "Includes grid connection and project financing costs; Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -1872,7 +1872,7 @@
                     "units": "percent / year",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": null,
+                    "provenance": [],
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -1901,7 +1901,7 @@
                     "units": "USD_2022 / kilowatt_hour",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": null,
+                    "provenance": [],
                     "note": "Includes grid connection and project financing costs; Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -1921,7 +1921,7 @@
                     "units": "percent / year",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": null,
+                    "provenance": [],
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -1950,7 +1950,7 @@
                     "units": "USD_2022 / kilowatt",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": null,
+                    "provenance": [],
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -1970,7 +1970,7 @@
                     "units": "percent / year",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": null,
+                    "provenance": [],
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -1999,7 +1999,7 @@
                     "units": "USD_2022 / kilowatt",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": null,
+                    "provenance": [],
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -2019,7 +2019,7 @@
                     "units": "percent / year",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": null,
+                    "provenance": [],
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -2048,7 +2048,7 @@
                     "units": "USD_2022 / kilowatt",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": null,
+                    "provenance": [],
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -2068,7 +2068,7 @@
                     "units": "percent / year",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": null,
+                    "provenance": [],
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -2097,7 +2097,7 @@
                     "units": "percent / year",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": null,
+                    "provenance": [],
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -2117,7 +2117,7 @@
                     "units": "USD_2023 / hour / metric_ton",
                     "carrier": "1 / carbon_dioxide",
                     "heating_value": null,
-                    "provenance": null,
+                    "provenance": [],
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -2146,7 +2146,7 @@
                     "units": "USD_2022 / kilowatt",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": null,
+                    "provenance": [],
                     "note": "Includes grid connection and project financing costs; Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -2166,7 +2166,7 @@
                     "units": "percent / year",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": null,
+                    "provenance": [],
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -2195,7 +2195,7 @@
                     "units": "USD_2022 / kilowatt_hour",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": null,
+                    "provenance": [],
                     "note": "Includes grid connection and project financing costs; Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -2215,7 +2215,7 @@
                     "units": "percent / year",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": null,
+                    "provenance": [],
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -2244,7 +2244,7 @@
                     "units": "USD_2022 / kilowatt",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": null,
+                    "provenance": [],
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -2264,7 +2264,7 @@
                     "units": "percent / year",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": null,
+                    "provenance": [],
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -2293,7 +2293,7 @@
                     "units": "USD_2022 / kilowatt",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": null,
+                    "provenance": [],
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -2313,7 +2313,7 @@
                     "units": "percent / year",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": null,
+                    "provenance": [],
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -2342,7 +2342,7 @@
                     "units": "USD_2022 / kilowatt",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": null,
+                    "provenance": [],
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -2362,7 +2362,7 @@
                     "units": "percent / year",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": null,
+                    "provenance": [],
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -2391,7 +2391,7 @@
                     "units": "USD_2022 / kilowatt",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": null,
+                    "provenance": [],
                     "note": "Includes grid connection and project financing costs; Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -2411,7 +2411,7 @@
                     "units": "percent / year",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": null,
+                    "provenance": [],
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -2440,7 +2440,7 @@
                     "units": "USD_2022 / kilowatt_hour",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": null,
+                    "provenance": [],
                     "note": "Includes grid connection and project financing costs; Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -2460,7 +2460,7 @@
                     "units": "percent / year",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": null,
+                    "provenance": [],
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -2489,7 +2489,7 @@
                     "units": "USD_2022 / kilowatt",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": null,
+                    "provenance": [],
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -2518,7 +2518,7 @@
                     "units": "USD_2022 / kilowatt",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": null,
+                    "provenance": [],
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -2547,7 +2547,7 @@
                     "units": "USD_2022 / kilowatt",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": null,
+                    "provenance": [],
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -2576,7 +2576,7 @@
                     "units": "USD_2022 / kilowatt",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": null,
+                    "provenance": [],
                     "note": "Includes grid connection and project financing costs; Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -2596,7 +2596,7 @@
                     "units": "percent / year",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": null,
+                    "provenance": [],
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -2625,7 +2625,7 @@
                     "units": "USD_2022 / kilowatt_hour",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": null,
+                    "provenance": [],
                     "note": "Includes grid connection and project financing costs; Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -2645,7 +2645,7 @@
                     "units": "percent / year",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": null,
+                    "provenance": [],
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -2674,7 +2674,7 @@
                     "units": "USD_2022 / kilowatt",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": null,
+                    "provenance": [],
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -2694,7 +2694,7 @@
                     "units": "percent / year",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": null,
+                    "provenance": [],
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -2723,7 +2723,7 @@
                     "units": "USD_2022 / kilowatt",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": null,
+                    "provenance": [],
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -2743,7 +2743,7 @@
                     "units": "percent / year",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": null,
+                    "provenance": [],
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -2772,7 +2772,7 @@
                     "units": "USD_2022 / kilowatt",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": null,
+                    "provenance": [],
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -2792,7 +2792,7 @@
                     "units": "percent / year",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": null,
+                    "provenance": [],
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -2821,7 +2821,7 @@
                     "units": "USD_2022 / kilowatt",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": null,
+                    "provenance": [],
                     "note": "Includes grid connection and project financing costs; Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -2841,7 +2841,7 @@
                     "units": "percent / year",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": null,
+                    "provenance": [],
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -2870,7 +2870,7 @@
                     "units": "USD_2022 / kilowatt_hour",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": null,
+                    "provenance": [],
                     "note": "Includes grid connection and project financing costs; Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -2890,7 +2890,7 @@
                     "units": "percent / year",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": null,
+                    "provenance": [],
                     "note": "Meaning of scenario and financial case: https://atb.nrel.gov/electricity/2024/definitions#scenarios",
                     "sources": {
                         "sources": [
@@ -2919,7 +2919,7 @@
                     "units": "year",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": null,
+                    "provenance": [],
                     "note": null,
                     "sources": {
                         "sources": [
@@ -2948,7 +2948,7 @@
                     "units": "year",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": null,
+                    "provenance": [],
                     "note": null,
                     "sources": {
                         "sources": [
@@ -2968,7 +2968,7 @@
                     "units": "percent",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": null,
+                    "provenance": [],
                     "note": null,
                     "sources": {
                         "sources": [
@@ -2997,7 +2997,7 @@
                     "units": "percent",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": null,
+                    "provenance": [],
                     "note": null,
                     "sources": {
                         "sources": [
@@ -3017,7 +3017,7 @@
                     "units": "USD_2022 / megawatt",
                     "carrier": "1 / fischer_tropsch",
                     "heating_value": "1 / lower_heating_value",
-                    "provenance": null,
+                    "provenance": [],
                     "note": null,
                     "sources": {
                         "sources": [
@@ -3037,7 +3037,7 @@
                     "units": "year",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": null,
+                    "provenance": [],
                     "note": null,
                     "sources": {
                         "sources": [
@@ -3057,7 +3057,7 @@
                     "units": "percent / year",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": null,
+                    "provenance": [],
                     "note": null,
                     "sources": {
                         "sources": [
@@ -3077,7 +3077,7 @@
                     "units": "dimensionless",
                     "carrier": "hydrogen / fischer_tropsch",
                     "heating_value": "lower_heating_value",
-                    "provenance": null,
+                    "provenance": [],
                     "note": "0.995 MWh_H2 per output, output increasing from 2020 to 2050 (0.65, 0.7, 0.73, 0.75 MWh liquid FT output).",
                     "sources": {
                         "sources": [
@@ -3097,7 +3097,7 @@
                     "units": "dimensionless",
                     "carrier": "electricity / fischer_tropsch",
                     "heating_value": "lower_heating_value",
-                    "provenance": null,
+                    "provenance": [],
                     "note": "0.005 MWh_el input per FT output, output increasing from 2020 to 2050 (0.65, 0.7, 0.73, 0.75 MWh liquid FT output).",
                     "sources": {
                         "sources": [
@@ -3117,7 +3117,7 @@
                     "units": "metric_ton / megawatt_hour",
                     "carrier": "carbon_dioxide / fischer_tropsch",
                     "heating_value": "lower_heating_value",
-                    "provenance": null,
+                    "provenance": [],
                     "note": "Input per 1t FT liquid fuels output, carbon efficiency increases with years (4.3, 3.9, 3.6, 3.3 t_CO2/t_FT from 2020-2050 with LHV 11.95 MWh_th/t_FT).",
                     "sources": {
                         "sources": [
@@ -3146,7 +3146,7 @@
                     "units": "percent",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": null,
+                    "provenance": [],
                     "note": null,
                     "sources": {
                         "sources": [
@@ -3175,7 +3175,7 @@
                     "units": "year",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": null,
+                    "provenance": [],
                     "note": null,
                     "sources": {
                         "sources": [
@@ -3204,7 +3204,7 @@
                     "units": "year",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": null,
+                    "provenance": [],
                     "note": null,
                     "sources": {
                         "sources": [
@@ -3233,7 +3233,7 @@
                     "units": "year",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": null,
+                    "provenance": [],
                     "note": null,
                     "sources": {
                         "sources": [
@@ -3253,7 +3253,7 @@
                     "units": "megawatt_hour / metric_ton",
                     "carrier": "electricity / carbon_dioxide",
                     "heating_value": "lower_heating_value",
-                    "provenance": null,
+                    "provenance": [],
                     "note": null,
                     "sources": {
                         "sources": [
@@ -3273,7 +3273,7 @@
                     "units": "megawatt_hour / metric_ton",
                     "carrier": "thermal / carbon_dioxide",
                     "heating_value": "lower_heating_value",
-                    "provenance": null,
+                    "provenance": [],
                     "note": null,
                     "sources": {
                         "sources": [
@@ -3302,7 +3302,7 @@
                     "units": "USD_2022 / kilowatt_hour",
                     "carrier": "1 / hydrogen",
                     "heating_value": "lower_heating_value",
-                    "provenance": null,
+                    "provenance": [],
                     "note": null,
                     "sources": {
                         "sources": [
@@ -3322,7 +3322,7 @@
                     "units": "percent / year",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": null,
+                    "provenance": [],
                     "note": null,
                     "sources": {
                         "sources": [
@@ -3342,7 +3342,7 @@
                     "units": "year",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": null,
+                    "provenance": [],
                     "note": null,
                     "sources": {
                         "sources": [
@@ -3362,7 +3362,7 @@
                     "units": "dimensionless",
                     "carrier": "electricity / hydrogen",
                     "heating_value": "lower_heating_value",
-                    "provenance": null,
+                    "provenance": [],
                     "note": "1.707 kWh/kg.",
                     "sources": {
                         "sources": [
@@ -3391,7 +3391,7 @@
                     "units": "USD_2022 / kilowatt_hour",
                     "carrier": "1 / hydrogen",
                     "heating_value": "lower_heating_value",
-                    "provenance": null,
+                    "provenance": [],
                     "note": null,
                     "sources": {
                         "sources": [
@@ -3411,7 +3411,7 @@
                     "units": "percent / year",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": null,
+                    "provenance": [],
                     "note": null,
                     "sources": {
                         "sources": [
@@ -3431,7 +3431,7 @@
                     "units": "year",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": null,
+                    "provenance": [],
                     "note": null,
                     "sources": {
                         "sources": [
@@ -3451,7 +3451,7 @@
                     "units": "percent",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": null,
+                    "provenance": [],
                     "note": null,
                     "sources": {
                         "sources": [
@@ -3480,7 +3480,7 @@
                     "units": "year",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": null,
+                    "provenance": [],
                     "note": null,
                     "sources": {
                         "sources": [
@@ -3509,7 +3509,7 @@
                     "units": "year",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": null,
+                    "provenance": [],
                     "note": null,
                     "sources": {
                         "sources": [
@@ -3538,7 +3538,7 @@
                     "units": "percent",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": null,
+                    "provenance": [],
                     "note": null,
                     "sources": {
                         "sources": [
@@ -3558,7 +3558,7 @@
                     "units": "percent",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": null,
+                    "provenance": [],
                     "note": null,
                     "sources": {
                         "sources": [
@@ -3587,7 +3587,7 @@
                     "units": "percent",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": null,
+                    "provenance": [],
                     "note": null,
                     "sources": {
                         "sources": [
@@ -3607,7 +3607,7 @@
                     "units": "percent",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": null,
+                    "provenance": [],
                     "note": null,
                     "sources": {
                         "sources": [
@@ -3636,7 +3636,7 @@
                     "units": "year",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": null,
+                    "provenance": [],
                     "note": null,
                     "sources": {
                         "sources": [
@@ -3656,7 +3656,7 @@
                     "units": "percent",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": null,
+                    "provenance": [],
                     "note": null,
                     "sources": {
                         "sources": [
@@ -3676,7 +3676,7 @@
                     "units": "percent",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": null,
+                    "provenance": [],
                     "note": null,
                     "sources": {
                         "sources": [
@@ -3705,7 +3705,7 @@
                     "units": "year",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": null,
+                    "provenance": [],
                     "note": null,
                     "sources": {
                         "sources": [
@@ -3725,7 +3725,7 @@
                     "units": "percent",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": null,
+                    "provenance": [],
                     "note": null,
                     "sources": {
                         "sources": [
@@ -3745,7 +3745,7 @@
                     "units": "percent",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": null,
+                    "provenance": [],
                     "note": null,
                     "sources": {
                         "sources": [
@@ -3774,7 +3774,7 @@
                     "units": "year",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": null,
+                    "provenance": [],
                     "note": null,
                     "sources": {
                         "sources": [
@@ -3794,7 +3794,7 @@
                     "units": "percent",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": null,
+                    "provenance": [],
                     "note": null,
                     "sources": {
                         "sources": [
@@ -3814,7 +3814,7 @@
                     "units": "percent",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": null,
+                    "provenance": [],
                     "note": null,
                     "sources": {
                         "sources": [
@@ -3843,7 +3843,7 @@
                     "units": "year",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": null,
+                    "provenance": [],
                     "note": null,
                     "sources": {
                         "sources": [
@@ -3872,7 +3872,7 @@
                     "units": "year",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": null,
+                    "provenance": [],
                     "note": null,
                     "sources": {
                         "sources": [
@@ -3892,7 +3892,7 @@
                     "units": "percent",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": null,
+                    "provenance": [],
                     "note": null,
                     "sources": {
                         "sources": [
@@ -3921,7 +3921,7 @@
                     "units": "year",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": null,
+                    "provenance": [],
                     "note": null,
                     "sources": {
                         "sources": [
@@ -3941,7 +3941,7 @@
                     "units": "percent",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": null,
+                    "provenance": [],
                     "note": null,
                     "sources": {
                         "sources": [
@@ -3961,7 +3961,7 @@
                     "units": "percent",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": null,
+                    "provenance": [],
                     "note": null,
                     "sources": {
                         "sources": [
@@ -3990,7 +3990,7 @@
                     "units": "year",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": null,
+                    "provenance": [],
                     "note": null,
                     "sources": {
                         "sources": [
@@ -4010,7 +4010,7 @@
                     "units": "percent",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": null,
+                    "provenance": [],
                     "note": null,
                     "sources": {
                         "sources": [
@@ -4030,7 +4030,7 @@
                     "units": "percent",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": null,
+                    "provenance": [],
                     "note": null,
                     "sources": {
                         "sources": [
@@ -4059,7 +4059,7 @@
                     "units": "percent",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": null,
+                    "provenance": [],
                     "note": null,
                     "sources": {
                         "sources": [
@@ -4079,7 +4079,7 @@
                     "units": "percent",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": null,
+                    "provenance": [],
                     "note": null,
                     "sources": {
                         "sources": [
@@ -4108,7 +4108,7 @@
                     "units": "percent",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": null,
+                    "provenance": [],
                     "note": null,
                     "sources": {
                         "sources": [
@@ -4128,7 +4128,7 @@
                     "units": "percent",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": null,
+                    "provenance": [],
                     "note": null,
                     "sources": {
                         "sources": [

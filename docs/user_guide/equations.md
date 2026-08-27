@@ -83,8 +83,18 @@ params = {
 eac = td.equation_registry.calculate("eac", params)
 ```
 
-The result of the calculation is a new `Parameter` object with `magnitude`, `units`, and `provenance` (set to the
-formula name that produced it).
+The result of the calculation is a new `Parameter` object with `magnitude`, `units`, and a `provenance` entry
+describing the calculation: that the value was derived from other parameters, the name and expression of the
+formula used, and the concrete input values it was solved with.
+
+```python
+print(eac.provenance[0])
+# Calculated from other parameters using formula 'eac_annuity': eac - specific_investment * wacc / (1 - (1 + wacc)**(-lifetime)) = 0
+# Input values:
+#   specific_investment = 1000.0 USD_2020 / kilowatt
+#   wacc = 0.07 dimensionless
+#   lifetime = 20.0 year
+```
 
 ### Checking whether a parameter can be derived
 
