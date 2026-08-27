@@ -126,11 +126,11 @@ eac_equations = td.equation_registry.list_equations(target="eac")
 If a target has no registered equations, `list_equations(target=...)` raises
 a `ValueError`.
 
-### REPL representation of equations
+### Displaying equations
 
 `Equation` objects provide a compact REPL representation via `repr(...)`.
 The representation includes equation name, parameters (in original order),
-equation string, and default flag.
+equation string, priority, and description.
 
 Long equation strings are truncated for readability in interactive sessions.
 
@@ -141,7 +141,22 @@ eq = td.Equation(
     eq_str="a - b - c",
 )
 print(repr(eq))
-# Equation(name='my_equation', parameters=['a', 'b', 'c'], eq_str='a - b - c', default=False)
+# Equation(name='my_equation', parameters=['a', 'b', 'c'], eq_str='a - b - c', priority=0, description=None)
+```
+
+For a human-readable, math-like rendering use `str(...)` / `print(...)`.
+It shows the equation name, the full (untruncated) expression set equal to
+zero, and the description if one is set:
+
+```python
+eq = td.Equation(
+    name="my_equation",
+    parameters=["a", "b", "c"],
+    eq_str="a - b - c",
+    description="a is the sum of b and c.",
+)
+print(eq)
+# my_equation: a - b - c = 0 (a is the sum of b and c.)
 ```
 
 ### Equation solve caching

@@ -119,6 +119,40 @@ class TestEquationRepr:
         assert long_expr not in rep
 
 
+class TestEquationStr:
+    def test_str_without_description(self) -> None:
+        equation = Equation(
+            name="simple",
+            parameters=["target", "input_a", "input_b"],
+            eq_str="target - input_a - input_b",
+        )
+
+        assert str(equation) == "simple: target - input_a - input_b = 0"
+
+    def test_str_with_description(self) -> None:
+        equation = Equation(
+            name="simple",
+            parameters=["target", "input_a", "input_b"],
+            eq_str="target - input_a - input_b",
+            description="Sum of two inputs.",
+        )
+
+        assert (
+            str(equation)
+            == "simple: target - input_a - input_b = 0 (Sum of two inputs.)"
+        )
+
+    def test_str_does_not_truncate_long_expression(self) -> None:
+        long_expr = "x - " + " + ".join(f"p{i}" for i in range(100))
+        equation = Equation(
+            name="long",
+            parameters=["x", "p0"],
+            eq_str=long_expr,
+        )
+
+        assert long_expr in str(equation)
+
+
 class TestEquationCaching:
     def test_symbolic_solutions_precomputed_on_registration(
         self, monkeypatch: pytest.MonkeyPatch

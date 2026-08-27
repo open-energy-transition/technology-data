@@ -210,6 +210,13 @@ class Equation:
             ")"
         )
 
+    def __str__(self) -> str:
+        """Return a human-readable, math-like rendering of the equation."""
+        s = f"{self.name}: {self.expr_str} = 0"
+        if self.description:
+            s += f" ({self.description})"
+        return s
+
     def can_solve_for(self, target: str, available: dict[str, Parameter]) -> bool:
         """
         Check if an equation can solve for `target` parameter with the provided `available` parameters.
