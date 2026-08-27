@@ -5,45 +5,57 @@
 """
 Equation and EquationRegistry for bidirectional parameter linking via equations in SymPy.
 
-Design
-------
-Each equation is registered as a symbolic expression equal to zero (e.g.
-``eac - sic*wacc/(1-(1+wacc)**(-lifetime))``). SymPy solves the expression
-for *any* of its participant variables given the others, so one registration
-covers every direction automatically.
+**Design**
+Each equation is registered as a symbolic expression equal to zero, e.g.
+for ``a = b`` the equation is registered as ``a - b`` and the ``= 0`` part is
+not registered.
+The package SymPy is used to solve the expression for *any* of its participant
+variables after registration asuming all other variables are given.
+This allows for performant usage of the equations post the initial registration
+in any direction.
 
-Unit handling
--------------
-Units are propagated automatically using the pint Quantities that each
-``Parameter`` already carries. The lambdified SymPy solution is evaluated with
-pint ``Quantity`` objects as inputs, so the result inherits consistent units
-without any extra annotation on the formula itself.
+**Equation registry**
+An equation registry is used to collect all equations.
+The registry contains functions for managing the member equations and look-up
+functions for finding equations that contain specific variables (parameters).
 
-One exception: parameters that appear in *exponent positions* in the solved
+Similarly to the unit registry, there is a default equation registry for the package
+with default equations already loaded in from the package data.
+Equations can be programmatically added or loaded from external file.
+
+**Units**
+Units are propagated automatically using the ``pint`` of the ``Parameter`` objects
+used in the calculations without any extra annotation on the formula itself.
+
+Exception: Parameters that appear in *exponent positions* in the solved
 expression (e.g. ``lifetime`` in ``(1+wacc)**(-lifetime)``) are passed as
-plain magnitudes. Raising a quantity to a dimensioned power is physically
-undefined; in every real-world formula such a parameter represents a
-dimensionless count whose physical unit is a label, not a true dimension.
+plain magnitudes without units.
+Raising a quantity to a dimensioned power is physically undefined.
+In real-world formulas such a parameter usually represents a dimensionless count
+whose physical unit is a label, not a true dimension, and thus we ignore them.
 
 When pint arithmetic itself fails (e.g. if the solved expression contains a
 transcendental function applied to a non-dimensionless quantity), evaluation
 falls back to magnitudes and the result is returned with ``units=None``.
+Might not be the best design, but if someone stumbles across it, we're open to
+suggestions on how to improve this.
 
-Currency consistency check
---------------------------
-Before any computation, only the parameters required by the selected equation
-are checked. Among those, parameters that carry a currency unit must share the
-same currency and currency year. If they do not, a ``ValueError`` is raised.
+**Unit consistency check**
+Before any equation is used to calculate a new parameter or the consistency of
+parameters, the participating parameters are checked for currency unit consistency.
+While strictly not necessary, this is a design decision.
+If the parameters carry different currency units and years, a ``ValueError`` is raised;
+the user needs to harmonise currency units first.
 
-Solving strategy
+**Solving of equations**
 ----------------
 To avoid SymPy hanging on transcendental equations (e.g. solving for WACC
 inside an annuity formula where it appears both linearly and as an exponent
 base), the solver follows this two-step strategy:
 
-1. **Symbolic-first**: solve the expression with purely abstract symbols, then
+1. Symbolic-first: solve the expression with purely abstract symbols, then
    evaluate the result via pint arithmetic. Abstract symbolic solving is
-   significantly faster than working with floating-point numbers because
+   faster than working with floating-point numbers because
    SymPy's algebraic algorithms are optimised for symbolic manipulation.
 
 2. **Numeric fallback**: if the symbolic step produces no result, substitute
@@ -51,17 +63,16 @@ base), the solver follows this two-step strategy:
    This can succeed in cases where SymPy's heuristics prefer concrete numbers.
 
 The solving is wrapped in a timeout using `overdue` to prevent the system
-from hanging indefinitely on difficult equations. If no SymPy solution is found
+from hanging indefinitely on difficult equations.
+If no SymPy solution is found
 within `_SOLVE_TIMEOUT_SECONDS` the call is cancelled and an error raised.
 """
 
 from __future__ import annotations
 
 # `from __future__ import annotations` makes all annotations lazy strings at
-# runtime. Together with the TYPE_CHECKING guard below this lets us reference
-# `Parameter` in type hints without importing it at module load time, which
-# would create a circular import: __init__.py → technology.py → formulas.py
-# → parameter.py → import technologydata (circular).
+# runtime. With the TYPE_CHECKING guard below this lets us reference
+# `Parameter` in type hints without importing which may lead to circular imports
 import math
 import pathlib
 from collections.abc import Callable, Sequence
@@ -97,9 +108,8 @@ class EquationConfig(pydantic.BaseModel):
 
 
 # Seconds to wait for SymPy before declaring "no analytical solution".
-# Most tractable algebraic solutions complete in well under a second; this
-# budget is intentionally generous to handle slow-but-solvable cases while
-# still catching transcendental equations that would otherwise hang forever.
+# Equations should usually solve well below under a second, but 
+# transcendental equations will hang forever
 _SOLVE_TIMEOUT_SECONDS = 5
 _EQUATION_REPR_MAX_EXPR_LENGTH = 80
 
