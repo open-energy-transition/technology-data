@@ -7,12 +7,12 @@ SPDX-License-Identifier: MIT
 
 # Summary
 
-<!-- What does this PR change, and why? Link related issues with "Closes #NNN". -->
+<!-- What does this PR change, and why? Link related issues with "Closes #ISSUE_NUMBER". -->
 
 ## Checklist
 
 - [ ] Tests added/updated for the change and `uv run pytest` passes
+- [ ] New files carry SPDX license info (checked by REUSE)
 - [ ] `uv run pre-commit run --all-files` passes (lint, format, mypy, REUSE)
-- [ ] New files carry SPDX license info (see `AGENTS.md`, section "Licensing")
-- [ ] Documentation/docstrings updated where behavior changed
+- [ ] Documentation/docstrings has been updated
 - [ ] (If AI-assisted) Changes were reviewed by a human before opening this PR
