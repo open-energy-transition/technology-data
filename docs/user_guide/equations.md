@@ -118,7 +118,8 @@ print(all_equations[0])
 # {'name': 'annuity_factor',
 #  'parameters': ['annuity_factor', 'wacc', 'lifetime'],
 #  'eq_str': 'annuity_factor - wacc / (1 - (1 + wacc)**(-lifetime))',
-#  'default': True}
+#  'priority': 1,
+#  'description': 'Capital recovery factor used to annualize upfront investment.'}
 
 eac_equations = td.equation_registry.list_equations(target="eac")
 ```
@@ -203,7 +204,7 @@ Parameters that already present in the technology object are not overwritten by 
 If you want to force a recalculation of an existing parameter, remove it from the `parameters` dictionary first:
 
 ```python
-tech = tech.remove_parameters("eac")
+del tech.parameters["eac"]
 tech = tech.calculate_parameters("eac")  # now recalculated
 ```
 
@@ -291,6 +292,7 @@ td.equation_registry.register(
 
 # Option 2: isolated registry
 my_reg = td.EquationRegistry()
+```
 
 ### Loading equations from YAML files
 
@@ -325,27 +327,20 @@ name that already exists with a different definition.
 The built-in default equations are now loaded from a YAML file in
 `src/technologydata/equations_data/default_equations.yaml`.
 That file declares a YAML language server schema for editor tooltip support.
+
+```python
 my_reg.register(
     name="my_formula",
-
-```text
-parameters=["x", "y", "z"],
-expr_str="x - y * z",
-priority=1,
-```
-
+    parameters=["x", "y", "z"],
+    expr_str="x - y * z",
+    priority=1,
 )
 result = my_reg.calculate("x", {
     "y": td.Parameter(magnitude=3.0, units="dimensionless"),
-
-```text
-"z": td.Parameter(magnitude=4.0, units="dimensionless"),
-```
-
+    "z": td.Parameter(magnitude=4.0, units="dimensionless"),
 })
 print(result.magnitude) # 12.0
-
-```text
+```
 
 ---
 
