@@ -10,7 +10,7 @@ The `Technology` class in `technologydata` represents a single technology, inclu
 - **Region, Year, and Scenario**: Tracks metadata for each technology, including `region`, `year`, `case`, and `detailed technology` name.
 - **Parameter Access**: Supports dictionary-like access and assignment for parameters.
 - **Consistency Checking**: Checks selected parameters against registered
-    equations and returns a per-equation status dictionary.
+  equations and returns a per-equation status dictionary.
 - **Parameter Calculation**: Placeholder for calculating missing or derived parameters.
 - **Currency Adjustment**: Harmonizes all technology parameters to a target currency, including inflation and exchange rates.
 - **Region and Scale Adjustment**: Placeholder methods for adjusting technology parameters to a different region or scaling values.
