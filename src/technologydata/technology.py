@@ -85,7 +85,7 @@ class Technology(pydantic.BaseModel):
         equations: "EquationRegistry | None" = None,
         rtol: float = 1e-6,
         atol: float = 1e-9,
-    ) -> dict[str, str]:
+    ) -> dict[str, bool | str]:
         """
         Check equation-level consistency for selected parameters.
 
@@ -128,7 +128,7 @@ class Technology(pydantic.BaseModel):
 
         Returns
         -------
-        dict[str, str]
+        dict[str, bool | str]
             Consistency status per checked equation.
 
         Raises
@@ -166,34 +166,26 @@ class Technology(pydantic.BaseModel):
 
         available_params = dict(self.parameters)
 
-        result: dict[str, str] = {}
+        result: dict[str, bool | str] = {}
         for equation_name, (equation, target) in equations_to_check.items():
             supporting_params = [name for name in equation.parameters if name != target]
             present_supporting = [
                 name for name in supporting_params if name in available_params
             ]
+            missing = [
+                name for name in equation.parameters if name not in available_params
+            ]
 
             if not present_supporting:
-                missing = [
-                    name for name in equation.parameters if name not in available_params
-                ]
                 result[equation_name] = f"inapplicable: {missing}"
                 continue
 
-            if (
-                len(present_supporting) < len(supporting_params)
-                or target not in available_params
-            ):
-                missing = [
-                    name for name in equation.parameters if name not in available_params
-                ]
+            if missing:
                 result[equation_name] = f"missing parameters: {missing}"
                 continue
 
             known_params = {
-                name: available_params[name]
-                for name in equation.parameters
-                if name != target
+                name: available_params[name] for name in supporting_params
             }
 
             try:

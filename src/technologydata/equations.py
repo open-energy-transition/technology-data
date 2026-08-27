@@ -62,8 +62,9 @@ from __future__ import annotations
 # `Parameter` in type hints without importing it at module load time, which
 # would create a circular import: __init__.py → technology.py → formulas.py
 # → parameter.py → import technologydata (circular).
+import math
 import pathlib
-from collections.abc import Sequence
+from collections.abc import Callable, Sequence
 from typing import TYPE_CHECKING, TypedDict
 
 import overdue
@@ -118,6 +119,23 @@ def _get_exponent_symbols(expr: sp.Expr) -> set[sp.Symbol]:
         if isinstance(node, sp.Pow):
             result |= node.exp.free_symbols
     return result
+
+
+def _evaluate_solution(
+    f: Callable, values: list[object]
+) -> tuple[float, object] | None:
+    """
+    Evaluate a lambdified solution with the given input values.
+
+    Returns the ``(magnitude, raw_result)`` pair, or ``None`` if the
+    evaluation fails or does not produce a finite number.
+    """
+    try:
+        raw = f(*values)
+        mag = float(raw.magnitude) if hasattr(raw, "magnitude") else float(raw)
+    except Exception:  # noqa: BLE001
+        return None
+    return None if math.isnan(mag) else (mag, raw)
 
 
 class Equation:
@@ -234,12 +252,11 @@ class Equation:
             `True` if the equation can solve for `target`, else `False`.
 
         """
-        if target not in self.parameters:
-            # Equation is not related to the target parameter
-            return False
-        else:
-            # Check if all other parameters in the equation are available for solving
-            return all(p in available for p in self.parameters if p != target)
+        # The equation must involve the target parameter, and all other
+        # participating parameters must be available for solving.
+        return target in self.parameters and all(
+            p in available for p in self.parameters if p != target
+        )
 
     def solve_for(self, target: str, params: dict[str, Parameter]) -> Parameter:
         """
@@ -294,30 +311,21 @@ class Equation:
                 for p in input_params
             ]
 
-            try:
-                raw = f(*input_values)
-                mag = float(raw.magnitude) if hasattr(raw, "magnitude") else float(raw)
-                if mag == mag:  # reject NaN
-                    results.append((mag, raw))
-            except Exception:  # noqa: BLE001
+            result = _evaluate_solution(f, input_values)
+            if result is None:
                 # Pint arithmetic failed (e.g. transcendental function on a
                 # non-dimensionless quantity). Fall back to magnitude-only.
                 mag_values = [params[p].magnitude for p in input_params]
-                try:
-                    raw_mag = f(*mag_values)
-                    mag = float(raw_mag)
-                    if mag == mag:
-                        results.append((mag, raw_mag))
-                except Exception:  # noqa: BLE001
-                    pass
+                result = _evaluate_solution(f, mag_values)
+            if result is not None:
+                results.append(result)
 
         if not results:
             # Step 2: substitute magnitudes first, then solve. This can succeed
             # when SymPy's heuristics prefer concrete numbers over abstract symbols.
             subs_mag = {
                 self._symbols_by_parameter[p]: params[p].magnitude
-                for p in params
-                if p in self._symbols_by_parameter
+                for p in input_params
             }
             try:
                 for sol in _solve_with_timeout(
@@ -325,7 +333,7 @@ class Equation:
                 ):
                     try:
                         mag = float(sol)
-                        if mag == mag:
+                        if not math.isnan(mag):
                             results.append((mag, mag))
                     except (TypeError, ValueError):
                         pass

@@ -335,7 +335,7 @@ class TechnologyCollection(pydantic.BaseModel):
         equations: "EquationRegistry | None" = None,
         rtol: float = 1e-6,
         atol: float = 1e-9,
-    ) -> list[dict[str, str]]:
+    ) -> list[dict[str, bool | str]]:
         """
         Check equation-level consistency for selected parameters of every contained Technology.
 
@@ -357,7 +357,7 @@ class TechnologyCollection(pydantic.BaseModel):
 
         Returns
         -------
-        list[dict[str, str]]
+        list[dict[str, bool | str]]
             Consistency status per checked equation, one dict per technology,
             in the same order as `self.technologies`.
 
