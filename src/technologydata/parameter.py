@@ -124,6 +124,16 @@ class Parameter(BaseModel):
         else:
             self._pint_heating_value = None
 
+    def __str__(self) -> str:
+        """Render magnitude, units, carrier, and heating value as one human-readable string."""
+        self._update_pint_attributes()
+        parts = [str(self._pint_quantity)]
+        if self.carrier:
+            parts.append(f"carrier={self.carrier}")
+        if self.heating_value:
+            parts.append(f"heating_value={self.heating_value}")
+        return ", ".join(parts)
+
     def to(self, units: str) -> Self:
         """Convert the parameter's quantity to new units."""
         self._update_pint_attributes()
