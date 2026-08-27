@@ -57,6 +57,7 @@ Consequences for code you write:
 - Docstrings are required (pydocstyle) and use NumPy style, matching the
   existing code.
 - pyupgrade targets modern syntax (e.g. `X | None`, builtin generics).
+- Formatting with `black` style.
 
 ## Licensing (REUSE) — applies to every new file
 
@@ -69,6 +70,7 @@ Every new file needs SPDX copyright and license tags, either:
   (root `*.md`, `*.yaml`, and `docs/**` are already covered there).
 
 Code is MIT; processed/derived data files are CC-BY-4.0.
+Copyright statement does not include a year, copyright holders are "technologydata contributors".
 Check with `uv run reuse lint`.
 
 ## Conventions
