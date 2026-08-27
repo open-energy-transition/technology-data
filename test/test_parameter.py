@@ -504,7 +504,9 @@ class TestParameter:
     def test_parameter_equality_different_provenance(self) -> None:
         """Test that parameters with different provenance are not equal."""
         param1 = technologydata.Parameter(magnitude=1000, provenance=["literature"])
-        param2 = technologydata.Parameter(magnitude=1000, provenance=["expert_estimate"])
+        param2 = technologydata.Parameter(
+            magnitude=1000, provenance=["expert_estimate"]
+        )
 
         assert param1 != param2
         assert param2 != param1

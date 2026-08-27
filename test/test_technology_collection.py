@@ -393,7 +393,9 @@ class TestTechnologyCollection:
             assert orig_tech.year == conv_tech.year
 
     @staticmethod
-    def _tech(name: str, **params: technologydata.Parameter) -> technologydata.Technology:
+    def _tech(
+        name: str, **params: technologydata.Parameter
+    ) -> technologydata.Technology:
         return technologydata.Technology(
             name=name,
             detailed_technology="Si-HC",
@@ -424,9 +426,7 @@ class TestTechnologyCollection:
         assert "eac" not in tc.technologies[0].parameters
         for tech in result.technologies:
             assert "eac" in tech.parameters
-            assert tech.parameters["eac"].magnitude == pytest.approx(
-                94.39292574325566
-            )
+            assert tech.parameters["eac"].magnitude == pytest.approx(94.39292574325566)
 
     def test_calculate_parameters_auto_discovery_per_technology(self) -> None:
         """With no explicit targets, each technology derives what it individually can."""

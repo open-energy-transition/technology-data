@@ -184,9 +184,7 @@ class Technology(pydantic.BaseModel):
                 result[equation_name] = f"missing parameters: {missing}"
                 continue
 
-            known_params = {
-                name: available_params[name] for name in supporting_params
-            }
+            known_params = {name: available_params[name] for name in supporting_params}
 
             try:
                 expected = equations.calculate(

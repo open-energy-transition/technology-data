@@ -324,8 +324,7 @@ class Equation:
             # Step 2: substitute magnitudes first, then solve. This can succeed
             # when SymPy's heuristics prefer concrete numbers over abstract symbols.
             subs_mag = {
-                self._symbols_by_parameter[p]: params[p].magnitude
-                for p in input_params
+                self._symbols_by_parameter[p]: params[p].magnitude for p in input_params
             }
             try:
                 for sol in _solve_with_timeout(
