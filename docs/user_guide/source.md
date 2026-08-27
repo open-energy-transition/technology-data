@@ -18,7 +18,7 @@ The `Source` class in `technologydata` represents bibliographic and web sources,
 ### Creating a Source
 
 ```python
-from technologydata.source import Source
+from technologydata import Source
 src = Source(title="Example Source", authors="The Authors", url="http://example.com")
 ```
 
@@ -27,7 +27,7 @@ A `Source` object can also be used to archive and retrieve PDFs or other files f
 ### Archiving a URL
 
 ```python
-from technologydata.source import Source
+from technologydata import Source
 src = Source(title="Example Source", authors="The Authors", url="http://example.com")
 
 src.ensure_in_wayback()
@@ -39,7 +39,7 @@ print(src.url_date_archive)  # Archive timestamp
 
 ```python
 import pathlib
-from technologydata.source import Source
+from technologydata import Source
 src = Source(title="Example Source", authors="The Authors", url="http://example.com")
 
 output_path = src.retrieve_from_wayback(pathlib.Path("downloads/"))
@@ -51,7 +51,7 @@ print(output_path)  # Path to downloaded file
 ```python
 import pathlib
 import pandas as pd
-from technologydata.source import Source
+from technologydata import Source
 
 # Create a Source for an Excel file
 excel_src = Source(title="Example Spreadsheet", authors="The Authors", url="http://example.com/data.xlsx")

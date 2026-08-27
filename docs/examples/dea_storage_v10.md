@@ -16,7 +16,7 @@ The Danish Energy Agency (DEA) data parser demonstrates a full data-cleaning and
 
 ## Dataset Description
 
-The original dataset is available at this [link](https://ens.dk/media/6589/download). A full description of the dataset is available at this [link](https://ens.dk/media/6588/download). The raw source file is included in the repository at `src/technologydata/parsers/raw/Technology_datasheet_for_energy_storage.xlsx`.
+The original dataset is available from the [Danish Energy Agency website](https://ens.dk/media/6589/download). A full description of the dataset is available in the [DEA documentation](https://ens.dk/media/6588/download). The raw source file is included in the repository at `src/technologydata/parsers/raw/Technology_datasheet_for_energy_storage.xlsx`.
 
 The dataset is in Excel format, and it includes, under the data sheet `alldata_flat`, a flat table of technology parameters for a range of energy storage technologies. Columns include `Technology`, `ws`, `par` (parameter name), `val` (value), `unit`, `year`, `est` (case/estimate), `priceyear`, plus metadata columns such as `cat`, `ref`, `note`. Rows are individual parameter records (parameter value + unit + context) for technologies and estimation cases.
 
@@ -40,7 +40,7 @@ Function `_extract_year()` extracts the first sequence of digits from the `year`
 
 Function `_clean_parameter_string()` removes leading hyphens, removes text inside square brackets (units/notes), collapses extra spaces and lower-cases the parameter name. It is applied to the `par` column.
 
-Function `_standardize_units()` is applied to columns `par` and `unit`. It completes missing units based on parameter name (e.g., `energy storage capacity for one unit` is mapped to the unit `MWh`) via a parameter-to-unit map. Moreover, it replaces known incorrect unit strings as `⁰C` -> `C` or `m2` to `meter**2`. The unit substitutions are driven by the `pint` documentation available at this [link](https://github.com/hgrecco/pint/blob/master/pint/default_en.txt).
+Function `_standardize_units()` is applied to columns `par` and `unit`. It completes missing units based on parameter name (e.g., `energy storage capacity for one unit` is mapped to the unit `MWh`) via a parameter-to-unit map. Moreover, it replaces known incorrect unit strings as `⁰C` -> `C` or `m2` to `meter**2`. The unit substitutions are driven by the [pint default units definition](https://github.com/hgrecco/pint/blob/master/pint/default_en.txt).
 
 Function `Commons.update_unit_with_currency_year(unit, priceyear)`, if present, appends `priceyear` information to currency units. This is because `technologydata` follows the currency pattern `\b(?P<cu_iso3>[A-Z]{3})_(?P<year>\d{4})\b`, as for example `EUR_2021`.
 
@@ -95,6 +95,7 @@ parser_accessor.parse(
 ```
 
 The `parse` method accepts the following arguments:
+
 - `input_file_name` (str): The name of the raw data file located in `src/technologydata/parsers/raw/`.
 - `num_digits` (int, default 4): Number of decimals for rounding numeric values.
 - `archive_source` (bool, default False): Whether to store the source on the Wayback Machine.

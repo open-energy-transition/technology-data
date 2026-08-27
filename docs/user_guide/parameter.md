@@ -6,7 +6,7 @@ The `Parameter` class in `technologydata` encapsulates a value, its unit, proven
 
 ## Features
 
-- **Value and Units**: Stores a numerical value (`magnitude`) and its associated units (`units`). Units are handled using `pint` and support custom currency units (e.g., `USD_2020/kW`). The default `pint` units definition file is available [here](https://github.com/hgrecco/pint/blob/master/pint/default_en.txt) for reference. Be mindful of false unit-friends, e.g. `t = metric_ton = tonne != ton = US_ton`
+- **Value and Units**: Stores a numerical value (`magnitude`) and its associated units (`units`). Units are handled using `pint` and support custom currency units (e.g., `USD_2020/kW`). The [pint default units definition](https://github.com/hgrecco/pint/blob/master/pint/default_en.txt) file is available for reference. Be mindful of false unit-friends, e.g. `t = metric_ton = tonne != ton = US_ton`
 - **Currency Unit Convention**: Currency units must follow the pattern `XYZ_YYYY`, where `XYZ` is the 3-letter [ISO 4217](https://en.wikipedia.org/wiki/ISO_4217) currency code (e.g., `USD`, `EUR`, `CNY`) and `YYYY` is the 4-digit year (e.g., `USD_2020`). This allows for both currency and inflation adjustments.
 - **Carrier and Heating Value**: Optionally specify an energy carrier (e.g., `H2`) and a heating value type (`LHV` or `HHV`).
 - **Provenance and Notes**: Track the origin of the data and any additional notes.
@@ -20,9 +20,7 @@ The `Parameter` class in `technologydata` encapsulates a value, its unit, proven
 ### Creating a Parameter
 
 ```python
-from technologydata.parameter import Parameter
-from technologydata.source import Source
-from technologydata.source_collection import SourceCollection
+from technologydata import Parameter, Source, SourceCollection
 
 param = Parameter(
     magnitude=1000,
@@ -61,7 +59,7 @@ Currency conversion and inflation adjustment are also available for `Technology`
 
 ```python
 # for a Technology
-from technologydata.technology import Technology
+from technologydata import Technology
 tech = Technology(
     name="Example Tech",
     detailed_technology="Detailed Example Tech",
@@ -75,7 +73,7 @@ converted_tech = tech.to_currency("USD_2020", source="worldbank")
 USD_2020 / kilowatt
 
 # and for a TechnologyCollection
-from technologydata.technology_collection import TechnologyCollection
+from technologydata import TechnologyCollection
 tech_collection = TechnologyCollection(technologies=[tech])
 converted_collection = tech_collection.to_currency("USD_2020", source="worldbank")
 >>> print(converted_collection.technologies[0].parameters["cost"].units)
@@ -99,7 +97,7 @@ DEU
 ### Arithmetic Operations
 
 ```python
-from technologydata.parameter import Parameter
+from technologydata import Parameter
 
 param2 = Parameter(magnitude=500, units="USD_2020/kW", carrier="H2", heating_value="LHV")
 sum_param = param + param2
@@ -110,7 +108,7 @@ sum_param = param + param2
 **Note:** If you try to add or subtract parameters with different carriers or heating values, a `ValueError` will be raised:
 
 ```python
-from technologydata.parameter import Parameter
+from technologydata import Parameter
 
 param_hhv = Parameter(magnitude=1, units="USD_2020/kW", carrier="H2", heating_value="HHV")
 param + param_hhv
@@ -139,7 +137,7 @@ The heating value can be changed using the `change_heating_value` method, which 
 ### Example: Converting Between LHV and HHV
 
 ```python
-from technologydata.parameter import Parameter
+from technologydata import Parameter
 
 # Create a parameter on LHV basis
 param_lhv = Parameter(magnitude=33.33, units="kWh/kg", carrier="hydrogen", heating_value="LHV")

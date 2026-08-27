@@ -105,3 +105,10 @@ class TestDataAccessor:
             match="Data source version 'v11' not found. The latest available version is v10.",
         ):
             DataAccessor(data_source="dea_energy_storage", version="v11").load()
+
+    def test_ensure_path_exists_is_idempotent(self, tmp_path: pathlib.Path) -> None:
+        """Test ensure_path_exists is idempotent."""
+        target = pathlib.Path(tmp_path, "test_directory")
+        DataAccessor.ensure_path_exists(target)
+        assert target.exists()
+        assert target.is_dir()
