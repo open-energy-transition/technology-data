@@ -108,7 +108,7 @@ class EquationConfig(pydantic.BaseModel):
 
 
 # Seconds to wait for SymPy before declaring "no analytical solution".
-# Equations should usually solve well below under a second, but 
+# Equations should usually solve well below under a second, but
 # transcendental equations will hang forever
 _SOLVE_TIMEOUT_SECONDS = 5
 _EQUATION_REPR_MAX_EXPR_LENGTH = 80
