@@ -188,6 +188,8 @@ class DataAccessor(pydantic.BaseModel):
             Base URL where the JSON files are hosted. The method will attempt to download
             technologies.json and sources.json from this location. The URL should point
             to the directory containing these files.
+        version : str
+            The version of the data to download. This will be used to create a subdirectory
 
         Returns
         -------
@@ -222,12 +224,7 @@ class DataAccessor(pydantic.BaseModel):
                 self.data_path, self.data_source, self.version, "sources.json"
             )
         else:
-            technologies_path = pathlib.Path(
-                self.data_path, self.data_source, "technologies.json"
-            )
-            sources_path = pathlib.Path(
-                self.data_path, self.data_source, "sources.json"
-            )
+            raise ValueError("Version must be specified for downloading data.")
 
         # Ensure parent directories exist
         self.ensure_path_exists(technologies_path.parent)
