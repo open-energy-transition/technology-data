@@ -10,6 +10,7 @@ import pathlib
 import re
 import sys
 from typing import Annotated
+from urllib.parse import urljoin
 
 import pydantic
 import requests
@@ -236,9 +237,8 @@ class DataAccessor(pydantic.BaseModel):
         >>> # src/technologydata/parsers/dea_energy_storage/v10/
 
         """
-        # Ensure base_url ends with /
-        if not base_url.endswith("/"):
-            base_url += "/"
+        # Ensure base_url ends with / using urljoin for proper URL normalization
+        base_url = urljoin(base_url, "./")
 
         # Download technologies.json
         technologies_url = f"{base_url}technologies.json"
