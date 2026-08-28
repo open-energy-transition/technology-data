@@ -164,9 +164,15 @@ class DataAccessor(pydantic.BaseModel):
             )
         else:
             version = self.get_latest_version_string(list(source_path.iterdir()))
-            raise ValueError(
-                f"Data source version '{self.version}' not found. The latest available version is {version}."
-            )
+            if self.version is None:
+                logger.warning(
+                    "Data source version is None. Best practices recommend providing a valid data version."
+                )
+            else:
+                logger.warning(
+                    f"Data source version {self.version} not found. "
+                    f"Using latest available version {version} instead."
+                )
 
         data_path = pathlib.Path(source_path, version)
         dp = DataPackage.from_json(self.data_source, self.version, data_path)

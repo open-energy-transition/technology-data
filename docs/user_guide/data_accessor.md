@@ -27,7 +27,8 @@ It is designed to work with a specific directory structure where datasets are or
 
 ### Creating a DataAccessor
 
-To use `DataAccessor`, create an instance with `data_source`. You can also provide `version` and optionally override `data_path`.
+To use `DataAccessor`, create an instance with `data_source`. If the `version` is not provided, the `DataAccessor` will automatically determined the latest available data version and use it. Best practice is to always specify the version to ensure reproducibility.
+Finally, you can optionally override `data_path`.
 
 ```python
 from technologydata.parsers.data_accessor import DataAccessor
@@ -36,11 +37,6 @@ from technologydata.parsers.data_accessor import DataAccessor
 accessor_v1 = DataAccessor(
     data_source="manual_input_usa",
     version="v1.0.0"
-)
-
-# Create an accessor that will use the latest version
-accessor_latest = DataAccessor(
-    data_source="dea_energy_storage"
 )
 ```
 
