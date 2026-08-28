@@ -98,13 +98,17 @@ class TestDataAccessor:
         assert data_package.version == "v0.13.4"
         assert len(data_package.technologies) == 85
 
-    def test_load_raises_value_error_for_invalid_version(self) -> None:
-        """Test if load raises ValueError for an invalid version."""
-        with pytest.raises(
-            ValueError,
-            match="Data source version 'v11' not found. The latest available version is v10.",
-        ):
-            DataAccessor(data_source="dea_energy_storage", version="v11").load()
+    def test_load_falls_back_to_latest_for_invalid_version(self) -> None:
+        """Test if load falls back to latest version when an invalid version is provided."""
+        data_accessor = DataAccessor(data_source="dea_energy_storage", version="v11")
+        data_package = data_accessor.load()
+
+        # Should successfully load with the latest version (v10)
+        assert data_package is not None
+        assert data_package.technologies is not None
+        assert data_package.name == "dea_energy_storage"
+        assert data_package.version == "v10"
+        assert len(data_package.technologies) == 136
 
     def test_ensure_path_exists_is_idempotent(self, tmp_path: pathlib.Path) -> None:
         """Test ensure_path_exists is idempotent."""

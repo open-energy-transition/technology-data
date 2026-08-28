@@ -146,8 +146,6 @@ class DataAccessor(pydantic.BaseModel):
         ------
         FileNotFoundError
             If the data source directory or the specified version directory is not found.
-        ValueError
-            If the specified version is not found. The user is notified of  the latest available version.
 
         """
         # Ensure the data path exists before attempting to load data
@@ -175,7 +173,7 @@ class DataAccessor(pydantic.BaseModel):
                 )
 
         data_path = pathlib.Path(source_path, version)
-        dp = DataPackage.from_json(self.data_source, self.version, data_path)
+        dp = DataPackage.from_json(self.data_source, version, data_path)
         return dp
 
     def parse(
