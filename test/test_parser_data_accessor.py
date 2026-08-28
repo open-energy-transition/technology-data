@@ -124,11 +124,12 @@ class TestDataAccessor:
         base_url = (
             "https://raw.githubusercontent.com/open-energy-transition/technology-data/"
         )
-        branch = "prototype-2/"
+        # Use specific commit SHA instead of branch name for test stability
+        commit_sha = "65a6aa6454493dbb56f5d12d8efab2a3a40104d7/"
         data_source = DataSourceName.MANUAL_INPUT_USA
         version = "v0.13.4"
         target_url = f"src/technologydata/parsers/{data_source}/{version}/"
-        url = base_url + branch + target_url
+        url = base_url + commit_sha + target_url
         data_accessor = DataAccessor(
             data_source="manual_input_usa", version="v0.13.4", data_path=tmp_path
         )
