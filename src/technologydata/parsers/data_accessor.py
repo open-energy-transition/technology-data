@@ -182,14 +182,18 @@ class DataAccessor(pydantic.BaseModel):
         specified base URL and loads them into a DataPackage instance. The sources.json
         file is optional; if not found, sources will be extracted from technologies.
 
+        The downloaded files are stored locally in the directory structure:
+        ``{data_path}/{data_source}/{version}/technologies.json`` and
+        ``{data_path}/{data_source}/{version}/sources.json``, where ``data_path``
+        defaults to ``src/technologydata/parsers/``. This allows the data to be
+        accessed later via the ``load()`` method without re-downloading.
+
         Parameters
         ----------
         base_url : str
             Base URL where the JSON files are hosted. The method will attempt to download
             technologies.json and sources.json from this location. The URL should point
             to the directory containing these files.
-        version : str
-            The version of the data to download. This will be used to create a subdirectory
 
         Returns
         -------
@@ -202,11 +206,19 @@ class DataAccessor(pydantic.BaseModel):
             If the HTTP request to download technologies.json fails.
         requests.ConnectionError
             If there is a network connectivity issue.
+        ValueError
+            If the version attribute is not set (required for determining storage location).
+
+        Notes
+        -----
+        The downloaded files persist on disk and can be reused in subsequent sessions
+        by calling ``load()`` with the same data source and version.
 
         Examples
         --------
         >>> accessor = DataAccessor(data_source="dea_energy_storage", version="v1.0")
         >>> dp = accessor.download("https://example.com/data")
+        >>> # Files are stored at: src/technologydata/parsers/dea_energy_storage/v1.0/
 
         """
         # Ensure base_url ends with /
