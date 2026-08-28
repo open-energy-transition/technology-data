@@ -182,6 +182,12 @@ class DataAccessor(pydantic.BaseModel):
         specified base URL and loads them into a DataPackage instance. The sources.json
         file is optional; if not found, sources will be extracted from technologies.
 
+        **Important:** The ``data_source`` and ``version`` attributes of the
+        DataAccessor instance determine the **local storage location** for downloaded
+        files. The ``base_url`` parameter determines **what data is downloaded**.
+        It is the caller's responsibility to ensure these are consistent - the method
+        does not validate that the URL content matches the specified version.
+
         The downloaded files are stored locally in the directory structure:
         ``{data_path}/{data_source}/{version}/technologies.json`` and
         ``{data_path}/{data_source}/{version}/sources.json``, where ``data_path``
@@ -193,7 +199,9 @@ class DataAccessor(pydantic.BaseModel):
         base_url : str
             Base URL where the JSON files are hosted. The method will attempt to download
             technologies.json and sources.json from this location. The URL should point
-            to the directory containing these files.
+            to the directory containing these files (without the filename itself).
+            **The caller must ensure this URL corresponds to the data_source and version
+            specified in the DataAccessor instance.**
 
         Returns
         -------
@@ -203,7 +211,7 @@ class DataAccessor(pydantic.BaseModel):
         Raises
         ------
         requests.HTTPError
-            If the HTTP request to download technologies.json fails.
+            If the HTTP request to download technologies.json or sources.json fails.
         requests.ConnectionError
             If there is a network connectivity issue.
         ValueError
@@ -211,14 +219,21 @@ class DataAccessor(pydantic.BaseModel):
 
         Notes
         -----
-        The downloaded files persist on disk and can be reused in subsequent sessions
-        by calling ``load()`` with the same data source and version.
+        - The ``data_source`` and ``version`` attributes must be set before calling this method.
+        - The method does **not** validate that the downloaded data matches the specified
+          version - this is the caller's responsibility.
+        - The downloaded files persist on disk and can be reused in subsequent sessions
+          by calling ``load()`` with the same data source and version.
 
         Examples
         --------
-        >>> accessor = DataAccessor(data_source="dea_energy_storage", version="v1.0")
-        >>> dp = accessor.download("https://example.com/data")
-        >>> # Files are stored at: src/technologydata/parsers/dea_energy_storage/v1.0/
+        Download v10 data and store it as v10:
+
+        >>> accessor = DataAccessor(data_source="dea_energy_storage", version="v10")
+        >>> base_url = "https://example.com/data/dea_energy_storage/v10/"
+        >>> dp = accessor.download(base_url)
+        >>> # Files are downloaded from the URL and stored at:
+        >>> # src/technologydata/parsers/dea_energy_storage/v10/
 
         """
         # Ensure base_url ends with /

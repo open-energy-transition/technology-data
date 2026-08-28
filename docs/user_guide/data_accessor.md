@@ -93,6 +93,50 @@ The `download()` method will:
 
 **Note**: The base URL should point to the directory containing the JSON files. The method will automatically append the file names to construct the full URLs.
 
+#### Important: URL and Version Consistency
+
+!!! warning "Caller Responsibility"
+    The `data_source` and `version` attributes of the `DataAccessor` instance determine the **local storage location** for downloaded files. The `base_url` parameter determines **what data is actually downloaded**.
+
+```text
+**The method does not validate that the URL content matches the specified version.** It is the caller's responsibility to ensure these are consistent.
+```
+
+**What this means in practice:**
+
+- The `data_source` and `version` attributes control where files are saved on disk
+- The `base_url` controls which remote files are downloaded
+- If these don't match, you'll download one version's data and label it as another version
+
+**Example of a problematic mismatch:**
+
+```python
+# ⚠️ BAD: This will download v10 data but store it as v9!
+accessor = DataAccessor(data_source="dea_energy_storage", version="v9")
+base_url = "https://example.com/data/dea_energy_storage/v10/"  # URL points to v10
+dp = accessor.download(base_url)  # Downloads v10 data, stores at .../v9/
+```
+
+**Correct usage:**
+
+```python
+# ✅ GOOD: Version in accessor matches version in URL
+accessor = DataAccessor(data_source="dea_energy_storage", version="v10")
+base_url = "https://example.com/data/dea_energy_storage/v10/"
+dp = accessor.download(base_url)  # Downloads v10 data, stores at .../v10/
+```
+
+**Storage location:**
+
+Downloaded files are saved to:
+
+```text
+{data_path}/{data_source}/{version}/technologies.json
+{data_path}/{data_source}/{version}/sources.json
+```
+
+Where `data_path` defaults to `src/technologydata/parsers/`. Once downloaded, the data can be accessed later using the `load()` method without re-downloading.
+
 ### Parsing Raw Data
 
 The `parse()` method is used to execute the data processing pipeline for a specific data source and version. It takes the raw data file as input and generates the structured `technologies.json` and `sources.json` files.
@@ -123,4 +167,6 @@ Please refer to the [API documentation](../api/data_accessor.md) for detailed in
 -   **Directory Structure**: The `DataAccessor` expects a specific directory structure within the project: `src/technologydata/parsers/<data_source_name>/<version>/ unless `data_path` is overridden.
 -   **Version Naming**: Version directories must be prefixed with a `v` and follow a pattern that can be parsed by `packaging.version` (e.g., `v1`, `v2.0`, `v1.0.1-alpha`). Directories that do not match this pattern will be ignored when searching for the latest version.
 -   **Target Data**: The `load()` method is designed to load a `DataPackage` from a folder. See the [DataPackage](./datapackage.md) documentation for more details on the expected contents of that folder (i.e.,`technologies.json`).
-- **Input Location for Parse**: `parse()` expects `input_file_name` under `data_path/raw/`.
+-   **Input Location for Parse**: `parse()` expects `input_file_name` under `data_path/raw/`.
+-   **Download Method Validation**: The `download()` method does **not** validate that the remote URL content matches the `data_source` and `version` attributes specified in the `DataAccessor` instance. Users must ensure consistency between these parameters to avoid downloading incorrect data or mislabeling versions. See the "Important: URL and Version Consistency" section above for details.
+-   **Version Required for Download**: The `version` attribute must be set when using the `download()` method. A `ValueError` will be raised if the version is `None`.
