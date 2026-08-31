@@ -24,7 +24,6 @@ import pytest
 
 import technologydata
 
-sys.path.append("./technology-data")
 path_cwd = pathlib.Path.cwd()
 
 
