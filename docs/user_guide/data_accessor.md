@@ -27,7 +27,7 @@ It is designed to work with a specific directory structure where datasets are or
 
 ### Creating a DataAccessor
 
-To use `DataAccessor`, create an instance with `data_source`. If the `version` is not provided, the `DataAccessor` will automatically determined the latest available data version and use it. Best practice is to always specify the version to ensure reproducibility.
+To use `DataAccessor`, create an instance with `data_source`. If the `version` is not provided, the `DataAccessor` will automatically determine the latest available data version and use it. Best practice is to always specify the version to ensure reproducibility, otherwise package updates may change the data returned when newer versions for this package become available.
 Finally, you can optionally override `data_path`.
 
 ```python
