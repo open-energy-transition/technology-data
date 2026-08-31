@@ -12,7 +12,7 @@ import pydantic
 from technologydata.parameter import Parameter
 
 if TYPE_CHECKING:
-    from technologydata.equations import EquationRegistry
+    from technologydata.equations import Equation, EquationRegistry
 
 
 class Technology(pydantic.BaseModel):
@@ -158,7 +158,7 @@ class Technology(pydantic.BaseModel):
 
         # Keep one anchor target parameter per equation so each equation is
         # evaluated exactly once while still respecting the user's filter.
-        equations_to_check: dict[str, tuple[object, str]] = {}
+        equations_to_check: dict[str, tuple[Equation, str]] = {}
         for target in checked_names:
             for equation in equations._equations_by_parameter.get(target, []):
                 if equation.name not in equations_to_check:

@@ -10,7 +10,7 @@ Each equation is registered as a symbolic expression equal to zero, e.g.
 for ``a = b`` the equation is registered as ``a - b`` and the ``= 0`` part is
 not registered.
 The package SymPy is used to solve the expression for *any* of its participant
-variables after registration asuming all other variables are given.
+variables after registration assuming all other variables are given.
 This allows for performant usage of the equations post the initial registration
 in any direction.
 
@@ -76,7 +76,7 @@ from __future__ import annotations
 import math
 import pathlib
 from collections.abc import Callable, Sequence
-from typing import TYPE_CHECKING, TypedDict
+from typing import TYPE_CHECKING, Any, TypedDict, cast
 
 import overdue
 import pydantic
@@ -119,7 +119,9 @@ def _solve_with_timeout(expr: sp.Expr, symbol: sp.Symbol) -> list[sp.Expr]:
     Call `sp.solve(expr, symbol)` with a timeout to prevent hanging on transcendental equations.
     """
     with overdue.timeout_set_to(_SOLVE_TIMEOUT_SECONDS, raise_exception=True):
-        return sp.solve(expr, symbol)
+        # sp.solve is untyped (returns Any); the actual runtime type here is a
+        # list of solved expressions.
+        return cast("list[sp.Expr]", sp.solve(expr, symbol))
 
 
 def _get_exponent_symbols(expr: sp.Expr) -> set[sp.Symbol]:
@@ -132,7 +134,7 @@ def _get_exponent_symbols(expr: sp.Expr) -> set[sp.Symbol]:
 
 
 def _evaluate_solution(
-    f: Callable, values: list[object]
+    f: Callable[..., Any], values: list[object]
 ) -> tuple[float, object] | None:
     """
     Evaluate a lambdified solution with the given input values.
@@ -325,7 +327,7 @@ class Equation:
             if result is None:
                 # Pint arithmetic failed (e.g. transcendental function on a
                 # non-dimensionless quantity). Fall back to magnitude-only.
-                mag_values = [params[p].magnitude for p in input_params]
+                mag_values: list[object] = [params[p].magnitude for p in input_params]
                 result = _evaluate_solution(f, mag_values)
             if result is not None:
                 results.append(result)
@@ -373,11 +375,11 @@ class Equation:
 
         result_units = str(raw_result.units) if hasattr(raw_result, "units") else None
 
-        input_values = "\n".join(f"  {p} = {params[p]}" for p in input_params)
+        input_values_str = "\n".join(f"  {p} = {params[p]}" for p in input_params)
         provenance_entry = (
             f"Calculated from other parameters using formula '{self.name}': "
             f"{self.expr_str} = 0\n"
-            f"Input values:\n{input_values}"
+            f"Input values:\n{input_values_str}"
         )
         return Parameter(
             magnitude=magnitude,

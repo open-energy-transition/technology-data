@@ -71,7 +71,9 @@ class Parameter(BaseModel):
     _pint_carrier: pint.Unit = PrivateAttr(None)
     _pint_heating_value: pint.Unit = PrivateAttr(None)
 
-    def __init__(self, **data: float | str | SourceCollection | None) -> None:
+    def __init__(
+        self, **data: float | str | list[str] | SourceCollection | None
+    ) -> None:
         """Initialize Parameter and update pint attributes."""
         # pint uses canonical names for units, carriers, and heating values
         # Ensure the Parameter object is always created with these consistent names from pint

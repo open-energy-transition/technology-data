@@ -304,11 +304,13 @@ class TestEacAnnuity:
     def test_forward_eac_currency_inherited(self) -> None:
         # lifetime appears only as exponent, so pint gives USD_2020/kW (not /year)
         result = equation_registry.calculate("eac", EAC_ANNUITY_PARAMS)
+        assert result.units is not None
         assert "USD_2020" in result.units
         assert "kilowatt" in result.units  # pint canonicalises kW → kilowatt
 
     def test_forward_eac_provenance(self) -> None:
         result = equation_registry.calculate("eac", EAC_ANNUITY_PARAMS)
+        assert result.provenance is not None
         assert len(result.provenance) == 1
         entry = result.provenance[0]
         assert "calculated from other parameters" in entry.lower()
@@ -328,6 +330,7 @@ class TestEacAnnuity:
         }
         result = equation_registry.calculate("specific_investment", params)
         assert result.magnitude == pytest.approx(1000.0, rel=1e-4)
+        assert result.units is not None
         assert "USD_2020" in result.units
         assert "kilowatt" in result.units
 
@@ -349,9 +352,11 @@ class TestEacSimple:
             "eac", EAC_SIMPLE_PARAMS, equation_name="eac_simple"
         )
         assert result.magnitude == pytest.approx(_EAC_SIMPLE_EXPECTED)
+        assert result.provenance is not None
         assert len(result.provenance) == 1
         assert "formula 'eac_simple'" in result.provenance[0]
         # eac_simple divides by lifetime directly, so pint gives /year correctly
+        assert result.units is not None
         assert "kilowatt" in result.units
         assert "year" in result.units
 
@@ -381,6 +386,7 @@ class TestAnnuityFactor:
         result = equation_registry.calculate("annuity_factor", self._PARAMS)
         assert result.magnitude == pytest.approx(_AF_EXPECTED, rel=1e-6)
         assert result.units == "dimensionless"
+        assert result.provenance is not None
         assert len(result.provenance) == 1
         assert "formula 'annuity_factor'" in result.provenance[0]
 
@@ -444,6 +450,7 @@ class TestTotalInvestment:
         }
         result = equation_registry.calculate("specific_investment", params)
         assert result.magnitude == pytest.approx(800.0)
+        assert result.units is not None
         assert "USD_2020" in result.units
 
     def test_backward_capacity(self) -> None:
@@ -455,6 +462,7 @@ class TestTotalInvestment:
         }
         result = equation_registry.calculate("capacity", params)
         assert result.magnitude == pytest.approx(100.0)
+        assert result.units is not None
         assert "kilowatt" in result.units
 
 
@@ -475,6 +483,7 @@ class TestFixedOm:
         }
         result = equation_registry.calculate("fixed_om", params)
         assert result.magnitude == pytest.approx(self._FOM_EXPECTED)
+        assert result.units is not None
         assert "USD_2020" in result.units
 
     def test_backward_fraction(self) -> None:
@@ -549,6 +558,7 @@ class TestFuelVariableCost:
         params = {"fuel_cost": self._FUEL_COST, "efficiency": self._EFF}
         result = equation_registry.calculate("fuel_variable_cost", params)
         assert result.magnitude == pytest.approx(self._FVC_EXPECTED)
+        assert result.units is not None
         assert "USD_2020" in result.units
 
     def test_backward_efficiency(self) -> None:
@@ -571,6 +581,7 @@ class TestFuelVariableCost:
         }
         result = equation_registry.calculate("fuel_cost", params)
         assert result.magnitude == pytest.approx(50.0)
+        assert result.units is not None
         assert "USD_2020" in result.units
 
 
@@ -588,6 +599,7 @@ class TestCo2Cost:
         params = {"co2_price": self._CO2_PRICE, "co2_intensity": self._CO2_INTENSITY}
         result = equation_registry.calculate("co2_cost", params)
         assert result.magnitude == pytest.approx(self._CO2_COST_EXPECTED)
+        assert result.units is not None
         assert "USD_2020" in result.units
 
     def test_backward_co2_price(self) -> None:
@@ -599,6 +611,7 @@ class TestCo2Cost:
         }
         result = equation_registry.calculate("co2_price", params)
         assert result.magnitude == pytest.approx(80.0)
+        assert result.units is not None
         assert "USD_2020" in result.units
 
     def test_backward_co2_intensity(self) -> None:
@@ -620,12 +633,14 @@ class TestCo2Cost:
 class TestFormulaSelection:
     def test_default_formula_chosen_when_not_specified(self) -> None:
         result = equation_registry.calculate("eac", EAC_ANNUITY_PARAMS)
+        assert result.provenance is not None
         assert "formula 'eac_annuity'" in result.provenance[0]
 
     def test_explicit_equation_name_overrides_default(self) -> None:
         result = equation_registry.calculate(
             "eac", EAC_SIMPLE_PARAMS, equation_name="eac_simple"
         )
+        assert result.provenance is not None
         assert "formula 'eac_simple'" in result.provenance[0]
 
     def test_fallback_to_applicable_when_default_cannot_apply(self) -> None:
@@ -633,6 +648,7 @@ class TestFormulaSelection:
         # eac_annuity is default but requires sic/wacc/lifetime — cannot apply.
         # eac_simple can apply.
         result = equation_registry.calculate("eac", EAC_SIMPLE_PARAMS)
+        assert result.provenance is not None
         assert "formula 'eac_simple'" in result.provenance[0]
 
     def test_unknown_equation_name_raises(self) -> None:
@@ -751,6 +767,7 @@ class TestCustomRegistry:
         }
         qty = reg.calculate("quantity", params_back)
         assert qty.magnitude == pytest.approx(100.0)
+        assert qty.units is not None
         assert "kilowatt" in qty.units
 
 
