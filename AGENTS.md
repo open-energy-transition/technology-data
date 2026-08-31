@@ -16,6 +16,8 @@ maintained by a community of maintainers, based on an initiative of Open Energy 
 - `src/technologydata/parsers/` — parsers for external data sources (e.g.
   DEA energy storage). JSON files under `parsers/*/v*/` are parser output —
   regenerate them via the parser, do not hand-edit.
+- `src/technologydata/parsers/data_accessor.py` a `DataAccessor` class for
+  accessing external data either from the package or from a remote source.
 - `test/` — pytest suite; shared fixtures in `test/conftest.py`, example
   data in `test/test_data/`.
 - `docs/` — MkDocs documentation (Material theme, `mkdocs.yaml`).
