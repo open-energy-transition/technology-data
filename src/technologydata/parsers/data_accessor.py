@@ -171,7 +171,7 @@ class DataAccessor(pydantic.BaseModel):
             else:
                 raise ValueError(
                     f"Data source version {self.version} not found. "
-                    f"Using latest available version {version} instead."
+                    f"The latest available version is: {version}."
                 )
 
         data_path = pathlib.Path(source_path, version)
