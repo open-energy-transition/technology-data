@@ -186,15 +186,11 @@ class Technology(pydantic.BaseModel):
 
             known_params = {name: available_params[name] for name in supporting_params}
 
-            try:
-                expected = equations.calculate(
-                    target,
-                    known_params,
-                    equation_name=equation_name,
-                )
-            except Exception:
-                result[equation_name] = False
-                continue
+            expected = equations.calculate(
+                target,
+                known_params,
+                equation_name=equation_name,
+            )
 
             observed = available_params[target]
             result[equation_name] = observed.isclose(
