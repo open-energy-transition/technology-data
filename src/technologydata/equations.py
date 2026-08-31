@@ -83,6 +83,8 @@ import pydantic
 import sympy as sp
 import yaml
 
+from technologydata.parameter import Parameter
+
 if TYPE_CHECKING:
     from technologydata.parameter import Parameter
 
@@ -115,9 +117,7 @@ _EQUATION_REPR_MAX_EXPR_LENGTH = 80
 
 
 def _solve_with_timeout(expr: sp.Expr, symbol: sp.Symbol) -> list[sp.Expr]:
-    """
-    Call `sp.solve(expr, symbol)` with a timeout to prevent hanging on transcendental equations.
-    """
+    """Call `sp.solve(expr, symbol)` with a timeout to prevent hanging on transcendental equations."""
     with overdue.timeout_set_to(_SOLVE_TIMEOUT_SECONDS, raise_exception=True):
         # sp.solve is untyped (returns Any); the actual runtime type here is a
         # list of solved expressions.
@@ -295,8 +295,6 @@ class Equation:
             If SymPy cannot find a closed-form analytical solution.
 
         """
-        from technologydata.parameter import Parameter
-
         # Only parameters required for solving this target are relevant.
         input_params = [p for p in self.parameters if p != target and p in params]
         input_syms = [self._symbols_by_parameter[p] for p in input_params]
@@ -723,8 +721,7 @@ class EquationRegistry:
 
     def can_calculate(self, target: str, params: dict[str, Parameter]) -> bool:
         """
-        Check if the registry has an equation that can calculate the `target` parameter
-        using the provided parameters.
+        Check if the registry has an equation to calculate the `target` parameter from the provided parameters.
 
         Parameters
         ----------
