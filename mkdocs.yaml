@@ -20,6 +20,8 @@ nav:
     - FAQ: home/faq.md
     - Contacts: home/contacts.md
 
+- Tutorial: tutorial/index.md
+
 - User Guide:
   - Data Package: user_guide/datapackage.md
   - Models: user_guide/models.md
