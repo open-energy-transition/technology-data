@@ -52,7 +52,25 @@ dp = DataPackage.from_json(
 )
 ```
 
-This will automatically extract sources from the technologies if not already present.
+#### Understanding JSON Round-Trip Behavior
+
+**Important:** `DataPackage.to_json()` writes both `technologies.json` and `sources.json`,
+but `DataPackage.from_json()` **only reads `technologies.json`**. This is intentional,
+not a bug.
+
+**Why this design?**
+
+- `sources.json` is a **derived/informative output** for human readability and provenance tracking
+- All source information is already embedded in the parameter objects within `technologies.json`
+- When loading, sources are automatically re-extracted from the technology parameters
+- This ensures the sources collection always reflects the actual sources referenced in the data
+
+**When to use `sources.json`:**
+
+- For standalone source collection management via `SourceCollection.from_json()`
+- For human review of all sources cited in a dataset
+- For generating bibliography or citation lists
+- For archival/documentation purposes
 
 ### Exporting to JSON
 
