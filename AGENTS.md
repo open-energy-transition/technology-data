@@ -4,7 +4,7 @@
 (costs, efficiencies, lifetimes) for energy system models, with unit-aware
 parameters, currency/inflation conversion, and data provenance tracking.
 It is an open-source project (MIT for code, CC-BY-4.0 for processed data)
-maintained by Open Energy Transition.
+maintained by a community of maintainers, based on an initiative of Open Energy Transition and Technische Universität Berlin.
 
 ## Layout
 
