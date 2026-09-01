@@ -29,7 +29,6 @@ requires-python = ">=3.12"
 dependencies = [
     "frozendict>=2.4.6",
     "hdx-python-country>=3.9.6",
-    "mypy>=1.15.0",
     "pandas>=2.2.3",
     "pint>=0.24.4",
     "pydantic>=2.11.7",
@@ -41,6 +40,7 @@ dependencies = [
     "sympy>=1.13",
     "pyyaml>=6.0.2",
     "types-pyyaml>=6.0.12.20260815",
+    "python-calamine>=0.4.0",
 ]
 
 [project.urls]
@@ -53,36 +53,26 @@ Changelog = "https://github.com/open-energy-transition/technology-data/releases"
 # editable installation of package and non-packaged dependencies
 [dependency-groups]
 dev = [
-    "ipykernel>=6.29.5",
     "pre-commit>=4.2.0",
     "pytest>=8.4.1",
     "pytest-cov>=6.2.1",
     "pytest-xdist>=3.8.0",
     "reuse>=5.0.2",
+    "mypy>=1.15.0",
     "technologydata",
 ]
 
 docs = [
     "cairosvg>=2.8.2",
-    "gurobipy>=12.0.3",
     "mkdocs-argref-plugin>=0.5.0",
     "mkdocs-autolinks-plugin>=0.7.1",
-    "mkdocs-ezlinks-plugin>=0.1.14",
-    "mkdocs-git-committers-plugin>=0.2.3",
     "mkdocs-git-revision-date-localized-plugin>=1.4.7",
-    "mkdocs-jupyter>=0.25.1",
     "mkdocs-material>=9.6.14",
-    "mkdocs-minify-plugin>=0.8.0",
-    "mkdocs-open-in-new-tab>=1.0.8",
-    "mkdocs-redirects>=1.2.2",
     "mkdocs-table-reader-plugin>=3.1.0",
     "mkdocs-video>=1.5.0",
     "mkdocstrings>=0.29.1",
     "mkdocstrings-python>=1.16.11",
-    "openpyxl>=3.1.5",
     "pillow>=11.3.0",
-    "python-calamine>=0.4.0",
-    "tsam>=2.3.9",
 ]
 
 [tool.pytest.ini_options]

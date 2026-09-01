@@ -106,6 +106,16 @@ class DataPackage(pydantic.BaseModel):
         DataPackage
             The loaded DataPackage instance.
 
+        Notes
+        -----
+        This method only loads ``technologies.json`` and derives the sources
+        collection from the technology parameters. The ``sources.json`` file,
+        if present, is intentionally ignored as it is a derived/informative
+        output. All source information is already contained within the
+        technology parameters in ``technologies.json``.
+        To load a standalone ``SourceCollection`` from ``sources.json``,
+        use ``SourceCollection.from_json()`` instead.
+
         """
         # Load technologies
         technologies_path = pathlib.Path(path_to_folder, "technologies.json")
