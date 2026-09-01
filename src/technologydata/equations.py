@@ -41,11 +41,8 @@ Might not be the best design, but if someone stumbles across it, we're open to
 suggestions on how to improve this.
 
 **Unit consistency check**
-Before any equation is used to calculate a new parameter or the consistency of
-parameters, the participating parameters are checked for currency unit consistency.
-While strictly not necessary, this is a design decision.
-If the parameters carry different currency units and years, a ``ValueError`` is raised;
-the user needs to harmonise currency units first.
+Unit consistency is checked through pint with symbolic calculations.
+With numeric calculations this check does not work so nicely.
 
 **Solving of equations**
 ----------------
