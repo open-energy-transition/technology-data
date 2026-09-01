@@ -391,3 +391,101 @@ class TestTechnologyCollection:
             assert orig_tech.case == conv_tech.case
             assert orig_tech.region == conv_tech.region
             assert orig_tech.year == conv_tech.year
+
+    @staticmethod
+    def _tech(
+        name: str, **params: technologydata.Parameter
+    ) -> technologydata.Technology:
+        return technologydata.Technology(
+            name=name,
+            detailed_technology="Si-HC",
+            case="example-scenario",
+            region="DEU",
+            year=2022,
+            parameters=params,
+        )
+
+    def test_calculate_parameters_explicit_target(self) -> None:
+        """Derive an explicit target for every technology in the collection."""
+        eac_params = {
+            "specific_investment": technologydata.Parameter(
+                magnitude=1000.0, units="USD_2020/kW"
+            ),
+            "wacc": technologydata.Parameter(magnitude=0.07, units="dimensionless"),
+            "lifetime": technologydata.Parameter(magnitude=20.0, units="year"),
+        }
+        tc = technologydata.TechnologyCollection(
+            technologies=[self._tech("A", **eac_params), self._tech("B", **eac_params)]
+        )
+
+        result = tc.calculate_parameters("eac")
+
+        assert isinstance(result, technologydata.TechnologyCollection)
+        assert result is not tc
+        # Original collection is untouched.
+        assert "eac" not in tc.technologies[0].parameters
+        for tech in result.technologies:
+            assert "eac" in tech.parameters
+            assert tech.parameters["eac"].magnitude == pytest.approx(94.39292574325566)
+
+    def test_calculate_parameters_auto_discovery_per_technology(self) -> None:
+        """With no explicit targets, each technology derives what it individually can."""
+        tc = technologydata.TechnologyCollection(
+            technologies=[
+                self._tech(
+                    "A",
+                    specific_investment=technologydata.Parameter(
+                        magnitude=1000.0, units="USD_2020/kW"
+                    ),
+                    wacc=technologydata.Parameter(
+                        magnitude=0.07, units="dimensionless"
+                    ),
+                    lifetime=technologydata.Parameter(magnitude=20.0, units="year"),
+                ),
+                self._tech(
+                    "B",
+                    total_investment_cost=technologydata.Parameter(
+                        magnitude=2000.0, units="USD_2020/kW"
+                    ),
+                    lifetime=technologydata.Parameter(magnitude=20.0, units="year"),
+                ),
+            ]
+        )
+
+        result = tc.calculate_parameters()
+
+        assert "eac" in result.technologies[0].parameters
+        assert "eac" in result.technologies[1].parameters
+        assert result.technologies[1].parameters["eac"].magnitude == pytest.approx(
+            100.0
+        )
+
+    def test_check_consistency_returns_one_status_dict_per_technology(self) -> None:
+        """Return per-technology consistency statuses, aligned with `technologies`."""
+        tc = technologydata.TechnologyCollection(
+            technologies=[
+                self._tech(
+                    "Consistent",
+                    specific_investment=technologydata.Parameter(
+                        magnitude=1000, units="EUR_2020/kW"
+                    ),
+                    annuity_factor=technologydata.Parameter(
+                        magnitude=0.1, units="dimensionless"
+                    ),
+                    eac=technologydata.Parameter(magnitude=100, units="EUR_2020/kW"),
+                ),
+                self._tech(
+                    "MissingInputs",
+                    capacity=technologydata.Parameter(magnitude=10, units="MW"),
+                ),
+            ]
+        )
+
+        status = tc.check_consistency(parameters=["eac"])
+
+        assert len(status) == len(tc) == 2
+        assert status[0]["eac_via_annuity_factor"] is True
+        assert (
+            status[1]["eac_via_annuity_factor"]
+            == "inapplicable: ['eac', 'specific_investment', 'annuity_factor']"
+        )

@@ -28,7 +28,7 @@ class TestParameter:
             units="USD_2020/kW",
             carrier="H2",
             heating_value="LHV",
-            provenance="literature",
+            provenance=["literature"],
             note="Estimated",
             sources=technologydata.SourceCollection(
                 sources=[
@@ -41,7 +41,7 @@ class TestParameter:
         )
         assert param.magnitude == 1000
         assert param.units == "USD_2020 / kilowatt"
-        assert param.provenance == "literature"
+        assert param.provenance == ["literature"]
         assert param.note == "Estimated"
         assert param.sources is not None
 
@@ -154,7 +154,7 @@ class TestParameter:
             units="USD_2020/kW",
             carrier="H2",
             heating_value="LHV",
-            provenance="literature",
+            provenance=["literature"],
             note="Estimated",
         )
         # Change magnitude and units
@@ -310,7 +310,7 @@ class TestParameter:
             units="USD_2020/kW",
             carrier="H2",
             heating_value="LHV",
-            provenance="literature",
+            provenance=["literature"],
             note="Estimated",
         )
 
@@ -398,6 +398,33 @@ class TestParameter:
             param_h2 / param_ch4
         ).carrier == param_h2._pint_carrier / param_ch4._pint_carrier
 
+    def test_parameter_currency_compatibility(self) -> None:
+        """Test that arithmetic is permitted for matching currencies and years."""
+        param_kw = technologydata.Parameter(magnitude=1, units="USD_2020/kW")
+        param_mw = technologydata.Parameter(magnitude=1000, units="USD_2020/MW")
+
+        # Both operands are equal after unit conversion and use the same currency-year.
+        added = param_kw + param_mw
+        subtracted = param_kw - param_mw
+
+        assert isinstance(added, technologydata.Parameter)
+        assert isinstance(subtracted, technologydata.Parameter)
+        assert added.units == "USD_2020 / kilowatt"
+        assert added.magnitude == pytest.approx(2)
+        assert subtracted.units == "USD_2020 / kilowatt"
+        assert subtracted.magnitude == pytest.approx(0)
+
+    def test_parameter_currency_incompatibility(self) -> None:
+        """Test that arithmetic is blocked for different currency years."""
+        param_2020 = technologydata.Parameter(magnitude=1, units="USD_2020/kW")
+        param_2021 = technologydata.Parameter(magnitude=1, units="USD_2021/kW")
+
+        with pytest.raises(ValueError, match="different currencies or currency years"):
+            param_2020 + param_2021
+
+        with pytest.raises(ValueError, match="different currencies or currency years"):
+            param_2020 - param_2021
+
     def test_parameter_equality(self) -> None:
         """Test equality comparison of Parameter objects."""
         # Create two identical parameters
@@ -406,7 +433,7 @@ class TestParameter:
             units="USD_2020/kW",
             carrier="H2",
             heating_value="LHV",
-            provenance="literature",
+            provenance=["literature"],
             note="Estimated",
             sources=technologydata.SourceCollection(
                 sources=[
@@ -422,7 +449,7 @@ class TestParameter:
             units="USD_2020/kW",
             carrier="H2",
             heating_value="LHV",
-            provenance="literature",
+            provenance=["literature"],
             note="Estimated",
             sources=technologydata.SourceCollection(
                 sources=[
@@ -476,8 +503,10 @@ class TestParameter:
 
     def test_parameter_equality_different_provenance(self) -> None:
         """Test that parameters with different provenance are not equal."""
-        param1 = technologydata.Parameter(magnitude=1000, provenance="literature")
-        param2 = technologydata.Parameter(magnitude=1000, provenance="expert_estimate")
+        param1 = technologydata.Parameter(magnitude=1000, provenance=["literature"])
+        param2 = technologydata.Parameter(
+            magnitude=1000, provenance=["expert_estimate"]
+        )
 
         assert param1 != param2
         assert param2 != param1
@@ -544,11 +573,42 @@ class TestParameter:
             units="USD_2020/kW",
             carrier="H2",
             heating_value="LHV",
-            provenance="literature",
+            provenance=["literature"],
             note="Estimated",
         )
 
         assert param == param
+
+    def test_is_consistent_with_true_after_unit_conversion(self) -> None:
+        """Parameters can be consistent even when units differ but are convertible."""
+        observed = technologydata.Parameter(magnitude=1000.0, units="USD_2020/kW")
+        expected = technologydata.Parameter(magnitude=1.0, units="USD_2020/W")
+
+        assert observed.isclose(expected)
+
+    def test_is_consistent_with_false_for_carrier_mismatch(self) -> None:
+        """Carrier mismatch makes parameters inconsistent."""
+        observed = technologydata.Parameter(magnitude=1.0, units="kWh", carrier="H2")
+        expected = technologydata.Parameter(magnitude=1.0, units="kWh", carrier="el")
+
+        assert not observed.isclose(expected)
+
+    def test_is_consistent_with_false_for_heating_value_mismatch(self) -> None:
+        """Heating value mismatch makes parameters inconsistent."""
+        observed = technologydata.Parameter(
+            magnitude=1.0,
+            units="kWh",
+            carrier="H2",
+            heating_value="LHV",
+        )
+        expected = technologydata.Parameter(
+            magnitude=1.0,
+            units="kWh",
+            carrier="H2",
+            heating_value="HHV",
+        )
+
+        assert not observed.isclose(expected)
 
     @pytest.mark.parametrize(
         "example_parameter",
@@ -558,7 +618,7 @@ class TestParameter:
                 "parameter_units": "USD_2020/kW",
                 "parameter_carrier": "H2",
                 "parameter_heating_value": "LHV",
-                "parameter_provenance": "literature",
+                "parameter_provenance": ["literature"],
                 "parameter_note": "Estimated",
                 "parameter_sources": [
                     technologydata.Source(title="title", authors="authors")
@@ -657,7 +717,7 @@ class TestParameter:
             units="kg",
             carrier="H2",
             heating_value="LHV",
-            provenance="test",
+            provenance=["test"],
             note="note",
         )
         result = param**2

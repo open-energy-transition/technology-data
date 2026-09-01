@@ -9,8 +9,8 @@ import json
 import logging
 import pathlib
 import re
-from collections.abc import Iterator
-from typing import Annotated, Self
+from collections.abc import Iterator, Sequence
+from typing import TYPE_CHECKING, Annotated, Self
 
 import pandas
 import pydantic
@@ -19,6 +19,9 @@ import pydantic_core
 from technologydata.parameter import Parameter
 from technologydata.technologies.growth_models import GrowthModel, LinearGrowth
 from technologydata.technology import Technology
+
+if TYPE_CHECKING:
+    from technologydata.equations import EquationRegistry
 
 logger = logging.getLogger(__name__)
 
@@ -289,6 +292,89 @@ class TechnologyCollection(pydantic.BaseModel):
 
         return TechnologyCollection(technologies=new_techs)  # type: ignore
 
+    def calculate_parameters(
+        self,
+        targets: str | list[str] | None = None,
+        equation_names: dict[str, str] | None = None,
+    ) -> Self:
+        """
+        Derive missing parameters of every contained Technology using registered equations.
+
+        Parameters
+        ----------
+        targets : str or list of str, optional
+            Parameter names to derive. If ``None``, for each technology all parameters
+            that can be derived from its currently available parameters (and are not
+            already present) are calculated automatically.
+        equation_names : dict of str to str, optional
+            Mapping of parameter name to equation name, used to override the
+            default equation for specific targets
+            (e.g. ``{"eac": "eac_simple"}``).
+
+        Returns
+        -------
+        TechnologyCollection
+            A new TechnologyCollection with the derived parameters added to each technology.
+
+        Raises
+        ------
+        ValueError
+            If a requested target has no applicable equation, required parameters
+            are missing, or input currencies are inconsistent, for any technology.
+
+        """
+        new_techs = [
+            tech.calculate_parameters(targets=targets, equation_names=equation_names)
+            for tech in self.technologies
+        ]
+        return TechnologyCollection(technologies=new_techs)  # type: ignore
+
+    def check_consistency(
+        self,
+        parameters: Sequence[str] | None = None,
+        equations: "EquationRegistry | None" = None,
+        rtol: float = 1e-6,
+        atol: float = 1e-9,
+    ) -> list[dict[str, bool | str]]:
+        """
+        Check equation-level consistency for selected parameters of every contained Technology.
+
+        See :meth:`Technology.check_consistency` for the semantics applied to each
+        technology individually.
+
+        Parameters
+        ----------
+        parameters: list[str] (optional)
+            The parameters to check for consistency. If None are specified,
+            all parameters of each Technology are considered.
+        equations: EquationRegistry (optional)
+            A registry of equations to check against.
+            Defaults to technologydata.equation_registry.
+        rtol: float (optional)
+            Relative tolerance to use for checking consistency of the parameters.
+        atol: float (optional)
+            Absolute tolerance to use for checking consistency of the parameters.
+
+        Returns
+        -------
+        list[dict[str, bool | str]]
+            Consistency status per checked equation, one dict per technology,
+            in the same order as `self.technologies`.
+
+        Raises
+        ------
+        ValueError
+            If ``parameters`` is given explicitly and includes a name for
+            which no equation is registered, for any technology.
+
+        """
+        return [
+            tech.check_consistency(
+                parameters=parameters, equations=equations, rtol=rtol, atol=atol
+            )
+            for tech in self.technologies
+        ]
+
     def fit(
         self, parameter: str, model: GrowthModel, p0: dict[str, float] | None = None
     ) -> GrowthModel:
@@ -436,7 +522,9 @@ class TechnologyCollection(pydantic.BaseModel):
                             deep=True,
                             update={
                                 "magnitude": param_value,
-                                "provenance": f"Projected to {to_year} using {model}.",
+                                "provenance": [
+                                    f"Projected to {to_year} using {model}."
+                                ],
                                 "note": None,  # Clear any existing note
                                 "sources": None,  # Clear any existing sources
                             },

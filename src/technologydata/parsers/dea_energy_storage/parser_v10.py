@@ -454,7 +454,7 @@ class DeaEnergyStorageV10Parser(ParserBase):
                     magnitude=row["val"],
                     units=row["unit"],
                     sources=sources,
-                    provenance="Parsed from Excel file",
+                    provenance=["Parsed from Excel file"],
                 )
             list_techs.append(
                 Technology(
