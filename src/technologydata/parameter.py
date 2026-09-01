@@ -428,7 +428,7 @@ class Parameter(BaseModel):
 
     def _check_parameter_compatibility(self, other: Self) -> None:
         """
-        Check if two parameters are compatible in terms of carrier, and heating value.
+        Check if two parameters are compatible in terms of currency units, carrier, and heating value.
 
         Parameters
         ----------
@@ -438,7 +438,7 @@ class Parameter(BaseModel):
         Raises
         ------
         ValueError
-            If the carriers and heating values of the two parameters are not compatible.
+            If the carriers, heating values, or currencies/currency years of the two parameters are not compatible.
             The error message specifies which attribute differs.
 
         """
@@ -451,6 +451,14 @@ class Parameter(BaseModel):
             raise ValueError(
                 f"Operation not permitted on parameters with different heating values: "
                 f"'{self._pint_heating_value}' and '{other._pint_heating_value}'."
+            )
+        if set(technologydata.extract_currency_units(self._pint_quantity.units)) != set(
+            technologydata.extract_currency_units(other._pint_quantity.units)
+        ):
+            raise ValueError(
+                f"Operation not permitted on parameters with different currencies or currency years: "
+                f"'{self._pint_quantity.units}' and '{other._pint_quantity.units}'. "
+                f"Use `to_currency` to convert to the same currency before performing the operation."
             )
 
     def __add__(self, other: Self) -> Self:
