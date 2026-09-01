@@ -192,6 +192,7 @@ plugins:
 
 hooks:
 - docs/assets/overrides/hooks/shortcodes.py
+- docs/assets/overrides/hooks/release_notes.py
 
 copyright: >-
   &copy technologydata contributors
