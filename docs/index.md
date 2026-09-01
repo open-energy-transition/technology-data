@@ -66,8 +66,8 @@ The bundled datasets are installed with it; no additional download step is neede
 The package already ships with some parsed data catalogues for immediate use.
 Prominent examples are:
 
-* Energy Storage Catalogue from the Danish Energy Agency (automatically extracted)
-* Annual Technology Baseline 2024 from NREL (manually collected in the old [`technologydata` repository](http://technologydata.readthedocs.io/))
+- Energy Storage Catalogue from the Danish Energy Agency (automatically extracted)
+- Annual Technology Baseline 2024 from NREL (manually collected in the old [`technologydata` repository](http://technologydata.readthedocs.io/))
 
 The raw files and parsing logic is also shipped alongside to provide the opportunity for verification.
 

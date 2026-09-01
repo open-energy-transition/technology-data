@@ -16,7 +16,6 @@ reusability and organization.
 
 import json
 import pathlib
-import sys
 from collections.abc import Callable
 from typing import Any
 
