@@ -14,7 +14,11 @@ modules in the same directory and subdirectories, promoting code
 reusability and organization.
 """
 
+import json
 import pathlib
+import sys
+from collections.abc import Callable
+from typing import Any
 
 import pytest
 
@@ -159,3 +163,14 @@ def example_parameter(request: pytest.FixtureRequest) -> technologydata.Paramete
         note=request.param.get("parameter_note"),
         sources=technologydata.SourceCollection(sources=source_list),
     )
+
+
+@pytest.fixture(scope="function")  # type: ignore
+def load_json() -> Callable[[pathlib.Path], Any]:
+    """Fixture to load json files to unit tests."""
+
+    def _load(filepath: pathlib.Path) -> Any:
+        with open(filepath) as f:
+            return json.load(f)
+
+    return _load
