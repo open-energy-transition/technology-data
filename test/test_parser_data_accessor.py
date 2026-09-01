@@ -5,10 +5,14 @@
 """Test the DataAccessor class."""
 
 import pathlib
+from collections.abc import Callable
+from typing import Any
 
 import pytest
 
 from technologydata.parsers.data_accessor import DataAccessor, DataSourceName
+
+path_cwd = pathlib.Path.cwd()
 
 
 class TestDataAccessor:
@@ -98,13 +102,15 @@ class TestDataAccessor:
         assert data_package.version == "v0.13.4"
         assert len(data_package.technologies) == 85
 
-    def test_load_raises_value_error_for_invalid_version(self) -> None:
-        """Test if load raises ValueError for an invalid version."""
+    def test_load_falls_back_to_latest_for_invalid_version(self) -> None:
+        """Test if load raises ValueError when an invalid version is provided."""
+        data_accessor = DataAccessor(data_source="dea_energy_storage", version="v11")
+
         with pytest.raises(
             ValueError,
-            match="Data source version 'v11' not found. The latest available version is v10.",
+            match=r"Data source version v11 not found\. The latest available version is: v10\.",
         ):
-            DataAccessor(data_source="dea_energy_storage", version="v11").load()
+            data_accessor.load()
 
     def test_ensure_path_exists_is_idempotent(self, tmp_path: pathlib.Path) -> None:
         """Test ensure_path_exists is idempotent."""
@@ -112,3 +118,42 @@ class TestDataAccessor:
         DataAccessor.ensure_path_exists(target)
         assert target.exists()
         assert target.is_dir()
+
+    def test_download(
+        self, load_json: Callable[[pathlib.Path], Any], tmp_path: pathlib.Path
+    ) -> None:
+        """Test downloading a DataPackage from URL by mocking HTTP requests."""
+        base_url = (
+            "https://raw.githubusercontent.com/open-energy-transition/technology-data/"
+        )
+        # Use specific commit SHA instead of branch name for test stability
+        commit_sha = "65a6aa6454493dbb56f5d12d8efab2a3a40104d7/"
+        data_source = DataSourceName.MANUAL_INPUT_USA
+        version = "v0.13.4"
+        target_url = f"src/technologydata/parsers/{data_source}/{version}/"
+        url = base_url + commit_sha + target_url
+        data_accessor = DataAccessor(
+            data_source="manual_input_usa", version="v0.13.4", data_path=tmp_path
+        )
+        dp = data_accessor.download(url)
+        assert dp is not None
+        assert dp.sources is not None
+        assert dp.technologies is not None
+        assert dp.name == "manual_input_usa"
+        assert dp.version == "v0.13.4"
+        assert len(dp.sources) == 1
+        assert len(dp.technologies) == 85
+        sources_reference_path = pathlib.Path(path_cwd, target_url, "sources.json")
+        technologies_reference_path = pathlib.Path(
+            path_cwd, target_url, "technologies.json"
+        )
+        sources_reference = load_json(sources_reference_path)
+        technologies_reference = load_json(technologies_reference_path)
+        sources_download = load_json(
+            pathlib.Path(tmp_path, data_source, version, "sources.json")
+        )
+        technologies_download = load_json(
+            pathlib.Path(tmp_path, data_source, version, "technologies.json")
+        )
+        assert sources_reference == sources_download
+        assert technologies_reference == technologies_download

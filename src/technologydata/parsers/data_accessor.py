@@ -10,8 +10,10 @@ import pathlib
 import re
 import sys
 from typing import Annotated
+from urllib.parse import urljoin
 
 import pydantic
+import requests
 from packaging.version import parse
 from pydantic import Field, field_validator
 
@@ -37,7 +39,8 @@ class DataAccessor(pydantic.BaseModel):
 
     This class provides a standardized interface to locate and load technology
     datasets from predefined data sources. It can either load a specific version
-    or automatically determine and load the latest available version.
+    from the local storage, automatically determining and loading the latest available
+    version, or download data from a remote URL.
 
     Attributes
     ----------
@@ -146,8 +149,8 @@ class DataAccessor(pydantic.BaseModel):
         ------
         FileNotFoundError
             If the data source directory or the specified version directory is not found.
-        ValueError
-            If the specified version is not found. The user is notified of  the latest available version.
+        ValueError:
+            If the specified version is not found in the data source directory.
 
         """
         # Ensure the data path exists before attempting to load data
@@ -164,13 +167,138 @@ class DataAccessor(pydantic.BaseModel):
             )
         else:
             version = self.get_latest_version_string(list(source_path.iterdir()))
-            raise ValueError(
-                f"Data source version '{self.version}' not found. The latest available version is {version}."
-            )
+            if self.version is None:
+                logger.warning(
+                    "Data source version is None. Best practices recommend providing a valid data version."
+                )
+            else:
+                raise ValueError(
+                    f"Data source version {self.version} not found. "
+                    f"The latest available version is: {version}."
+                )
 
         data_path = pathlib.Path(source_path, version)
-        dp = DataPackage.from_json(self.data_source, self.version, data_path)
+        dp = DataPackage.from_json(self.data_source, version, data_path)
         return dp
+
+    def download(self, base_url: str) -> DataPackage:
+        """
+        Download and load technology data from a remote URL.
+
+        This method downloads technologies.json and sources.json files from the
+        specified base URL and loads them into a DataPackage instance. The sources.json
+        file is optional; if not found, sources will be extracted from technologies.
+
+        **Important:** The ``data_source`` and ``version`` attributes of the
+        DataAccessor instance determine the **local storage location** for downloaded
+        files. The ``base_url`` parameter determines **what data is downloaded**.
+        It is the caller's responsibility to ensure these are consistent - the method
+        does not validate that the URL content matches the specified version.
+
+        The downloaded files are stored locally in the directory structure:
+        ``{data_path}/{data_source}/{version}/technologies.json`` and
+        ``{data_path}/{data_source}/{version}/sources.json``, where ``data_path``
+        defaults to ``src/technologydata/parsers/``. This allows the data to be
+        accessed later via the ``load()`` method without re-downloading.
+
+        Parameters
+        ----------
+        base_url : str
+            Base URL where the JSON files are hosted. The method will attempt to download
+            technologies.json and sources.json from this location. The URL should point
+            to the directory containing these files (without the filename itself).
+            **The caller must ensure this URL corresponds to the data_source and version
+            specified in the DataAccessor instance.**
+
+        Returns
+        -------
+        DataPackage
+            An instance of DataPackage initialized with the downloaded data.
+
+        Raises
+        ------
+        requests.HTTPError
+            If the HTTP request to download technologies.json or sources.json fails.
+        requests.ConnectionError
+            If there is a network connectivity issue.
+        ValueError
+            If the version attribute is not set (required for determining storage location).
+
+        Notes
+        -----
+        - The ``data_source`` and ``version`` attributes must be set before calling this method.
+        - The method does **not** validate that the downloaded data matches the specified
+          version - this is the caller's responsibility.
+        - The downloaded files persist on disk and can be reused in subsequent sessions
+          by calling ``load()`` with the same data source and version.
+
+        Examples
+        --------
+        Download v10 data and store it as v10:
+
+        >>> accessor = DataAccessor(data_source="dea_energy_storage", version="v10")
+        >>> base_url = "https://example.com/data/dea_energy_storage/v10/"
+        >>> dp = accessor.download(base_url)
+        >>> # Files are downloaded from the URL and stored at:
+        >>> # src/technologydata/parsers/dea_energy_storage/v10/
+
+        """
+        # Ensure base_url ends with / using urljoin for proper URL normalization
+        base_url = urljoin(base_url, "./")
+
+        # Download technologies.json
+        technologies_url = f"{base_url}technologies.json"
+        sources_url = f"{base_url}sources.json"
+        if self.version:
+            technologies_path = pathlib.Path(
+                self.data_path, self.data_source, self.version, "technologies.json"
+            )
+            sources_path = pathlib.Path(
+                self.data_path, self.data_source, self.version, "sources.json"
+            )
+        else:
+            raise ValueError("Version must be specified for downloading data.")
+
+        # Ensure parent directories exist
+        self.ensure_path_exists(technologies_path.parent)
+        self.ensure_path_exists(sources_path.parent)
+
+        try:
+            logger.info(f"Downloading technologies.json from {technologies_url}")
+            response = requests.get(technologies_url, timeout=30)
+            response.raise_for_status()
+
+            with open(technologies_path, "w", encoding="utf-8") as f:
+                f.write(response.text)
+        except requests.HTTPError as e:
+            logger.error(f"Failed to download technologies.json: {e}")
+            raise
+
+        try:
+            logger.info(f"Downloading sources.json from {sources_url}")
+            response = requests.get(sources_url, timeout=30)
+            response.raise_for_status()
+
+            with open(sources_path, "w", encoding="utf-8") as f:
+                f.write(response.text)
+        except requests.HTTPError as e:
+            logger.error(f"Failed to download sources.json: {e}")
+            raise
+
+        # Load using DataPackage.from_json
+        # Construct path to folder containing the downloaded files
+        if self.version:
+            path_to_folder = pathlib.Path(
+                self.data_path, self.data_source, self.version
+            )
+        else:
+            path_to_folder = pathlib.Path(self.data_path, self.data_source)
+
+        data_package = DataPackage.from_json(
+            name=self.data_source, version=self.version, path_to_folder=path_to_folder
+        )
+
+        return data_package
 
     def parse(
         self,

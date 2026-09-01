@@ -20,6 +20,7 @@ nav:
   - Source Collection: user_guide/source_collection.md
   - Technology: user_guide/technology.md
   - Technology Collection: user_guide/technology_collection.md
+  - Formula System: user_guide/formulas.md
   - DEA Energy Storage Parser: user_guide/dea_energy_storage_parser.md
   - Manual Input USA Parser: user_guide/manual_input_usa_parser.md
   - Data Accessor: user_guide/data_accessor.md
@@ -31,6 +32,7 @@ nav:
 
 - API Reference:
   - Data Package: api/datapackage.md
+  - Formulas: api/formulas.md
   - Parameter: api/parameter.md
   - Source: api/source.md
   - Source Collection: api/source_collection.md
