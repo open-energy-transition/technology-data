@@ -184,6 +184,7 @@ class Equation:
         priority: int = 0,
         description: str | None = None,
     ) -> None:
+        """Build the equation's internal SymPy representation and precompute symbolic solutions."""
         self.name = name
         self.parameters = parameters
         self.expr_str = eq_str
@@ -407,6 +408,7 @@ class EquationRegistry:
     """
 
     def __init__(self) -> None:
+        """Initialize an empty registry with no equations registered."""
         # Parameter-centric index used by get_equation/can_calculate.
         self._equations_by_parameter: dict[str, list[Equation]] = {}
         # Name-centric index used for uniqueness checks and full registry listing.

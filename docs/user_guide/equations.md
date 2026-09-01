@@ -172,7 +172,7 @@ the numeric fallback directly with the provided values.
 
 ### Integration with `Technology` objects
 
-[`Technology.calculate_parameters`][technologydata.technology.Technology.calculate_parameters]
+[`Technology.calculate_parameters`][technologydata.technology.Technology]
 wraps the registry so you can derive parameters directly on a `Technology` object.
 It always returns a **new** `Technology` instance; the original is never mutated.
 
@@ -247,7 +247,7 @@ tech_alt = tech.calculate_parameters(
 
 ### Currency handling
 
-The formula system operates does not support mixed curencies in a single calculation.
+The formula system does not support mixed currencies in a single calculation.
 Before a calculation a check is performned that every currency-bearing input uses the same currency *and* currency year (e.g. all `USD_2020`, or all `EUR_2022`).
 
 If the currencies are inconsistent, a `ValueError` is raised immediately:
