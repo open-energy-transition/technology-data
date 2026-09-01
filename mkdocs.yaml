@@ -9,6 +9,7 @@ nav:
 - Home:
   - Home: index.md
   - Release Notes: home/release-notes.md
+  - FAQ: home/faq.md
   - License: home/license.md
 
 - User Guide:
