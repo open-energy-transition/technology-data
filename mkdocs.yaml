@@ -8,17 +8,9 @@ edit_uri: edit/master/docs/
 nav:
 - Home:
   - Home: index.md
-  - Overview:
-    - Release Notes: home/release-notes.md
-  - Getting Started:
-    - Installation: home/installation.md
-  - Reference:
-    - Users: home/users.md
-    - Citing: home/citing.md
-    - License: home/license.md
-  - Support:
-    - FAQ: home/faq.md
-    - Contacts: home/contacts.md
+  - Release Notes: home/release-notes.md
+  - FAQ: home/faq.md
+  - License: home/license.md
 
 - User Guide:
   - Data Package: user_guide/datapackage.md
@@ -202,6 +194,7 @@ plugins:
 
 hooks:
 - docs/assets/overrides/hooks/shortcodes.py
+- docs/assets/overrides/hooks/release_notes.py
 
 copyright: >-
   &copy technologydata contributors
