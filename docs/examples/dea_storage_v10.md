@@ -10,38 +10,32 @@ SPDX-License-Identifier: MIT
 !!! note
     This example refers specifically to **version 10** (`v10`) of the DEA Energy Storage dataset. Details such as file names, sheet structure, and parser behaviour may differ for other versions.
 
-The Danish Energy Agency (DEA) energy storage dataset is the package's main data source. In its raw form it is an Excel workbook whose `alldata_flat` sheet holds one row per parameter record, across the columns `ws`, `Technology`, `cat`, `par`, `unit`, `priceyear`, `note`, `ref`, `est`, `year` and `val`. The parser in `src/technologydata/parsers/dea_energy_storage/` turns those 3127 rows into the schema files `technologies.json` and `sources.json`.
+The Danish Energy Agency (DEA) maintains a dataset of techno-economic data for different energy storage technologies.
+The data in its raw format is available in PDF and as an Excel file.
+We parse the Excel file and extract more than 3000 individual parameters into our data schema and make them available through the package.
 
-The dataset is published by the [Danish Energy Agency](https://ens.dk/media/6589/download) and described in the [accompanying documentation](https://ens.dk/media/6588/download). A copy is included in the repository at `src/technologydata/parsers/raw/Technology_datasheet_for_energy_storage.xlsx`.
+The dataset is published by the Danish Energy Agency via [this website](https://ens.dk/media/6589/download) and described in the [accompanying documentation](https://ens.dk/media/6588/download).
+The data is licensed CC-BY-4.0.
 
 ## Quick start
 
-Load the parsed dataset. The catalogues ship inside the installed package, so `data_path` can be derived from the package location and these snippets run from any working directory.
+Load the parsed dataset.
+The data ships with the package
 
 ```python
-import pathlib
-
-import technologydata
-from technologydata.parsers.data_accessor import DataAccessor
+from technologydata import DataAccessor
 
 # The bundled catalogues ship inside the installed package.
-data = pathlib.Path(technologydata.__file__).parent / "parsers"
 
 data_package = DataAccessor(
     data_source="dea_energy_storage",
     version="v10",
-    data_path=data,
 ).load()
 
 technologies = data_package.technologies
 print(len(technologies.technologies))
+> 136
 ```
-
-```text
-136
-```
-
-`load()` also writes `INFO: Data source directory corresponding to version v10 found.` to standard error.
 
 Inspect the collection as a table:
 
@@ -59,31 +53,40 @@ large-scale hot water tanks (steel) control  2015
                    na-nicl2 battery control  2015
 ```
 
-Read one parameter of one technology:
+Select the data for all years of Li-ion utility scale battery in the EU:
 
 ```python
-battery = next(
-    t
-    for t in technologies.technologies
-    if t.detailed_technology == "lithium-ion battery (utility-scale)"
-    and t.case == "control"
-    and t.year == 2025
+batteries = data.technologies.get(
+    name="lithium ion battery",
+    detailed_technology="utility-scale",
+    region="EU",
+    case="control",
+    # Use regex to match all years from 2000 to 2099
+    year="20\\d+",
 )
-investment = battery.parameters["specific investment"]
-print(investment.magnitude, investment.units)
+
+len(batteries)
+# 5
 ```
 
-```text
-288000.0 EUR_2020 / megawatt_hour
+The technologies are also accessible as a list.
+Get the first technology from the list and access one of its parameters (the speciic investment costs):
+
+```python
+investment = batteries.technologies[0].parameters["specific investment"]
+print(investment)
+# 288000.0 EUR_2020 / megawatt_hour
 ```
 
 ## From raw data to parsed output
 
-Each raw row carries one parameter value together with the context that identifies it. The parser cleans those fields, then groups the rows into `Technology` objects, so that a set of rows sharing a technology, year and estimate case becomes a single object holding a dictionary of `Parameter` values.
+Each raw row carries one parameter value together with the context that identifies it.
+The parser written for `technologydata` cleans and harmonises these fields, then groups the rows into `Technology` objects.
+Each technology object is then created based on the group of rows identifying this technology and holds a dictionary of `Parameter` values.
 
 ```mermaid
 flowchart LR
-  subgraph raw["alldata_flat row"]
+  subgraph raw["DEA Excel file (alldata_flat row)"]
     direction TB
     r1["ws<br>Technology"]
     r2["par<br>val<br>unit<br>priceyear"]
@@ -98,16 +101,18 @@ flowchart LR
   end
   subgraph out["Technology"]
     direction TB
-    o1["name<br>detailed_technology"]
+    o1["name<br>detailed_technology<br>case<br>region<br>year"]
     o2["parameters:<br>Parameter magnitude, units"]
-    o3["year<br>case<br>region"]
+    o3["Source information"]
+    o4["Provenance information"]
   end
   raw --> parser --> out
 ```
 
-## A worked row
+## Deep dive: From raw to parsed data
 
-Row 2333 of `alldata_flat` (the 0-based pandas index, row 2335 in Excel) records the 2025 specific investment of a utility-scale lithium-ion battery. It reaches the parsed collection as follows.
+An example for a speciic row, e.g. row 2335 of Excel file's worksheet `alldata_flat` contains the 2025 specific investment of a utility-scale lithium-ion battery.
+It reaches the parsed collection as follows.
 
 | Raw field | Raw value | Parsed field | Parsed value |
 |---|---|---|---|
@@ -120,7 +125,9 @@ Row 2333 of `alldata_flat` (the 0-based pandas index, row 2335 in Excel) records
 | `val` | `0.288` | `Parameter.magnitude` | `288000.0` |
 | `unit`, `priceyear` | `MEUR/MWh`, `2020` | `Parameter.units` | `EUR_2020 / megawatt_hour` |
 
-Two conversions are worth following. The leading three-digit code `180` is stripped from `ws`, the remaining whitespace trimmed and the text lower-cased, which is why the technology is keyed as `lithium ion battery`. The unit `MEUR/MWh` is rescaled to `EUR/MWh`, multiplying `val` by 1e6, and `priceyear` is folded into the currency, giving the `EUR_2020` form the package uses throughout.
+Three opinioated transformations are worth following:
+The leading three-digit code `180` is stripped from `ws`, the remaining whitespace trimmed and the text lower-cased, which is why the technology is keyed as `lithium ion battery`.
+The unit `MEUR/MWh` is rescaled to `EUR/MWh`, multiplying `val` by 1e6, and `priceyear` is folded into the currency, giving the `EUR_2020` form the package uses throughout.
 
 ## Parser steps in detail
 
