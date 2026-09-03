@@ -17,10 +17,9 @@ import requests
 from packaging.version import parse
 from pydantic import Field, field_validator
 
+from technologydata.datapackage import DataPackage
 from technologydata.parsers.dea_energy_storage import DeaEnergyStorageParser
 from technologydata.parsers.manual_input_usa import ManualInputUsaParser
-
-from technologydata.datapackage import DataPackage
 
 path_cwd = pathlib.Path.cwd()
 
@@ -336,7 +335,6 @@ class DataAccessor(pydantic.BaseModel):
             If the required input data file is not found.
 
         """
-
         parser: DeaEnergyStorageParser | ManualInputUsaParser
 
         if self.data_source == DataSourceName.DEA_ENERGY_STORAGE:
