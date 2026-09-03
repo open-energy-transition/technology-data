@@ -59,7 +59,7 @@ The bundled datasets are installed with it; no additional download step is neede
   collections export to `pandas.DataFrame`, CSV and JSON, and reload from JSON.
 - **Interpolation and extrapolation.**
   `GrowthModels` allow for easy gap filling when data is missing for particular years.
-  Use model fitting and projections with commonly used growth models, including linear, expontential and logistic growth.
+  Use model fitting and projections with commonly used growth models, including linear, exponential and logistic growth.
 
 ## Bundled datasets (Batteries included)
 
