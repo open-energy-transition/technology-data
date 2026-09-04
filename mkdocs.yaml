@@ -8,17 +8,9 @@ edit_uri: edit/master/docs/
 nav:
 - Home:
   - Home: index.md
-  - Overview:
-    - Release Notes: home/release-notes.md
-  - Getting Started:
-    - Installation: home/installation.md
-  - Reference:
-    - Users: home/users.md
-    - Citing: home/citing.md
-    - License: home/license.md
-  - Support:
-    - FAQ: home/faq.md
-    - Contacts: home/contacts.md
+  - Release Notes: home/release-notes.md
+  - FAQ: home/faq.md
+  - License: home/license.md
 
 - Tutorial: tutorial/index.md
 
@@ -30,6 +22,7 @@ nav:
   - Source Collection: user_guide/source_collection.md
   - Technology: user_guide/technology.md
   - Technology Collection: user_guide/technology_collection.md
+  - Formula System: user_guide/formulas.md
   - DEA Energy Storage Parser: user_guide/dea_energy_storage_parser.md
   - Manual Input USA Parser: user_guide/manual_input_usa_parser.md
   - Data Accessor: user_guide/data_accessor.md
@@ -41,6 +34,7 @@ nav:
 
 - API Reference:
   - Data Package: api/datapackage.md
+  - Formulas: api/formulas.md
   - Parameter: api/parameter.md
   - Source: api/source.md
   - Source Collection: api/source_collection.md
@@ -202,6 +196,7 @@ plugins:
 
 hooks:
 - docs/assets/overrides/hooks/shortcodes.py
+- docs/assets/overrides/hooks/release_notes.py
 
 copyright: >-
   &copy technologydata contributors

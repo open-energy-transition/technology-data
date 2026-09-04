@@ -6,7 +6,10 @@
 
 import pathlib
 
+import pytest
+
 import technologydata
+from technologydata.equations import EquationRegistry
 
 path_cwd = pathlib.Path.cwd()
 
@@ -26,13 +29,13 @@ class TestTechnology:
                 "investment": technologydata.Parameter(
                     magnitude=500,
                     units="EUR_2022/kW",
-                    provenance="Industry report",
+                    provenance=["Industry report"],
                     note="Average overnight cost",
                 ),
                 "lifetime": technologydata.Parameter(
                     magnitude=25,
                     units="years",
-                    provenance="Literature",
+                    provenance=["Literature"],
                 ),
             },
         )
@@ -57,18 +60,18 @@ class TestTechnology:
                 "investment": technologydata.Parameter(
                     magnitude=500,
                     units="EUR_2022/kW",
-                    provenance="Industry report",
+                    provenance=["Industry report"],
                     note="Average overnight cost",
                 ),
                 "fixed_om": technologydata.Parameter(
                     magnitude=10,
                     units="EUR_2022/kW/year",
-                    provenance="Literature",
+                    provenance=["Literature"],
                 ),
                 "lifetime": technologydata.Parameter(
                     magnitude=25,
                     units="years",
-                    provenance="Literature",
+                    provenance=["Literature"],
                 ),
             },
         )
@@ -124,7 +127,7 @@ class TestTechnology:
                 "investment": technologydata.Parameter(
                     magnitude=1200,
                     units="EUR_2020/kW",
-                    provenance="Industry data",
+                    provenance=["Industry data"],
                 ),
             },
         )
@@ -178,7 +181,7 @@ class TestTechnology:
                     magnitude=500,
                     units="EUR_2022/kW",
                     carrier="electricity",
-                    provenance="Industry report",
+                    provenance=["Industry report"],
                     note="Average overnight cost",
                     sources=technologydata.SourceCollection(
                         sources=[
@@ -269,3 +272,225 @@ class TestTechnology:
             converted.parameters["capacity"].magnitude
             == tech.parameters["capacity"].magnitude
         )
+
+    def test_check_consistency_returns_status_per_equation(self) -> None:
+        """Return per-equation statuses for the selected parameter set."""
+        tech = technologydata.Technology(
+            name="Solar photovoltaics",
+            detailed_technology="Si-HC",
+            case="example-scenario",
+            region="DEU",
+            year=2022,
+            parameters={
+                "specific_investment": technologydata.Parameter(
+                    magnitude=1000,
+                    units="EUR_2020/kW",
+                ),
+                "annuity_factor": technologydata.Parameter(
+                    magnitude=0.1,
+                    units="dimensionless",
+                ),
+                "eac": technologydata.Parameter(
+                    magnitude=100,
+                    units="EUR_2020/kW",
+                ),
+            },
+        )
+
+        status = tech.check_consistency(parameters=["eac"])
+        assert status["eac_via_annuity_factor"] is True
+        assert status["eac_annuity"] == "missing parameters: ['wacc', 'lifetime']"
+        # None of eac_simple's supporting parameters (total_investment_cost,
+        # lifetime) are present, so it is inapplicable rather than merely
+        # missing some parameters.
+        assert (
+            status["eac_simple"]
+            == "inapplicable: ['total_investment_cost', 'lifetime']"
+        )
+
+    def test_check_consistency_marks_equation_violation_false(self) -> None:
+        """Mark an equation as False when all inputs are present but values disagree."""
+        tech = technologydata.Technology(
+            name="Solar photovoltaics",
+            detailed_technology="Si-HC",
+            case="example-scenario",
+            region="DEU",
+            year=2022,
+            parameters={
+                "specific_investment": technologydata.Parameter(
+                    magnitude=1000,
+                    units="EUR_2020/kW",
+                ),
+                "annuity_factor": technologydata.Parameter(
+                    magnitude=0.1,
+                    units="dimensionless",
+                ),
+                "eac": technologydata.Parameter(
+                    magnitude=120,
+                    units="EUR_2020/kW",
+                ),
+            },
+        )
+
+        status = tech.check_consistency(parameters=["eac"])
+        assert status["eac_via_annuity_factor"] is False
+
+    def test_check_consistency_marks_inapplicable_when_all_missing(self) -> None:
+        """Mark an equation as inapplicable when none of its parameters are present."""
+        tech = technologydata.Technology(
+            name="Solar photovoltaics",
+            detailed_technology="Si-HC",
+            case="example-scenario",
+            region="DEU",
+            year=2022,
+            parameters={
+                "capacity": technologydata.Parameter(magnitude=10, units="MW"),
+            },
+        )
+
+        status = tech.check_consistency(parameters=["eac"])
+        assert (
+            status["eac_via_annuity_factor"]
+            == "inapplicable: ['eac', 'specific_investment', 'annuity_factor']"
+        )
+        assert (
+            status["eac_annuity"]
+            == "inapplicable: ['eac', 'specific_investment', 'wacc', 'lifetime']"
+        )
+        assert (
+            status["eac_simple"]
+            == "inapplicable: ['eac', 'total_investment_cost', 'lifetime']"
+        )
+
+    def test_check_consistency_marks_inapplicable_with_default_parameters(self) -> None:
+        """
+        Mark an equation inapplicable even without an explicit `parameters` filter.
+
+        A technology's own present parameters always include the equation's
+        target, so "inapplicable" only shows up if it is based on whether the
+        equation's *other* (supporting) parameters are present, not on the
+        target itself.
+        """
+        tech = technologydata.Technology(
+            name="Solar photovoltaics",
+            detailed_technology="Si-HC",
+            case="example-scenario",
+            region="DEU",
+            year=2022,
+            parameters={
+                "eac": technologydata.Parameter(magnitude=100, units="EUR_2020/kW"),
+            },
+        )
+
+        status = tech.check_consistency()
+        assert (
+            status["eac_via_annuity_factor"]
+            == "inapplicable: ['specific_investment', 'annuity_factor']"
+        )
+
+    def test_check_consistency_raises_for_unknown_parameter(self) -> None:
+        """Raise a clear error when an explicitly requested parameter has no equation."""
+        tech = technologydata.Technology(
+            name="Solar photovoltaics",
+            detailed_technology="Si-HC",
+            case="example-scenario",
+            region="DEU",
+            year=2022,
+            parameters={
+                "capacity": technologydata.Parameter(magnitude=10, units="MW"),
+            },
+        )
+
+        with pytest.raises(ValueError, match="No equation registered for parameter"):
+            tech.check_consistency(parameters=["not_a_real_parameter"])
+
+    def test_check_consistency_ignores_unselected_parameters(self) -> None:
+        """Ignore parameters outside the requested consistency-check subset."""
+        tech = technologydata.Technology(
+            name="Solar photovoltaics",
+            detailed_technology="Si-HC",
+            case="example-scenario",
+            region="DEU",
+            year=2022,
+            parameters={
+                "specific_investment": technologydata.Parameter(
+                    magnitude=1000,
+                    units="EUR_2020/kW",
+                ),
+                "annuity_factor": technologydata.Parameter(
+                    magnitude=0.1,
+                    units="dimensionless",
+                ),
+                "eac": technologydata.Parameter(
+                    magnitude=100,
+                    units="EUR_2020/kW",
+                ),
+                "fixed_om": technologydata.Parameter(
+                    magnitude=200,
+                    units="EUR_2020/kW",
+                ),
+                "fixed_om_fraction": technologydata.Parameter(
+                    magnitude=0.02,
+                    units="dimensionless",
+                ),
+            },
+        )
+
+        status = tech.check_consistency(parameters=["eac"])
+        assert "fixed_om_from_fraction" not in status
+        assert status["eac_via_annuity_factor"] is True
+
+    def test_check_consistency_tolerance_is_applied(self) -> None:
+        """Allow small floating-point deviations within user-provided tolerance."""
+        tech = technologydata.Technology(
+            name="Solar photovoltaics",
+            detailed_technology="Si-HC",
+            case="example-scenario",
+            region="DEU",
+            year=2022,
+            parameters={
+                "specific_investment": technologydata.Parameter(
+                    magnitude=1000,
+                    units="EUR_2020/kW",
+                ),
+                "annuity_factor": technologydata.Parameter(
+                    magnitude=0.1,
+                    units="dimensionless",
+                ),
+                "eac": technologydata.Parameter(
+                    magnitude=100.000001,
+                    units="EUR_2020/kW",
+                ),
+            },
+        )
+
+        status = tech.check_consistency(parameters=["eac"], rtol=1e-5)
+        assert status["eac_via_annuity_factor"] is True
+
+    def test_check_consistency_uses_custom_equation_registry(self) -> None:
+        """Allow consistency checks against a caller-provided equation registry."""
+        custom_registry = EquationRegistry()
+        custom_registry.register(
+            name="z_sum",
+            parameters=["z", "x", "y"],
+            eq_str="z - x - y",
+        )
+
+        tech = technologydata.Technology(
+            name="Test",
+            detailed_technology="Custom",
+            case="example-scenario",
+            region="DEU",
+            year=2022,
+            parameters={
+                "x": technologydata.Parameter(magnitude=2.0, units="dimensionless"),
+                "y": technologydata.Parameter(magnitude=3.0, units="dimensionless"),
+                "z": technologydata.Parameter(magnitude=5.0, units="dimensionless"),
+            },
+        )
+
+        status = tech.check_consistency(
+            parameters=["z"],
+            equations=custom_registry,
+        )
+        assert status == {"z_sum": True}

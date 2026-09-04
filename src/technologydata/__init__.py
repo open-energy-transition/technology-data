@@ -4,7 +4,12 @@
 
 """technologydata: A package for managing and analyzing technology data used for energy system models."""
 
+from technologydata.data_accessor import DataAccessor
 from technologydata.datapackage import DataPackage
+from technologydata.default_equations import (
+    equation_registry,  # also registers built-in equations
+)
+from technologydata.equations import Equation, EquationRegistry
 from technologydata.parameter import Parameter
 from technologydata.source import Source
 from technologydata.source_collection import SourceCollection
@@ -23,14 +28,18 @@ from technologydata.utils.units import (
 
 __all__ = [
     "Commons",
-    "DateFormatEnum",
+    "DataAccessor",
     "DataPackage",
+    "DateFormatEnum",
+    "Equation",
+    "EquationRegistry",
     "FileExtensionEnum",
     "Parameter",
     "Source",
     "SourceCollection",
     "Technology",
     "TechnologyCollection",
+    "equation_registry",
     "CURRENCY_UNIT_PATTERN",
     "creg",
     "extract_currency_units",

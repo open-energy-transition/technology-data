@@ -76,7 +76,7 @@ The parser is run using the `DataAccessor` class. You need to create an instance
 Here is an example of how to run the parser from a Python script:
 
 ```python
-from technologydata.parsers.data_accessor import DataAccessor
+from technologydata import DataAccessor
 
 # Create an accessor for the version to be parsed
 parser_accessor = DataAccessor(

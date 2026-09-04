@@ -119,9 +119,6 @@ jobs:
     - uses: actions/checkout@v6
     - uses: softprops/action-gh-release@v2
       with:
-        body: |
-          Revised release notes are available in the documentation.
-        append_body: true
         generate_release_notes: true
 
   publish:

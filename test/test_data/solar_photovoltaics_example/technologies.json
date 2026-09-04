@@ -12,7 +12,9 @@
                     "units": "megawatt",
                     "carrier": "electricity",
                     "heating_value": null,
-                    "provenance": "Model calculation",
+                    "provenance": [
+                        "Model calculation"
+                    ],
                     "note": "Average capacity factor of 22% assumed",
                     "sources": {
                         "sources": [
@@ -40,7 +42,9 @@
                     "units": "EUR_2022 / kilowatt",
                     "carrier": "1 / electricity",
                     "heating_value": null,
-                    "provenance": "Industry report",
+                    "provenance": [
+                        "Industry report"
+                    ],
                     "note": "Average overnight cost",
                     "sources": {
                         "sources": [
@@ -68,7 +72,9 @@
                     "units": "EUR_2022 / watt",
                     "carrier": "1 / electricity",
                     "heating_value": null,
-                    "provenance": "Derived",
+                    "provenance": [
+                        "Derived"
+                    ],
                     "note": "Calculated from investment/capacity",
                     "sources": {
                         "sources": [
@@ -96,7 +102,9 @@
                     "units": "year",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": "Manufacturer specification",
+                    "provenance": [
+                        "Manufacturer specification"
+                    ],
                     "note": "With performance degradation guarantee",
                     "sources": {
                         "sources": [
@@ -124,7 +132,9 @@
                     "units": "percent",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": "Financial analysis",
+                    "provenance": [
+                        "Financial analysis"
+                    ],
                     "note": "Nominal weighted average cost of capital",
                     "sources": {
                         "sources": [
@@ -161,7 +171,9 @@
                     "units": "megawatt",
                     "carrier": "electricity",
                     "heating_value": null,
-                    "provenance": "Model calculation",
+                    "provenance": [
+                        "Model calculation"
+                    ],
                     "note": "Average capacity factor of 25% assumed",
                     "sources": {
                         "sources": [
@@ -189,7 +201,9 @@
                     "units": "EUR_2022 / kilowatt",
                     "carrier": "1 / electricity",
                     "heating_value": null,
-                    "provenance": "Industry report",
+                    "provenance": [
+                        "Industry report"
+                    ],
                     "note": "Average overnight cost",
                     "sources": {
                         "sources": [
@@ -217,7 +231,9 @@
                     "units": "EUR_2022 / watt",
                     "carrier": "1 / electricity",
                     "heating_value": null,
-                    "provenance": "Derived",
+                    "provenance": [
+                        "Derived"
+                    ],
                     "note": "Calculated from investment/capacity",
                     "sources": {
                         "sources": [
@@ -245,7 +261,9 @@
                     "units": "year",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": "Manufacturer specification",
+                    "provenance": [
+                        "Manufacturer specification"
+                    ],
                     "note": "With performance degradation guarantee",
                     "sources": {
                         "sources": [
@@ -273,7 +291,9 @@
                     "units": "percent",
                     "carrier": null,
                     "heating_value": null,
-                    "provenance": "Financial analysis",
+                    "provenance": [
+                        "Financial analysis"
+                    ],
                     "note": "Nominal weighted average cost of capital",
                     "sources": {
                         "sources": [

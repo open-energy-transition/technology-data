@@ -13,15 +13,13 @@ from typing import Any
 import pandas as pd
 import pydantic
 
-from technologydata import (
-    Commons,
-    Parameter,
-    Source,
-    SourceCollection,
-    Technology,
-    TechnologyCollection,
-)
+from technologydata.parameter import Parameter
 from technologydata.parsers.data_parser_base import ParserBase
+from technologydata.source import Source
+from technologydata.source_collection import SourceCollection
+from technologydata.technology import Technology
+from technologydata.technology_collection import TechnologyCollection
+from technologydata.utils.commons import Commons
 
 path_cwd = pathlib.Path.cwd()
 
@@ -454,7 +452,7 @@ class DeaEnergyStorageV10Parser(ParserBase):
                     magnitude=row["val"],
                     units=row["unit"],
                     sources=sources,
-                    provenance="Parsed from Excel file",
+                    provenance=["Parsed from Excel file"],
                 )
             list_techs.append(
                 Technology(

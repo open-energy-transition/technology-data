@@ -78,3 +78,6 @@ dev/
 
 # pydeflate cache
 pydeflate_data/
+
+# site
+site/
