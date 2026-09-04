@@ -1,1 +1,1 @@
-::: technologydata.parsers.data_accessor.DataAccessor
+::: technologydata.data_accessor.DataAccessor

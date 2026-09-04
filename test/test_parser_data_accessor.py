@@ -10,7 +10,8 @@ from typing import Any
 
 import pytest
 
-from technologydata.parsers.data_accessor import DataAccessor, DataSourceName
+from technologydata import DataAccessor
+from technologydata.data_accessor import DataSourceName
 
 path_cwd = pathlib.Path.cwd()
 

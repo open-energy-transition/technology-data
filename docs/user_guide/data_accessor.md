@@ -32,7 +32,7 @@ To use `DataAccessor`, create an instance with `data_source`. If the `version` i
 Finally, you can optionally override `data_path`.
 
 ```python
-from technologydata.parsers.data_accessor import DataAccessor
+from technologydata import DataAccessor
 
 # Create an accessor for a specific version
 accessor_v1 = DataAccessor(
@@ -63,7 +63,7 @@ print(type(dp_v1))
 The `download()` method enables you to download and load technology data directly from a remote URL. This is useful when you want to access datasets hosted on external servers without manually downloading files.
 
 ```python
-from technologydata.parsers.data_accessor import DataAccessor
+from technologydata import DataAccessor
 
 # Create an accessor for remote data
 remote_accessor = DataAccessor(
@@ -138,7 +138,7 @@ Where `data_path` defaults to `src/technologydata/parsers/`. Once downloaded, th
 The `parse()` method is used to execute the data processing pipeline for a specific data source and version. It takes the raw data file as input and generates the structured `technologies.json` and `sources.json` files.
 
 ```python
-from technologydata.parsers.data_accessor import DataAccessor
+from technologydata import DataAccessor
 
 # Create an accessor for the version to be parsed
 parser_accessor = DataAccessor(
