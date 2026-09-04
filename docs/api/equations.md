@@ -1,3 +1,3 @@
-::: technologydata.formulas.Equation
+::: technologydata.equations.Equation
 
-::: technologydata.formulas.EquationRegistry
+::: technologydata.equations.EquationRegistry

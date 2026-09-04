@@ -184,7 +184,7 @@ Please refer to the [API documentation](../api/technology.md) for detailed infor
 ### Calculating Derived Parameters
 
 Use the formula registry to automatically derive missing parameters. See
-[Formula System](equations.md) for the full reference.
+[Formula System](./equations.md) for the full reference.
 
 ```python
 from technologydata.technology import Technology
