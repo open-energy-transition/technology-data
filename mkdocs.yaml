@@ -55,6 +55,7 @@ nav:
   - Instructions: contributing/instructions.md
   - Code of Conduct: contributing/CODE_OF_CONDUCT.md
   - Contributors: contributing/contributors.md
+  - API Improvement Proposals: contributing/api_improvement_proposals.md
 
 # Theme settings
 theme:
