@@ -7,19 +7,24 @@ SPDX-License-Identifier: MIT
 
 -->
 
-This tutorial builds up a `DataPackage` from nothing, then replaces the hand-written parts with published data. Each section adds one idea and every snippet runs on its own, so you can paste them into a session in order.
+This tutorial walks through the features of `technologydata` and how to use them.
+It shows how to use `Parameter` and `Technology` objects, use the functionalities of the package, and combine them into a packaged data follow our data schema (a `DataPackage`).
+All manual steps are shown, as well as how to utilise some pre-parsed and packaged data from the Danish Energy Agency.
 
-## When to use this package
+## Who this package is for
 
-Techno-economic catalogues are published in different currencies, price years, units, heating-value conventions and naming schemes. Comparing two of them means tracking all of that by hand, and the bookkeeping is where the mistakes happen.
+Techno-economic data is central to energy system models.
+They usually utilise data catalogues that are published in different currencies, price years, units, heating-value conventions and naming schemes.
+Comparing, combining and harmonising them means making these changes and tracking them all by hand - a highly repetitive and error-prone process.
 
-Reach for `technologydata` when you need to:
+This is where `technologydata` is meant to support you.
+It helps to:
 
 - combine assumptions from more than one source, or from a source and your own numbers;
 - convert between currencies, price years and units without losing track of what was converted;
-- keep a record of where each number came from.
-
-It is **not** the right tool when you only need a handful of constants for one model, in one currency, from one source. A dictionary is simpler and honest about its scope.
+- keep a record of where each number came from and how it was calculated
+- supports through an equation system derived parameters and consistency checks
+- provides common models for scenario interpolation and projection
 
 ## 1. A parameter that knows its units
 
