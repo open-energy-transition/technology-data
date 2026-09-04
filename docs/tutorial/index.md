@@ -84,12 +84,9 @@ Writing technologies by hand does not scale. The package ships two parsed catalo
 
 ``` py
 >>> import pathlib
->>> import technologydata
->>> from technologydata.parsers.data_accessor import DataAccessor
->>> # The bundled catalogues ship inside the installed package.
->>> data = pathlib.Path(technologydata.__file__).parent / "parsers"
->>> dea = DataAccessor(data_source="dea_energy_storage", version="v10", data_path=data).load()
->>> usa = DataAccessor(data_source="manual_input_usa", version="v0.13.4", data_path=data).load()
+>>> from technologydata import DataAccessor
+>>> dea = DataAccessor(data_source="dea_energy_storage", version="v10").load()
+>>> usa = DataAccessor(data_source="manual_input_usa", version="v0.13.4").load()
 >>> print(len(dea.technologies.technologies), len(usa.technologies.technologies))
 136 85
 ```
@@ -166,9 +163,65 @@ To work with both catalogues at once, concatenate them into one collection:
 
 The two files are the same shape as the ones the bundled catalogues ship, so a package you assemble here can be loaded by anything that reads them.
 
+## 7. Derive parameters and check consistency
+
+Some parameters are related by known formulas rather than independent. Specific investment cost, total investment cost and capacity are one such triple: specific investment is just total investment divided by capacity. `calculate_parameters()` uses a registry of these relationships to fill in whichever one is missing.
+
+``` py
+>>> tech = Technology(
+...     name="Solar PV",
+...     detailed_technology="Crystalline Silicon",
+...     case="Base",
+...     region="DEU",
+...     year=2020,
+...     parameters={
+...         "specific_investment": Parameter(magnitude=1.0, units="EUR_2020/kW"),
+...         "total_investment_cost": Parameter(magnitude=1_000.0, units="EUR_2020"),
+...     },
+... )
+>>> tech = tech.calculate_parameters("capacity")
+>>> capacity = tech.parameters["capacity"]
+>>> print(capacity.magnitude, capacity.units)
+1000.0 kilowatt
+```
+
+The same relationship works in reverse to check, rather than derive: `check_consistency()` confirms that the parameters a technology already has still agree with each other.
+
+``` py
+>>> print(tech.check_consistency(parameters=["capacity"]))
+{'total_investment_from_specific': True}
+```
+
+If a parameter is edited by hand and no longer agrees with the others, the check flags it:
+
+``` py
+>>> tech.parameters["capacity"].magnitude = 5
+>>> print(tech.check_consistency(parameters=["capacity"]))
+{'total_investment_from_specific': False}
+```
+
+`parameters=` restricts the check to equations that involve the given names; omit it to check every equation touching any parameter the technology has.
+
+## 8. Project a technology into the future
+
+A published catalogue only covers the years its source measured. Growth-model curves — linear, exponential, logistic and others — fit to known data points and project a value to any year, past or future.
+
+``` py
+>>> from technologydata.technologies.growth_models import LinearGrowth
+>>> model = LinearGrowth(x0=2020)
+>>> model = model.add_data((2020, 1000.0)).add_data((2025, 1250.0)).add_data((2030, 1500.0))
+>>> model = model.fit()
+>>> model.project(2040)
+2000.0
+```
+
+`add_data()` and `fit()` both return the model, so calls chain. `project()` extrapolates using the fitted curve — here a straight line through the three points, continued out to 2040. `TechnologyCollection.fit()` and `.project()` apply the same curves across every technology in a collection at once, fitting one named parameter per technology and returning a new collection with the projected years added.
+
 ## Where to go next
 
 - [`Parameter`](../user_guide/parameter.md), [`TechnologyCollection`](../user_guide/technology_collection.md) and [`DataPackage`](../user_guide/datapackage.md) — reference for the classes built above.
 - [`DataAccessor`](../user_guide/data_accessor.md) — every option for locating and loading a catalogue.
 - [Danish Energy Agency parser](../examples/dea_storage_v10.md) and [Manual Input USA parser](../examples/manual_input_usa_v0134.md) — how each bundled catalogue is produced from its raw file.
+- [Parameter formula system](../user_guide/equations.md) — every built-in formula, how to register your own, and the details of how a formula is solved.
+- [`Technology`](../user_guide/technology.md) and [Models](../user_guide/models.md) — more on `calculate_parameters()`, `check_consistency()` and the growth-model curves.
 - [Use cases](../user_guide/design.md) — the scenarios the package was designed around.
