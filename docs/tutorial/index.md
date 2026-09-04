@@ -25,20 +25,15 @@ It is **not** the right tool when you only need a handful of constants for one m
 
 The smallest useful object is a `Parameter`: a magnitude, a unit, and the source it came from.
 
-```python
-from technologydata import Parameter, Source, SourceCollection
-
-sources = SourceCollection(sources=[Source(
-    title="Technology Data for Energy storage (May 2025)",
-    authors="Danish Energy Agency",
-    url="https://ens.dk/media/6589/download",
-)])
-
-investment = Parameter(magnitude=288000.0, units="EUR_2020/MWh", sources=sources)
-print(investment.magnitude, investment.units)
-```
-
-```text
+``` py
+>>> from technologydata import Parameter, Source, SourceCollection
+>>> sources = SourceCollection(sources=[Source(
+...     title="Technology Data for Energy storage (May 2025)",
+...     authors="Danish Energy Agency",
+...     url="https://ens.dk/media/6589/download",
+... )])
+>>> investment = Parameter(magnitude=288000.0, units="EUR_2020/MWh", sources=sources)
+>>> print(investment.magnitude, investment.units)
 288000.0 EUR_2020 / megawatt_hour
 ```
 
@@ -46,12 +41,9 @@ The unit string is parsed rather than stored verbatim, which is why `EUR_2020/MW
 
 Because the unit is real, the parameter can be converted:
 
-```python
-per_kwh = investment.to("EUR_2020/kWh")
-print(per_kwh.magnitude, per_kwh.units)
-```
-
-```text
+``` py
+>>> per_kwh = investment.to("EUR_2020/kWh")
+>>> print(per_kwh.magnitude, per_kwh.units)
 288.0 EUR_2020 / kilowatt_hour
 ```
 
@@ -59,28 +51,23 @@ print(per_kwh.magnitude, per_kwh.units)
 
 A `Technology` groups parameters that describe the same thing in the same year and case. A `TechnologyCollection` holds many of those, and a `DataPackage` pairs a collection with its sources.
 
-```python
-from technologydata import DataPackage, Technology, TechnologyCollection
-
-battery = Technology(
-    name="lithium ion battery",
-    detailed_technology="lithium-ion battery (utility-scale)",
-    region="EU",
-    year=2025,
-    case="control",
-    parameters={"specific investment": investment},
-)
-
-package = DataPackage(
-    name="my-assumptions",
-    version="v1",
-    technologies=TechnologyCollection(technologies=[battery]),
-    sources=sources,
-)
-print(package.name, package.version, len(package.technologies.technologies))
-```
-
-```text
+``` py
+>>> from technologydata import DataPackage, Technology, TechnologyCollection
+>>> battery = Technology(
+...     name="lithium ion battery",
+...     detailed_technology="lithium-ion battery (utility-scale)",
+...     region="EU",
+...     year=2025,
+...     case="control",
+...     parameters={"specific investment": investment},
+... )
+>>> package = DataPackage(
+...     name="my-assumptions",
+...     version="v1",
+...     technologies=TechnologyCollection(technologies=[battery]),
+...     sources=sources,
+... )
+>>> print(package.name, package.version, len(package.technologies.technologies))
 my-assumptions v1 1
 ```
 
@@ -90,22 +77,15 @@ my-assumptions v1 1
 
 Writing technologies by hand does not scale. The package ships two parsed catalogues, which load the same way and give you the same `TechnologyCollection` type you just built.
 
-```python
-import pathlib
-
-import technologydata
-from technologydata.parsers.data_accessor import DataAccessor
-
-# The bundled catalogues ship inside the installed package.
-data = pathlib.Path(technologydata.__file__).parent / "parsers"
-
-dea = DataAccessor(data_source="dea_energy_storage", version="v10", data_path=data).load()
-usa = DataAccessor(data_source="manual_input_usa", version="v0.13.4", data_path=data).load()
-
-print(len(dea.technologies.technologies), len(usa.technologies.technologies))
-```
-
-```text
+``` py
+>>> import pathlib
+>>> import technologydata
+>>> from technologydata.parsers.data_accessor import DataAccessor
+>>> # The bundled catalogues ship inside the installed package.
+>>> data = pathlib.Path(technologydata.__file__).parent / "parsers"
+>>> dea = DataAccessor(data_source="dea_energy_storage", version="v10", data_path=data).load()
+>>> usa = DataAccessor(data_source="manual_input_usa", version="v0.13.4", data_path=data).load()
+>>> print(len(dea.technologies.technologies), len(usa.technologies.technologies))
 136 85
 ```
 
@@ -116,20 +96,16 @@ print(len(dea.technologies.technologies), len(usa.technologies.technologies))
 !!! warning "`get()` matches regular expressions, not literal text"
     Every argument is compiled as a regex, so `(` and `)` are read as a group rather than as brackets. A name containing them silently matches nothing. Pass it through `re.escape()`.
 
-```python
-import re
-
-selected = dea.technologies.get(
-    name="lithium ion battery",
-    region="EU",
-    year=2030,
-    case="control",
-    detailed_technology=re.escape("lithium-ion battery (utility-scale)"),
-)
-print(len(selected.technologies))
-```
-
-```text
+``` py
+>>> import re
+>>> selected = dea.technologies.get(
+...     name="lithium ion battery",
+...     region="EU",
+...     year=2030,
+...     case="control",
+...     detailed_technology=re.escape("lithium-ion battery (utility-scale)"),
+... )
+>>> print(len(selected.technologies))
 1
 ```
 
@@ -139,25 +115,20 @@ Without `re.escape()` the same call returns an empty collection rather than rais
 
 This is what the bookkeeping was for. The Danish figure is in `EUR_2020` per MWh; the USA figure is in `USD_2022` per kWh. Converting both to `USD_2023` per kWh makes them comparable.
 
-```python
-dea_investment = selected.technologies[0].parameters["specific investment"]
-dea_2023 = dea_investment.to_currency("USD_2023", country="DEU").to("USD_2023/kWh")
-
-usa_battery = next(
-    t
-    for t in usa.technologies.technologies
-    if t.detailed_technology == "battery storage"
-    and t.year == 2030
-    and t.case == "Moderate - Market"
-)
-usa_2023 = usa_battery.parameters["investment"].to_currency("USD_2023", country="USA")
-
-print(round(dea_2023.magnitude, 1), dea_2023.units)
-print(round(usa_2023.magnitude, 1), usa_2023.units)
-```
-
-```text
+``` py
+>>> dea_investment = selected.technologies[0].parameters["specific investment"]
+>>> dea_2023 = dea_investment.to_currency("USD_2023", country="DEU").to("USD_2023/kWh")
+>>> usa_battery = next(
+...     t
+...     for t in usa.technologies.technologies
+...     if t.detailed_technology == "battery storage"
+...     and t.year == 2030
+...     and t.case == "Moderate - Market"
+... )
+>>> usa_2023 = usa_battery.parameters["investment"].to_currency("USD_2023", country="USA")
+>>> print(round(dea_2023.magnitude, 1), dea_2023.units)
 351.7 USD_2023 / kilowatt_hour
+>>> print(round(usa_2023.magnitude, 1), usa_2023.units)
 264.2 USD_2023 / kilowatt_hour
 ```
 
@@ -165,14 +136,11 @@ print(round(usa_2023.magnitude, 1), usa_2023.units)
 
 To work with both catalogues at once, concatenate them into one collection:
 
-```python
-combined = TechnologyCollection(
-    technologies=dea.technologies.technologies + usa.technologies.technologies
-)
-print(len(combined.technologies))
-```
-
-```text
+``` py
+>>> combined = TechnologyCollection(
+...     technologies=dea.technologies.technologies + usa.technologies.technologies
+... )
+>>> print(len(combined.technologies))
 221
 ```
 
@@ -180,19 +148,14 @@ print(len(combined.technologies))
 
 `to_json()` writes a package to a directory; `from_json()` reads it back given the same name and version.
 
-```python
-import tempfile
-
-folder = pathlib.Path(tempfile.mkdtemp())
-package.to_json(folder)
-print(sorted(p.name for p in folder.iterdir()))
-
-reloaded = DataPackage.from_json("my-assumptions", "v1", folder)
-print(len(reloaded.technologies.technologies))
-```
-
-```text
+``` py
+>>> import tempfile
+>>> folder = pathlib.Path(tempfile.mkdtemp())
+>>> package.to_json(folder)
+>>> print(sorted(p.name for p in folder.iterdir()))
 ['sources.json', 'technologies.json']
+>>> reloaded = DataPackage.from_json("my-assumptions", "v1", folder)
+>>> print(len(reloaded.technologies.technologies))
 1
 ```
 
