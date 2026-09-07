@@ -79,7 +79,7 @@ converted = collection.to_currency("USD_2025", source="worldbank")
 ### Deriving Missing Parameters and Checking Consistency
 
 `calculate_parameters` and `check_consistency` apply the corresponding
-[`Technology`](technology.md) method to every technology in the collection and
+[`Technology`](./technology.md) method to every technology in the collection and
 return, respectively, a new `TechnologyCollection` and a list of per-equation
 status dicts (one per technology, in the same order as `collection.technologies`).
 

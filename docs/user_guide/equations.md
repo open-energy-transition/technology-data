@@ -348,14 +348,14 @@ print(result.magnitude) # 12.0
 
 ### How it works
 
-A [`Equation`][technologydata.formulas.Equation] stores a **SymPy expression string** set to zero (e.g. `"eac - sic*wacc/(1-(1+wacc)**(-lifetime))"`) along with the list of participant parameter names.
+A [`Equation`][technologydata.equations.Equation] stores a **SymPy expression string** set to zero (e.g. `"eac - sic*wacc/(1-(1+wacc)**(-lifetime))"`) along with the list of participant parameter names.
 When asked to solve for a target, it:
 
 1. Maps each parameter name to a positional SymPy symbol (`_p0`, `_p1`, ...) so that names with spaces or other non-identifier characters are supported.
 2. Applies a **symbolic-first** strategy: solves the expression with abstract symbols and produces a callable via `sympy.lambdify`. The known parameters are then passed as `pint` Quantity objects, so units are propagated automatically through Python's arithmetic operators.
 3. Falls back to **numeric substitution** if the symbolic step yields no result — substitutes the known values first, then calls the solver on the simplified expression.
 
-The [`EquationRegistry`][technologydata.formulas.EquationRegistry] indexes each
+The [`EquationRegistry`][technologydata.equations.EquationRegistry] indexes each
 `Equation` under every parameter it involves.
 
 ### Formula selection
