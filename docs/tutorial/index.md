@@ -28,23 +28,26 @@ It helps to:
 
 ## 1. A parameter that knows its units
 
-The smallest useful object is a `Parameter`: a magnitude, a unit, and the source it came from.
+The smallest useful object is a `Parameter`: a magnitude, a unit, an (energy) carrier, a heating value and the source it came from.
 
 ``` py
 >>> from technologydata import Parameter, Source, SourceCollection
->>> sources = SourceCollection(sources=[Source(
-...     title="Technology Data for Energy storage (May 2025)",
-...     authors="Danish Energy Agency",
-...     url="https://ens.dk/media/6589/download",
-... )])
->>> investment = Parameter(magnitude=288000.0, units="EUR_2020/MWh", sources=sources)
->>> print(investment.magnitude, investment.units)
-288000.0 EUR_2020 / megawatt_hour
+>>> investment = Parameter(magnitude=288000.0, units="EUR_2020/MWh", carrier="H2", heating_value="LHV")
+>>> print(investment)
+288000.0 EUR_2020 / megawatt_hour, carrier=hydrogen, heating_value=lower_heating_value
 ```
 
-The unit string is parsed rather than stored verbatim, which is why `EUR_2020/MWh` comes back as `EUR_2020 / megawatt_hour`. A currency is written as a three-letter code, an underscore and the price year — `EUR_2020`, `USD_2022`. Prefixed forms such as `MEUR_2020` are **not** units the registry knows; scale the magnitude instead.
+The unit string is parsed rather than stored verbatim, which is why `EUR_2020/MWh` comes back as `EUR_2020 / megawatt_hour`.
+A currency is written as a three-letter code, an underscore and the price year - `EUR_2020`.
+Generally SI-Prefixes such as `M` or `k` are supported, but not for currency units.
+A value like `MEUR_2020` would therefore be manually converted to million `EUR_2020` by you.
+The carrier and heating value information allows to distinguish between carriers and their carriers for unit parts.
+E.g. `MWh` may reference to `MWh` of hydrogen at its lower heating value (LHV);
+a unit like this is not directly compatible with different carriers and heating values.
+The additional carrier and heating value information appears like the unit in the denominator.
+`technologydata` does prevent operations on units where carrier and heating value information is incompatible.
 
-Because the unit is real, the parameter can be converted:
+The unit can be converted to get e.g. the investments per `kWh`:
 
 ``` py
 >>> per_kwh = investment.to("EUR_2020/kWh")
@@ -52,9 +55,9 @@ Because the unit is real, the parameter can be converted:
 288.0 EUR_2020 / kilowatt_hour
 ```
 
-## 2. From parameter to data package
+## 2. A `Technology` bundles related parameters
 
-A `Technology` groups parameters that describe the same thing in the same year and case. A `TechnologyCollection` holds many of those, and a `DataPackage` pairs a collection with its sources.
+A `Technology` groups parameters that describe the same technology for a year and in a certain scenario, we call it a "case".
 
 ``` py
 >>> from technologydata import DataPackage, Technology, TechnologyCollection
@@ -64,21 +67,86 @@ A `Technology` groups parameters that describe the same thing in the same year a
 ...     region="EU",
 ...     year=2025,
 ...     case="control",
-...     parameters={"specific investment": investment},
+...     parameters={
+...         "specific investment": investment,
+...         "lifetime": Parameter(magnitude=30, units="year"),
+...     },
 ... )
+>>> print(battery)
+name='lithium ion battery' detailed_technology='lithium-ion battery (utility-scale)' case='control' region='EU' year=2025 parameters={'specific investment': Parameter(magnitude=288000.0, units='EUR_2020 / megawatt_hour', carrier='hydrogen', heating_value='lower_heating_value', provenance=None, note=None, sources=SourceCollection(sources=[])), 'lifetime': Parameter(magnitude=30, units='year', carrier=None, heating_value=None, provenance=None, note=None, sources=SourceCollection(sources=[]))}
+```
+
+Printed in full, a `Technology` is just its identifying fields (`name`, `detailed_technology`, `case`, `region`, `year`) plus a `parameters` dictionary of named `Parameter` objects — nothing more is hidden inside it.
+
+## 3. Track a technology across years
+
+The same technology usually needs one `Technology` object per year, since its parameter values change over time. A `TechnologyCollection` holds several of them together — that is what makes it a *collection* rather than a single record.
+
+``` py
+>>> battery_2030 = Technology(
+...     name="lithium ion battery",
+...     detailed_technology="lithium-ion battery (utility-scale)",
+...     region="EU",
+...     year=2030,
+...     case="control",
+...     parameters={
+...         "specific investment": Parameter(magnitude=230000.0, units="EUR_2020/MWh"),
+...         "lifetime": Parameter(magnitude=30, units="year"),
+...     },
+... )
+>>> battery_2035 = Technology(
+...     name="lithium ion battery",
+...     detailed_technology="lithium-ion battery (utility-scale)",
+...     region="EU",
+...     year=2035,
+...     case="control",
+...     parameters={
+...         "specific investment": Parameter(magnitude=190000.0, units="EUR_2020/MWh"),
+...         "lifetime": Parameter(magnitude=30, units="year"),
+...     },
+... )
+>>> battery_over_time = TechnologyCollection(technologies=[battery, battery_2030, battery_2035])
+>>> print(sorted(t.year for t in battery_over_time.technologies))
+[2025, 2030, 2035]
+```
+
+Nothing ties these three objects together except sharing a `name`, `detailed_technology`, `region` and `case` — the collection does not require or enforce a fixed set of years, so it can hold as many or as few as you have data for.
+
+## 4. Bundle many technologies into a `DataPackage`
+
+A `TechnologyCollection` is not limited to one technology's history — it can hold entirely different technologies side by side. A `DataPackage` pairs such a collection with the `SourceCollection` that documents where the numbers came from.
+
+``` py
+>>> wind = Technology(
+...     name="onshore wind",
+...     detailed_technology="onshore wind turbine",
+...     region="EU",
+...     year=2025,
+...     case="control",
+...     parameters={
+...         "specific investment": Parameter(magnitude=1_200_000.0, units="EUR_2020/MW"),
+...     },
+... )
+>>> sources = SourceCollection(sources=[Source(
+...     title="Technology Data for Energy storage (May 2025)",
+...     authors="Danish Energy Agency",
+...     url="https://ens.dk/media/6589/download",
+... )])
 >>> package = DataPackage(
 ...     name="my-assumptions",
 ...     version="v1",
-...     technologies=TechnologyCollection(technologies=[battery]),
+...     technologies=TechnologyCollection(
+...         technologies=battery_over_time.technologies + [wind]
+...     ),
 ...     sources=sources,
 ... )
 >>> print(package.name, package.version, len(package.technologies.technologies))
-my-assumptions v1 1
+my-assumptions v1 4
 ```
 
-`DataPackage` requires a `name` and a `version` as well as the data — they are what `from_json()` uses to identify the package later.
+The package now bundles four technologies — three years of the battery plus the unrelated wind turbine — under one set of sources. `DataPackage` requires a `name` and a `version` as well as the data; they are what `from_json()` uses to identify the package later.
 
-## 3. Load a published catalogue
+## 5. Load a published catalogue
 
 Writing technologies by hand does not scale. The package ships two parsed catalogues, which load the same way and give you the same `TechnologyCollection` type you just built.
 
@@ -91,7 +159,7 @@ Writing technologies by hand does not scale. The package ships two parsed catalo
 136 85
 ```
 
-## 4. Select one technology
+## 6. Select one technology
 
 `TechnologyCollection.get()` filters on five attributes and returns a new collection.
 
@@ -113,7 +181,7 @@ Writing technologies by hand does not scale. The package ships two parsed catalo
 
 Without `re.escape()` the same call returns an empty collection rather than raising, so a silent zero is the symptom to watch for.
 
-## 5. Compare two catalogues
+## 7. Compare two catalogues
 
 This is what the bookkeeping was for. The Danish figure is in `EUR_2020` per MWh; the USA figure is in `USD_2022` per kWh. Converting both to `USD_2023` per kWh makes them comparable.
 
@@ -146,7 +214,7 @@ To work with both catalogues at once, concatenate them into one collection:
 221
 ```
 
-## 6. Save it and load it back
+## 8. Save it and load it back
 
 `to_json()` writes a package to a directory; `from_json()` reads it back given the same name and version.
 
@@ -158,12 +226,12 @@ To work with both catalogues at once, concatenate them into one collection:
 ['sources.json', 'technologies.json']
 >>> reloaded = DataPackage.from_json("my-assumptions", "v1", folder)
 >>> print(len(reloaded.technologies.technologies))
-1
+4
 ```
 
 The two files are the same shape as the ones the bundled catalogues ship, so a package you assemble here can be loaded by anything that reads them.
 
-## 7. Derive parameters and check consistency
+## 9. Derive parameters and check consistency
 
 Some parameters are related by known formulas rather than independent. Specific investment cost, total investment cost and capacity are one such triple: specific investment is just total investment divided by capacity. `calculate_parameters()` uses a registry of these relationships to fill in whichever one is missing.
 
@@ -202,7 +270,7 @@ If a parameter is edited by hand and no longer agrees with the others, the check
 
 `parameters=` restricts the check to equations that involve the given names; omit it to check every equation touching any parameter the technology has.
 
-## 8. Project a technology into the future
+## 10. Project a technology into the future
 
 A published catalogue only covers the years its source measured. Growth-model curves — linear, exponential, logistic and others — fit to known data points and project a value to any year, past or future.
 
