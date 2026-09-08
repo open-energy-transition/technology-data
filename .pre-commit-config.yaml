@@ -80,6 +80,7 @@ repos:
   - id: pip-audit
     name: pip-audit
     entry: bash -c 'uv export --format requirements.txt --no-hashes | uv run pip-audit -r /dev/stdin'
-    language: system
+    language: python
     pass_filenames: false
     files: ^(uv\.lock|pyproject\.toml)$
+    additional_dependencies: ['uv', 'pip-audit']
