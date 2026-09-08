@@ -4,6 +4,7 @@
 
 ci:
   autoupdate_schedule: quarterly
+  skip: [pip-audit]  # Skip pip-audit in pre-commit.ci due to network restrictions
 
 repos:
   # Basic pre-commit hooks for whitespace, merge conflicts, etc.
