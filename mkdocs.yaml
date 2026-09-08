@@ -155,7 +155,6 @@ plugins:
     type: timeago
     timezone: Europe/Berlin
     enable_creation_date: true
-    enable_parallel_processing: false
 - argref:
     autolinks:
     - reference_prefix: ":octicons-git-pull-request-16:"
