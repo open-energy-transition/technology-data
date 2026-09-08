@@ -80,7 +80,7 @@ repos:
   hooks:
   - id: pip-audit
     name: pip-audit
-    entry: bash -c 'uv export --format requirements.txt --no-hashes | uv run pip-audit -r /dev/stdin'
+    entry: bash -c 'uv export --format requirements.txt --no-hashes --no-editable | uv run pip-audit -r /dev/stdin'
     language: python
     pass_filenames: false
     files: ^(uv\.lock|pyproject\.toml)$

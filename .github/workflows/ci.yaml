@@ -68,5 +68,5 @@ jobs:
     - name: Security audit with pip-audit
       if: steps.changes.outputs.lockfile == 'true'
       run: |
-        uv export --format requirements.txt -o requirements-audit.txt
+        uv export --format requirements.txt --no-hashes --no-editable -o requirements-audit.txt
         uv run pip-audit -r requirements-audit.txt
