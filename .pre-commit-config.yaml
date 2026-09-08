@@ -73,3 +73,13 @@ repos:
   hooks:
   - id: rumdl
     args: ["--fix", "--disable=MD013, MD024, MD030, MD033, MD041"]
+
+  # pip-audit: Security audit for Python dependencies
+- repo: local
+  hooks:
+  - id: pip-audit
+    name: pip-audit
+    entry: bash -c 'uv export --format requirements.txt --no-hashes | uv run pip-audit -r /dev/stdin'
+    language: system
+    pass_filenames: false
+    files: ^(uv\.lock|pyproject\.toml)$
