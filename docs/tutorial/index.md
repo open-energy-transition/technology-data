@@ -297,16 +297,22 @@ If a parameter is edited by hand and no longer agrees with the others, the check
 
 `parameters=` restricts the check to equations that involve the given names; omit it to check every equation touching any parameter the technology has.
 
-The equation used in this case is one of the equations `technologydata` ships by default. You can look it up the same way `calculate_parameters()` and `check_consistency()` do internally, through the `equation_registry`:
+The equation used in this case looks like this:
+
+$$
+\text{total_investment\_cost} = \text{specific\_investment} \cdot \text{capacity}
+$$
+
+It is one of the equations `technologydata` ships by default, and you can look it up the same way `calculate_parameters()` and `check_consistency()` do internally, through the `equation_registry`:
 
 ``` py
 >>> from technologydata import equation_registry
->>> equation = equation_registry.get_equation("capacity", tech.parameters)
->>> print(equation)
-total_investment_from_specific: total_investment_cost - specific_investment * capacity = 0
+>>> equation_registry.list_equations(target="capacity")
+[{'name': 'total_investment_from_specific', 'parameters': ['total_investment_cost', 'specific_investment', 'capacity'], 'eq_str': 'total_investment_cost - specific_investment * capacity', 'priority': 1, 'description': None}]
 ```
 
-The equation is written as an expression equal to zero, which is why it reads `total_investment_cost - specific_investment * capacity` rather than `total_investment_cost = specific_investment * capacity` — both say the same thing. See the [parameter formula system](../user_guide/equations.md) for the full list of built-in equations and how to register your own.
+`eq_str` is the equation written as an expression equal to zero, which is why it reads `total_investment_cost - specific_investment * capacity` rather than the rearranged form above.
+See the [equation system](../user_guide/equations.md) for the full list of built-in equations and how to register your own.
 
 ## 10. Project a technology into the future
 
@@ -321,7 +327,8 @@ A published catalogue only covers the years its source measured. Growth-model cu
 2000.0
 ```
 
-`add_data()` and `fit()` both return the model, so calls chain. `project()` extrapolates using the fitted curve — here a straight line through the three points, continued out to 2040. `TechnologyCollection.fit()` and `.project()` apply the same curves across every technology in a collection at once, fitting one named parameter per technology and returning a new collection with the projected years added.
+`add_data()` and `fit()` both return the model, so calls chain.
+`project()` extrapolates using the fitted curve — here a straight line through the three points, continued out to 2040. `TechnologyCollection.fit()` and `.project()` apply the same curves across every technology in a collection at once, fitting one named parameter per technology and returning a new collection with the projected years added.
 
 ## Where to go next
 
