@@ -80,7 +80,8 @@ Printed in full, a `Technology` is just its identifying fields (`name`, `detaile
 
 ## 3. Track a technology across years
 
-The same technology usually needs one `Technology` object per year, since its parameter values change over time. A `TechnologyCollection` holds several of them together — that is what makes it a *collection* rather than a single record.
+If we want to track technology parameters over multiple years, we use multiple `Technology` objects per year.
+A `TechnologyCollection` holds several of them together:
 
 ``` py
 >>> battery_2030 = Technology(
@@ -114,7 +115,16 @@ Nothing ties these three objects together except sharing a `name`, `detailed_tec
 
 ## 4. Bundle many technologies into a `DataPackage`
 
-A `TechnologyCollection` is not limited to one technology's history — it can hold entirely different technologies side by side. A `DataPackage` pairs such a collection with the `SourceCollection` that documents where the numbers came from.
+A `TechnologyCollection` is not limited to one technology's history.
+It can hold entirely different technologies side by side.
+When you want to share your collection with others or store them in a project, they are best stored as a `DataPackage`.
+This is our data schema that allows for reliable writing to file / reading from file and smooth data exchange with others.
+For now the `DataPackage` supports `json` and `csv` file formats.
+These formats have the advantage of being human-readable, although the files they produce are a bit larger.
+In the future we will make other file formats available.
+
+A `DataPackage` also includes information on all the sources used for the technologies and stores them as a combined `SourceCollection`.
+This collection can be used for generating e.g. bibliographies or summarising all the sources used for a project.
 
 ``` py
 >>> wind = Technology(
@@ -148,23 +158,30 @@ The package now bundles four technologies — three years of the battery plus th
 
 ## 5. Load a published catalogue
 
-Writing technologies by hand does not scale. The package ships two parsed catalogues, which load the same way and give you the same `TechnologyCollection` type you just built.
+Writing technologies by hand does not scale well.
+The idea of `technologydata` is that many people contribute to larger databases that everyone can then use in their projects.
+For now the package ships with some parsed catalogues which you can load and use right away.
+Two of them are the Energy Storage Catalogue from the Danish Energy Agency, and the Annual Technology Baseline from NLR, formerly NREL.
+To load them, use the `DataAccessor`:
 
 ``` py
->>> import pathlib
 >>> from technologydata import DataAccessor
 >>> dea = DataAccessor(data_source="dea_energy_storage", version="v10").load()
 >>> usa = DataAccessor(data_source="manual_input_usa", version="v0.13.4").load()
->>> print(len(dea.technologies.technologies), len(usa.technologies.technologies))
-136 85
+>>> print(dea.name, dea.version, len(dea.technologies.technologies))
+dea_energy_storage v10 136
+>>> print(usa.name, usa.version, len(usa.technologies.technologies))
+manual_input_usa v0.13.4 85
 ```
+
+Both come back as `DataPackage` objects, the same shape as `package` from the previous section — just with a lot more technologies inside.
 
 ## 6. Select one technology
 
 `TechnologyCollection.get()` filters on five attributes and returns a new collection.
 
 !!! warning "`get()` matches regular expressions, not literal text"
-    Every argument is compiled as a regex, so `(` and `)` are read as a group rather than as brackets. A name containing them silently matches nothing. Pass it through `re.escape()`.
+    Every argument is compiled as a regex, so `(` and `)` are read as a group rather than as brackets. A name containing them silently matches nothing. Pass it through `re.escape()` or escape them using `\(` and `\)`.
 
 ``` py
 >>> import re
@@ -219,6 +236,7 @@ To work with both catalogues at once, concatenate them into one collection:
 `to_json()` writes a package to a directory; `from_json()` reads it back given the same name and version.
 
 ``` py
+>>> import pathlib
 >>> import tempfile
 >>> folder = pathlib.Path(tempfile.mkdtemp())
 >>> package.to_json(folder)
@@ -233,7 +251,10 @@ The two files are the same shape as the ones the bundled catalogues ship, so a p
 
 ## 9. Derive parameters and check consistency
 
-Some parameters are related by known formulas rather than independent. Specific investment cost, total investment cost and capacity are one such triple: specific investment is just total investment divided by capacity. `calculate_parameters()` uses a registry of these relationships to fill in whichever one is missing.
+Some parameters are related by known formulas rather than independent.
+E.g. specific investment cost, total investment cost and capacity are one such triple:
+specific investment is just total investment divided by capacity.
+`calculate_parameters()` uses common equations to calculate missing parameters from known ones:
 
 ``` py
 >>> tech = Technology(
@@ -253,7 +274,13 @@ Some parameters are related by known formulas rather than independent. Specific 
 1000.0 kilowatt
 ```
 
-The same relationship works in reverse to check, rather than derive: `check_consistency()` confirms that the parameters a technology already has still agree with each other.
+You can define and add your own equations and also overwrite existing ones.
+The equations can also be used to check, rather than derive:
+`check_consistency()` confirms that the parameters a technology already has still agree with each other.
+This is helpful e.g. if you have a long list of values and you want to make sure that the parameters are all consistent to each other.
+The functionality can not help you to identify which of the parameters is wrong, but it will flag all the involved parameters.
+
+In this example everything is fine and the consistency check reports consistency across the parameters:
 
 ``` py
 >>> print(tech.check_consistency(parameters=["capacity"]))
@@ -269,6 +296,17 @@ If a parameter is edited by hand and no longer agrees with the others, the check
 ```
 
 `parameters=` restricts the check to equations that involve the given names; omit it to check every equation touching any parameter the technology has.
+
+The equation used in this case is one of the equations `technologydata` ships by default. You can look it up the same way `calculate_parameters()` and `check_consistency()` do internally, through the `equation_registry`:
+
+``` py
+>>> from technologydata import equation_registry
+>>> equation = equation_registry.get_equation("capacity", tech.parameters)
+>>> print(equation)
+total_investment_from_specific: total_investment_cost - specific_investment * capacity = 0
+```
+
+The equation is written as an expression equal to zero, which is why it reads `total_investment_cost - specific_investment * capacity` rather than `total_investment_cost = specific_investment * capacity` — both say the same thing. See the [parameter formula system](../user_guide/equations.md) for the full list of built-in equations and how to register your own.
 
 ## 10. Project a technology into the future
 
