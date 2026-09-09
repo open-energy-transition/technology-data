@@ -4,6 +4,7 @@
 
 ci:
   autoupdate_schedule: quarterly
+  skip: [pip-audit]  # Skip pip-audit in pre-commit.ci due to network restrictions
 
 repos:
   # Basic pre-commit hooks for whitespace, merge conflicts, etc.
@@ -73,3 +74,14 @@ repos:
   hooks:
   - id: rumdl
     args: ["--fix", "--disable=MD013, MD024, MD030, MD033, MD041"]
+
+  # pip-audit: Security audit for Python dependencies
+- repo: local
+  hooks:
+  - id: pip-audit
+    name: pip-audit
+    entry: bash -c 'uv export --format requirements.txt --no-hashes --no-editable | uv run pip-audit -r /dev/stdin'
+    language: python
+    pass_filenames: false
+    files: ^(uv\.lock|pyproject\.toml)$
+    additional_dependencies: ['uv', 'pip-audit']

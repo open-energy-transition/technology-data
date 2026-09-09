@@ -1,0 +1,23 @@
+# CODEOWNERS file for technology-data
+# These owners will be the default owners for everything in the repo
+# and will be requested for review when someone opens a pull request.
+
+# Default owners for the entire repository
+* @euronion @finozzifa
+
+# Documentation
+/docs/ @euronion @finozzifa
+
+# Source code
+/src/ @euronion @finozzifa
+
+# Tests
+/tests/ @euronion @finozzifa
+
+# CI/CD and workflows
+/.github/ @euronion @finozzifa
+
+# Configuration files
+*.toml @euronion @finozzifa
+*.yaml @euronion @finozzifa
+*.yml @euronion @finozzifa
