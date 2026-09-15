@@ -4,6 +4,8 @@
 
 name: Release
 
+permissions: read-all
+
 on:
   push:
     tags:

@@ -4,6 +4,8 @@
 
 name: Check documentation links
 
+permissions: read-all
+
 on:
   schedule:
   - cron: "0 4 * * 1" # every Monday at 04:00 UTC

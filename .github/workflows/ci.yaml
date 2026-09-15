@@ -3,6 +3,8 @@
 # SPDX-License-Identifier: MIT
 name: Technologydata prototype CI
 
+permissions: read-all
+
 on:
   push:
     branches: [prototype-2]

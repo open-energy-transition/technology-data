@@ -3,6 +3,8 @@
 # SPDX-License-Identifier: MIT
 name: Docs
 
+permissions: read-all
+
 on:
   push:
     branches: [master]
