@@ -70,16 +70,18 @@ class SourceCollection(pydantic.BaseModel):
         sources_str = ", ".join(str(source) for source in self.sources)
         return f"SourceCollection with {len(self.sources)} sources: {sources_str}"
 
-    def get(self, title: str, authors: str) -> Self:
+    def get(self, title: str | None = None, authors: str | None = None) -> Self:
         """
         Filter sources based on regex patterns for non-optional attributes.
 
+        Parameters not provided will match any value (equivalent to .* regex).
+
         Parameters
         ----------
-        title : str
-            Regex pattern to filter titles.
-        authors : str
-            Regex pattern to filter authors.
+        title : str, optional
+            Regex pattern to filter titles. If None, matches all titles.
+        authors : str, optional
+            Regex pattern to filter authors. If None, matches all authors.
 
         Returns
         -------

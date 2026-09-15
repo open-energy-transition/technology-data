@@ -147,6 +147,48 @@ class TestTechnologyCollection:
         assert isinstance(result, technologydata.TechnologyCollection)
         assert len(result.technologies) == 1
 
+    @pytest.mark.parametrize(
+        "filter_param, filter_value, expected_count",
+        [
+            ["name", "Solar photovoltaics", 2],
+            ["region", "DEU", 2],
+            ["year", 2022, 2],
+            ["case", "example-scenario", 1],
+            ["case", "example-project", 1],
+            ["detailed_technology", "Si-HC", 2],
+        ],
+    )  # type: ignore
+    def test_get_with_single_parameter(
+        self, filter_param: str, filter_value: str | int, expected_count: int
+    ) -> None:
+        """Check if get() with a single parameter filters correctly."""
+        input_file = pathlib.Path(
+            path_cwd,
+            "test",
+            "test_data",
+            "solar_photovoltaics_example",
+            "technologies.json",
+        )
+        technologies_collection = technologydata.TechnologyCollection.from_json(
+            input_file
+        )
+        # Use explicit conditionals to maintain type safety
+        if filter_param == "name":
+            result = technologies_collection.get(name=str(filter_value))
+        elif filter_param == "region":
+            result = technologies_collection.get(region=str(filter_value))
+        elif filter_param == "year":
+            result = technologies_collection.get(year=int(filter_value))
+        elif filter_param == "case":
+            result = technologies_collection.get(case=str(filter_value))
+        elif filter_param == "detailed_technology":
+            result = technologies_collection.get(detailed_technology=str(filter_value))
+        else:
+            raise ValueError(f"Unknown filter parameter: {filter_param}")
+
+        assert isinstance(result, technologydata.TechnologyCollection)
+        assert len(result.technologies) == expected_count
+
     def test_fit_linear_growth(self) -> None:
         """Test TechnologyCollection.fit with LinearGrowth model."""
         tech = technologydata.Technology(
