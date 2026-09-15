@@ -320,3 +320,35 @@ class TestSourceCollection:
         )
         result = source_collection.get(title=title_pattern, authors=authors_pattern)
         assert len(result.sources) == 1
+
+    @pytest.mark.parametrize(
+        "filter_param, filter_value, expected_count",
+        [
+            ["title", "atb_nrel", 1],
+            ["title", "tech_data_generation", 1],
+            ["authors", "NREL/ATB", 1],
+            ["authors", "Danish Energy Agency", 1],
+        ],
+    )  # type: ignore
+    def test_get_with_single_parameter(
+        self, filter_param: str, filter_value: str | int, expected_count: int
+    ) -> None:
+        """Check if get() with a single parameter filters correctly."""
+        input_file = pathlib.Path(
+            path_cwd,
+            "test",
+            "test_data",
+            "solar_photovoltaics_example",
+            "sources.json",
+        )
+        sources_collection = technologydata.SourceCollection.from_json(input_file)
+        # Use explicit conditionals to maintain type safety
+        if filter_param == "title":
+            result = sources_collection.get(title=str(filter_value))
+        elif filter_param == "authors":
+            result = sources_collection.get(authors=str(filter_value))
+        else:
+            raise ValueError(f"Unknown filter parameter: {filter_param}")
+
+        assert isinstance(result, technologydata.SourceCollection)
+        assert len(result.sources) == expected_count
