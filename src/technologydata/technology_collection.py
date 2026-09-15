@@ -66,23 +66,30 @@ class TechnologyCollection(pydantic.BaseModel):
         return len(self.technologies)
 
     def get(
-        self, name: str, region: str, year: int, case: str, detailed_technology: str
+        self,
+        name: str | None = None,
+        region: str | None = None,
+        year: int | None = None,
+        case: str | None = None,
+        detailed_technology: str | None = None,
     ) -> Self:
         """
         Filter technologies based on regex patterns for non-optional attributes.
 
+        Parameters not provided will match any value (equivalent to .* regex).
+
         Parameters
         ----------
-        name : str
-            Regex pattern to filter technology names.
-        region : str
-            Regex pattern to filter region identifiers.
-        year : int
-            Regex pattern to filter the year of the data.
-        case : str
-            Regex pattern to filter case or scenario identifiers.
-        detailed_technology : str
-            Regex pattern to filter detailed technology names.
+        name : str, optional
+            Regex pattern to filter technology names. If None, matches all names.
+        region : str, optional
+            Regex pattern to filter region identifiers. If None, matches all regions.
+        year : int, optional
+            Regex pattern to filter the year of the data. If None, matches all years.
+        case : str, optional
+            Regex pattern to filter case or scenario identifiers. If None, matches all cases.
+        detailed_technology : str, optional
+            Regex pattern to filter detailed technology names. If None, matches all detailed technologies.
 
         Returns
         -------
