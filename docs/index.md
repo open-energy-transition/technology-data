@@ -6,6 +6,7 @@
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/open-energy-transition/technology-data/blob/prototype-2/LICENSE)
 [![Python](https://img.shields.io/pypi/pyversions/technologydata.svg)](https://pypi.python.org/pypi/technologydata)
 [![OpenSSF Scorecard](https://api.scorecard.dev/projects/github.com/open-energy-transition/technology-data/badge)](https://scorecard.dev/viewer/?uri=github.com/open-energy-transition/technology-data)
+[![pre-commit.ci status](https://results.pre-commit.ci/badge/github/open-energy-transition/technology-data/prototype-2.svg)](https://results.pre-commit.ci/latest/github/open-energy-transition/technology-data/prototype-2)
 
 # technologydata: techno-economic assumptions for energy models
 
