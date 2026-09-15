@@ -5,6 +5,7 @@
 [![PyPI version](https://img.shields.io/pypi/v/technologydata.svg)](https://pypi.python.org/pypi/technologydata)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/open-energy-transition/technology-data/blob/prototype-2/LICENSE)
 [![Python](https://img.shields.io/pypi/pyversions/technologydata.svg)](https://pypi.python.org/pypi/technologydata)
+[![OpenSSF Scorecard](https://api.scorecard.dev/projects/github.com/open-energy-transition/technology-data/badge)](https://scorecard.dev/viewer/?uri=github.com/open-energy-transition/technology-data)
 
 # technologydata: techno-economic assumptions for energy models
 
@@ -16,7 +17,7 @@ The goal of this package is to make energy system modelling easier and more effi
 Techno-economic catalogues are published in different currencies, price years, physical units, heating-value conventions and parameter naming schemes.
 Harmonising to combine multiple sources into one energy system model therefore requires a sequence of conversions that is easy to get wrong and rarely recorded.
 
-This package contains a data schema and represents the techno-economic assumpstions as Python objects.
+This package contains a data schema and represents the techno-economic assumptions as Python objects.
 The objects called `Parameter` carry not only values ("magnitude"), but also unit information, currency year, energy carrier, heating-value basis, provenance and bibliographic sources.
 Commonly used conversions are available, parameters can be checked for consistency.
 Provenance information for modifying parameters is automatically recorded, e.g. to keep track of currency conversion factors or formulas used for calculation.
