@@ -434,6 +434,7 @@ class DeaEnergyStorageV10Parser(ParserBase):
             source = Source(
                 title="Technology Data for Energy storage (May 2025)",
                 authors="Danish Energy Agency",
+                version="v10",
                 url="https://ens.dk/media/6589/download",
                 url_date="2025-10-08 09:24:00",
             )

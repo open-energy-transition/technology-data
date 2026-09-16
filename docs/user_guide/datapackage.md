@@ -13,7 +13,7 @@ The `DataPackage` class in `technologydata` provides a container for managing co
 
 ## Features
 
-- **Name & Version**: Stores the dataset name (required) and version (optional) as first-class attributes.
+- **Name & Version**: Stores the dataset name (required) and version (required) as first-class attributes.
 - **Technology Collection**: Stores a collection of `Technology` objects via the `TechnologyCollection` class.
 - **Source Collection**: Stores a collection of `Source` objects via the `SourceCollection` class.
 - **Batch Operations**: Supports batch export to JSON and CSV formats.
@@ -24,7 +24,7 @@ The `DataPackage` class in `technologydata` provides a container for managing co
 
 ### Creating a DataPackage
 
-You can create a `DataPackage` by instantiating it directly or by loading from JSON files. The `name` field is required; `version` is optional.
+You can create a `DataPackage` by instantiating it directly or by loading from JSON files. Both the `name` and `version` fields are required.
 
 ```python
 from technologydata import DataPackage, TechnologyCollection, SourceCollection
@@ -40,7 +40,7 @@ dp = DataPackage(
 
 ### Loading from JSON
 
-To load a `DataPackage` from a folder containing `technologies.json` and (optionally) `sources.json`, pass the dataset `name`, an optional `version`, and the path to the folder:
+To load a `DataPackage` from a folder containing `technologies.json` and (optionally) `sources.json`, pass the dataset `name`, `version`, and the path to the folder:
 
 ```python
 from technologydata import DataPackage

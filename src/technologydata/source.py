@@ -49,6 +49,9 @@ class Source(pydantic.BaseModel):
 
     title: Annotated[str, pydantic.Field(description="Title of the source.")]
     authors: Annotated[str, pydantic.Field(description="Authors of the source.")]
+    version: Annotated[
+        str | None, pydantic.Field(description="Version of the source.")
+    ] = None
     url: Annotated[str | None, pydantic.Field(description="URL of the source.")] = None
     url_archive: Annotated[str | None, pydantic.Field(description="Archived URL.")] = (
         None

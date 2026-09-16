@@ -3,6 +3,7 @@
         {
             "title": "atb_nrel",
             "authors": "NREL/ATB",
+            "version": "1.0",
             "url": "https://oedi-data-lake.s3.amazonaws.com/ATB/electricity/parquet/2024/v3.0.0/ATBe.parquet",
             "url_archive": "https://web.archive.org/web/20250522150802/https://oedi-data-lake.s3.amazonaws.com/ATB/electricity/parquet/2024/v3.0.0/ATBe.parquet",
             "url_date": "2025-05-22 15:08:02",
@@ -11,6 +12,7 @@
         {
             "title": "tech_data_generation",
             "authors": "Danish Energy Agency",
+            "version": "2.0",
             "url": "https://ens.dk/media/3273/download",
             "url_archive": "http://web.archive.org/web/20250506160204/https://ens.dk/media/3273/download",
             "url_date": "2025-05-06 16:02:04",
