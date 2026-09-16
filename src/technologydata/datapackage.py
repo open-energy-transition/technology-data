@@ -31,7 +31,7 @@ class DataPackage(pydantic.BaseModel):
     ----------
     name : str
         The name of the dataset stored in the DataPackage object.
-    version : Optional[str]
+    version : str
         The version of the dataset stored in the DataPackage object.
     technologies : Optional[TechnologyCollection]
         List of Technology objects.
@@ -47,11 +47,11 @@ class DataPackage(pydantic.BaseModel):
         ),
     ]
     version: Annotated[
-        str | None,
+        str,
         pydantic.Field(
             description="The version of the dataset stored in the DataPackage object."
         ),
-    ] = None
+    ]
     technologies: Annotated[
         TechnologyCollection | None,
         pydantic.Field(description="List of Technology objects."),
@@ -87,7 +87,7 @@ class DataPackage(pydantic.BaseModel):
 
     @classmethod
     def from_json(
-        cls, name: str, version: str | None, path_to_folder: pathlib.Path | str
+        cls, name: str, version: str, path_to_folder: pathlib.Path | str
     ) -> Self:
         """
         Load a DataPackage from a JSON file.
@@ -96,7 +96,7 @@ class DataPackage(pydantic.BaseModel):
         ----------
         name : str
             The name of the dataset stored in the DataPackage object.
-        version: Optional[str]
+        version : str
             The version of the dataset stored in the DataPackage object.
         path_to_folder : pathlib.Path or str
             Path to the data package folder.
