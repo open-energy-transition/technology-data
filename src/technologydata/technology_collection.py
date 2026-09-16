@@ -16,6 +16,7 @@ import pandas
 import pydantic
 import pydantic_core
 
+from technologydata import SCHEMA_VERSION
 from technologydata.parameter import Parameter
 from technologydata.technologies.growth_models import GrowthModel, LinearGrowth
 from technologydata.technology import Technology
@@ -299,7 +300,7 @@ class TechnologyCollection(pydantic.BaseModel):
         self,
         file_path: pathlib.Path,
         schema_path: pathlib.Path | None = None,
-        output_schema: bool = False,
+        output_schema: bool = True,
     ) -> None:
         """
         Export the TechnologyCollection to a JSON file, together with a data schema.
@@ -310,7 +311,7 @@ class TechnologyCollection(pydantic.BaseModel):
             The path to the JSON file to be created.
         schema_path : pathlib.Path
             The path to the JSON schema file to be created. By default, created with a `schema` suffix next to `file_path`.
-        output_schema : bool, default False
+        output_schema : bool, default True
             If True, generates a JSON schema file describing the data structure.
             The schema will include field descriptions and type information.
 
@@ -321,6 +322,9 @@ class TechnologyCollection(pydantic.BaseModel):
 
             # Export the model's schema with descriptions to a dict
             schema = self.model_json_schema()
+
+            # Add schema_version to the schema
+            schema["schema_version"] = SCHEMA_VERSION
 
             # Save the schema (which includes descriptions) to a JSON file
             with open(schema_path, "w") as f:
