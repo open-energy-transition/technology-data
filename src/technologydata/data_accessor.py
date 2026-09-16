@@ -178,13 +178,16 @@ class DataAccessor(pydantic.BaseModel):
         dp = DataPackage.from_json(self.data_source, version, data_path)
         return dp
 
-    def download(self, base_url: str) -> DataPackage:
+    def download(self, base_url: str, use_cache: bool = True) -> DataPackage:
         """
         Download and load technology data from a remote URL.
 
         This method downloads technologies.json and sources.json files from the
         specified base URL and loads them into a DataPackage instance. The sources.json
         file is optional; if not found, sources will be extracted from technologies.
+
+        By default, if the data is already cached locally, it will be loaded from the
+        cache instead of re-downloading. Set ``use_cache=False`` to force a fresh download.
 
         **Important:** The ``data_source`` and ``version`` attributes of the
         DataAccessor instance determine the **local storage location** for downloaded
@@ -206,6 +209,9 @@ class DataAccessor(pydantic.BaseModel):
             to the directory containing these files (without the filename itself).
             **The caller must ensure this URL corresponds to the data_source and version
             specified in the DataAccessor instance.**
+        use_cache : bool, optional
+            If True (default), check for locally cached files first and use them if available.
+            If False, always download from the URL even if cached files exist.
 
         Returns
         -------
@@ -228,33 +234,51 @@ class DataAccessor(pydantic.BaseModel):
           version - this is the caller's responsibility.
         - The downloaded files persist on disk and can be reused in subsequent sessions
           by calling ``load()`` with the same data source and version.
+        - When ``use_cache=True``, only the existence of technologies.json is checked to
+          determine if the cache is valid.
 
         Examples
         --------
-        Download v10 data and store it as v10:
+        Download v10 data and store it as v10 (uses cache if available):
 
         >>> accessor = DataAccessor(data_source="dea_energy_storage", version="v10")
         >>> base_url = "https://example.com/data/dea_energy_storage/v10/"
         >>> dp = accessor.download(base_url)
-        >>> # Files are downloaded from the URL and stored at:
+        >>> # If not cached, files are downloaded from the URL and stored at:
         >>> # src/technologydata/parsers/dea_energy_storage/v10/
 
+        Force a fresh download, ignoring cache:
+
+        >>> dp = accessor.download(base_url, use_cache=False)
+
         """
+        # Validate that version is set
+        if not self.version:
+            raise ValueError("Version must be specified for downloading data.")
+
+        # Define local paths
+        technologies_path = pathlib.Path(
+            self.data_path, self.data_source, self.version, "technologies.json"
+        )
+        sources_path = pathlib.Path(
+            self.data_path, self.data_source, self.version, "sources.json"
+        )
+
+        # Check cache if use_cache is enabled
+        if use_cache and technologies_path.exists():
+            logger.info(
+                f"Using cached data from {technologies_path.parent} (use_cache=True)"
+            )
+            return self.load()
+
+        # If not in cache or use_cache=False, proceed with download
+
         # Ensure base_url ends with / using urljoin for proper URL normalization
         base_url = urljoin(base_url, "./")
 
-        # Download technologies.json
+        # Prepare download URLs
         technologies_url = f"{base_url}technologies.json"
         sources_url = f"{base_url}sources.json"
-        if self.version:
-            technologies_path = pathlib.Path(
-                self.data_path, self.data_source, self.version, "technologies.json"
-            )
-            sources_path = pathlib.Path(
-                self.data_path, self.data_source, self.version, "sources.json"
-            )
-        else:
-            raise ValueError("Version must be specified for downloading data.")
 
         # Ensure parent directories exist
         self.ensure_path_exists(technologies_path.parent)
@@ -283,13 +307,8 @@ class DataAccessor(pydantic.BaseModel):
             raise
 
         # Load using DataPackage.from_json
-        # Construct path to folder containing the downloaded files
-        if self.version:
-            path_to_folder = pathlib.Path(
-                self.data_path, self.data_source, self.version
-            )
-        else:
-            path_to_folder = pathlib.Path(self.data_path, self.data_source)
+        # Use the already defined technologies_path to determine folder location
+        path_to_folder = technologies_path.parent
 
         data_package = DataPackage.from_json(
             name=self.data_source, version=self.version, path_to_folder=path_to_folder
