@@ -15,7 +15,7 @@ import pandas
 import pydantic
 import pydantic_core
 
-from technologydata import SCHEMA_VERSION
+from technologydata.schema_version import SCHEMA_VERSION
 from technologydata.source import Source
 
 

@@ -11,6 +11,7 @@ from technologydata.default_equations import (
 )
 from technologydata.equations import Equation, EquationRegistry
 from technologydata.parameter import Parameter
+from technologydata.schema_version import SCHEMA_VERSION
 from technologydata.source import Source
 from technologydata.source_collection import SourceCollection
 from technologydata.technology import Technology
@@ -25,9 +26,6 @@ from technologydata.utils.units import (
     hvreg,
     ureg,
 )
-
-# Schema version for JSON outputs (semantic versioning without 'v' prefix)
-SCHEMA_VERSION = "1.0.0"
 
 __all__ = [
     "Commons",
