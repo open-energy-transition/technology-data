@@ -135,7 +135,7 @@ class TestDataAccessor:
             "https://raw.githubusercontent.com/open-energy-transition/technology-data/"
         )
         # Use specific commit SHA instead of branch name for test stability
-        commit_sha = "65a6aa6454493dbb56f5d12d8efab2a3a40104d7/"
+        commit_sha = "655b2a759520037fea7f448cb48449e37f9b191f/"
         data_source = DataSourceName.MANUAL_INPUT_USA
         version = "v0.13.4"
         target_url = f"src/technologydata/parsers/{data_source}/{version}/"
@@ -151,21 +151,17 @@ class TestDataAccessor:
         assert dp.version == "v0.13.4"
         assert len(dp.sources) == 1
         assert len(dp.technologies) == 85
-
-
-#        sources_reference_path = pathlib.Path(path_cwd, target_url, "sources.json")
-#        technologies_reference_path = pathlib.Path(
-#            path_cwd, target_url, "technologies.json"
-#        )
-#        sources_reference = load_json(sources_reference_path)
-#        technologies_reference = load_json(technologies_reference_path)
-#        sources_download = load_json(
-#            pathlib.Path(tmp_path, data_source, version, "sources.json")
-#        )
-#        technologies_download = load_json(
-#            pathlib.Path(tmp_path, data_source, version, "technologies.json")
-#        )
-#
-#
-#        assert sources_reference == sources_download
-#        assert technologies_reference == technologies_download
+        sources_reference_path = pathlib.Path(path_cwd, target_url, "sources.json")
+        technologies_reference_path = pathlib.Path(
+            path_cwd, target_url, "technologies.json"
+        )
+        sources_reference = load_json(sources_reference_path)
+        technologies_reference = load_json(technologies_reference_path)
+        sources_download = load_json(
+            pathlib.Path(tmp_path, data_source, version, "sources.json")
+        )
+        technologies_download = load_json(
+            pathlib.Path(tmp_path, data_source, version, "technologies.json")
+        )
+        assert sources_reference == sources_download
+        assert technologies_reference == technologies_download
