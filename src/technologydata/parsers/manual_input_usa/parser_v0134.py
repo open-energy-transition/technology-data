@@ -120,7 +120,8 @@ class ManualInputUSAV0134Parser(ParserBase):
             source = Source(
                 title="Energy system technology data for the US",
                 authors="Contributors to technology-data. Data source: manual_input_usa.csv",
-                url="https://github.com/PyPSA/technology-data/blob/master/inputs/US/manual_input_usa.csv",
+                version="v0.13.4",
+                url="https://github.com/PyPSA/technology-data/blob/v0.13.4/inputs/US/manual_input_usa.csv",
             )
             source.ensure_in_wayback()
             sources = SourceCollection(sources=[source])
