@@ -16,8 +16,8 @@ import pandas
 import pydantic
 import pydantic_core
 
-from technologydata import SCHEMA_VERSION
 from technologydata.parameter import Parameter
+from technologydata.schema_version import SCHEMA_VERSION
 from technologydata.technologies.growth_models import GrowthModel, LinearGrowth
 from technologydata.technology import Technology
 
