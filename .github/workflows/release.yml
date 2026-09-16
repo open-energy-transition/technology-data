@@ -21,7 +21,7 @@ jobs:
     outputs:
       prepared: ${{ steps.validate.outputs.prepared }}
     steps:
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@v7
 
     - name: Validate commit message
       id: validate
@@ -50,7 +50,7 @@ jobs:
         echo "Branch found: $branch"
         echo "BRANCH_NAME=$branch" >> $GITHUB_ENV
 
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@v7
       with:
         fetch-depth: 0
         ref: ${{ env.BRANCH_NAME }}
@@ -58,7 +58,7 @@ jobs:
 
     # Start of preparation script
 
-    - uses: actions/setup-python@v6
+    - uses: actions/setup-python@v7
       with:
         python-version: 3.12
 
@@ -108,7 +108,7 @@ jobs:
     if: ${{ needs.check-preparation.outputs.prepared == 'true' }}
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@v7
     - uses: hynek/build-and-inspect-python-package@v2
 
   release:
@@ -118,8 +118,8 @@ jobs:
     permissions:
       contents: write
     steps:
-    - uses: actions/checkout@v6
-    - uses: softprops/action-gh-release@v2
+    - uses: actions/checkout@v7
+    - uses: softprops/action-gh-release@v3
       with:
         generate_release_notes: true
 
@@ -133,7 +133,7 @@ jobs:
     permissions:
       id-token: write
     steps:
-    - uses: actions/download-artifact@v6
+    - uses: actions/download-artifact@v8
       with:
         name: Packages
         path: dist
