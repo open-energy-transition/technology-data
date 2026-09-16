@@ -26,6 +26,9 @@ from technologydata.utils.units import (
     ureg,
 )
 
+# Schema version for JSON outputs (semantic versioning without 'v' prefix)
+SCHEMA_VERSION = "1.0.0"
+
 __all__ = [
     "Commons",
     "DataAccessor",
@@ -35,6 +38,7 @@ __all__ = [
     "EquationRegistry",
     "FileExtensionEnum",
     "Parameter",
+    "SCHEMA_VERSION",
     "Source",
     "SourceCollection",
     "Technology",
