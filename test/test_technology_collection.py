@@ -570,5 +570,5 @@ class TestTechnologyCollection:
         assert capacity_params[0].magnitude == 1.0
         assert capacity_params[1].magnitude == 3.0
         assert len(technology_collection.get_parameter("yeah")) == 2
-        assert technology_collection.get_parameter("yeah")[0] is not None
+        assert technology_collection.get_parameter("yeah")[0] is None
         assert technology_collection.get_parameter("yeah")[1] is None

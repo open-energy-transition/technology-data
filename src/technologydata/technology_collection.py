@@ -180,6 +180,40 @@ class TechnologyCollection(pydantic.BaseModel):
 
         return TechnologyCollection(technologies=filtered_technologies)  # type: ignore
 
+    def __add__(self, other: Self) -> Self:
+        """
+        Merge two TechnologyCollection objects using the + operator.
+
+        Parameters
+        ----------
+        other : TechnologyCollection
+            The collection to merge with.
+
+        Returns
+        -------
+        TechnologyCollection
+            A new TechnologyCollection containing technologies from both collections.
+
+        """
+        return self.__class__(technologies=self.technologies + other.technologies)
+
+    def append(self, tech: Technology) -> Self:
+        """
+        Append a technology to an existing TechnologyCollection.
+
+        Parameters
+        ----------
+        tech : Technology
+            The technology to add.
+
+        Returns
+        -------
+        TechnologyCollection
+            A new TechnologyCollection with the appended technology.
+
+        """
+        return self + self.__class__(technologies=[tech])
+
     def to_dataframe(self) -> pandas.DataFrame:
         """
         Convert the TechnologyCollection to a pandas DataFrame.
