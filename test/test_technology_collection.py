@@ -572,3 +572,79 @@ class TestTechnologyCollection:
         assert len(technology_collection.get_parameter("yeah")) == 2
         assert technology_collection.get_parameter("yeah")[0] is None
         assert technology_collection.get_parameter("yeah")[1] is None
+
+    def test_append(self) -> None:
+        """Test if the append method works correctly and is non-mutating."""
+        input_file = pathlib.Path(
+            path_cwd,
+            "test",
+            "test_data",
+            "solar_photovoltaics_example",
+            "technologies.json",
+        )
+        original_collection = technologydata.TechnologyCollection.from_json(input_file)
+        original_length = len(original_collection)
+
+        new_tech = technologydata.Technology(
+            name="New Technology",
+            detailed_technology="New Tech",
+            region="USA",
+            case="test-case",
+            year=2023,
+            parameters={},
+        )
+
+        new_collection = original_collection.append(new_tech)
+
+        # Check that append returns a new collection
+        assert isinstance(new_collection, technologydata.TechnologyCollection)
+        assert len(new_collection) == original_length + 1
+        # Check that the original collection is unchanged (non-mutating)
+        assert len(original_collection) == original_length
+        # Check that the new technology is in the new collection
+        assert new_collection[-1].name == "New Technology"
+        assert new_collection[-1].region == "USA"
+
+    def test_add(self) -> None:
+        """Test if the __add__ method works correctly for merging collections."""
+        input_file = pathlib.Path(
+            path_cwd,
+            "test",
+            "test_data",
+            "solar_photovoltaics_example",
+            "technologies.json",
+        )
+        collection_a = technologydata.TechnologyCollection.from_json(input_file)
+        collection_b = technologydata.TechnologyCollection(
+            technologies=[
+                technologydata.Technology(
+                    name="Tech A",
+                    detailed_technology="A",
+                    region="EUR",
+                    case="case-a",
+                    year=2025,
+                    parameters={},
+                ),
+                technologydata.Technology(
+                    name="Tech B",
+                    detailed_technology="B",
+                    region="USA",
+                    case="case-b",
+                    year=2026,
+                    parameters={},
+                ),
+            ]
+        )
+
+        # Merge using + operator
+        merged_collection = collection_a + collection_b
+
+        # Check that merge creates a new collection with combined technologies
+        assert isinstance(merged_collection, technologydata.TechnologyCollection)
+        assert len(merged_collection) == len(collection_a) + len(collection_b)
+        # Check that original collections are unchanged
+        assert len(collection_a) == 2
+        assert len(collection_b) == 2
+        # Check that technologies from both collections are present
+        assert merged_collection[0].case == "example-scenario"
+        assert merged_collection[-1].name == "Tech B"
