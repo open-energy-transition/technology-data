@@ -10,7 +10,7 @@ import logging
 import pathlib
 import re
 from collections.abc import Iterator, Sequence
-from typing import TYPE_CHECKING, Annotated, Self
+from typing import TYPE_CHECKING, Annotated, Self, overload
 
 import pandas
 import pydantic
@@ -40,6 +40,35 @@ class TechnologyCollection(pydantic.BaseModel):
     technologies: Annotated[
         list[Technology], pydantic.Field(description="List of Technology objects.")
     ]
+
+    # Given the fact that the return type depends on the input type
+    # We add the overload decorator to provide exact signatures
+    # index: int --> Technology
+    # index: slice --> TechnologyCollection
+    @overload
+    def __getitem__(self, index: int) -> Technology: ...
+
+    @overload
+    def __getitem__(self, index: slice) -> Self: ...
+
+    def __getitem__(self, index: int | slice) -> Technology | Self:
+        """
+        Access a TechnologyCollection by index, slice.
+
+        Parameters
+        ----------
+        index : int | slice
+            Index or slice of the Technology to access.
+
+        Returns
+        -------
+        Technology | Self
+            The requested Technology (if an index is provided) or TechnologyCollection (if a slice is given).
+
+        """
+        if isinstance(index, slice):
+            return self.__class__(technologies=self.technologies[index])
+        return self.technologies[index]
 
     def __iter__(self) -> Iterator[Technology]:  # type: ignore
         """

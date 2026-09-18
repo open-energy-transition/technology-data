@@ -531,3 +531,22 @@ class TestTechnologyCollection:
             status[1]["eac_via_annuity_factor"]
             == "inapplicable: ['eac', 'specific_investment', 'annuity_factor']"
         )
+
+    def test_getitem(self) -> None:
+        """Test if the __getitem__ method works correctly."""
+        input_file = pathlib.Path(
+            path_cwd,
+            "test",
+            "test_data",
+            "solar_photovoltaics_example",
+            "technologies.json",
+        )
+        technology_collection = technologydata.TechnologyCollection.from_json(
+            input_file
+        )
+        assert isinstance(technology_collection[0], technologydata.Technology)
+        assert isinstance(
+            technology_collection[0:1], technologydata.TechnologyCollection
+        )
+        assert technology_collection[0].case == "example-scenario"
+        assert technology_collection[1].case == "example-project"
