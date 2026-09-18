@@ -550,3 +550,25 @@ class TestTechnologyCollection:
         )
         assert technology_collection[0].case == "example-scenario"
         assert technology_collection[1].case == "example-project"
+
+    def test_get_parameter(self) -> None:
+        """Test if the get_parameter method works correctly."""
+        input_file = pathlib.Path(
+            path_cwd,
+            "test",
+            "test_data",
+            "solar_photovoltaics_example",
+            "technologies.json",
+        )
+        technology_collection = technologydata.TechnologyCollection.from_json(
+            input_file
+        )
+        assert len(technology_collection.get_parameter("capacity")) == 2
+        capacity_params = technology_collection.get_parameter("capacity")
+        assert isinstance(capacity_params[0], technologydata.Parameter)
+        assert isinstance(capacity_params[1], technologydata.Parameter)
+        assert capacity_params[0].magnitude == 1.0
+        assert capacity_params[1].magnitude == 3.0
+        assert len(technology_collection.get_parameter("yeah")) == 2
+        assert technology_collection.get_parameter("yeah")[0] is not None
+        assert technology_collection.get_parameter("yeah")[1] is None

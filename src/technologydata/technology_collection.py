@@ -94,6 +94,24 @@ class TechnologyCollection(pydantic.BaseModel):
         """
         return len(self.technologies)
 
+    def get_parameter(self, name: str) -> list[Parameter | None]:
+        """
+        Get parameter values across all technologies in the collection.
+
+        Parameters
+        ----------
+        name : str
+            Parameter name to retrieve.
+
+        Returns
+        -------
+        list[Parameter | None]
+            List with one entry per technology. None for technologies
+            that don't have this parameter.
+
+        """
+        return [tech.parameters.get(name) for tech in self.technologies]
+
     def get(
         self,
         name: str | None = None,
