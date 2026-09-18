@@ -531,3 +531,157 @@ class TestTechnologyCollection:
             status[1]["eac_via_annuity_factor"]
             == "inapplicable: ['eac', 'specific_investment', 'annuity_factor']"
         )
+
+    def test_getitem(self) -> None:
+        """Test if the __getitem__ method works correctly."""
+        input_file = pathlib.Path(
+            path_cwd,
+            "test",
+            "test_data",
+            "solar_photovoltaics_example",
+            "technologies.json",
+        )
+        technology_collection = technologydata.TechnologyCollection.from_json(
+            input_file
+        )
+        assert isinstance(technology_collection[0], technologydata.Technology)
+        assert isinstance(
+            technology_collection[0:1], technologydata.TechnologyCollection
+        )
+        assert technology_collection[0].case == "example-scenario"
+        assert technology_collection[1].case == "example-project"
+
+    def test_get_parameter(self) -> None:
+        """Test if the get_parameter method works correctly."""
+        input_file = pathlib.Path(
+            path_cwd,
+            "test",
+            "test_data",
+            "solar_photovoltaics_example",
+            "technologies.json",
+        )
+        technology_collection = technologydata.TechnologyCollection.from_json(
+            input_file
+        )
+        assert len(technology_collection.get_parameter("capacity")) == 2
+        capacity_params = technology_collection.get_parameter("capacity")
+        assert isinstance(capacity_params[0], technologydata.Parameter)
+        assert isinstance(capacity_params[1], technologydata.Parameter)
+        assert capacity_params[0].magnitude == 1.0
+        assert capacity_params[1].magnitude == 3.0
+        assert len(technology_collection.get_parameter("yeah")) == 2
+        assert technology_collection.get_parameter("yeah")[0] is None
+        assert technology_collection.get_parameter("yeah")[1] is None
+
+    def test_append(self) -> None:
+        """Test if the append method works correctly and is non-mutating."""
+        input_file = pathlib.Path(
+            path_cwd,
+            "test",
+            "test_data",
+            "solar_photovoltaics_example",
+            "technologies.json",
+        )
+        original_collection = technologydata.TechnologyCollection.from_json(input_file)
+        original_length = len(original_collection)
+
+        new_tech = technologydata.Technology(
+            name="New Technology",
+            detailed_technology="New Tech",
+            region="USA",
+            case="test-case",
+            year=2023,
+            parameters={},
+        )
+
+        new_collection = original_collection.append(new_tech)
+
+        # Check that append returns a new collection
+        assert isinstance(new_collection, technologydata.TechnologyCollection)
+        assert len(new_collection) == original_length + 1
+        # Check that the original collection is unchanged (non-mutating)
+        assert len(original_collection) == original_length
+        # Check that the new technology is in the new collection
+        assert new_collection[-1].name == "New Technology"
+        assert new_collection[-1].region == "USA"
+
+    def test_add(self) -> None:
+        """Test if the __add__ method works correctly for merging collections."""
+        input_file = pathlib.Path(
+            path_cwd,
+            "test",
+            "test_data",
+            "solar_photovoltaics_example",
+            "technologies.json",
+        )
+        collection_a = technologydata.TechnologyCollection.from_json(input_file)
+        collection_b = technologydata.TechnologyCollection(
+            technologies=[
+                technologydata.Technology(
+                    name="Tech A",
+                    detailed_technology="A",
+                    region="EUR",
+                    case="case-a",
+                    year=2025,
+                    parameters={},
+                ),
+                technologydata.Technology(
+                    name="Tech B",
+                    detailed_technology="B",
+                    region="USA",
+                    case="case-b",
+                    year=2026,
+                    parameters={},
+                ),
+            ]
+        )
+
+        # Merge using + operator
+        merged_collection = collection_a + collection_b
+
+        # Check that merge creates a new collection with combined technologies
+        assert isinstance(merged_collection, technologydata.TechnologyCollection)
+        assert len(merged_collection) == len(collection_a) + len(collection_b)
+        # Check that original collections are unchanged
+        assert len(collection_a) == 2
+        assert len(collection_b) == 2
+        # Check that technologies from both collections are present
+        assert merged_collection[0].case == "example-scenario"
+        assert merged_collection[-1].name == "Tech B"
+
+    def test_str(self) -> None:
+        """Test if __str__ method returns a compact summary."""
+        # Test with empty collection
+        empty_collection = technologydata.TechnologyCollection(technologies=[])
+        assert str(empty_collection) == "TechnologyCollection(0 technologies)"
+
+        # Test with single technology
+        single_tech = technologydata.Technology(
+            name="Solar PV",
+            detailed_technology="Si-HC",
+            case="baseline",
+            region="DEU",
+            year=2025,
+            parameters={},
+        )
+        single_collection = technologydata.TechnologyCollection(
+            technologies=[single_tech]
+        )
+        result = str(single_collection)
+        assert "1 technologies" in result
+        assert "Solar PV" in result
+        assert "DEU" in result
+        assert "2025" in result
+
+        # Test with larger collection
+        input_file = pathlib.Path(
+            path_cwd,
+            "test",
+            "test_data",
+            "solar_photovoltaics_example",
+            "technologies.json",
+        )
+        collection = technologydata.TechnologyCollection.from_json(input_file)
+        result = str(collection)
+        assert "2 technologies" in result
+        assert "Solar photovoltaics" in result
