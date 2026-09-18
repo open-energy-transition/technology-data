@@ -79,6 +79,56 @@ class Technology(pydantic.BaseModel):
         """
         self.parameters[key] = value
 
+    def __contains__(self, key: str) -> bool:
+        """
+        Check if a parameter exists.
+
+        Parameters
+        ----------
+        key : str
+            Parameter name.
+
+        Returns
+        -------
+        bool
+            True if the parameter exists, False otherwise.
+
+        """
+        return key in self.parameters
+
+    def __delitem__(self, key: str) -> None:
+        """
+        Delete a parameter by name.
+
+        Parameters
+        ----------
+        key : str
+            Parameter name.
+
+        """
+        del self.parameters[key]
+
+    def __str__(self) -> str:
+        """
+        Return a compact human-readable summary of the Technology.
+
+        Returns
+        -------
+        str
+            Summary with name, region, year, case, and parameter names.
+
+        """
+        param_names = list(self.parameters.keys())
+        param_str = (
+            f"{len(param_names)} parameters: {param_names}"
+            if param_names
+            else "no parameters"
+        )
+        return (
+            f"Technology({self.name!r}, region={self.region!r}, year={self.year}, "
+            f"case={self.case!r}, {param_str})"
+        )
+
     def check_consistency(
         self,
         parameters: Sequence[str] | None = None,

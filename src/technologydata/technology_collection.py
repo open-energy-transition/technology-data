@@ -94,6 +94,33 @@ class TechnologyCollection(pydantic.BaseModel):
         """
         return len(self.technologies)
 
+    def __str__(self) -> str:
+        """
+        Return a compact human-readable summary of the TechnologyCollection.
+
+        Returns
+        -------
+        str
+            Summary with count and brief technology information.
+
+        """
+        count = len(self.technologies)
+        if count == 0:
+            return "TechnologyCollection(0 technologies)"
+        elif count <= 3:
+            tech_summaries = [
+                f"{t.name} ({t.region}, {t.year})" for t in self.technologies
+            ]
+            return f"TechnologyCollection({count} technologies: {', '.join(tech_summaries)})"
+        else:
+            first_tech = self.technologies[0]
+            last_tech = self.technologies[-1]
+            return (
+                f"TechnologyCollection({count} technologies: "
+                f"{first_tech.name} ({first_tech.region}, {first_tech.year}) ... "
+                f"{last_tech.name} ({last_tech.region}, {last_tech.year}))"
+            )
+
     def get_parameter(self, name: str) -> list[Parameter | None]:
         """
         Get parameter values across all technologies in the collection.

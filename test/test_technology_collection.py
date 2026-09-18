@@ -648,3 +648,40 @@ class TestTechnologyCollection:
         # Check that technologies from both collections are present
         assert merged_collection[0].case == "example-scenario"
         assert merged_collection[-1].name == "Tech B"
+
+    def test_str(self) -> None:
+        """Test if __str__ method returns a compact summary."""
+        # Test with empty collection
+        empty_collection = technologydata.TechnologyCollection(technologies=[])
+        assert str(empty_collection) == "TechnologyCollection(0 technologies)"
+
+        # Test with single technology
+        single_tech = technologydata.Technology(
+            name="Solar PV",
+            detailed_technology="Si-HC",
+            case="baseline",
+            region="DEU",
+            year=2025,
+            parameters={},
+        )
+        single_collection = technologydata.TechnologyCollection(
+            technologies=[single_tech]
+        )
+        result = str(single_collection)
+        assert "1 technologies" in result
+        assert "Solar PV" in result
+        assert "DEU" in result
+        assert "2025" in result
+
+        # Test with larger collection
+        input_file = pathlib.Path(
+            path_cwd,
+            "test",
+            "test_data",
+            "solar_photovoltaics_example",
+            "technologies.json",
+        )
+        collection = technologydata.TechnologyCollection.from_json(input_file)
+        result = str(collection)
+        assert "2 technologies" in result
+        assert "Solar photovoltaics" in result
