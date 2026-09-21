@@ -10,7 +10,7 @@ import logging
 import pathlib
 import re
 from collections.abc import Iterator, Sequence
-from typing import TYPE_CHECKING, Annotated, Self
+from typing import TYPE_CHECKING, Annotated, Self, overload
 
 import pandas
 import pydantic
@@ -41,6 +41,35 @@ class TechnologyCollection(pydantic.BaseModel):
         list[Technology], pydantic.Field(description="List of Technology objects.")
     ]
 
+    # Given the fact that the return type depends on the input type
+    # We add the overload decorator to provide exact signatures
+    # index: int --> Technology
+    # index: slice --> TechnologyCollection
+    @overload
+    def __getitem__(self, index: int) -> Technology: ...
+
+    @overload
+    def __getitem__(self, index: slice) -> Self: ...
+
+    def __getitem__(self, index: int | slice) -> Technology | Self:
+        """
+        Access a TechnologyCollection by index, slice.
+
+        Parameters
+        ----------
+        index : int | slice
+            Index or slice of the Technology to access.
+
+        Returns
+        -------
+        Technology | Self
+            The requested Technology (if an index is provided) or TechnologyCollection (if a slice is given).
+
+        """
+        if isinstance(index, slice):
+            return self.__class__(technologies=self.technologies[index])
+        return self.technologies[index]
+
     def __iter__(self) -> Iterator[Technology]:  # type: ignore
         """
         Return an iterator over the list of Technology objects.
@@ -64,6 +93,51 @@ class TechnologyCollection(pydantic.BaseModel):
 
         """
         return len(self.technologies)
+
+    def __str__(self) -> str:
+        """
+        Return a compact human-readable summary of the TechnologyCollection.
+
+        Returns
+        -------
+        str
+            Summary with count and brief technology information.
+
+        """
+        count = len(self.technologies)
+        if count == 0:
+            return "TechnologyCollection(0 technologies)"
+        elif count <= 3:
+            tech_summaries = [
+                f"{t.name} ({t.region}, {t.year})" for t in self.technologies
+            ]
+            return f"TechnologyCollection({count} technologies: {', '.join(tech_summaries)})"
+        else:
+            first_tech = self.technologies[0]
+            last_tech = self.technologies[-1]
+            return (
+                f"TechnologyCollection({count} technologies: "
+                f"{first_tech.name} ({first_tech.region}, {first_tech.year}) ... "
+                f"{last_tech.name} ({last_tech.region}, {last_tech.year}))"
+            )
+
+    def get_parameter(self, name: str) -> list[Parameter | None]:
+        """
+        Get parameter values across all technologies in the collection.
+
+        Parameters
+        ----------
+        name : str
+            Parameter name to retrieve.
+
+        Returns
+        -------
+        list[Parameter | None]
+            List with one entry per technology. None for technologies
+            that don't have this parameter.
+
+        """
+        return [tech.parameters.get(name) for tech in self.technologies]
 
     def get(
         self,
@@ -132,6 +206,40 @@ class TechnologyCollection(pydantic.BaseModel):
             ]
 
         return TechnologyCollection(technologies=filtered_technologies)  # type: ignore
+
+    def __add__(self, other: Self) -> Self:
+        """
+        Merge two TechnologyCollection objects using the + operator.
+
+        Parameters
+        ----------
+        other : TechnologyCollection
+            The collection to merge with.
+
+        Returns
+        -------
+        TechnologyCollection
+            A new TechnologyCollection containing technologies from both collections.
+
+        """
+        return self.__class__(technologies=self.technologies + other.technologies)
+
+    def append(self, tech: Technology) -> Self:
+        """
+        Append a technology to an existing TechnologyCollection.
+
+        Parameters
+        ----------
+        tech : Technology
+            The technology to add.
+
+        Returns
+        -------
+        TechnologyCollection
+            A new TechnologyCollection with the appended technology.
+
+        """
+        return self + self.__class__(technologies=[tech])
 
     def to_dataframe(self) -> pandas.DataFrame:
         """
