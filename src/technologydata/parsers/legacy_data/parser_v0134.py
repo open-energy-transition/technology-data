@@ -111,7 +111,17 @@ class LegacyDataV0134Parser(ParserBase):
             heating_value = "LHV"
             return standardized_unit, carrier_str, heating_value
 
-        # Pattern 6: Energy unit with el/th/thermal carrier to mass (check BEFORE Pattern 5)
+        # Pattern 5: Mass/energy ratio with carriers (excludes el/th/thermal via regex)
+        match5 = re.match(UnitPatternRegex.MASS_ENERGY_RATIO.value, input_unit)
+        if match5:
+            unit1, carrier1, unit2, carrier2 = match5.groups()
+            standardized_unit = f"{unit1}/{unit2}"
+            carrier_str = f"{carrier1}/{carrier2}"
+            # Determine heating value based on unit types
+            heating_value_result = "LHV" if ("Wh" in unit1 or "Wh" in unit2) else None
+            return standardized_unit, carrier_str, heating_value_result
+
+        # Pattern 6: Energy unit with el/th/thermal carrier to mass
         match6 = re.match(UnitPatternRegex.ENERGY_THERMAL_MASS.value, input_unit)
         if match6:
             unit, carrier1, carrier2 = match6.groups()
@@ -121,16 +131,6 @@ class LegacyDataV0134Parser(ParserBase):
             carrier_str = f"{normalized_carrier1}/{carrier2}"
             heating_value = "LHV"
             return standardized_unit, carrier_str, heating_value
-
-        # Pattern 5: Mass/energy ratio with carriers
-        match5 = re.match(UnitPatternRegex.MASS_ENERGY_RATIO.value, input_unit)
-        if match5:
-            unit1, carrier1, unit2, carrier2 = match5.groups()
-            standardized_unit = f"{unit1}/{unit2}"
-            carrier_str = f"{carrier1}/{carrier2}"
-            # Determine heating value based on unit types
-            heating_value_result = "LHV" if ("Wh" in unit1 or "Wh" in unit2) else None
-            return standardized_unit, carrier_str, heating_value_result
 
         # Pattern 7: Currency with generic unit and carrier per time (in parentheses)
         match7 = re.match(

@@ -44,7 +44,8 @@ class UnitPatternRegex(StrEnum):
 
     # Pattern 5: Mass/energy ratio with carriers (order agnostic)
     # Examples: t_CO2/MWh_FT, MWh_el/t_CO2, MWh_H2/t_HLOHC
-    MASS_ENERGY_RATIO = r"^(t|[kMGT]?Wh)_([A-Za-z0-9]+)/([kMGT]?Wh|t)_([A-Za-z0-9]+)$"
+    # Excludes el/th/thermal carriers which are handled by Pattern 6
+    MASS_ENERGY_RATIO = r"^(t|[kMGT]?Wh)_(?!(?:el|th|thermal)/)([A-Za-z0-9]+)/([kMGT]?Wh|t)_([A-Za-z0-9]+)$"
 
     # Pattern 6: Energy unit with el/th/thermal carrier to mass with carrier
     # Examples: MWh_el/t_CO2, MWh_th/t_cement, kWh_thermal/t_clinker
