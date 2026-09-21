@@ -24,13 +24,13 @@ nav:
   - Technology Collection: user_guide/technology_collection.md
   - Equation System: user_guide/equations.md
   - DEA Energy Storage Parser: user_guide/dea_energy_storage_parser.md
-  - Manual Input USA Parser: user_guide/manual_input_usa_parser.md
+  - Legacy Data Parser: user_guide/legacy_data_parser.md
   - Data Accessor: user_guide/data_accessor.md
   - Use Cases: user_guide/design.md
 
 - Examples:
   - Danish Energy Agency Parser (version 10): examples/dea_storage_v10.md
-  - Manual Input USA Parser (version 0.13.4): examples/manual_input_usa_v0134.md
+  - Legacy Data Parser (version 0.13.4): examples/legacy_data_v0134.md
 
 - API Reference:
   - Data Package: api/datapackage.md
@@ -42,7 +42,7 @@ nav:
   - Technology Collection: api/technology_collection.md
   - Data Accessor: api/data_accessor.md
   - Dea Energy Storage Parser: api/dea_energy_storage_parser.md
-  - Manual Input USA Parser: api/manual_input_usa_parser.md
+  - Legacy Data Parser: api/legacy_data_parser.md
   - Utils:
     - Commons:
       - Common functionalities: api/commons/commons.md

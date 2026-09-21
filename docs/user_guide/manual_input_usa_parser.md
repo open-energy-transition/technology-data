@@ -18,22 +18,22 @@ While it is possible to use the parser directly, the recommended way to access t
 If you need to use the parser directly, you can instantiate `ManualInputUsaParser` and call the `parse` method with the desired version and other parameters.
 
 ```python
-from technologydata.parsers.manual_input_usa import ManualInputUsaParser
+from technologydata.parsers.legacy_data import LegacyDataParser
 import pathlib
 
 # Instantiate the main parser
-manual_input_parser = ManualInputUsaParser()
+legacy_data_parser = LegacyDataParser()
 
 # Define parameters
 version = "v0.13.4"
-input_file = pathlib.Path("path/to/your/manual_input_usa.csv")
+input_file = pathlib.Path("path/to/your/legacy_data.csv")
 num_digits = 3
 archive_source = False
 filter_params = True
 export_schema = False
 
 # Parse the data
-manual_input_parser.parse(
+legacy_data_parser.parse(
     version=version,
     input_path=input_file,
     num_digits=num_digits,
@@ -71,8 +71,8 @@ The `parse` method orchestrates the entire parsing process for the `v0.13.4` dat
 -   `**kwargs`:
   -   `export_schema` (`bool`): If `True`, exports the Pydantic schema for the data models.
 
-The processed data is saved to `technologies.json` and `sources.json` in the `src/technologydata/parsers/manual_input_usa/v0.13.4/` directory.
+The processed data is saved to `technologies.json` and `sources.json` in the `../../src/technologydata/parsers/legacy_data` directory.
 
 ## API Reference
 
-Please refer to the [API documentation](../api/manual_input_usa_parser.md) for detailed information on the class methods and attributes.
+Please refer to the [API documentation](../api/legacy_data_parser.md) for detailed information on the class methods and attributes.

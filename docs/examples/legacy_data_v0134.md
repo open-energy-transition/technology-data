@@ -12,11 +12,11 @@ SPDX-License-Identifier: MIT
 !!! note
     This example refers specifically to **version 0.13.4** (`v0134`) of the Manual Input USA dataset.
 
-The Manual Input USA data parser demonstrates a data-cleaning and transformation pipeline for converting manually curated, USA-specific tabular data into the `technologydata` schema files `technologies.json` and `sources.json`. The parser is implemented in `src/technologydata/parsers/manual_input_usa/`.
+The Manual Input USA data parser demonstrates a data-cleaning and transformation pipeline for converting manually curated, USA-specific tabular data into the `technologydata` schema files `technologies.json` and `sources.json`. The parser is implemented in `../../src/technologydata/parsers/legacy_data`.
 
 ## Dataset Description
 
-The original dataset is a manually curated CSV file containing USA-specific technology parameters available from the [PyPSA technology-data repository](https://github.com/PyPSA/technology-data/blob/v0.13.4/inputs/US/manual_input_usa.csv). The raw source file is included in the repository at `src/technologydata/parsers/raw/manual_input_usa.csv`.
+The original dataset is a manually curated CSV file containing USA-specific technology parameters available from the [PyPSA technology-data repository](https://github.com/PyPSA/technology-data/blob/v0.13.4/inputs/US/manual_input_usa.csv). The raw source file is included in the repository at `../../src/technologydata/parsers/raw/legacy_data/manual_input_usa.csv`.
 
 The dataset is in CSV format and includes a flat table of technology parameters for various energy technologies relevant to the USA context. Columns include `technology`, `parameter`, `year`, `value`, `unit`, `currency_year`, `source`, `further_description`, `financial_case`, and `scenario`. Rows are individual parameter records (parameter value + unit + context) for technologies with different scenarios and financial cases.
 
@@ -26,7 +26,7 @@ The parser is articulated in the following steps.
 
 ### Read the raw data
 
-The script reads the raw data available at `src/technologydata/parsers/raw/manual_input_usa.csv` in a `pandas` dataframe. It uses `pandas.read_csv(..., dtype=str, na_values="None")`. All entries are handled as strings initially except for the `value` column which is converted to float.
+The script reads the raw data available at `../../src/technologydata/parsers/raw/legacy_data/manual_input_usa.csv` in a `pandas` dataframe. It uses `pandas.read_csv(..., dtype=str, na_values="None")`. All entries are handled as strings initially except for the `value` column which is converted to float.
 
 ### Data cleaning, validation and dealing with missing/null values
 
@@ -76,13 +76,13 @@ from technologydata import DataAccessor
 
 # Create an accessor for the version to be parsed
 parser_accessor = DataAccessor(
-    data_source="manual_input_usa",
+    data_source="legacy_data",
     version="v0.13.4"
 )
 
 # Run the parser with desired options
 parser_accessor.parse(
-    input_file_name="manual_input_usa.csv",
+    input_file_name="legacy_data.csv",
     num_digits=3,
     archive_source=True,
     export_schema=True,
@@ -99,7 +99,7 @@ The `parse` method accepts the following arguments:
 
 ### Outputs
 
-The parser generates the following outputs inside `src/technologydata/parsers/manual_input_usa/v0.13.4/`:
+The parser generates the following outputs inside `../../src/technologydata/parsers/legacy_data`:
 
 - `technologies.json`
 - `sources.json`

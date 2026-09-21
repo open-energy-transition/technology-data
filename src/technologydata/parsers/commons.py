@@ -5,10 +5,60 @@
 """Classes for Commons methods for the data parsers."""
 
 import argparse
+from enum import StrEnum
 from typing import Annotated, Any
 
 import pydantic
 from pydantic import BaseModel, ConfigDict
+
+
+class UnitPatternRegex(StrEnum):
+    """
+    Enum defining regex patterns for extracting units, carriers, and heating values.
+
+    Each pattern matches a specific format of unit strings commonly found in
+    energy technology data. The patterns handle various combinations of:
+    - Currency units (USD, EUR) with optional year
+    - Energy units (kWh, MWh, GWh, etc.)
+    - Mass units (t)
+    - Carriers (H2, CH4, CO2, FT, etc.)
+    - Time dimensions (/h)
+    - Distance dimensions (/km)
+    """
+
+    # Pattern 1: Currency with optional year and power/energy carrier
+    # Examples: USD_2022/MW_FT, EUR/kWh_H2, EUR_2020/kW_CH4
+    CURRENCY_POWER_CARRIER = r"^(USD|EUR)(?:_(\d{4}))?/([kMGT]?Wh?)_([A-Za-z0-9]+)$"
+
+    # Pattern 2: Currency with optional year, mass carrier and time (without parentheses)
+    # Examples: USD_2023/t_CO2/h, EUR/t_cement/h
+    CURRENCY_MASS_TIME = r"^(USD|EUR)(?:_(\d{4}))?/t_([A-Za-z0-9]+)/h$"
+
+    # Pattern 3: Currency with optional year, mass carrier and time (with parentheses)
+    # Examples: EUR/(t_HVC/h), USD_2022/(t_CO2/h)
+    CURRENCY_MASS_TIME_PAREN = r"^(USD|EUR)(?:_(\d{4}))?/\(t_([A-Za-z0-9]+)/h\)$"
+
+    # Pattern 4: Energy ratio with carriers
+    # Examples: MWh_H2/MWh_FT, MWh_el/MWh_CH4, kWh_NG/kWh_H2
+    ENERGY_ENERGY_RATIO = r"^([kMGT]?Wh)_([A-Za-z0-9]+)/([kMGT]?Wh)_([A-Za-z0-9]+)$"
+
+    # Pattern 5: Mass/energy ratio with carriers (order agnostic)
+    # Examples: t_CO2/MWh_FT, MWh_el/t_CO2, MWh_H2/t_HLOHC
+    MASS_ENERGY_RATIO = r"^(t|[kMGT]?Wh)_([A-Za-z0-9]+)/([kMGT]?Wh|t)_([A-Za-z0-9]+)$"
+
+    # Pattern 6: Energy unit with el/th/thermal carrier to mass with carrier
+    # Examples: MWh_el/t_CO2, MWh_th/t_cement, kWh_thermal/t_clinker
+    ENERGY_THERMAL_MASS = r"^([kMGT]?Wh)_(el|th|thermal)/t_([A-Za-z0-9]+)$"
+
+    # Pattern 7: Currency with generic unit and carrier per time (in parentheses)
+    # Examples: EUR/(t_HVC/h), USD/(MW_H2/h)
+    CURRENCY_GENERIC_TIME_PAREN = (
+        r"^(USD|EUR)(?:_(\d{4}))?/\(([A-Za-z0-9]+)_([A-Za-z0-9]+)/h\)$"
+    )
+
+    # Pattern 8: Currency per mass/time with distance dimension
+    # Examples: EUR/(tCO2/h)/km, USD_2023/(t_cement/h)/km
+    CURRENCY_MASS_TIME_DISTANCE = r"^(USD|EUR)(?:_(\d{4}))?/\(t([A-Za-z0-9]+)/h\)/km$"
 
 
 class ArgumentConfig(BaseModel):

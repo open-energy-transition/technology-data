@@ -2,20 +2,20 @@
 #
 # SPDX-License-Identifier: MIT
 
-"""Provide a parser for the technology-data manual_input_usa.csv dataset."""
+"""Provide a parser for the technology-data legacy_data.csv dataset."""
 
 import logging
 import pathlib
 
 from technologydata.parsers.data_parser_base import ParserBase
-from technologydata.parsers.manual_input_usa.parser_v0134 import (
-    ManualInputUSAV0134Parser,
+from technologydata.parsers.legacy_data.parser_v0134 import (
+    LegacyDataV0134Parser,
 )
 
 
-class ManualInputUsaParser:
+class LegacyDataParser:
     """
-    Main parser for the technology_data manual_input_usa.csv dataset.
+    Main parser for the technology_data legacy_data.csv dataset.
 
     Dispatches to version-specific parser implementations.
     """
@@ -23,8 +23,8 @@ class ManualInputUsaParser:
     def __init__(self) -> None:
         """Initialize the parser and maps versions to parser classes."""
         self._parsers: dict[str, type[ParserBase]] = {
-            "v0.13.4": ManualInputUSAV0134Parser,
-            # "v0.13.5": ManualInputUSAV0135Parser, # Add new versions here
+            "v0.13.4": LegacyDataV0134Parser,
+            # "v0.13.5": LegacyDataV0135Parser, # Add new versions here
         }
 
     def get_supported_versions(self) -> list[str]:
@@ -41,7 +41,7 @@ class ManualInputUsaParser:
         export_schema: bool,
     ) -> None:
         """
-        Parse the specified version of the technology_data manual_input_usa.csv dataset.
+        Parse the specified version of the technology_data legacy_data.csv dataset.
 
         This method selects the appropriate parser for the given version and
         delegates the parsing task to it.
@@ -77,7 +77,7 @@ class ManualInputUsaParser:
         parser_instance = parser_class()
 
         logging.info(
-            f"Parsing the technology-data manual_input_usa.csv. dataset version {version} using {parser_class.__name__}"
+            f"Parsing the technology-data legacy_data.csv. dataset version {version} using {parser_class.__name__}"
         )
         return parser_instance.parse(
             input_path=input_path,
@@ -89,4 +89,4 @@ class ManualInputUsaParser:
 
 
 # Make the main parser class available for import from the module
-__all__ = ["ManualInputUsaParser", "ManualInputUSAV0134Parser"]
+__all__ = ["LegacyDataParser", "LegacyDataV0134Parser"]
