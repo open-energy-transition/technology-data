@@ -61,6 +61,9 @@ class TestLegacyDataParserV0134:
             ("EUR/t_steel/h", "EUR/t/h", "1/steel", None),
             ("MWh_el/t_steel", "MWh/t", "el/steel", "LHV"),
             ("MWh_NG/MWh_H2", "MWh/MWh", "NG/H2", "LHV"),
+            ("MWh_coal/MWh_H2", "MWh/MWh", "coal/H2", "LHV"),
+            ("MWh_oil/MWh_H2", "MWh/MWh", "oil/H2", "LHV"),
+            ("MWh_wood/MWh_H2", "MWh/MWh", "wood/H2", "LHV"),
         ],
     )  # type: ignore
     def test_extract_units_carriers_heating_value(
