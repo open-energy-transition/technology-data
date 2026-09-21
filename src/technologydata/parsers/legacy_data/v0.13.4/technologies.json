@@ -3301,7 +3301,7 @@
                     "magnitude": 2.28,
                     "units": "USD_2022 / kilowatt_hour",
                     "carrier": "1 / hydrogen",
-                    "heating_value": "lower_heating_value",
+                    "heating_value": "1 / lower_heating_value",
                     "provenance": null,
                     "note": null,
                     "sources": {
@@ -3390,7 +3390,7 @@
                     "magnitude": 16.87,
                     "units": "USD_2022 / kilowatt_hour",
                     "carrier": "1 / hydrogen",
-                    "heating_value": "lower_heating_value",
+                    "heating_value": "1 / lower_heating_value",
                     "provenance": null,
                     "note": null,
                     "sources": {
