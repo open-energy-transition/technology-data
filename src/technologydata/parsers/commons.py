@@ -5,6 +5,7 @@
 """Classes for Commons methods for the data parsers."""
 
 import argparse
+import re
 from enum import StrEnum
 from typing import Annotated, Any
 
@@ -60,6 +61,81 @@ class UnitPatternRegex(StrEnum):
     # Pattern 8: Currency per mass/time with distance dimension
     # Examples: EUR/(tCO2/h)/km, USD_2023/(t_cement/h)/km
     CURRENCY_MASS_TIME_DISTANCE = r"^(USD|EUR)(?:_(\d{4}))?/\(t([A-Za-z0-9]+)/h\)/km$"
+
+
+class UnitCarrierHeatingValueExtractor:
+    """Process matched unit patterns into standardized unit, carrier, and heating value tuples."""
+
+    @staticmethod
+    def process_currency_power_carrier(match: re.Match[str]) -> tuple[str, str, str]:
+        """Process currency with power/energy carrier pattern."""
+        currency, year, unit, carrier = match.groups()
+        standardized_unit = (
+            f"{currency}_{year}/{unit}" if year else f"{currency}/{unit}"
+        )
+        carrier_str = f"1/{carrier}"
+        # Distinguish between power (W) and energy (Wh) units
+        heating_value = "LHV" if unit.endswith("h") else "1/LHV"
+        return standardized_unit, carrier_str, heating_value
+
+    @staticmethod
+    def process_currency_mass_time(match: re.Match[str]) -> tuple[str, str, None]:
+        """Process currency with mass carrier and time pattern."""
+        currency, year, carrier = match.groups()
+        standardized_unit = f"{currency}_{year}/t/h" if year else f"{currency}/t/h"
+        carrier_str = f"1/{carrier}"
+        return standardized_unit, carrier_str, None
+
+    @staticmethod
+    def process_energy_ratio(match: re.Match[str]) -> tuple[str, str, str]:
+        """Process energy ratio with carriers pattern."""
+        unit1, carrier1, unit2, carrier2 = match.groups()
+        standardized_unit = f"{unit1}/{unit2}"
+        # Normalize "th" to "thermal"
+        normalized_carrier1 = "thermal" if carrier1 == "th" else carrier1
+        normalized_carrier2 = "thermal" if carrier2 == "th" else carrier2
+        carrier_str = f"{normalized_carrier1}/{normalized_carrier2}"
+        return standardized_unit, carrier_str, "LHV"
+
+    @staticmethod
+    def process_mass_energy_ratio(match: re.Match[str]) -> tuple[str, str, str | None]:
+        """Process mass/energy ratio with carriers pattern."""
+        unit1, carrier1, unit2, carrier2 = match.groups()
+        standardized_unit = f"{unit1}/{unit2}"
+        carrier_str = f"{carrier1}/{carrier2}"
+        # Determine heating value based on unit types
+        heating_value = "LHV" if ("Wh" in unit1 or "Wh" in unit2) else None
+        return standardized_unit, carrier_str, heating_value
+
+    @staticmethod
+    def process_energy_thermal_mass(match: re.Match[str]) -> tuple[str, str, str]:
+        """Process energy unit with el/th/thermal carrier to mass pattern."""
+        unit, carrier1, carrier2 = match.groups()
+        standardized_unit = f"{unit}/t"
+        # Normalize "th" to "thermal"
+        normalized_carrier1 = "thermal" if carrier1 == "th" else carrier1
+        carrier_str = f"{normalized_carrier1}/{carrier2}"
+        return standardized_unit, carrier_str, "LHV"
+
+    @staticmethod
+    def process_currency_generic_time(match: re.Match[str]) -> tuple[str, str, None]:
+        """Process currency with generic unit and carrier per time pattern."""
+        currency, year, unit_type, carrier = match.groups()
+        standardized_unit = (
+            f"{currency}_{year}/{unit_type}/h" if year else f"{currency}/{unit_type}/h"
+        )
+        return standardized_unit, f"1/{carrier}", None
+
+    @staticmethod
+    def process_currency_mass_time_distance(
+        match: re.Match[str],
+    ) -> tuple[str, str, None]:
+        """Process currency per mass/time with distance dimension pattern."""
+        currency, year, carrier = match.groups()
+        standardized_unit = (
+            f"{currency}_{year}/t/h/km" if year else f"{currency}/t/h/km"
+        )
+        return standardized_unit, f"1/{carrier}", None
 
 
 class ArgumentConfig(BaseModel):

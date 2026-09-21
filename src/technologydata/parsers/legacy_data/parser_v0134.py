@@ -12,7 +12,10 @@ from typing import Any
 import pandas
 
 from technologydata.parameter import Parameter
-from technologydata.parsers.commons import UnitPatternRegex
+from technologydata.parsers.commons import (
+    UnitCarrierHeatingValueExtractor,
+    UnitPatternRegex,
+)
 from technologydata.parsers.data_parser_base import ParserBase
 from technologydata.source import Source
 from technologydata.source_collection import SourceCollection
@@ -72,91 +75,47 @@ class LegacyDataV0134Parser(ParserBase):
             return input_unit, None, None
 
         # Pattern 1: Currency with optional year and power/energy carrier
-        match1 = re.match(UnitPatternRegex.CURRENCY_POWER_CARRIER.value, input_unit)
-        if match1:
-            currency, year, unit, carrier = match1.groups()
-            standardized_unit = (
-                f"{currency}_{year}/{unit}" if year else f"{currency}/{unit}"
+        match = re.match(UnitPatternRegex.CURRENCY_POWER_CARRIER.value, input_unit)
+        if match:
+            return UnitCarrierHeatingValueExtractor.process_currency_power_carrier(
+                match
             )
-            carrier_str = f"1/{carrier}"
-            # Distinguish between power (W) and energy (Wh) units
-            heating_value = "LHV" if unit.endswith("h") else "1/LHV"
-            return standardized_unit, carrier_str, heating_value
 
-        # Pattern 2: Currency with optional year, mass carrier and time (without parentheses)
-        match2 = re.match(UnitPatternRegex.CURRENCY_MASS_TIME.value, input_unit)
-        if match2:
-            currency, year, carrier = match2.groups()
-            standardized_unit = f"{currency}_{year}/t/h" if year else f"{currency}/t/h"
-            carrier_str = f"1/{carrier}"
-            return standardized_unit, carrier_str, None
+        # Pattern 2 & 3: Currency with mass carrier and time (with or without parentheses)
+        match = re.match(UnitPatternRegex.CURRENCY_MASS_TIME.value, input_unit)
+        if match:
+            return UnitCarrierHeatingValueExtractor.process_currency_mass_time(match)
 
-        # Pattern 3: Currency with optional year and mass/time in parentheses
-        match3 = re.match(UnitPatternRegex.CURRENCY_MASS_TIME_PAREN.value, input_unit)
-        if match3:
-            currency, year, carrier = match3.groups()
-            standardized_unit = f"{currency}_{year}/t/h" if year else f"{currency}/t/h"
-            carrier_str = f"1/{carrier}"
-            return standardized_unit, carrier_str, None
+        match = re.match(UnitPatternRegex.CURRENCY_MASS_TIME_PAREN.value, input_unit)
+        if match:
+            return UnitCarrierHeatingValueExtractor.process_currency_mass_time(match)
 
         # Pattern 4: Energy ratio with carriers
-        match4 = re.match(UnitPatternRegex.ENERGY_ENERGY_RATIO.value, input_unit)
-        if match4:
-            unit1, carrier1, unit2, carrier2 = match4.groups()
-            standardized_unit = f"{unit1}/{unit2}"
-            # Normalize "th" to "thermal"
-            normalized_carrier1 = "thermal" if carrier1 == "th" else carrier1
-            normalized_carrier2 = "thermal" if carrier2 == "th" else carrier2
-            carrier_str = f"{normalized_carrier1}/{normalized_carrier2}"
-            heating_value = "LHV"
-            return standardized_unit, carrier_str, heating_value
+        match = re.match(UnitPatternRegex.ENERGY_ENERGY_RATIO.value, input_unit)
+        if match:
+            return UnitCarrierHeatingValueExtractor.process_energy_ratio(match)
 
         # Pattern 5: Mass/energy ratio with carriers (excludes el/th/thermal via regex)
-        match5 = re.match(UnitPatternRegex.MASS_ENERGY_RATIO.value, input_unit)
-        if match5:
-            unit1, carrier1, unit2, carrier2 = match5.groups()
-            standardized_unit = f"{unit1}/{unit2}"
-            carrier_str = f"{carrier1}/{carrier2}"
-            # Determine heating value based on unit types
-            heating_value_result = "LHV" if ("Wh" in unit1 or "Wh" in unit2) else None
-            return standardized_unit, carrier_str, heating_value_result
+        match = re.match(UnitPatternRegex.MASS_ENERGY_RATIO.value, input_unit)
+        if match:
+            return UnitCarrierHeatingValueExtractor.process_mass_energy_ratio(match)
 
         # Pattern 6: Energy unit with el/th/thermal carrier to mass
-        match6 = re.match(UnitPatternRegex.ENERGY_THERMAL_MASS.value, input_unit)
-        if match6:
-            unit, carrier1, carrier2 = match6.groups()
-            standardized_unit = f"{unit}/t"
-            # Normalize "th" to "thermal"
-            normalized_carrier1 = "thermal" if carrier1 == "th" else carrier1
-            carrier_str = f"{normalized_carrier1}/{carrier2}"
-            heating_value = "LHV"
-            return standardized_unit, carrier_str, heating_value
+        match = re.match(UnitPatternRegex.ENERGY_THERMAL_MASS.value, input_unit)
+        if match:
+            return UnitCarrierHeatingValueExtractor.process_energy_thermal_mass(match)
 
         # Pattern 7: Currency with generic unit and carrier per time (in parentheses)
-        match7 = re.match(
-            UnitPatternRegex.CURRENCY_GENERIC_TIME_PAREN.value, input_unit
-        )
-        if match7:
-            currency, year, unit_type, carrier = match7.groups()
-            standardized_unit = (
-                f"{currency}_{year}/{unit_type}/h"
-                if year
-                else f"{currency}/{unit_type}/h"
-            )
-            carrier_str = f"1/{carrier}"
-            return standardized_unit, carrier_str, None
+        match = re.match(UnitPatternRegex.CURRENCY_GENERIC_TIME_PAREN.value, input_unit)
+        if match:
+            return UnitCarrierHeatingValueExtractor.process_currency_generic_time(match)
 
         # Pattern 8: Currency per mass/time with distance dimension
-        match8 = re.match(
-            UnitPatternRegex.CURRENCY_MASS_TIME_DISTANCE.value, input_unit
-        )
-        if match8:
-            currency, year, carrier = match8.groups()
-            standardized_unit = (
-                f"{currency}_{year}/t/h/km" if year else f"{currency}/t/h/km"
+        match = re.match(UnitPatternRegex.CURRENCY_MASS_TIME_DISTANCE.value, input_unit)
+        if match:
+            return UnitCarrierHeatingValueExtractor.process_currency_mass_time_distance(
+                match
             )
-            carrier_str = f"1/{carrier}"
-            return standardized_unit, carrier_str, None
 
         # No pattern matched - return as-is
         return input_unit, None, None
