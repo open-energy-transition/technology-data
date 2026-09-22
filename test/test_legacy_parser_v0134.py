@@ -6,7 +6,7 @@
 
 import pytest
 
-from technologydata.parsers.legacy_data import LegacyDataV0134Parser
+from technologydata.parsers.legacy_input_data import LegacyInputDataV0134Parser
 
 
 class TestLegacyDataParserV0134:
@@ -74,5 +74,7 @@ class TestLegacyDataParserV0134:
         expected_heating: str | None,
     ) -> None:
         """Test extraction of units, carriers, and heating values."""
-        result = LegacyDataV0134Parser._extract_units_carriers_heating_value(input_unit)
+        result = LegacyInputDataV0134Parser._extract_units_carriers_heating_value(
+            input_unit
+        )
         assert result == (expected_unit, expected_carrier, expected_heating)

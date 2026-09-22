@@ -86,9 +86,9 @@ class TestDataAccessor:
         assert len(data_package.technologies) == 136
 
     def test_parse_and_access_data_legacy_data(self) -> None:
-        """Test parse and load data for legacy_data/usa.csv."""
-        data_accessor = DataAccessor(data_source="legacy_data", version="v0.13.4")
-        file_name = "legacy_data/usa.csv"
+        """Test parse and load data for legacy_input_data/usa.csv."""
+        data_accessor = DataAccessor(data_source="legacy_input_data", version="v0.13.4")
+        file_name = "legacy_input_data/usa.csv"
         data_accessor.parse(file_name, num_digits=3)
         data_package = data_accessor.load()
 
@@ -97,7 +97,7 @@ class TestDataAccessor:
         assert data_package is not None
         assert data_package.technologies is not None
         assert data_package.sources is not None
-        assert data_package.name == "legacy_data"
+        assert data_package.name == "legacy_input_data"
         assert data_package.version == "v0.13.4"
         assert len(data_package.technologies) == 85
 
@@ -132,13 +132,13 @@ class TestDataAccessor:
     #     target_url = f"src/technologydata/parsers/{data_source}/{version}/"
     #     url = base_url + commit_sha + target_url
     #     data_accessor = DataAccessor(
-    #         data_source="legacy_data", version="v0.13.4", data_path=tmp_path
+    #         data_source="legacy_input_data", version="v0.13.4", data_path=tmp_path
     #     )
     #     dp = data_accessor.download(url)
     #     assert dp is not None
     #     assert dp.sources is not None
     #     assert dp.technologies is not None
-    #     assert dp.name == "legacy_data"
+    #     assert dp.name == "legacy_input_data"
     #     assert dp.version == "v0.13.4"
     #     assert len(dp.sources) == 1
     #     assert len(dp.technologies) == 85

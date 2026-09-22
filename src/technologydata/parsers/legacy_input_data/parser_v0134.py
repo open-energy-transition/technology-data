@@ -2,7 +2,7 @@
 #
 # SPDX-License-Identifier: MIT
 
-"""Parser for version 0.13.4 of the legacy_data/other.csv and legacy_data/usa.csv datasets."""
+"""Parser for version 0.13.4 of the raw/legacy_input_data/other.csv and raw/legacy_input_data/usa.csv datasets."""
 
 import logging
 import pathlib
@@ -28,8 +28,8 @@ path_cwd = pathlib.Path.cwd()
 logger = logging.getLogger(__name__)
 
 
-class LegacyDataV0134Parser(ParserBase):
-    """Parser for v0.13.4 of the legacy_data/other.csv and legacy_data/usa.csv datasets."""
+class LegacyInputDataV0134Parser(ParserBase):
+    """Parser for v0.13.4 of the raw/legacy_input_data/other.csv and raw/legacy_input_data/usa.csv datasets."""
 
     @staticmethod
     def _extract_units_carriers_heating_value(
@@ -187,7 +187,7 @@ class LegacyDataV0134Parser(ParserBase):
             financial_case_for_tech = None
             for _, row in group.iterrows():
                 unit, carrier, heating_value = (
-                    LegacyDataV0134Parser._extract_units_carriers_heating_value(
+                    LegacyInputDataV0134Parser._extract_units_carriers_heating_value(
                         row["unit"]
                     )
                 )
@@ -237,7 +237,7 @@ class LegacyDataV0134Parser(ParserBase):
         **kwargs: Any,
     ) -> None:
         """
-        Parse and process version 0.13.4 of the legacy_data/usa.csv dataset.
+        Parse and process version 0.13.4 of the raw/legacy_input_data/usa.csv and raw/legacy_input_data/other.csv dataset.
 
         This method reads the raw data from an Excel file, cleans and transforms
         it through a series of steps, and then builds a TechnologyCollection.
@@ -263,30 +263,34 @@ class LegacyDataV0134Parser(ParserBase):
         """
         export_schema = kwargs.get("export_schema", False)
 
-        legacy_data_usa_input_path = pathlib.Path(input_path)
+        legacy_input_data_usa_input_path = pathlib.Path(input_path)
 
-        legacy_data_usa_df = pandas.read_csv(
-            legacy_data_usa_input_path, dtype=str, na_values="None"
+        legacy_input_data_usa_df = pandas.read_csv(
+            legacy_input_data_usa_input_path, dtype=str, na_values="None"
         )
-        legacy_data_usa_df["value"] = legacy_data_usa_df["value"].astype(float)
-        legacy_data_usa_df["scenario"] = legacy_data_usa_df["scenario"].fillna(
-            "not_available"
+        legacy_input_data_usa_df["value"] = legacy_input_data_usa_df["value"].astype(
+            float
         )
+        legacy_input_data_usa_df["scenario"] = legacy_input_data_usa_df[
+            "scenario"
+        ].fillna("not_available")
 
         # Replace "per unit" with "%" and multiply val by 100
-        mask_per_unit = legacy_data_usa_df["unit"].str.contains("per unit")
-        legacy_data_usa_df.loc[mask_per_unit, "unit"] = legacy_data_usa_df.loc[
-            mask_per_unit, "unit"
-        ].str.replace("per unit", "%")
-        legacy_data_usa_df.loc[mask_per_unit, "value"] = (
-            legacy_data_usa_df.loc[mask_per_unit, "value"] * 100.0
+        mask_per_unit = legacy_input_data_usa_df["unit"].str.contains("per unit")
+        legacy_input_data_usa_df.loc[mask_per_unit, "unit"] = (
+            legacy_input_data_usa_df.loc[mask_per_unit, "unit"].str.replace(
+                "per unit", "%"
+            )
+        )
+        legacy_input_data_usa_df.loc[mask_per_unit, "value"] = (
+            legacy_input_data_usa_df.loc[mask_per_unit, "value"] * 100.0
         ).round(num_digits)
         logger.info(
             "`per unit` replaced by `%`. Corresponding value multiplied by 100."
         )
 
         # Include currency_year in unit if applicable
-        legacy_data_usa_df["unit"] = legacy_data_usa_df.apply(
+        legacy_input_data_usa_df["unit"] = legacy_input_data_usa_df.apply(
             lambda row: Commons.update_unit_with_currency_year(
                 row["unit"], row["currency_year"]
             ),
@@ -295,24 +299,24 @@ class LegacyDataV0134Parser(ParserBase):
         logger.info("`currency_year` included in `unit` column.")
 
         # Build TechnologyCollection
-        legacy_data_usa_base_path = pathlib.Path(
+        legacy_input_data_usa_base_path = pathlib.Path(
             path_cwd,
             "src",
             "technologydata",
             "parsers",
-            "legacy_data",
+            "legacy_input_data",
         )
         output_technologies_path = pathlib.Path(
-            legacy_data_usa_base_path,
+            legacy_input_data_usa_base_path,
             "v0.13.4/technologies.json",
         )
         output_sources_path = pathlib.Path(
-            legacy_data_usa_base_path,
+            legacy_input_data_usa_base_path,
             "v0.13.4/sources.json",
         )
 
-        tech_col = LegacyDataV0134Parser._build_technology_collection(
-            legacy_data_usa_df,
+        tech_col = LegacyInputDataV0134Parser._build_technology_collection(
+            legacy_input_data_usa_df,
             output_sources_path,
             archive_source=archive_source,
             output_schema=export_schema,

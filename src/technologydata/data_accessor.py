@@ -19,7 +19,7 @@ from pydantic import Field, field_validator
 
 from technologydata.datapackage import DataPackage
 from technologydata.parsers.dea_energy_storage import DeaEnergyStorageParser
-from technologydata.parsers.legacy_data import LegacyDataParser
+from technologydata.parsers.legacy_input_data import LegacyInputDataParser
 
 path_cwd = pathlib.Path.cwd()
 
@@ -30,7 +30,7 @@ class DataSourceName(enum.StrEnum):
     """An enumeration of available data sources."""
 
     DEA_ENERGY_STORAGE = "dea_energy_storage"
-    LEGACY_DATA = "legacy_data"
+    LEGACY_DATA = "legacy_input_data"
 
 
 class DataAccessor(pydantic.BaseModel):
@@ -351,12 +351,12 @@ class DataAccessor(pydantic.BaseModel):
             If the required input data file is not found.
 
         """
-        parser: DeaEnergyStorageParser | LegacyDataParser
+        parser: DeaEnergyStorageParser | LegacyInputDataParser
 
         if self.data_source == DataSourceName.DEA_ENERGY_STORAGE:
             parser = DeaEnergyStorageParser()
         elif self.data_source == DataSourceName.LEGACY_DATA:
-            parser = LegacyDataParser()
+            parser = LegacyInputDataParser()
         else:
             raise ValueError(
                 f"Unsupported data source: {self.data_source}. "

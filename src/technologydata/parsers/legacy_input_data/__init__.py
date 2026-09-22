@@ -2,20 +2,20 @@
 #
 # SPDX-License-Identifier: MIT
 
-"""Provide a parser for the technology-data legacy_data.csv dataset."""
+"""Provide a parser for the technology-data raw/others.csv and  raw/usa.csv dataset."""
 
 import logging
 import pathlib
 
 from technologydata.parsers.data_parser_base import ParserBase
-from technologydata.parsers.legacy_data.parser_v0134 import (
-    LegacyDataV0134Parser,
+from technologydata.parsers.legacy_input_data.parser_v0134 import (
+    LegacyInputDataV0134Parser,
 )
 
 
-class LegacyDataParser:
+class LegacyInputDataParser:
     """
-    Main parser for the technology_data legacy_data.csv dataset.
+    Main parser for the technology_data raw/legacy_input_data/other.csv and raw/legacy_input_data/usa.csv dataset.
 
     Dispatches to version-specific parser implementations.
     """
@@ -23,8 +23,8 @@ class LegacyDataParser:
     def __init__(self) -> None:
         """Initialize the parser and maps versions to parser classes."""
         self._parsers: dict[str, type[ParserBase]] = {
-            "v0.13.4": LegacyDataV0134Parser,
-            # "v0.13.5": LegacyDataV0135Parser, # Add new versions here
+            "v0.13.4": LegacyInputDataV0134Parser,
+            # "v0.13.5": LegacyInputDataV0135Parser, # Add new versions here
         }
 
     def get_supported_versions(self) -> list[str]:
@@ -41,7 +41,7 @@ class LegacyDataParser:
         export_schema: bool,
     ) -> None:
         """
-        Parse the specified version of the technology_data legacy_data.csv dataset.
+        Parse the specified version of the technology_data raw/legacy_input_data/other.csv and raw/legacy_input_data/usa.csv dataset.
 
         This method selects the appropriate parser for the given version and
         delegates the parsing task to it.
@@ -77,7 +77,7 @@ class LegacyDataParser:
         parser_instance = parser_class()
 
         logging.info(
-            f"Parsing the technology-data legacy_data.csv. dataset version {version} using {parser_class.__name__}"
+            f"Parsing the technology-data raw/legacy_input_data/usa.csv and raw/legacy_input_data/other.csv. dataset version {version} using {parser_class.__name__}"
         )
         return parser_instance.parse(
             input_path=input_path,
@@ -89,4 +89,4 @@ class LegacyDataParser:
 
 
 # Make the main parser class available for import from the module
-__all__ = ["LegacyDataParser", "LegacyDataV0134Parser"]
+__all__ = ["LegacyInputDataParser", "LegacyInputDataV0134Parser"]

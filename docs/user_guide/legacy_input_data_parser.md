@@ -1,4 +1,4 @@
-# Manual Input USA Parser
+# Legacy Input Data Parser
 
 The `ManualInputUsaParser` is responsible for parsing data from the `manual_input_usa.csv` dataset. It is designed to handle different versions of the dataset, with a specific implementation for `v0.13.4`.
 
@@ -18,7 +18,7 @@ While it is possible to use the parser directly, the recommended way to access t
 If you need to use the parser directly, you can instantiate `ManualInputUsaParser` and call the `parse` method with the desired version and other parameters.
 
 ```python
-from technologydata.parsers.legacy_data import LegacyDataParser
+from technologydata.parsers.legacy_input_data import LegacyInputDataParser
 import pathlib
 
 # Instantiate the main parser
@@ -26,7 +26,7 @@ legacy_data_parser = LegacyDataParser()
 
 # Define parameters
 version = "v0.13.4"
-input_file = pathlib.Path("path/to/your/legacy_data.csv")
+input_file = pathlib.Path("path/to/your/legacy_input_data.csv")
 num_digits = 3
 archive_source = False
 filter_params = True
@@ -71,8 +71,8 @@ The `parse` method orchestrates the entire parsing process for the `v0.13.4` dat
 -   `**kwargs`:
   -   `export_schema` (`bool`): If `True`, exports the Pydantic schema for the data models.
 
-The processed data is saved to `technologies.json` and `sources.json` in the `../../src/technologydata/parsers/legacy_data` directory.
+The processed data is saved to `technologies.json` and `sources.json` in the `../../src/technologydata/parsers/legacy_input_data` directory.
 
 ## API Reference
 
-Please refer to the [API documentation](../api/legacy_data_parser.md) for detailed information on the class methods and attributes.
+Please refer to the [API documentation](../api/legacy_input_data_parser.md) for detailed information on the class methods and attributes.

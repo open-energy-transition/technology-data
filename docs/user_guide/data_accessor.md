@@ -36,7 +36,7 @@ from technologydata import DataAccessor
 
 # Create an accessor for a specific version
 accessor_v1 = DataAccessor(
-    data_source="legacy_data",
+    data_source="legacy_input_data",
     version="v1.0.0"
 )
 ```
@@ -50,7 +50,7 @@ The directory structure is expected to be: `src/technologydata/parsers/<data_sou
 The `load()` method will look for the exact version specified during instantiation. If the version is not provided, it will log a warning and use the latest available version. If the version is provided but not found, it will raise a `ValueError` and inform you of the latest available version.
 
 ```python
-# Assuming the path .../parsers/legacy_data/v1.0.0/ exists
+# Assuming the path .../parsers/legacy_input_data/v1.0.0/ exists
 dp_v1 = accessor_v1.load()
 
 # dp_v1 is now a DataPackage object containing the data from v1.0.0
