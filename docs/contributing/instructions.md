@@ -8,6 +8,7 @@ We enthusiastically invite anyone interested in `technologydata` to share new id
 
 - [Code contributions](#code-contributions): Implement new features, fix bugs, or improve the performance.
 - [Documentation contributions](#documentation-contributions): Improve the documentation by adding new sections, fixing typos, or clarifying existing content.
+- [Adding a dataset](adding_a_dataset.md): Add a parser and fact sheet for a new data source.
 
 ## Where to go for help
 

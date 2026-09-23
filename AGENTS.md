@@ -16,6 +16,8 @@ maintained by a community of maintainers, based on an initiative of Open Energy 
 - `src/technologydata/parsers/` — parsers for external data sources (e.g.
   DEA energy storage). JSON files under `parsers/*/v*/` are parser output —
   regenerate them via the parser, do not hand-edit.
+  Each data source has a fact sheet in `docs/datasets/<key>.md`; when adding
+  or changing a data source, follow `docs/contributing/adding_a_dataset.md`.
 - `src/technologydata/data_accessor.py` — `DataAccessor` class for
   accessing external data either from the package or from a remote source.
   Import as `from technologydata import DataAccessor`.
