@@ -62,6 +62,10 @@ class UnitPatternRegex(StrEnum):
     # Examples: EUR/(tCO2/h)/km, USD_2023/(t_cement/h)/km
     CURRENCY_MASS_TIME_DISTANCE = r"^(USD|EUR)(?:_(\d{4}))?/\(t([A-Za-z0-9]+)/h\)/km$"
 
+    # Pattern 9: Currency with optional year and mass carrier (without time)
+    # Examples: EUR/t_clinker, USD_2023/t_cement, EUR/t_HVC
+    CURRENCY_MASS_CARRIER = r"^(USD|EUR)(?:_(\d{4}))?/t_([A-Za-z0-9]+)$"
+
 
 class UnitCarrierHeatingValueExtractor:
     """Process matched unit patterns into standardized unit, carrier, and heating value tuples."""
@@ -84,6 +88,14 @@ class UnitCarrierHeatingValueExtractor:
         currency, year, carrier = match.groups()
         standardized_unit = f"{currency}_{year}/t/h" if year else f"{currency}/t/h"
         carrier_str = f"1/{carrier}"
+        return standardized_unit, carrier_str, None
+
+    @staticmethod
+    def process_currency_mass_carrier(match: re.Match[str]) -> tuple[str, str, None]:
+        """Process currency with mass carrier (without time) pattern."""
+        currency, year, carrier = match.groups()
+        standardized_unit = f"{currency}_{year}/t" if year else f"{currency}/t"
+        carrier_str = carrier
         return standardized_unit, carrier_str, None
 
     @staticmethod

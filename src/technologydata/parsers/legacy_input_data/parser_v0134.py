@@ -117,6 +117,11 @@ class LegacyInputDataV0134Parser(ParserBase):
                 match
             )
 
+        # Pattern 9: Currency with mass carrier (without time)
+        match = re.match(UnitPatternRegex.CURRENCY_MASS_CARRIER.value, input_unit)
+        if match:
+            return UnitCarrierHeatingValueExtractor.process_currency_mass_carrier(match)
+
         # No pattern matched - return as-is
         return input_unit, None, None
 
