@@ -650,6 +650,25 @@ class TestParameter:
         assert result.magnitude == param.magnitude * factor
         assert result.units == param.units
 
+    def test_parameter_mul_without_carrier_and_heating_value(self) -> None:
+        """Test multiplication of two Parameters that have no carrier or heating value."""
+        specific_investment = technologydata.Parameter(
+            magnitude=250_000, units="EUR_2020/MWh"
+        )
+        capacity = technologydata.Parameter(magnitude=100, units="MWh")
+        result = specific_investment * capacity
+        assert result.magnitude == 25_000_000
+        assert result.units == "EUR_2020"
+        assert result.carrier is None
+        assert result.heating_value is None
+
+    def test_parameter_to_does_not_modify_original(self) -> None:
+        """Test that unit conversion leaves the original Parameter unchanged."""
+        param = technologydata.Parameter(magnitude=250_000, units="EUR_2020/MWh")
+        param.to("EUR_2020/kWh")
+        assert param._pint_quantity.magnitude == 250_000
+        assert str(param._pint_quantity.units) == "EUR_2020 / megawatt_hour"
+
     def test_parameter_div_scalar(self) -> None:
         """Test division of a Parameter by a scalar."""
         # Test division by an float

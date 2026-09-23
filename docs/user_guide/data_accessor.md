@@ -131,7 +131,7 @@ Downloaded files are saved to:
 {data_path}/{data_source}/{version}/sources.json
 ```
 
-Where `data_path` defaults to `src/technologydata/parsers/`. Once downloaded, the data can be accessed later using the `load()` method without re-downloading.
+Where `data_path` defaults to the `parsers/` directory of the installed package (`src/technologydata/parsers/` in a repository checkout). Once downloaded, the data can be accessed later using the `load()` method without re-downloading.
 
 ### Parsing Raw Data
 

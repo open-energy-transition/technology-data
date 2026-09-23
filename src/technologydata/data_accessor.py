@@ -21,7 +21,8 @@ from technologydata.datapackage import DataPackage
 from technologydata.parsers.dea_energy_storage import DeaEnergyStorageParser
 from technologydata.parsers.legacy_input_data import LegacyInputDataParser
 
-path_cwd = pathlib.Path.cwd()
+# The datasets are shipped inside the package, next to their parsers.
+path_parsers = pathlib.Path(__file__).parent / "parsers"
 
 logger = logging.getLogger(__name__)
 
@@ -52,8 +53,9 @@ class DataAccessor(pydantic.BaseModel):
         If not provided, the latest version will be automatically determined
         and used. Default is None.
     data_path : pathlib.Path, optional
-        The path to the data source directory. If not provided, the default
-        path will be used.
+        The path to the data source directory. If not provided, the
+        `parsers` directory of the installed package is used
+        (`src/technologydata/parsers` in a repository checkout).
 
     """
 
@@ -66,7 +68,7 @@ class DataAccessor(pydantic.BaseModel):
         Field(
             description="The base directory path where data sources are located.",
         ),
-    ] = pathlib.Path(path_cwd, "src", "technologydata", "parsers")
+    ] = path_parsers
 
     @staticmethod
     def ensure_path_exists(input_data_path: pathlib.Path) -> None:

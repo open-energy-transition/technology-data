@@ -494,3 +494,60 @@ class TestTechnology:
             equations=custom_registry,
         )
         assert status == {"z_sum": True}
+
+    def test_contains(self) -> None:
+        """Test if __contains__ method works correctly."""
+        tech = technologydata.Technology(
+            name="Test Technology",
+            detailed_technology="Test",
+            case="test-case",
+            region="USA",
+            year=2023,
+            parameters={
+                "capacity": technologydata.Parameter(magnitude=100.0, units="MW"),
+                "lifetime": technologydata.Parameter(magnitude=25.0, units="year"),
+            },
+        )
+        assert "capacity" in tech
+        assert "lifetime" in tech
+        assert "nonexistent" not in tech
+
+    def test_delitem(self) -> None:
+        """Test if __delitem__ method works correctly."""
+        tech = technologydata.Technology(
+            name="Test Technology",
+            detailed_technology="Test",
+            case="test-case",
+            region="USA",
+            year=2023,
+            parameters={
+                "capacity": technologydata.Parameter(magnitude=100.0, units="MW"),
+                "lifetime": technologydata.Parameter(magnitude=25.0, units="year"),
+            },
+        )
+        assert "capacity" in tech
+        del tech["capacity"]
+        assert "capacity" not in tech
+        assert "lifetime" in tech
+
+    def test_str(self) -> None:
+        """Test if __str__ method returns a compact summary."""
+        tech = technologydata.Technology(
+            name="Solar PV",
+            detailed_technology="Si-HC",
+            case="baseline",
+            region="DEU",
+            year=2025,
+            parameters={
+                "capacity": technologydata.Parameter(magnitude=100.0, units="MW"),
+                "lifetime": technologydata.Parameter(magnitude=25.0, units="year"),
+            },
+        )
+        result = str(tech)
+        assert "Solar PV" in result
+        assert "DEU" in result
+        assert "2025" in result
+        assert "baseline" in result
+        assert "2 parameters" in result
+        assert "capacity" in result
+        assert "lifetime" in result
