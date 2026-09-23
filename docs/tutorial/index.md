@@ -10,6 +10,7 @@ SPDX-License-Identifier: MIT
 This tutorial walks through the features of `technologydata` and how to use them.
 It shows how to use `Parameter` and `Technology` objects, use the functionalities of the package, and combine them into a packaged data follow our data schema (a `DataPackage`).
 All manual steps are shown, as well as how to utilise some pre-parsed and packaged data from the Danish Energy Agency.
+For a shorter introduction, see [Getting started](../getting_started.md).
 
 ## Who this package is for
 

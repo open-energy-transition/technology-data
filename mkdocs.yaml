@@ -12,6 +12,8 @@ nav:
   - FAQ: home/faq.md
   - License: home/license.md
 
+- Getting Started: getting_started.md
+
 - Tutorial: tutorial/index.md
 
 - User Guide:

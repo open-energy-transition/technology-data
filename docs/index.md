@@ -42,6 +42,8 @@ uv add install technologydata
 The package requires Python 3.12 or newer.
 The bundled datasets are installed with it; no additional download step is needed.
 
+New to `technologydata`? Start with [Getting started](getting_started.md).
+
 ## Features of the package
 
 - **Unit-ful parameters.**
