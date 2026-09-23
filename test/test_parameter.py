@@ -662,6 +662,13 @@ class TestParameter:
         assert result.carrier is None
         assert result.heating_value is None
 
+    def test_parameter_to_does_not_modify_original(self) -> None:
+        """Test that unit conversion leaves the original Parameter unchanged."""
+        param = technologydata.Parameter(magnitude=250_000, units="EUR_2020/MWh")
+        param.to("EUR_2020/kWh")
+        assert param._pint_quantity.magnitude == 250_000
+        assert str(param._pint_quantity.units) == "EUR_2020 / megawatt_hour"
+
     def test_parameter_div_scalar(self) -> None:
         """Test division of a Parameter by a scalar."""
         # Test division by an float

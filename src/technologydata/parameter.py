@@ -154,10 +154,10 @@ class Parameter(BaseModel):
                 "Use `to_currency` for currency conversions."
             )
 
-        self._pint_quantity = self._pint_quantity.to(units)
+        new_quantity = self._pint_quantity.to(units)
         return Parameter(
-            magnitude=self._pint_quantity.magnitude,
-            units=str(self._pint_quantity.units),
+            magnitude=new_quantity.magnitude,
+            units=str(new_quantity.units),
             carrier=self.carrier,
             heating_value=self.heating_value,
             provenance=self.provenance,
