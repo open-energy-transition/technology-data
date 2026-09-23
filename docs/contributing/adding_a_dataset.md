@@ -22,7 +22,7 @@ Fact sheets are short and structured, written for experienced modellers and for 
    For the `Contents` section, run the code once and paste its output below it.
 
 When the data of an existing dataset changes, the doctest fails and shows the new output; paste it into the fact sheet.
-When a new version is added, add a row to the `Versions` table, add the version to the front matter and update `Accessing the data` and `Contents` to the new version.
+When a new version is added, add a row to the `Available versions` table, add the version to the front matter and update `Accessing the data` and `Contents` to the new version.
 
 ## Guidelines
 
@@ -77,7 +77,7 @@ SPDX-License-Identifier: MIT
 | Raw format | <format, sheet> |
 | Parser | [`<ParserClass>`](../api/<key>_parser.md) |
 
-## Versions
+## Available versions
 
 | Version key | Upstream release | Raw file | Parse options | Status |
 |---|---|---|---|---|

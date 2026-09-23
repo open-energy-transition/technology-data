@@ -39,7 +39,7 @@ The values are compiled from NREL ATB 2024, ICCT IRA e-fuels assumptions, JRC-EU
 | Raw format | CSV |
 | Parser | [`ManualInputUsaParser`](../api/manual_input_usa_parser.md) |
 
-## Versions
+## Available versions
 
 | Version key | Upstream release | Raw file | Parse options | Status |
 |---|---|---|---|---|

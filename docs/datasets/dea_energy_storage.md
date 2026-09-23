@@ -39,7 +39,7 @@ The Danish Energy Agency (DEA) technology catalogue for energy storage: costs, e
 | Raw format | Excel, sheet `alldata_flat` |
 | Parser | [`DeaEnergyStorageParser`](../api/dea_energy_storage_parser.md) |
 
-## Versions
+## Available versions
 
 | Version key | Upstream release | Raw file | Parse options | Status |
 |---|---|---|---|---|
