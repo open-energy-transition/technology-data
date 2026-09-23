@@ -30,7 +30,8 @@ When a new version is added, add a row to the `Available versions` table, add th
     Once the parser and the parsed data exist, writing the fact sheet can be delegated to an AI agent.
     The repository contains the skill [`dataset-factsheet`](https://github.com/open-energy-transition/technology-data/blob/master/.claude/skills/dataset-factsheet/SKILL.md) with step-by-step instructions: where each fact comes from, how to generate the tables and which checks to run.
     Claude Code picks it up automatically (ask e.g. "create the fact sheet for `<key>`" or run `/dataset-factsheet`); other agents are pointed to it by `AGENTS.md`.
-    Review the result, in particular the assumptions, limitations and license.
+    Always review the result created by AI; other people want to build their work on it.
+    Pay particular attention to the assumptions, limitations and license.
 
 ## Guidelines
 
