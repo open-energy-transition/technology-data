@@ -17,19 +17,28 @@ ammonia = [ammonia] = NH3
 carbon = [carbon] = C
 carbon_dioxide = [carbon_dioxide] = CO2
 carbon_monoxide = [carbon_monoxide] = CO
+cement = [portland_cement]
+clinker = [clinker]
 coal = [coal] = anthracite = hard_coal = black_coal
+dehydrogenated_dibenzyltoluene = [dehydrogenated_dibenzyltoluene]= H0-DBT = LOHC
 diesel = [diesel]
+electricity = [electricity] = e = el
+ethanol = [ethanol] = eth = C2H5OH
 fischer_tropsch = [fischer_tropsch] = FT = FTF = fischer_tropsch_fuel
 gasoline = [gasoline] = petrol
 jet_fuel_a1 = [jet_fuel_a1] = JETA1
-electricity = [electricity] = e = el
+kerosene = [kerosene]
 hydrogen = [hydrogen] = H2
+hydrogenated_dibenzyltoluene = [hydrogenated_dibenzyltoluene] = H18-DBT = HLOHC
+hot_briquetted_iron = [hot_briquetted_iron] = HBI
 lignite = [lignite]
 methane = [methane] = CH4
 methanol = [methanol] = CH3OH = MeOH
+naphtha = [naphtha]
 natural_gas = [natural_gas] = NG
 nitrogen = [nitrogen] = N2
 oxygen = [oxygen] = O2
+steel = [steel]
 thermal = [thermal] = th
 water = [water] = H2O
 wood = [wood]

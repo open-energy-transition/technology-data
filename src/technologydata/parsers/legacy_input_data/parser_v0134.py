@@ -326,6 +326,12 @@ class LegacyInputDataV0134Parser(ParserBase):
         legacy_input_data_other_df["value"] = legacy_input_data_other_df[
             "value"
         ].astype(float)
+
+        # Correct typo: MWHh_el -> MWh_el
+        legacy_input_data_other_df["unit"] = legacy_input_data_other_df[
+            "unit"
+        ].str.replace("MWHh_el", "MWh_el")
+
         # Add missing columns for other.csv
         legacy_input_data_other_df["scenario"] = "not_available"
         legacy_input_data_other_df["financial_case"] = None
