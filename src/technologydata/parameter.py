@@ -652,12 +652,17 @@ class Parameter(BaseModel):
             else None
         )
 
-        new_heating_value = self._pint_heating_value * other._pint_heating_value
+        new_heating_value = (
+            self._pint_heating_value * other._pint_heating_value
+            if self._pint_heating_value and other._pint_heating_value
+            else None
+        )
+
         return Parameter(
             magnitude=new_quantity.magnitude,
             units=str(new_quantity.units),
-            carrier=str(new_carrier),
-            heating_value=str(new_heating_value),
+            carrier=new_carrier,
+            heating_value=new_heating_value,
             provenance=(self.provenance or []) + (other.provenance or []),
             note=(self.note or "") + (other.note or ""),  # TODO make nicer
             sources=SourceCollection(
