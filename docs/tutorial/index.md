@@ -140,6 +140,7 @@ SourceCollection with 1 sources: 'technologydata tutorial': 'Illustrative electr
 
 The source stays attached through conversions and arithmetic, so a converted value can still be traced back to its study.
 A `Source` can also hold a URL and be archived on the Wayback Machine, see the [Source guide](../user_guide/source.md).
+Provenance information is tracked for some operations automatically - a feature that will be expanded in the future, such that all automatic transformations of `technoloydata` keep track of what has happened to a value.
 
 ## 6. Technologies
 
@@ -279,7 +280,7 @@ The version matters for reproducibility: it records which set of assumptions a m
 `to_csv()` writes the same content as CSV for spreadsheets.
 More in the [DataPackage guide](../user_guide/datapackage.md).
 
-## 10. Ready-made datasets
+## 10. Batteries included - sharing encouraged
 
 Building every assumption by hand does not scale.
 `technologydata` therefore ships datasets parsed from published catalogues, and loading one gives the same kind of `DataPackage` you just built:
@@ -292,6 +293,7 @@ dea_energy_storage v10 136
 ```
 
 The [Datasets](../datasets/index.md) section describes each dataset, and the [Overview](../overview.md) shows how to work with one.
+We welcome new datasets and additions - together we can build larger and better databases for technology data in energy system models!
 
 ## Where to go next
 
