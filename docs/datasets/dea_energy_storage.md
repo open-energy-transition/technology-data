@@ -62,7 +62,7 @@ See the [tutorial](../tutorial/index.md) for filtering, unit and currency conver
 ## Reproduce
 
 Run from the root of a repository checkout.
-The parser writes to `<cwd>/src/technologydata/parsers/dea_energy_storage/v10/` and overwrites the shipped files.
+The parser overwrites the files shipped with the package.
 
 ```python
 from technologydata import DataAccessor
@@ -158,13 +158,13 @@ With `archive_source=False` (the default) the existing `sources.json` is reused;
 - **Cases** (`est`): `ctrl` → `control`, `Lower`/`Upper` → `lower`/`upper`.
 - **Years**: first number in the cell (`Uncertainty (2050)` → `2050`).
 - **Units**: made readable by pint, currencies written as `EUR_2020`.
-  `MEUR` and `kEUR` are converted to `EUR` with the value scaled accordingly; `pct.` → `percent`, `m3` → `meter**3`, `⁰C` → `C`.
+  `MEUR` and `kEUR` are converted to `EUR` with the value scaled accordingly; `pct.` to `percent`, `m3` to `meter**3`, and `⁰C` to `C`.
 
 ## Assumptions and deviations from the source
 
 - **Parameter subset**: only 7 parameters are shipped (`filter_params=True`).
   The raw sheet has about 76 distinct parameters, e.g. round trip efficiency, cycle life, energy density, construction time; re-run the parser with `filter_params=False` to get all of them.
-- **Region**: every entry is labelled `EU`, although the DEA catalogue is compiled for Danish conditions.
+- **Region**: every entry is assumed to be valid for Europe (region = `EU`). The sources used by the DEA are not specific enough to only assume Danish conditions.
 - **Missing units** are filled from the parameter name, e.g. `fixed o&m` without a unit becomes `percent / year`, `energy storage capacity for one unit` becomes `MWh`.
 - **Non-numeric values** and values with comparators (`<1`, `>20,000`) are dropped, as are rows without technology, parameter, value or a four-digit year.
 - **Sources**: every parameter cites the catalogue as a whole; the row-level `ref` and `note` columns are dropped.

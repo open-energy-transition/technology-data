@@ -98,7 +98,7 @@ See the [tutorial](../tutorial/index.md) for filtering, unit and currency conver
 ## Reproduce
 
 Run from the root of a repository checkout.
-The parser writes to `<cwd>/src/technologydata/parsers/<key>/<version>/` and overwrites the shipped files.
+The parser overwrites the files shipped with the package.
 
 ```python
 from technologydata import DataAccessor
