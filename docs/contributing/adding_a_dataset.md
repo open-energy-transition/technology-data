@@ -8,10 +8,11 @@ SPDX-License-Identifier: MIT
 -->
 
 Every dataset shipped with `technologydata` has a fact sheet in `docs/datasets/`.
-Fact sheets are short and structured, written for experienced modellers and for AI agents looking for structured information: what the data is, where it comes from, how to load and reproduce it, what it contains, and which choices the parser made.
+Fact sheets are short and structured information: what the data is, where it comes from, how to load and reproduce it, what it contains, and which important choices made for parsing the original data.
 
 ## Checklist
 
+0. Clone the repository.
 1. Add the raw file to `src/technologydata/parsers/raw/` and its license to `REUSE.toml`.
 2. Add a parser under `src/technologydata/parsers/<key>/` and register `<key>` in `DataSourceName` and `DataAccessor.parse()`.
 3. Run the parser and commit the output in `src/technologydata/parsers/<key>/<version>/`.
@@ -21,17 +22,23 @@ Fact sheets are short and structured, written for experienced modellers and for 
    The code blocks of every fact sheet are run as doctests, and their output must match the page.
    For the `Contents` section, run the code once and paste its output below it.
 
-When the data of an existing dataset changes, the doctest fails and shows the new output; paste it into the fact sheet.
+When the data of a dataset changes, the doctest will fail because the output of the code will no longer match the output in the documentation;
+paste the new output into the fact sheet then to resolve.
 When a new version is added, add a row to the `Available versions` table, add the version to the front matter and update `Accessing the data` and `Contents` to the new version.
+
+!!! tip "Delegate work to AI agents"
+    Once the parser and the parsed data exist, writing the fact sheet can be delegated to an AI agent.
+    The repository contains the skill [`dataset-factsheet`](https://github.com/open-energy-transition/technology-data/blob/master/.claude/skills/dataset-factsheet/SKILL.md) with step-by-step instructions: where each fact comes from, how to generate the tables and which checks to run.
+    Claude Code picks it up automatically (ask e.g. "create the fact sheet for `<key>`" or run `/dataset-factsheet`); other agents are pointed to it by `AGENTS.md`.
+    Review the result, in particular the assumptions, limitations and license.
 
 ## Guidelines
 
-- Keep the fact sheet concise: tables and short bullets, no step-by-step description of the parser code.
-- The front matter is the machine-readable summary; keep it in sync with the `At a glance` table.
-- **Assumptions and deviations** are choices that make the parsed data differ from the source (filters, fixed regions, filled-in units, merged cases).
-  **Known limitations** are what gets lost or can mislead (dropped or overwritten values, heterogeneous units, missing sources).
-  Quantify where cheap, e.g. "7 of about 76 parameters".
-- Code blocks meant to be tested use ` ``` py ` with `>>>` prompts; code that must not run in the tests (such as `parse()`) uses ` ```python `.
+- Keep the fact sheet concise: tables and short bullets, no step-by-step description of the parser code - this should go into the parser itself.
+- The front matter is the machine-readable summary hidden in the online documentation; keep it in sync with the `At a glance` table.
+- *Assumptions and deviations* are choices that make the parsed data differ from the source (filters, fixed regions, filled-in units, merged cases).
+- *Known limitations* are what gets lost or can mislead (dropped or overwritten values, heterogeneous units, missing sources).
+- Code blocks meant to be tested use ` ``` py <code> ``` ` with `>>>` prompts. Code that should not be automatically tested uses ` ```python <code> ``` `.
 
 ## Template
 
