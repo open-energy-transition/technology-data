@@ -5,6 +5,7 @@
 """Parameter class for encapsulating a value, its unit, provenance, notes, and sources."""
 
 import logging
+import math
 from typing import Annotated, Self
 
 import pint
@@ -30,8 +31,8 @@ class Parameter(BaseModel):
         The energy carrier.
     heating_value : Optional[str]
         The heating value type.
-    provenance : Optional[str]
-        Description of the data's provenance.
+    provenance : Optional[list[str]]
+        Ordered history of human-readable descriptions of the data's provenance.
     note : Optional[str]
         Additional notes about the parameter.
     sources : Optional[SourceCollection]
@@ -51,9 +52,14 @@ class Parameter(BaseModel):
         str | None,
         Field(description="Heating value type for energy carriers ('LHV' or 'HHV')."),
     ] = None
-    provenance: Annotated[str | None, Field(description="The data's provenance.")] = (
-        None
-    )
+    provenance: Annotated[
+        list[str] | None,
+        Field(
+            description="Ordered history of human-readable descriptions of how this "
+            "parameter's value was derived, e.g. sourced from literature, parsed from "
+            "a file, or calculated from a formula."
+        ),
+    ] = None
     note: Annotated[str | None, Field(description="Additional notes.")] = None
     sources: Annotated[
         SourceCollection,
@@ -65,7 +71,9 @@ class Parameter(BaseModel):
     _pint_carrier: pint.Unit = PrivateAttr(None)
     _pint_heating_value: pint.Unit = PrivateAttr(None)
 
-    def __init__(self, **data: float | str | SourceCollection | None) -> None:
+    def __init__(
+        self, **data: float | str | list[str] | SourceCollection | None
+    ) -> None:
         """Initialize Parameter and update pint attributes."""
         # pint uses canonical names for units, carriers, and heating values
         # Ensure the Parameter object is always created with these consistent names from pint
@@ -123,6 +131,16 @@ class Parameter(BaseModel):
         else:
             self._pint_heating_value = None
 
+    def __str__(self) -> str:
+        """Render magnitude, units, carrier, and heating value as one human-readable string."""
+        self._update_pint_attributes()
+        parts = [str(self._pint_quantity)]
+        if self.carrier:
+            parts.append(f"carrier={self.carrier}")
+        if self.heating_value:
+            parts.append(f"heating_value={self.heating_value}")
+        return ", ".join(parts)
+
     def to(self, units: str) -> Self:
         """Convert the parameter's quantity to new units."""
         self._update_pint_attributes()
@@ -146,6 +164,50 @@ class Parameter(BaseModel):
             note=self.note,
             sources=self.sources,
         )  # type: ignore
+
+    def isclose(
+        self,
+        other: Self,
+        rtol: float = 1e-6,
+        atol: float = 1e-9,
+    ) -> bool:
+        """
+        Check whether another parameter is numerically and contextually consistent.
+
+        Consistency means:
+        - same carrier
+        - same heating value
+        - compatible units (or both unitless)
+        - numerically close magnitudes after unit harmonization
+        """
+        if self.carrier != other.carrier:
+            return False
+
+        if self.heating_value != other.heating_value:
+            return False
+
+        if self.units is None and other.units is None:
+            return math.isclose(
+                self.magnitude,
+                other.magnitude,
+                rel_tol=rtol,
+                abs_tol=atol,
+            )
+
+        if self.units is None or other.units is None:
+            return False
+
+        try:
+            other_in_self_units = other.to(self.units)
+        except Exception:
+            return False
+
+        return math.isclose(
+            self.magnitude,
+            other_in_self_units.magnitude,
+            rel_tol=rtol,
+            abs_tol=atol,
+        )
 
     def to_currency(
         self, target_currency: str, country: str, source: str = "worldbank"
@@ -366,7 +428,7 @@ class Parameter(BaseModel):
 
     def _check_parameter_compatibility(self, other: Self) -> None:
         """
-        Check if two parameters are compatible in terms of units, carrier, and heating value.
+        Check if two parameters are compatible in terms of currency units, carrier, and heating value.
 
         Parameters
         ----------
@@ -376,7 +438,7 @@ class Parameter(BaseModel):
         Raises
         ------
         ValueError
-            If the carriers or heating values of the two parameters are not compatible.
+            If the carriers, heating values, or currencies/currency years of the two parameters are not compatible.
             The error message specifies which attribute differs.
 
         """
@@ -389,6 +451,14 @@ class Parameter(BaseModel):
             raise ValueError(
                 f"Operation not permitted on parameters with different heating values: "
                 f"'{self._pint_heating_value}' and '{other._pint_heating_value}'."
+            )
+        if set(technologydata.extract_currency_units(self._pint_quantity.units)) != set(
+            technologydata.extract_currency_units(other._pint_quantity.units)
+        ):
+            raise ValueError(
+                f"Operation not permitted on parameters with different currencies or currency years: "
+                f"'{self._pint_quantity.units}' and '{other._pint_quantity.units}'. "
+                f"Use `to_currency` to convert to the same currency before performing the operation."
             )
 
     def __add__(self, other: Self) -> Self:
@@ -419,8 +489,7 @@ class Parameter(BaseModel):
             units=new_quantity.units,
             carrier=self.carrier,
             heating_value=self.heating_value,
-            provenance=(self.provenance or "")
-            + (other.provenance or ""),  # TODO make nicer
+            provenance=(self.provenance or []) + (other.provenance or []),
             note=(self.note or "") + (other.note or ""),  # TODO make nicer
             sources=SourceCollection(
                 sources=(self.sources.sources + other.sources.sources)
@@ -454,8 +523,7 @@ class Parameter(BaseModel):
             units=str(new_quantity.units),
             carrier=self.carrier,
             heating_value=self.heating_value,
-            provenance=(self.provenance or "")
-            + (other.provenance or ""),  # TODO make nicer
+            provenance=(self.provenance or []) + (other.provenance or []),
             note=(self.note or "") + (other.note or ""),  # TODO make nicer
             sources=SourceCollection(
                 sources=(self.sources.sources + other.sources.sources)
@@ -523,8 +591,7 @@ class Parameter(BaseModel):
             units=str(new_quantity.units),
             carrier=new_carrier,
             heating_value=new_heating_value,
-            provenance=(self.provenance or "")
-            + (other.provenance or ""),  # TODO make nicer
+            provenance=(self.provenance or []) + (other.provenance or []),
             note=(self.note or "") + (other.note or ""),  # TODO make nicer
             sources=SourceCollection(
                 sources=(self.sources.sources + other.sources.sources)
@@ -591,8 +658,7 @@ class Parameter(BaseModel):
             units=str(new_quantity.units),
             carrier=str(new_carrier),
             heating_value=str(new_heating_value),
-            provenance=(self.provenance or "")
-            + (other.provenance or ""),  # TODO make nicer
+            provenance=(self.provenance or []) + (other.provenance or []),
             note=(self.note or "") + (other.note or ""),  # TODO make nicer
             sources=SourceCollection(
                 sources=(self.sources.sources + other.sources.sources)

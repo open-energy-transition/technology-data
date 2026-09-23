@@ -147,6 +147,48 @@ class TestTechnologyCollection:
         assert isinstance(result, technologydata.TechnologyCollection)
         assert len(result.technologies) == 1
 
+    @pytest.mark.parametrize(
+        "filter_param, filter_value, expected_count",
+        [
+            ["name", "Solar photovoltaics", 2],
+            ["region", "DEU", 2],
+            ["year", 2022, 2],
+            ["case", "example-scenario", 1],
+            ["case", "example-project", 1],
+            ["detailed_technology", "Si-HC", 2],
+        ],
+    )  # type: ignore
+    def test_get_with_single_parameter(
+        self, filter_param: str, filter_value: str | int, expected_count: int
+    ) -> None:
+        """Check if get() with a single parameter filters correctly."""
+        input_file = pathlib.Path(
+            path_cwd,
+            "test",
+            "test_data",
+            "solar_photovoltaics_example",
+            "technologies.json",
+        )
+        technologies_collection = technologydata.TechnologyCollection.from_json(
+            input_file
+        )
+        # Use explicit conditionals to maintain type safety
+        if filter_param == "name":
+            result = technologies_collection.get(name=str(filter_value))
+        elif filter_param == "region":
+            result = technologies_collection.get(region=str(filter_value))
+        elif filter_param == "year":
+            result = technologies_collection.get(year=int(filter_value))
+        elif filter_param == "case":
+            result = technologies_collection.get(case=str(filter_value))
+        elif filter_param == "detailed_technology":
+            result = technologies_collection.get(detailed_technology=str(filter_value))
+        else:
+            raise ValueError(f"Unknown filter parameter: {filter_param}")
+
+        assert isinstance(result, technologydata.TechnologyCollection)
+        assert len(result.technologies) == expected_count
+
     def test_fit_linear_growth(self) -> None:
         """Test TechnologyCollection.fit with LinearGrowth model."""
         tech = technologydata.Technology(
@@ -391,3 +433,255 @@ class TestTechnologyCollection:
             assert orig_tech.case == conv_tech.case
             assert orig_tech.region == conv_tech.region
             assert orig_tech.year == conv_tech.year
+
+    @staticmethod
+    def _tech(
+        name: str, **params: technologydata.Parameter
+    ) -> technologydata.Technology:
+        return technologydata.Technology(
+            name=name,
+            detailed_technology="Si-HC",
+            case="example-scenario",
+            region="DEU",
+            year=2022,
+            parameters=params,
+        )
+
+    def test_calculate_parameters_explicit_target(self) -> None:
+        """Derive an explicit target for every technology in the collection."""
+        eac_params = {
+            "specific_investment": technologydata.Parameter(
+                magnitude=1000.0, units="USD_2020/kW"
+            ),
+            "wacc": technologydata.Parameter(magnitude=0.07, units="dimensionless"),
+            "lifetime": technologydata.Parameter(magnitude=20.0, units="year"),
+        }
+        tc = technologydata.TechnologyCollection(
+            technologies=[self._tech("A", **eac_params), self._tech("B", **eac_params)]
+        )
+
+        result = tc.calculate_parameters("eac")
+
+        assert isinstance(result, technologydata.TechnologyCollection)
+        assert result is not tc
+        # Original collection is untouched.
+        assert "eac" not in tc.technologies[0].parameters
+        for tech in result.technologies:
+            assert "eac" in tech.parameters
+            assert tech.parameters["eac"].magnitude == pytest.approx(94.39292574325566)
+
+    def test_calculate_parameters_auto_discovery_per_technology(self) -> None:
+        """With no explicit targets, each technology derives what it individually can."""
+        tc = technologydata.TechnologyCollection(
+            technologies=[
+                self._tech(
+                    "A",
+                    specific_investment=technologydata.Parameter(
+                        magnitude=1000.0, units="USD_2020/kW"
+                    ),
+                    wacc=technologydata.Parameter(
+                        magnitude=0.07, units="dimensionless"
+                    ),
+                    lifetime=technologydata.Parameter(magnitude=20.0, units="year"),
+                ),
+                self._tech(
+                    "B",
+                    total_investment_cost=technologydata.Parameter(
+                        magnitude=2000.0, units="USD_2020/kW"
+                    ),
+                    lifetime=technologydata.Parameter(magnitude=20.0, units="year"),
+                ),
+            ]
+        )
+
+        result = tc.calculate_parameters()
+
+        assert "eac" in result.technologies[0].parameters
+        assert "eac" in result.technologies[1].parameters
+        assert result.technologies[1].parameters["eac"].magnitude == pytest.approx(
+            100.0
+        )
+
+    def test_check_consistency_returns_one_status_dict_per_technology(self) -> None:
+        """Return per-technology consistency statuses, aligned with `technologies`."""
+        tc = technologydata.TechnologyCollection(
+            technologies=[
+                self._tech(
+                    "Consistent",
+                    specific_investment=technologydata.Parameter(
+                        magnitude=1000, units="EUR_2020/kW"
+                    ),
+                    annuity_factor=technologydata.Parameter(
+                        magnitude=0.1, units="dimensionless"
+                    ),
+                    eac=technologydata.Parameter(magnitude=100, units="EUR_2020/kW"),
+                ),
+                self._tech(
+                    "MissingInputs",
+                    capacity=technologydata.Parameter(magnitude=10, units="MW"),
+                ),
+            ]
+        )
+
+        status = tc.check_consistency(parameters=["eac"])
+
+        assert len(status) == len(tc) == 2
+        assert status[0]["eac_via_annuity_factor"] is True
+        assert (
+            status[1]["eac_via_annuity_factor"]
+            == "inapplicable: ['eac', 'specific_investment', 'annuity_factor']"
+        )
+
+    def test_getitem(self) -> None:
+        """Test if the __getitem__ method works correctly."""
+        input_file = pathlib.Path(
+            path_cwd,
+            "test",
+            "test_data",
+            "solar_photovoltaics_example",
+            "technologies.json",
+        )
+        technology_collection = technologydata.TechnologyCollection.from_json(
+            input_file
+        )
+        assert isinstance(technology_collection[0], technologydata.Technology)
+        assert isinstance(
+            technology_collection[0:1], technologydata.TechnologyCollection
+        )
+        assert technology_collection[0].case == "example-scenario"
+        assert technology_collection[1].case == "example-project"
+
+    def test_get_parameter(self) -> None:
+        """Test if the get_parameter method works correctly."""
+        input_file = pathlib.Path(
+            path_cwd,
+            "test",
+            "test_data",
+            "solar_photovoltaics_example",
+            "technologies.json",
+        )
+        technology_collection = technologydata.TechnologyCollection.from_json(
+            input_file
+        )
+        assert len(technology_collection.get_parameter("capacity")) == 2
+        capacity_params = technology_collection.get_parameter("capacity")
+        assert isinstance(capacity_params[0], technologydata.Parameter)
+        assert isinstance(capacity_params[1], technologydata.Parameter)
+        assert capacity_params[0].magnitude == 1.0
+        assert capacity_params[1].magnitude == 3.0
+        assert len(technology_collection.get_parameter("yeah")) == 2
+        assert technology_collection.get_parameter("yeah")[0] is None
+        assert technology_collection.get_parameter("yeah")[1] is None
+
+    def test_append(self) -> None:
+        """Test if the append method works correctly and is non-mutating."""
+        input_file = pathlib.Path(
+            path_cwd,
+            "test",
+            "test_data",
+            "solar_photovoltaics_example",
+            "technologies.json",
+        )
+        original_collection = technologydata.TechnologyCollection.from_json(input_file)
+        original_length = len(original_collection)
+
+        new_tech = technologydata.Technology(
+            name="New Technology",
+            detailed_technology="New Tech",
+            region="USA",
+            case="test-case",
+            year=2023,
+            parameters={},
+        )
+
+        new_collection = original_collection.append(new_tech)
+
+        # Check that append returns a new collection
+        assert isinstance(new_collection, technologydata.TechnologyCollection)
+        assert len(new_collection) == original_length + 1
+        # Check that the original collection is unchanged (non-mutating)
+        assert len(original_collection) == original_length
+        # Check that the new technology is in the new collection
+        assert new_collection[-1].name == "New Technology"
+        assert new_collection[-1].region == "USA"
+
+    def test_add(self) -> None:
+        """Test if the __add__ method works correctly for merging collections."""
+        input_file = pathlib.Path(
+            path_cwd,
+            "test",
+            "test_data",
+            "solar_photovoltaics_example",
+            "technologies.json",
+        )
+        collection_a = technologydata.TechnologyCollection.from_json(input_file)
+        collection_b = technologydata.TechnologyCollection(
+            technologies=[
+                technologydata.Technology(
+                    name="Tech A",
+                    detailed_technology="A",
+                    region="EUR",
+                    case="case-a",
+                    year=2025,
+                    parameters={},
+                ),
+                technologydata.Technology(
+                    name="Tech B",
+                    detailed_technology="B",
+                    region="USA",
+                    case="case-b",
+                    year=2026,
+                    parameters={},
+                ),
+            ]
+        )
+
+        # Merge using + operator
+        merged_collection = collection_a + collection_b
+
+        # Check that merge creates a new collection with combined technologies
+        assert isinstance(merged_collection, technologydata.TechnologyCollection)
+        assert len(merged_collection) == len(collection_a) + len(collection_b)
+        # Check that original collections are unchanged
+        assert len(collection_a) == 2
+        assert len(collection_b) == 2
+        # Check that technologies from both collections are present
+        assert merged_collection[0].case == "example-scenario"
+        assert merged_collection[-1].name == "Tech B"
+
+    def test_str(self) -> None:
+        """Test if __str__ method returns a compact summary."""
+        # Test with empty collection
+        empty_collection = technologydata.TechnologyCollection(technologies=[])
+        assert str(empty_collection) == "TechnologyCollection(0 technologies)"
+
+        # Test with single technology
+        single_tech = technologydata.Technology(
+            name="Solar PV",
+            detailed_technology="Si-HC",
+            case="baseline",
+            region="DEU",
+            year=2025,
+            parameters={},
+        )
+        single_collection = technologydata.TechnologyCollection(
+            technologies=[single_tech]
+        )
+        result = str(single_collection)
+        assert "1 technologies" in result
+        assert "Solar PV" in result
+        assert "DEU" in result
+        assert "2025" in result
+
+        # Test with larger collection
+        input_file = pathlib.Path(
+            path_cwd,
+            "test",
+            "test_data",
+            "solar_photovoltaics_example",
+            "technologies.json",
+        )
+        collection = technologydata.TechnologyCollection.from_json(input_file)
+        result = str(collection)
+        assert "2 technologies" in result
+        assert "Solar photovoltaics" in result

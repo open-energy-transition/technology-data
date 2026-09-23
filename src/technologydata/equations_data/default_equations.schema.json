@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://technologydata.readthedocs.io/schemas/default_equations.schema.json",
+  "title": "technologydata equation definitions",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": ["name", "parameters", "eq_str"],
+    "properties": {
+      "name": {
+        "type": "string",
+        "minLength": 1,
+        "description": "Unique equation name"
+      },
+      "parameters": {
+        "type": "array",
+        "minItems": 2,
+        "items": {
+          "type": "string",
+          "minLength": 1
+        },
+        "description": "Names of all parameters used in the equation"
+      },
+      "eq_str": {
+        "type": "string",
+        "minLength": 1,
+        "description": "Equation expression set equal to zero"
+      },
+      "priority": {
+        "type": "integer",
+        "minimum": 0,
+        "default": 0,
+        "description": "Priority to use this equation for calculating a parameter, higher values are preferred"
+      },
+      "description": {
+        "type": "string",
+        "description": "Optional free-text description"
+      }
+    }
+  }
+}

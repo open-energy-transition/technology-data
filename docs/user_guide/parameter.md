@@ -9,7 +9,7 @@ The `Parameter` class in `technologydata` encapsulates a value, its unit, proven
 - **Value and Units**: Stores a numerical value (`magnitude`) and its associated units (`units`). Units are handled using `pint` and support custom currency units (e.g., `USD_2020/kW`). The [pint default units definition](https://github.com/hgrecco/pint/blob/master/pint/default_en.txt) file is available for reference. Be mindful of false unit-friends, e.g. `t = metric_ton = tonne != ton = US_ton`
 - **Currency Unit Convention**: Currency units must follow the pattern `XYZ_YYYY`, where `XYZ` is the 3-letter [ISO 4217](https://en.wikipedia.org/wiki/ISO_4217) currency code (e.g., `USD`, `EUR`, `CNY`) and `YYYY` is the 4-digit year (e.g., `USD_2020`). This allows for both currency and inflation adjustments.
 - **Carrier and Heating Value**: Optionally specify an energy carrier (e.g., `H2`) and a heating value type (`LHV` or `HHV`).
-- **Provenance and Notes**: Track the origin of the data and any additional notes.
+- **Provenance and Notes**: `provenance` is an ordered list of human-readable strings tracking the history of how a parameter's value was derived (e.g. sourced from literature, parsed from a file, calculated from a formula). `note` holds any additional free-text notes.
 - **Sources**: Attach a `SourceCollection` of references for traceability.
 - **Unit Conversion**: Convert between compatible units (excluding currency conversion) using `.to()`.
 - **Currency/Inflation Adjustment**: Convert between currencies and adjust for inflation using `.to_currency()`.
@@ -27,7 +27,7 @@ param = Parameter(
     units="USD_2020/kW",
     carrier="H2",
     heating_value="LHV",
-    provenance="Directly extracted from literature",
+    provenance=["Directly extracted from literature"],
     note="Estimated",
     sources=SourceCollection(sources=[
         Source(title="Example Title", authors="some authors")
@@ -35,7 +35,7 @@ param = Parameter(
 )
 
 >>> param
-Parameter(magnitude=1000.0, units='USD_2020/kW', carrier='H2', heating_value='LHV', provenance='literature', note='Estimated', sources=SourceCollection(sources=[Source(title='Example Title', authors='some authors', )]))
+Parameter(magnitude=1000.0, units='USD_2020/kW', carrier='H2', heating_value='LHV', provenance=['Directly extracted from literature'], note='Estimated', sources=SourceCollection(sources=[Source(title='Example Title', authors='some authors', )]))
 ```
 
 ### Unit Conversion (excluding currency)
@@ -167,7 +167,7 @@ Please refer to the [API documentation](../api/parameter.md) for detailed inform
 
 ## Notes
 
-- **Provenance/Note/Sources in Arithmetic**: When performing arithmetic operations, the handling and merging of `provenance`, `note`, and `sources` is not yet implemented (see `TODO` comments in the code).
+- **Provenance/Note/Sources in Arithmetic**: When performing arithmetic operations, `provenance` lists are concatenated (preserving both operands' full history); merging of `note` and `sources` is not yet implemented (see `TODO` comments in the code).
 - **Unit Conversion**: The `.to()` method does not support currency conversion; use `.to_currency()` for that.
 - **Partial Unit Compatibility**: Only certain combinations of units, carriers, and heating values are supported for arithmetic operations.
 - **No Uncertainty Handling**: There is currently no support for uncertainty or error propagation.

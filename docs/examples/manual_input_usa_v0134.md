@@ -157,7 +157,7 @@ The parsed files shipped with the package are produced by the same public entry 
     Unlike `load()`, the output path is derived from the current working directory, as `<cwd>/src/technologydata/parsers/manual_input_usa/v0.13.4/`, and ignores `data_path`. Run this from the root of a checkout you are willing to modify: it overwrites the files distributed with the package.
 
 ```python
-from technologydata.parsers.data_accessor import DataAccessor
+from technologydata import DataAccessor
 
 parser_accessor = DataAccessor(
     data_source="manual_input_usa",

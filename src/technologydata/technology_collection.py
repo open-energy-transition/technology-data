@@ -9,8 +9,8 @@ import json
 import logging
 import pathlib
 import re
-from collections.abc import Iterator
-from typing import Annotated, Self
+from collections.abc import Iterator, Sequence
+from typing import TYPE_CHECKING, Annotated, Self, overload
 
 import pandas
 import pydantic
@@ -19,6 +19,9 @@ import pydantic_core
 from technologydata.parameter import Parameter
 from technologydata.technologies.growth_models import GrowthModel, LinearGrowth
 from technologydata.technology import Technology
+
+if TYPE_CHECKING:
+    from technologydata.equations import EquationRegistry
 
 logger = logging.getLogger(__name__)
 
@@ -37,6 +40,35 @@ class TechnologyCollection(pydantic.BaseModel):
     technologies: Annotated[
         list[Technology], pydantic.Field(description="List of Technology objects.")
     ]
+
+    # Given the fact that the return type depends on the input type
+    # We add the overload decorator to provide exact signatures
+    # index: int --> Technology
+    # index: slice --> TechnologyCollection
+    @overload
+    def __getitem__(self, index: int) -> Technology: ...
+
+    @overload
+    def __getitem__(self, index: slice) -> Self: ...
+
+    def __getitem__(self, index: int | slice) -> Technology | Self:
+        """
+        Access a TechnologyCollection by index, slice.
+
+        Parameters
+        ----------
+        index : int | slice
+            Index or slice of the Technology to access.
+
+        Returns
+        -------
+        Technology | Self
+            The requested Technology (if an index is provided) or TechnologyCollection (if a slice is given).
+
+        """
+        if isinstance(index, slice):
+            return self.__class__(technologies=self.technologies[index])
+        return self.technologies[index]
 
     def __iter__(self) -> Iterator[Technology]:  # type: ignore
         """
@@ -62,24 +94,76 @@ class TechnologyCollection(pydantic.BaseModel):
         """
         return len(self.technologies)
 
-    def get(
-        self, name: str, region: str, year: int, case: str, detailed_technology: str
-    ) -> Self:
+    def __str__(self) -> str:
         """
-        Filter technologies based on regex patterns for non-optional attributes.
+        Return a compact human-readable summary of the TechnologyCollection.
+
+        Returns
+        -------
+        str
+            Summary with count and brief technology information.
+
+        """
+        count = len(self.technologies)
+        if count == 0:
+            return "TechnologyCollection(0 technologies)"
+        elif count <= 3:
+            tech_summaries = [
+                f"{t.name} ({t.region}, {t.year})" for t in self.technologies
+            ]
+            return f"TechnologyCollection({count} technologies: {', '.join(tech_summaries)})"
+        else:
+            first_tech = self.technologies[0]
+            last_tech = self.technologies[-1]
+            return (
+                f"TechnologyCollection({count} technologies: "
+                f"{first_tech.name} ({first_tech.region}, {first_tech.year}) ... "
+                f"{last_tech.name} ({last_tech.region}, {last_tech.year}))"
+            )
+
+    def get_parameter(self, name: str) -> list[Parameter | None]:
+        """
+        Get parameter values across all technologies in the collection.
 
         Parameters
         ----------
         name : str
-            Regex pattern to filter technology names.
-        region : str
-            Regex pattern to filter region identifiers.
-        year : int
-            Regex pattern to filter the year of the data.
-        case : str
-            Regex pattern to filter case or scenario identifiers.
-        detailed_technology : str
-            Regex pattern to filter detailed technology names.
+            Parameter name to retrieve.
+
+        Returns
+        -------
+        list[Parameter | None]
+            List with one entry per technology. None for technologies
+            that don't have this parameter.
+
+        """
+        return [tech.parameters.get(name) for tech in self.technologies]
+
+    def get(
+        self,
+        name: str | None = None,
+        region: str | None = None,
+        year: int | None = None,
+        case: str | None = None,
+        detailed_technology: str | None = None,
+    ) -> Self:
+        """
+        Filter technologies based on regex patterns for non-optional attributes.
+
+        Parameters not provided will match any value (equivalent to .* regex).
+
+        Parameters
+        ----------
+        name : str, optional
+            Regex pattern to filter technology names. If None, matches all names.
+        region : str, optional
+            Regex pattern to filter region identifiers. If None, matches all regions.
+        year : int, optional
+            Regex pattern to filter the year of the data. If None, matches all years.
+        case : str, optional
+            Regex pattern to filter case or scenario identifiers. If None, matches all cases.
+        detailed_technology : str, optional
+            Regex pattern to filter detailed technology names. If None, matches all detailed technologies.
 
         Returns
         -------
@@ -122,6 +206,40 @@ class TechnologyCollection(pydantic.BaseModel):
             ]
 
         return TechnologyCollection(technologies=filtered_technologies)  # type: ignore
+
+    def __add__(self, other: Self) -> Self:
+        """
+        Merge two TechnologyCollection objects using the + operator.
+
+        Parameters
+        ----------
+        other : TechnologyCollection
+            The collection to merge with.
+
+        Returns
+        -------
+        TechnologyCollection
+            A new TechnologyCollection containing technologies from both collections.
+
+        """
+        return self.__class__(technologies=self.technologies + other.technologies)
+
+    def append(self, tech: Technology) -> Self:
+        """
+        Append a technology to an existing TechnologyCollection.
+
+        Parameters
+        ----------
+        tech : Technology
+            The technology to add.
+
+        Returns
+        -------
+        TechnologyCollection
+            A new TechnologyCollection with the appended technology.
+
+        """
+        return self + self.__class__(technologies=[tech])
 
     def to_dataframe(self) -> pandas.DataFrame:
         """
@@ -289,6 +407,89 @@ class TechnologyCollection(pydantic.BaseModel):
 
         return TechnologyCollection(technologies=new_techs)  # type: ignore
 
+    def calculate_parameters(
+        self,
+        targets: str | list[str] | None = None,
+        equation_names: dict[str, str] | None = None,
+    ) -> Self:
+        """
+        Derive missing parameters of every contained Technology using registered equations.
+
+        Parameters
+        ----------
+        targets : str or list of str, optional
+            Parameter names to derive. If ``None``, for each technology all parameters
+            that can be derived from its currently available parameters (and are not
+            already present) are calculated automatically.
+        equation_names : dict of str to str, optional
+            Mapping of parameter name to equation name, used to override the
+            default equation for specific targets
+            (e.g. ``{"eac": "eac_simple"}``).
+
+        Returns
+        -------
+        TechnologyCollection
+            A new TechnologyCollection with the derived parameters added to each technology.
+
+        Raises
+        ------
+        ValueError
+            If a requested target has no applicable equation, required parameters
+            are missing, or input currencies are inconsistent, for any technology.
+
+        """
+        new_techs = [
+            tech.calculate_parameters(targets=targets, equation_names=equation_names)
+            for tech in self.technologies
+        ]
+        return TechnologyCollection(technologies=new_techs)  # type: ignore
+
+    def check_consistency(
+        self,
+        parameters: Sequence[str] | None = None,
+        equations: "EquationRegistry | None" = None,
+        rtol: float = 1e-6,
+        atol: float = 1e-9,
+    ) -> list[dict[str, bool | str]]:
+        """
+        Check equation-level consistency for selected parameters of every contained Technology.
+
+        See :meth:`Technology.check_consistency` for the semantics applied to each
+        technology individually.
+
+        Parameters
+        ----------
+        parameters: list[str] (optional)
+            The parameters to check for consistency. If None are specified,
+            all parameters of each Technology are considered.
+        equations: EquationRegistry (optional)
+            A registry of equations to check against.
+            Defaults to technologydata.equation_registry.
+        rtol: float (optional)
+            Relative tolerance to use for checking consistency of the parameters.
+        atol: float (optional)
+            Absolute tolerance to use for checking consistency of the parameters.
+
+        Returns
+        -------
+        list[dict[str, bool | str]]
+            Consistency status per checked equation, one dict per technology,
+            in the same order as `self.technologies`.
+
+        Raises
+        ------
+        ValueError
+            If ``parameters`` is given explicitly and includes a name for
+            which no equation is registered, for any technology.
+
+        """
+        return [
+            tech.check_consistency(
+                parameters=parameters, equations=equations, rtol=rtol, atol=atol
+            )
+            for tech in self.technologies
+        ]
+
     def fit(
         self, parameter: str, model: GrowthModel, p0: dict[str, float] | None = None
     ) -> GrowthModel:
@@ -436,7 +637,9 @@ class TechnologyCollection(pydantic.BaseModel):
                             deep=True,
                             update={
                                 "magnitude": param_value,
-                                "provenance": f"Projected to {to_year} using {model}.",
+                                "provenance": [
+                                    f"Projected to {to_year} using {model}."
+                                ],
                                 "note": None,  # Clear any existing note
                                 "sources": None,  # Clear any existing sources
                             },

@@ -8,17 +8,11 @@ edit_uri: edit/master/docs/
 nav:
 - Home:
   - Home: index.md
-  - Overview:
-    - Release Notes: home/release-notes.md
-  - Getting Started:
-    - Installation: home/installation.md
-  - Reference:
-    - Users: home/users.md
-    - Citing: home/citing.md
-    - License: home/license.md
-  - Support:
-    - FAQ: home/faq.md
-    - Contacts: home/contacts.md
+  - Release Notes: home/release-notes.md
+  - FAQ: home/faq.md
+  - License: home/license.md
+
+- Tutorial: tutorial/index.md
 
 - User Guide:
   - Data Package: user_guide/datapackage.md
@@ -28,6 +22,7 @@ nav:
   - Source Collection: user_guide/source_collection.md
   - Technology: user_guide/technology.md
   - Technology Collection: user_guide/technology_collection.md
+  - Equation System: user_guide/equations.md
   - DEA Energy Storage Parser: user_guide/dea_energy_storage_parser.md
   - Manual Input USA Parser: user_guide/manual_input_usa_parser.md
   - Data Accessor: user_guide/data_accessor.md
@@ -39,6 +34,7 @@ nav:
 
 - API Reference:
   - Data Package: api/datapackage.md
+  - Equations: api/equations.md
   - Parameter: api/parameter.md
   - Source: api/source.md
   - Source Collection: api/source_collection.md
@@ -61,6 +57,7 @@ nav:
   - Instructions: contributing/instructions.md
   - Code of Conduct: contributing/CODE_OF_CONDUCT.md
   - Contributors: contributing/contributors.md
+  - API Improvement Proposals: contributing/api_improvement_proposals.md
 
 # Theme settings
 theme:
@@ -158,6 +155,7 @@ plugins:
     type: timeago
     timezone: Europe/Berlin
     enable_creation_date: true
+    enable_parallel_processing: false
 - argref:
     autolinks:
     - reference_prefix: ":octicons-git-pull-request-16:"
@@ -200,6 +198,7 @@ plugins:
 
 hooks:
 - docs/assets/overrides/hooks/shortcodes.py
+- docs/assets/overrides/hooks/release_notes.py
 
 copyright: >-
   &copy technologydata contributors
