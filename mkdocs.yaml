@@ -59,7 +59,7 @@ nav:
   - Code of Conduct: contributing/CODE_OF_CONDUCT.md
   - Contributors: contributing/contributors.md
   - Adding a Dataset: contributing/adding_a_dataset.md
-  - API Improvement Proposals: contributing/api_improvement_proposals.md
+  - Improvement Backlog: contributing/improvement_backlog.md
 
 # Theme settings
 theme:
