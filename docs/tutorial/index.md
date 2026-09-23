@@ -73,10 +73,10 @@ A `Technology` groups parameters that describe the same technology for a year an
 ...     },
 ... )
 >>> print(battery)
-name='lithium ion battery' detailed_technology='lithium-ion battery (utility-scale)' case='control' region='EU' year=2025 parameters={'specific investment': Parameter(magnitude=288000.0, units='EUR_2020 / megawatt_hour', carrier='hydrogen', heating_value='lower_heating_value', provenance=None, note=None, sources=SourceCollection(sources=[])), 'lifetime': Parameter(magnitude=30, units='year', carrier=None, heating_value=None, provenance=None, note=None, sources=SourceCollection(sources=[]))}
+Technology('lithium ion battery', region='EU', year=2025, case='control', 2 parameters: ['specific investment', 'lifetime'])
 ```
 
-Printed in full, a `Technology` is just its identifying fields (`name`, `detailed_technology`, `case`, `region`, `year`) plus a `parameters` dictionary of named `Parameter` objects — nothing more is hidden inside it.
+A `Technology` is just its identifying fields (`name`, `detailed_technology`, `case`, `region`, `year`) plus a `parameters` dictionary of named `Parameter` objects — nothing more is hidden inside it. Printing it shows a compact summary with the parameter names.
 
 ## 3. Track a technology across years
 
