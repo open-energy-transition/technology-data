@@ -45,7 +45,7 @@ The Danish Energy Agency (DEA) technology catalogue for energy storage: costs, e
 |---|---|---|---|---|
 | `v10` | May 2025, downloaded 2025-10-08 | `Technology_datasheet_for_energy_storage.xlsx` | `num_digits=3`, `filter_params=True` | latest |
 
-## Quick start
+## Accessing the data
 
 ``` py
 >>> from technologydata import DataAccessor
@@ -58,23 +58,6 @@ The Danish Energy Agency (DEA) technology catalogue for energy storage: costs, e
 ```
 
 See the [tutorial](../tutorial/index.md) for filtering, unit and currency conversion.
-
-## Reproduce
-
-Run from the root of a repository checkout.
-The parser overwrites the files shipped with the package.
-
-```python
-from technologydata import DataAccessor
-
-DataAccessor(data_source="dea_energy_storage", version="v10").parse(
-    input_file_name="Technology_datasheet_for_energy_storage.xlsx",
-    num_digits=3,
-    filter_params=True,
-)
-```
-
-With `archive_source=False` (the default) the existing `sources.json` is reused; `archive_source=True` re-archives the source on the Wayback Machine and rewrites `sources.json`.
 
 ## Contents
 
@@ -169,6 +152,23 @@ With `archive_source=False` (the default) the existing `sources.json` is reused;
 - **Non-numeric values** and values with comparators (`<1`, `>20,000`) are dropped, as are rows without technology, parameter, value or a four-digit year.
 - **Sources**: every parameter cites the catalogue as a whole; the row-level `ref` and `note` columns are dropped.
 
+## Reproduce
+
+Run from the root of a repository checkout.
+The parser overwrites the files shipped with the package.
+
+```python
+from technologydata import DataAccessor
+
+DataAccessor(data_source="dea_energy_storage", version="v10").parse(
+    input_file_name="Technology_datasheet_for_energy_storage.xlsx",
+    num_digits=3,
+    filter_params=True,
+)
+```
+
+With `archive_source=False` (the default) the existing `sources.json` is reused; `archive_source=True` re-archives the source on the Wayback Machine and rewrites `sources.json`.
+
 ## Known limitations
 
 - **Duplicate parameters are overwritten.** Where a technology reports the same parameter twice in different units, only the last row in the sheet is kept:
@@ -179,6 +179,8 @@ With `archive_source=False` (the default) the existing `sources.json` is reused;
 ## Citation
 
 > Danish Energy Agency (2025): Technology Data for Energy Storage. <https://ens.dk/media/6589/download>
+
+License: [CC-BY-4.0](https://creativecommons.org/licenses/by/4.0/)
 
 Please also cite `technologydata`, see [Citing](../index.md#citing).
 

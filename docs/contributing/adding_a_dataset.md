@@ -22,7 +22,7 @@ Fact sheets are short and structured, written for experienced modellers and for 
    For the `Contents` section, run the code once and paste its output below it.
 
 When the data of an existing dataset changes, the doctest fails and shows the new output; paste it into the fact sheet.
-When a new version is added, add a row to the `Versions` table, add the version to the front matter and update the quick start and `Contents` to the new version.
+When a new version is added, add a row to the `Versions` table, add the version to the front matter and update `Accessing the data` and `Contents` to the new version.
 
 ## Guidelines
 
@@ -83,7 +83,7 @@ SPDX-License-Identifier: MIT
 |---|---|---|---|---|
 | `<version>` | <upstream release, date> | `<file>` | `num_digits=3`, … | latest |
 
-## Quick start
+## Accessing the data
 
 ``` py
 >>> from technologydata import DataAccessor
@@ -94,22 +94,6 @@ SPDX-License-Identifier: MIT
 ```
 
 See the [tutorial](../tutorial/index.md) for filtering, unit and currency conversion.
-
-## Reproduce
-
-Run from the root of a repository checkout.
-The parser overwrites the files shipped with the package.
-
-```python
-from technologydata import DataAccessor
-
-DataAccessor(data_source="<key>", version="<version>").parse(
-    input_file_name="<file>",
-    num_digits=3,
-)
-```
-
-With `archive_source=False` (the default) the existing `sources.json` is reused; `archive_source=True` archives the source on the Wayback Machine and rewrites `sources.json`.
 
 ## Contents
 
@@ -165,6 +149,22 @@ With `archive_source=False` (the default) the existing `sources.json` is reused;
 
 - **<Topic>**: <choice made by the parser and its effect>
 
+## Reproduce
+
+Run from the root of a repository checkout.
+The parser overwrites the files shipped with the package.
+
+```python
+from technologydata import DataAccessor
+
+DataAccessor(data_source="<key>", version="<version>").parse(
+    input_file_name="<file>",
+    num_digits=3,
+)
+```
+
+With `archive_source=False` (the default) the existing `sources.json` is reused; `archive_source=True` archives the source on the Wayback Machine and rewrites `sources.json`.
+
 ## Known limitations
 
 - **<Topic>**: <what is lost or can mislead>
@@ -172,6 +172,8 @@ With `archive_source=False` (the default) the existing `sources.json` is reused;
 ## Citation
 
 > <Recommended citation of the original data>
+
+License: [<SPDX identifier>](<link to the license text>), if known
 
 Please also cite `technologydata`, see [Citing](../index.md#citing).
 

@@ -45,7 +45,7 @@ The values are compiled from NREL ATB 2024, ICCT IRA e-fuels assumptions, JRC-EU
 |---|---|---|---|---|
 | `v0.13.4` | PyPSA technology-data v0.13.4 | `manual_input_usa.csv` | `num_digits=3` | latest |
 
-## Quick start
+## Accessing the data
 
 ``` py
 >>> from technologydata import DataAccessor
@@ -56,22 +56,6 @@ The values are compiled from NREL ATB 2024, ICCT IRA e-fuels assumptions, JRC-EU
 ```
 
 See the [tutorial](../tutorial/index.md) for filtering, unit and currency conversion.
-
-## Reproduce
-
-Run from the root of a repository checkout.
-The parser overwrites the files shipped with the package.
-
-```python
-from technologydata import DataAccessor
-
-DataAccessor(data_source="manual_input_usa", version="v0.13.4").parse(
-    input_file_name="manual_input_usa.csv",
-    num_digits=3,
-)
-```
-
-With `archive_source=False` (the default) the existing `sources.json` is reused; `archive_source=True` archives the source on the Wayback Machine and rewrites `sources.json`.
 
 ## Contents
 
@@ -169,6 +153,22 @@ With `archive_source=False` (the default) the existing `sources.json` is reused;
   In v0.13.4 both financial cases carry identical values, so no numbers are lost, only the `R&D` label.
 - **Region**: every entry is labelled `USA`.
 
+## Reproduce
+
+Run from the root of a repository checkout.
+The parser overwrites the files shipped with the package.
+
+```python
+from technologydata import DataAccessor
+
+DataAccessor(data_source="manual_input_usa", version="v0.13.4").parse(
+    input_file_name="manual_input_usa.csv",
+    num_digits=3,
+)
+```
+
+With `archive_source=False` (the default) the existing `sources.json` is reused; `archive_source=True` archives the source on the Wayback Machine and rewrites `sources.json`.
+
 ## Known limitations
 
 - **Row-level sources are dropped.** Every parameter cites the CSV as a single source; the original reference (NREL ATB 2024, ICCT, JRC-EU-TIMES, Stöckl et al.) is only in the `source` column of the raw file.
@@ -178,6 +178,8 @@ With `archive_source=False` (the default) the existing `sources.json` is reused;
 ## Citation
 
 > PyPSA technology-data contributors: technology-data v0.13.4, `inputs/US/manual_input_usa.csv`, accessed 2025-10-20. <https://github.com/PyPSA/technology-data/tree/v0.13.4>
+
+License: [CC-BY-4.0](https://creativecommons.org/licenses/by/4.0/); the underlying sources may have their own terms.
 
 Please also cite the underlying sources listed above and `technologydata`, see [Citing](../index.md#citing).
 
