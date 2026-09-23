@@ -21,7 +21,14 @@ Harmonising to combine multiple sources into one energy system model therefore r
 This package contains a data schema and represents the techno-economic assumptions as Python objects.
 The objects called `Parameter` carry not only values ("magnitude"), but also unit information, currency year, energy carrier, heating-value basis, provenance and bibliographic sources.
 Commonly used conversions are available, parameters can be checked for consistency.
-Provenance information for modifying parameters is automatically recorded, e.g. to keep track of currency conversion factors or formulas used for calculation.
+Sources stay attached through conversions and arithmetic, and parameters derived with the built-in equations record the formula and input values used.
+
+The package is meant for energy system modellers who:
+
+- combine assumptions from more than one source, or from a source and their own numbers;
+- convert between currencies, price years, units and heating values without losing track of what was converted;
+- need to know where each number came from and how it was calculated;
+- derive related parameters or check them for consistency, and project values to years their sources do not cover.
 
 ## Installation
 

@@ -9,6 +9,7 @@ SPDX-License-Identifier: MIT
 
 This page introduces the building blocks of `technologydata` in a few short steps: parameters, technologies, collections of technologies, the datasets that ship with the package, and data packages for saving and sharing data.
 It assumes `technologydata` is [installed](./index.md#installation).
+For the motivation behind each concept, see the [Tutorial](tutorial/index.md).
 
 ## 1. Parameters with units
 
