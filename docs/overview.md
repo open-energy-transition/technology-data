@@ -136,7 +136,8 @@ More: loading options in the [DataAccessor guide](user_guide/data_accessor.md).
 ### 3.3 Projections with growth models
 
 The DEA gives no value for 2045.
-`project()` fits a growth model to a parameter across the years in a collection and returns the projected years as a new collection:
+`project()` fits a growth model to a parameter across the years in a collection and returns the projected years as a new collection.
+Here we use a linear model (`LinearGrowth`) to interpolate between `2040` and `2050` values in the DEA dataset:
 
 ``` py
 >>> from technologydata.technologies.growth_models import LinearGrowth
@@ -148,7 +149,7 @@ The DEA gives no value for 2045.
 305770
 ```
 
-More: exponential, logistic and other growth models in the [models guide](user_guide/models.md) and [projecting collections](user_guide/technology_collection.md#projecting-parameters).
+More models and functionality are available: exponential, logistic and other growth models in the [models guide](user_guide/models.md) and [projecting collections](user_guide/technology_collection.md#projecting-parameters).
 
 ## 4. Harmonising currencies and inflation
 
@@ -162,7 +163,7 @@ ValueError: Operation not permitted on parameters with different currencies or c
 ```
 
 `to_currency()` converts to another currency and price year, adjusting for inflation with the deflator of the given country (ISO 3166 alpha-3 code).
-The DEA region `EU` is not a country, so we use Germany:
+(Note: The region `EU` is not a country, so we use Germany `= DEU` for inflation indicators:)
 
 ``` py
 >>> dea_investment = dea_battery.parameters["specific investment"].to_currency("EUR_2024", country="DEU")
@@ -170,7 +171,9 @@ The DEA region `EU` is not a country, so we use Germany:
 335418 EUR_2024 / megawatt_hour
 ```
 
-The inflation and exchange rate data (World Bank by default) is downloaded on first use.
+The inflation and exchange rate data (World Bank by default) is downloaded on first use and then cached so this operation is only slow upon first use.
+This functionality is also available on `TechnologyCollections`, allowing for quick harmonisation across multiple technologies into one harmonised dataset.
+
 The total investment of a fictitious 400 MWh project in 2024 prices is then:
 
 ``` py
@@ -185,8 +188,8 @@ More: data sources and options for the conversion in the [Parameter guide](user_
 
 ## 5. Consistency checks
 
-`check_consistency()` uses the same equations to check that the parameters of a technology agree with each other.
-The battery from section 2 is consistent; after changing its capacity, its total investment no longer matches:
+`check_consistency()` uses standard or your custom equations to check that the parameters of a technology agree with each other.
+The battery from section 2 is consistent; after changing its capacity, its total investment no longer matches and this error is highlighted:
 
 ``` py
 >>> battery.check_consistency(parameters=["total_investment_cost"])
