@@ -7,7 +7,7 @@ SPDX-License-Identifier: MIT
 
 -->
 
-This page introduces the building blocks of `technologydata` in a few short steps: parameters, technologies, collections of technologies, and the datasets that ship with the package.
+This page introduces the building blocks of `technologydata` in a few short steps: parameters, technologies, collections of technologies, the datasets that ship with the package, and data packages for saving and sharing data.
 It assumes `technologydata` is [installed](./index.md#installation).
 
 ## 1. Parameters with units
@@ -165,14 +165,21 @@ ValueError: Operation not permitted on parameters with different currencies or c
 The DEA region `EU` is not a country, so we use Germany:
 
 ``` py
->>> dea_investment = dea_battery.parameters["specific investment"]
->>> print(round(dea_investment.to_currency("EUR_2024", country="DEU").magnitude))
-335418
->>> print(round(dea_investment.to_currency("USD_2024", country="DEU").magnitude))
-363050
+>>> dea_investment = dea_battery.parameters["specific investment"].to_currency("EUR_2024", country="DEU")
+>>> print(round(dea_investment.magnitude), dea_investment.units)
+335418 EUR_2024 / megawatt_hour
 ```
 
 The inflation and exchange rate data (World Bank by default) is downloaded on first use.
+The total investment of a fictitious 400 MWh project in 2024 prices is then:
+
+``` py
+>>> project_investment = dea_investment * Parameter(magnitude=400, units="MWh")
+>>> print(f"{project_investment.magnitude / 1e6:.1f} million {project_investment.units}")
+134.2 million EUR_2024
+```
+
+The result keeps the DEA catalogue as its source, so the number stays traceable; see the [Source guide](user_guide/source.md).
 
 More: data sources and options for the conversion in the [Parameter guide](user_guide/parameter.md#currency-and-inflation-adjustment).
 
@@ -193,20 +200,34 @@ Equations that lack a parameter are reported as such rather than checked.
 
 More: checking and deriving parameters in the [Technology guide](user_guide/technology.md#calculating-parameters-and-checking-consistency).
 
-## 6. A project's investment
+## 6. Data packages: saving and loading
 
-Putting it together: the total investment of a fictitious 400 MWh battery project, based on the DEA 2030 value in 2024 prices:
+A `DataPackage` bundles a collection of technologies with their sources under a name and a version; `DataAccessor.load()` returns one.
+It follows the data schema of `technologydata`, the same format the bundled datasets are stored in, so your own packages can be shared and loaded the same way.
+Here we store the DEA battery series as our own package:
 
 ``` py
->>> project_capacity = Parameter(magnitude=400, units="MWh")
->>> project_investment = dea_investment.to_currency("EUR_2024", country="DEU") * project_capacity
->>> print(f"{project_investment.magnitude / 1e6:.1f} million {project_investment.units}")
-134.2 million EUR_2024
+>>> import pathlib, tempfile
+>>> from technologydata import DataPackage
+>>> package = DataPackage(name="my-batteries", version="v1", technologies=dea_batteries)
+>>> package.get_source_collection()
+>>> print(len(package.sources))
+1
+>>> folder = pathlib.Path(tempfile.mkdtemp())
+>>> package.to_json(folder)
+>>> print(sorted(p.name for p in folder.iterdir()))
+['sources.json', 'technologies.json']
+>>> reloaded = DataPackage.from_json("my-batteries", "v1", folder)
+>>> print(reloaded.technologies.get(year=2030)[0].parameters["specific investment"])
+279000.0 EUR_2020 / megawatt_hour
 ```
 
-The result keeps the DEA catalogue as its source, so the number stays traceable; see the [Source guide](user_guide/source.md).
+`get_source_collection()` collects the sources of all parameters into `package.sources`.
+`to_csv()` writes the same content as CSV files for spreadsheets, and `TechnologyCollection.to_json(..., output_schema=True)` also writes the JSON schema describing the file format.
+
+More: file formats and the JSON round trip in the [DataPackage guide](user_guide/datapackage.md).
 
 ## Next steps
 
-- The [tutorial](tutorial/index.md) goes further: comparing two datasets, saving your own data and working with the equations in more detail.
+- The [tutorial](tutorial/index.md) goes further: comparing two datasets and working with the equations in more detail.
 - The [User Guide](user_guide/technology.md) and the [API Reference](api/technology.md) describe every class in detail.
