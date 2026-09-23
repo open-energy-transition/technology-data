@@ -10,6 +10,7 @@ from typing import Any
 
 import pytest
 
+import technologydata
 from technologydata import DataAccessor
 from technologydata.data_accessor import DataSourceName
 
@@ -65,6 +66,12 @@ class TestDataAccessor:
         assert data_package.name == "dea_energy_storage"
         assert data_package.version == "v10"
         assert len(data_package.technologies) == 136
+
+    def test_default_data_path_is_package_directory(self) -> None:
+        """Test that the bundled data is found independent of the working directory."""
+        accessor = DataAccessor(data_source="dea_energy_storage", version="v10")
+        expected = pathlib.Path(technologydata.__file__).parent / "parsers"
+        assert accessor.data_path == expected
 
     def test_access_data_dea_energy_storage_validation(self) -> None:
         """Test load data for dea_energy_storage with a wrong data set name."""
