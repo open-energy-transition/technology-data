@@ -337,6 +337,11 @@ class LegacyInputDataV0134Parser(ParserBase):
             "unit"
         ].str.replace("MWHh_el", "MWh_el")
 
+        # Correct typo: t_cl -> t/clinker
+        legacy_input_data_other_df["unit"] = legacy_input_data_other_df[
+            "unit"
+        ].str.replace(" t_cl/t_cement", "t_clinker/t_cement,")
+
         # Add missing columns for other.csv
         legacy_input_data_other_df["scenario"] = "not_available"
         legacy_input_data_other_df["financial_case"] = None
@@ -352,6 +357,11 @@ class LegacyInputDataV0134Parser(ParserBase):
             ignore_index=True,
         )
         logger.info("USA and other data combined.")
+
+        # Normalize "p.u." to "per unit"
+        legacy_input_data_df["unit"] = legacy_input_data_df["unit"].str.replace(
+            "p.u.", "per unit", regex=False
+        )
 
         # Replace "per unit" with "%" and multiply val by 100
         mask_per_unit = legacy_input_data_df["unit"].str.contains("per unit", na=False)

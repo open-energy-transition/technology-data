@@ -70,6 +70,7 @@ class TestLegacyDataParserV0134:
             ("EUR/t_clinker", "EUR/t", "clinker", None),
             ("EUR/t_cement", "EUR/t", "cement", None),
             ("EUR/t_HVC", "EUR/t", "HVC", None),
+            ("t_clinker/t_cement", "t/t", "clinker/cement", None),
         ],
     )  # type: ignore
     def test_extract_units_carriers_heating_value(
