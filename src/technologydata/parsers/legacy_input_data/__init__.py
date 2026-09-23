@@ -34,7 +34,7 @@ class LegacyInputDataParser:
     def parse(
         self,
         version: str,
-        input_path: pathlib.Path,
+        input_path: pathlib.Path | list[pathlib.Path],
         num_digits: int,
         archive_source: bool,
         filter_params: bool,
@@ -50,8 +50,8 @@ class LegacyInputDataParser:
         ----------
         version : str
             The version of the dataset to parse (e.g., 'v0.13.4').
-        input_path : pathlib.Path
-            Path to the raw input data file.
+        input_path : list of pathlib.Path
+            List of paths to the raw input data files (CSV).
         num_digits : int, optional
             Number of significant digits to round the values, by default 4.
         archive_source : bool, optional

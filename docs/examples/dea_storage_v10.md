@@ -16,7 +16,7 @@ The Danish Energy Agency (DEA) data parser demonstrates a full data-cleaning and
 
 ## Dataset Description
 
-The original dataset is available from the [Danish Energy Agency website](https://ens.dk/media/6589/download). A full description of the dataset is available in the [DEA documentation](https://ens.dk/media/6588/download). The raw source file is included in the repository at `src/technologydata/parsers/raw/Technology_datasheet_for_energy_storage.xlsx`.
+The original dataset is available from the [Danish Energy Agency website](https://ens.dk/media/6589/download). A full description of the dataset is available in the [DEA documentation](https://ens.dk/media/6588/download). The raw source file is included in the repository at `src/technologydata/parsers/raw/dea_energy_storage/Technology_datasheet_for_energy_storage.xlsx`.
 
 The dataset is in Excel format, and it includes, under the data sheet `alldata_flat`, a flat table of technology parameters for a range of energy storage technologies. Columns include `Technology`, `ws`, `par` (parameter name), `val` (value), `unit`, `year`, `est` (case/estimate), `priceyear`, plus metadata columns such as `cat`, `ref`, `note`. Rows are individual parameter records (parameter value + unit + context) for technologies and estimation cases.
 
@@ -26,7 +26,7 @@ The parser is articulated in the following steps.
 
 ### Read the raw data
 
-The script reads the raw data available at `src/technologydata/parsers/raw/Technology_datasheet_for_energy_storage.xlsx`, under sheet `alldata_flat`, in a `pandas` dataframe. It uses `pandas.read_excel(..., engine=calamine, dtype=str)`. All entries are handled as strings initially.
+The script reads the raw data available at `src/technologydata/parsers/raw/dea_energy_storage/Technology_datasheet_for_energy_storage.xlsx`, under sheet `alldata_flat`, in a `pandas` dataframe. It uses `pandas.read_excel(..., engine=calamine, dtype=str)`. All entries are handled as strings initially.
 
 ### Data cleaning, validation and dealing with missing/null values
 
@@ -92,11 +92,18 @@ parser_accessor.parse(
     filter_params=True,
     export_schema=True,
 )
+
+# You can also use a different Excel file with the same structure
+# parser_accessor.parse(
+#     input_file_name="Alternative_datasheet.xlsx",
+#     num_digits=3,
+#     ...
+# )
 ```
 
 The `parse` method accepts the following arguments:
 
-- `input_file_name` (str): The name of the raw data file located in `src/technologydata/parsers/raw/`.
+- `input_file_name` (str): The name of the Excel file located in `src/technologydata/parsers/raw/dea_energy_storage/`. This allows flexibility to parse alternative files with the same structure.
 - `num_digits` (int, default 4): Number of decimals for rounding numeric values.
 - `archive_source` (bool, default False): Whether to store the source on the Wayback Machine.
 - `filter_params` (bool, default False): Whether to filter parameters.

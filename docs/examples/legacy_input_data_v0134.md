@@ -82,16 +82,23 @@ parser_accessor = DataAccessor(
 
 # Run the parser with desired options
 parser_accessor.parse(
-    input_file_name="legacy_input_data.csv",
+    input_file_name=["usa.csv", "other.csv"],
     num_digits=3,
     archive_source=True,
     export_schema=True,
 )
+
+# You can also parse different CSV files with the same structure
+# parser_accessor.parse(
+#     input_file_name=["usa_alternative.csv", "other_alternative.csv"],
+#     num_digits=3,
+#     ...
+# )
 ```
 
 The `parse` method accepts the following arguments:
 
-- `input_file_name` (str): The name of the raw data file located in `src/technologydata/parsers/raw/`.
+- `input_file_name` (list[str]): A list of CSV file names located in `src/technologydata/parsers/raw/legacy_input_data/`. The first file should contain USA-specific data, and the second should contain rest-of-world data. This allows flexibility to parse alternative files with the same structure.
 - `num_digits` (int, default 4): Number of decimals for rounding numeric values.
 - `archive_source` (bool, default False): Whether to store the source on the Wayback Machine.
 - `filter_params` (bool, default False): Whether to filter parameters (not used by this parser).

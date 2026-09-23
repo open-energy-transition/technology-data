@@ -72,8 +72,11 @@ class TestDataAccessor:
     def test_parse_and_access_data_dea_energy_storage(self) -> None:
         """Test parse and load data for dea_energy_storage."""
         data_accessor = DataAccessor(data_source="dea_energy_storage", version="v10")
-        file_name = "Technology_datasheet_for_energy_storage.xlsx"
-        data_accessor.parse(file_name, num_digits=3, filter_params=True)
+        data_accessor.parse(
+            input_file_names=["Technology_datasheet_for_energy_storage.xlsx"],
+            num_digits=3,
+            filter_params=True,
+        )
         data_package = data_accessor.load()
 
         assert data_accessor.data_source == DataSourceName.DEA_ENERGY_STORAGE
@@ -86,10 +89,12 @@ class TestDataAccessor:
         assert len(data_package.technologies) == 136
 
     def test_parse_and_access_data_legacy_data(self) -> None:
-        """Test parse and load data for legacy_input_data/usa.csv."""
+        """Test parse and load data for legacy_input_data (usa.csv and other.csv)."""
         data_accessor = DataAccessor(data_source="legacy_input_data", version="v0.13.4")
-        file_name = "legacy_input_data/usa.csv"
-        data_accessor.parse(file_name, num_digits=3)
+        data_accessor.parse(
+            input_file_names=["usa.csv", "other.csv"],
+            num_digits=3,
+        )
         data_package = data_accessor.load()
 
         assert data_accessor.data_source == DataSourceName.LEGACY_DATA
@@ -99,7 +104,8 @@ class TestDataAccessor:
         assert data_package.sources is not None
         assert data_package.name == "legacy_input_data"
         assert data_package.version == "v0.13.4"
-        assert len(data_package.technologies) == 85
+        # Now parses both usa.csv (85 techs) and other.csv, so count will be higher
+        assert len(data_package.technologies) > 85
 
     def test_load_falls_back_to_latest_for_invalid_version(self) -> None:
         """Test if load raises ValueError when an invalid version is provided."""

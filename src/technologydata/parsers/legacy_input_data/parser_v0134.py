@@ -146,6 +146,7 @@ class LegacyInputDataV0134Parser(ParserBase):
             - 'unit': Parameter units
             - 'further_description': Extra information about the technology
             - 'financial_case': Technology financial case
+            - 'region': Region identifier (e.g., 'USA' or empty)
         sources_path: pathlib.Path
             Output path for storing the SourceCollection object
         archive_source: Optional[bool]
@@ -161,7 +162,7 @@ class LegacyInputDataV0134Parser(ParserBase):
 
         Notes
         -----
-        - The function groups the DataFrame by ["scenario", "year", "technology"]
+        - The function groups the DataFrame by ["scenario", "year", "technology", "region"]
         - For each group, it creates a dictionary of Parameters
         - Each Technology is instantiated with group-specific attributes
 
@@ -169,19 +170,25 @@ class LegacyInputDataV0134Parser(ParserBase):
         list_techs = []
 
         if archive_source:
-            source = Source(
+            source_usa = Source(
                 title="Energy system technology data for the US",
                 authors="Contributors to technology-data. Data source: manual_input_usa.csv",
                 url="https://github.com/PyPSA/technology-data/blob/master/inputs/US/manual_input_usa.csv",
             )
-            source.ensure_in_wayback()
-            sources = SourceCollection(sources=[source])
+            source_usa.ensure_in_wayback()
+            source_other = Source(
+                title="Energy system technology data",
+                authors="Contributors to technology-data. Data source: other.csv",
+                url="https://github.com/PyPSA/technology-data/blob/master/inputs/manual_input.csv",
+            )
+            source_other.ensure_in_wayback()
+            sources = SourceCollection(sources=[source_usa, source_other])
             sources.to_json(sources_path, output_schema=output_schema)
         else:
             sources = SourceCollection.from_json(sources_path)
 
-        for (scenario, year, technology), group in dataframe.groupby(
-            ["scenario", "year", "technology"]
+        for (scenario, year, technology, region), group in dataframe.groupby(
+            ["scenario", "year", "technology", "region"]
         ):
             parameters = {}
             financial_case_for_tech = None
@@ -216,10 +223,13 @@ class LegacyInputDataV0134Parser(ParserBase):
             if financial_case_for_tech is not None:
                 case_value = f"{scenario} - {financial_case_for_tech}"
 
+            # Use region from dataframe, convert empty string to actual value or keep as is
+            region_value = region if region else None
+
             list_techs.append(
                 Technology(
                     name=technology,
-                    region="USA",
+                    region=region_value,
                     year=year,
                     parameters=parameters,
                     case=case_value,
@@ -231,7 +241,7 @@ class LegacyInputDataV0134Parser(ParserBase):
 
     def parse(
         self,
-        input_path: pathlib.Path,
+        input_path: pathlib.Path | list[pathlib.Path],
         num_digits: int,
         archive_source: bool,
         **kwargs: Any,
@@ -239,14 +249,14 @@ class LegacyInputDataV0134Parser(ParserBase):
         """
         Parse and process version 0.13.4 of the raw/legacy_input_data/usa.csv and raw/legacy_input_data/other.csv dataset.
 
-        This method reads the raw data from an Excel file, cleans and transforms
+        This method reads the raw data from both CSV files, cleans and transforms
         it through a series of steps, and then builds a TechnologyCollection.
         The processed data is saved to JSON files.
 
         Parameters
         ----------
-        input_path : pathlib.Path
-            Path to the raw input data file (Excel).
+        input_path : pathlib.Path | list[pathlib.Path]
+            Paths to the raw input data files (CSV).
         num_digits : int
             Number of significant digits to round numerical values.
         archive_source : bool
@@ -255,18 +265,49 @@ class LegacyInputDataV0134Parser(ParserBase):
             export_schema : bool
                 If True, exports the Pydantic schema for the data models.
 
+        Raises
+        ------
+        TypeError
+            If input_path is a list instead of a single Path.
+
         Returns
         -------
         TechnologyCollection
             A collection of parsed technology data.
 
         """
+        # Validate that input_path is a single Path, not a list
+        if isinstance(input_path, pathlib.Path):
+            raise TypeError(
+                "LegacyInputDataV0134Parser requires a list of paths to the input files. "
+            )
+
         export_schema = kwargs.get("export_schema", False)
 
-        legacy_input_data_usa_input_path = pathlib.Path(input_path)
+        # Identify which file is USA and which is other based on filename
+        usa_path = None
+        other_path = None
 
+        for file_path in input_path:
+            if "usa" in file_path.name.casefold() or "us" in file_path.name.casefold():
+                usa_path = file_path
+            else:
+                other_path = file_path
+
+        # Validate we found both files
+        if usa_path is None:
+            raise ValueError(
+                f"Could not find USA file (expected filename containing 'usa' or 'us'). "
+                f"Got files: {[p.name for p in input_path]}"
+            )
+        if other_path is None:
+            raise ValueError(
+                f"Could not find 'other' file. Got files: {[p.name for p in input_path]}"
+            )
+
+        # Read USA data
         legacy_input_data_usa_df = pandas.read_csv(
-            legacy_input_data_usa_input_path, dtype=str, na_values="None"
+            usa_path, dtype=str, na_values="None"
         )
         legacy_input_data_usa_df["value"] = legacy_input_data_usa_df["value"].astype(
             float
@@ -274,23 +315,45 @@ class LegacyInputDataV0134Parser(ParserBase):
         legacy_input_data_usa_df["scenario"] = legacy_input_data_usa_df[
             "scenario"
         ].fillna("not_available")
+        # Add region column for USA data
+        legacy_input_data_usa_df["region"] = "USA"
+        logger.info("USA data loaded with region='USA'.")
+
+        # Read other data
+        legacy_input_data_other_df = pandas.read_csv(
+            other_path, dtype=str, na_values="None"
+        )
+        legacy_input_data_other_df["value"] = legacy_input_data_other_df[
+            "value"
+        ].astype(float)
+        # Add missing columns for other.csv
+        legacy_input_data_other_df["scenario"] = "not_available"
+        legacy_input_data_other_df["financial_case"] = None
+        # Add region column (empty) for other data
+        legacy_input_data_other_df["region"] = ""
+        logger.info("Other data loaded with region='' and missing columns added.")
+
+        # Combine both dataframes
+        legacy_input_data_df = pandas.concat(
+            [legacy_input_data_usa_df, legacy_input_data_other_df],
+            ignore_index=True,
+        )
+        logger.info("USA and other data combined.")
 
         # Replace "per unit" with "%" and multiply val by 100
-        mask_per_unit = legacy_input_data_usa_df["unit"].str.contains("per unit")
-        legacy_input_data_usa_df.loc[mask_per_unit, "unit"] = (
-            legacy_input_data_usa_df.loc[mask_per_unit, "unit"].str.replace(
-                "per unit", "%"
-            )
-        )
-        legacy_input_data_usa_df.loc[mask_per_unit, "value"] = (
-            legacy_input_data_usa_df.loc[mask_per_unit, "value"] * 100.0
+        mask_per_unit = legacy_input_data_df["unit"].str.contains("per unit", na=False)
+        legacy_input_data_df.loc[mask_per_unit, "unit"] = legacy_input_data_df.loc[
+            mask_per_unit, "unit"
+        ].str.replace("per unit", "%")
+        legacy_input_data_df.loc[mask_per_unit, "value"] = (
+            legacy_input_data_df.loc[mask_per_unit, "value"] * 100.0
         ).round(num_digits)
         logger.info(
             "`per unit` replaced by `%`. Corresponding value multiplied by 100."
         )
 
         # Include currency_year in unit if applicable
-        legacy_input_data_usa_df["unit"] = legacy_input_data_usa_df.apply(
+        legacy_input_data_df["unit"] = legacy_input_data_df.apply(
             lambda row: Commons.update_unit_with_currency_year(
                 row["unit"], row["currency_year"]
             ),
@@ -299,7 +362,7 @@ class LegacyInputDataV0134Parser(ParserBase):
         logger.info("`currency_year` included in `unit` column.")
 
         # Build TechnologyCollection
-        legacy_input_data_usa_base_path = pathlib.Path(
+        legacy_input_data_output_base_path = pathlib.Path(
             path_cwd,
             "src",
             "technologydata",
@@ -307,16 +370,16 @@ class LegacyInputDataV0134Parser(ParserBase):
             "legacy_input_data",
         )
         output_technologies_path = pathlib.Path(
-            legacy_input_data_usa_base_path,
+            legacy_input_data_output_base_path,
             "v0.13.4/technologies.json",
         )
         output_sources_path = pathlib.Path(
-            legacy_input_data_usa_base_path,
+            legacy_input_data_output_base_path,
             "v0.13.4/sources.json",
         )
 
         tech_col = LegacyInputDataV0134Parser._build_technology_collection(
-            legacy_input_data_usa_df,
+            legacy_input_data_df,
             output_sources_path,
             archive_source=archive_source,
             output_schema=export_schema,

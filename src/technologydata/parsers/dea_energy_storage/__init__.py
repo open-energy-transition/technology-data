@@ -34,7 +34,7 @@ class DeaEnergyStorageParser:
     def parse(
         self,
         version: str,
-        input_path: pathlib.Path,
+        input_path: pathlib.Path | list[pathlib.Path],
         num_digits: int,
         archive_source: bool,
         filter_params: bool,
