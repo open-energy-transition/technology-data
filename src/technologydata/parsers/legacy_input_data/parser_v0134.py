@@ -330,8 +330,10 @@ class LegacyInputDataV0134Parser(ParserBase):
         legacy_input_data_other_df["scenario"] = "not_available"
         legacy_input_data_other_df["financial_case"] = None
         # Add region column (empty) for other data
-        legacy_input_data_other_df["region"] = ""
-        logger.info("Other data loaded with region='' and missing columns added.")
+        legacy_input_data_other_df["region"] = "not_available"
+        logger.info(
+            "Other data loaded with region='not_available' and missing columns added."
+        )
 
         # Combine both dataframes
         legacy_input_data_df = pandas.concat(
