@@ -38,7 +38,10 @@ methanol = [methanol] = CH3OH = MeOH
 naphtha = [naphtha]
 natural_gas = [natural_gas] = NG
 nitrogen = [nitrogen] = N2
+oil = [oil]
+ore = [ore]
 oxygen = [oxygen] = O2
+scrap = [scrap]
 steel = [steel]
 slag = [slag]
 thermal = [thermal] = th

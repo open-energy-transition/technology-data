@@ -122,6 +122,11 @@ class LegacyInputDataV0134Parser(ParserBase):
         if match:
             return UnitCarrierHeatingValueExtractor.process_currency_mass_carrier(match)
 
+        # Pattern 10: Power per distance per power with carriers
+        match = re.match(UnitPatternRegex.POWER_DISTANCE_POWER.value, input_unit)
+        if match:
+            return UnitCarrierHeatingValueExtractor.process_power_distance_power(match)
+
         # No pattern matched - return as-is
         return input_unit, None, None
 
@@ -337,6 +342,16 @@ class LegacyInputDataV0134Parser(ParserBase):
             "unit"
         ].str.replace("MWHh_el", "MWh_el")
 
+        # Correct typo: MWhth -> MWh_th
+        legacy_input_data_other_df["unit"] = legacy_input_data_other_df[
+            "unit"
+        ].str.replace("MWhth", "MWh_th", regex=False)
+
+        # Correct typo: tCO2 -> t_CO2
+        legacy_input_data_other_df["unit"] = legacy_input_data_other_df[
+            "unit"
+        ].str.replace("tCO2", "t_CO2", regex=False)
+
         # Correct typo: t_cl -> t/clinker
         legacy_input_data_other_df["unit"] = legacy_input_data_other_df[
             "unit"
@@ -362,6 +377,18 @@ class LegacyInputDataV0134Parser(ParserBase):
         legacy_input_data_df["unit"] = legacy_input_data_df["unit"].str.replace(
             "p.u.", "per unit", regex=False
         )
+
+        # Replace "1000km" with "km" and divide val by 1000
+        mask_1000km = legacy_input_data_df["unit"].str.contains(
+            "1000km", na=False, regex=False
+        )
+        legacy_input_data_df.loc[mask_1000km, "unit"] = legacy_input_data_df.loc[
+            mask_1000km, "unit"
+        ].str.replace("1000km", "km", regex=False)
+        legacy_input_data_df.loc[mask_1000km, "value"] = (
+            legacy_input_data_df.loc[mask_1000km, "value"] / 1000.0
+        ).round(num_digits)
+        logger.info("`1000km` replaced by `km`. Corresponding value divided by 1000.")
 
         # Replace "per unit" with "%" and multiply val by 100
         mask_per_unit = legacy_input_data_df["unit"].str.contains("per unit", na=False)

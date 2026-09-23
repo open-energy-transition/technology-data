@@ -59,12 +59,16 @@ class UnitPatternRegex(StrEnum):
     )
 
     # Pattern 8: Currency per mass/time with distance dimension
-    # Examples: EUR/(tCO2/h)/km, USD_2023/(t_cement/h)/km
-    CURRENCY_MASS_TIME_DISTANCE = r"^(USD|EUR)(?:_(\d{4}))?/\(t([A-Za-z0-9]+)/h\)/km$"
+    # Examples: EUR/(t_CO2/h)/km, USD_2023/(t_cement/h)/km
+    CURRENCY_MASS_TIME_DISTANCE = r"^(USD|EUR)(?:_(\d{4}))?/\(t_([A-Za-z0-9]+)/h\)/km$"
 
     # Pattern 9: Currency with optional year and mass carrier (without time)
     # Examples: EUR/t_clinker, USD_2023/t_cement, EUR/t_HVC
     CURRENCY_MASS_CARRIER = r"^(USD|EUR)(?:_(\d{4}))?/t_([A-Za-z0-9]+)$"
+
+    # Pattern 10: Power per distance per power with carriers
+    # Examples: MW_e/km/MW_CH4, MW_e/km/MW_H2
+    POWER_DISTANCE_POWER = r"^([kMGT]?W)_([A-Za-z0-9]+)/km/([kMGT]?W)_([A-Za-z0-9]+)$"
 
 
 class UnitCarrierHeatingValueExtractor:
@@ -148,6 +152,16 @@ class UnitCarrierHeatingValueExtractor:
             f"{currency}_{year}/t/h/km" if year else f"{currency}/t/h/km"
         )
         return standardized_unit, f"1/{carrier}", None
+
+    @staticmethod
+    def process_power_distance_power(match: re.Match[str]) -> tuple[str, str, str]:
+        """Process power per distance per power with carriers pattern."""
+        unit1, carrier1, unit2, carrier2 = match.groups()
+        standardized_unit = f"{unit1}/km/{unit2}"
+        carrier_str = f"{carrier1}/{carrier2}"
+        # Distinguish between power (W) and energy (Wh) units
+        heating_value = "1/LHV"
+        return standardized_unit, carrier_str, heating_value
 
 
 class ArgumentConfig(BaseModel):
