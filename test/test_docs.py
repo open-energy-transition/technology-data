@@ -22,7 +22,7 @@ import pytest
 DOCS_DIR = Path(__file__).parent.parent / "docs"
 
 # Every dataset fact sheet is tested, so their tables stay in sync with the data.
-DOCS = [DOCS_DIR / "tutorial" / "index.md"] + sorted(
+DOCS = [DOCS_DIR / "overview.md", DOCS_DIR / "tutorial" / "index.md"] + sorted(
     p for p in (DOCS_DIR / "datasets").glob("*.md") if p.name != "index.md"
 )
 
