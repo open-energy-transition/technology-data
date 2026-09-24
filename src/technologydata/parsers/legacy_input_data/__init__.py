@@ -2,7 +2,7 @@
 #
 # SPDX-License-Identifier: MIT
 
-"""Provide a parser for the technology-data raw/others.csv and  raw/usa.csv dataset."""
+"""Provide a parser for the technology-data raw/legacy_input_data/other.csv and raw/legacy_input_data/usa.csv datasets."""
 
 import logging
 import pathlib

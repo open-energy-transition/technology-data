@@ -26,13 +26,27 @@ The parser is articulated in the following steps.
 
 ### Read the raw data
 
-The script reads the raw data available at `../../src/technologydata/parsers/raw/legacy_input_data` in a `pandas` dataframe. It uses `pandas.read_csv(..., dtype=str, na_values="None")`. All entries are handled as strings initially except for the `value` column which is converted to float.
+The parser reads both raw CSV files available at `../../src/technologydata/parsers/raw/legacy_input_data` into separate `pandas` dataframes:
+
+- `usa.csv`: Contains USA-specific technology data, tagged with `region='USA'`
+- `other.csv`: Contains rest-of-world technology data, tagged with `region='not_available'`
+
+Both files use `pandas.read_csv(..., dtype=str, na_values="None")`. All entries are handled as strings initially except for the `value` column which is converted to float. After data cleaning and normalization, the two dataframes are concatenated into a single dataframe for processing.
 
 ### Data cleaning, validation and dealing with missing/null values
 
 The data cleaning and validation happens with the following steps.
 
-Function `_extract_units_carriers_heating_value()` extracts standardized units, carriers, and heating values from input unit strings. This function maps complex unit representations to simplified unit, carrier, and heating value combinations using a predefined dictionary of special patterns. Examples include:
+**Unit normalization**: The parser first normalizes malformed unit strings before processing:
+
+- `tCO2` → `t_CO2` (adds missing underscore)
+- `MWHh_el` → `MWh_el` (fixes capitalization)
+- `MWhth` → `MWh_th` (adds missing underscore)
+- `kWel` → `kW_el` (adds missing underscore)
+- `MWh_thdh` → `MWh_th` (fixes typo)
+- Removes `,dp` suffix from units (design point notation)
+
+**Unit extraction**: Function `_extract_units_carriers_heating_value()` extracts standardized units, carriers, and heating values from input unit strings. This function maps complex unit representations to simplified unit, carrier, and heating value combinations using regex pattern matching across 12 different patterns. Examples include:
 
 - `USD_2022/MW_FT` → unit: `USD_2022/MW`, carrier: `1/FT`, heating_value: `1/LHV`
 - `MWh_H2/MWh_FT` → unit: `MWh/MWh`, carrier: `H2/FT`, heating_value: `LHV`
@@ -40,27 +54,31 @@ Function `_extract_units_carriers_heating_value()` extracts standardized units, 
 - `t_CO2/MWh_FT` → unit: `t/MWh`, carrier: `CO2/FT`, heating_value: `LHV`
 - `USD_2022/kWh_H2` → unit: `USD_2022/kWh`, carrier: `1/H2`, heating_value: `LHV`
 - `USD_2023/t_CO2/h` → unit: `USD_2023/t/h`, carrier: `1/CO2`, heating_value: `None`
+- `EUR/(tCO2/h)/km` → unit: `EUR/t/h/km`, carrier: `1/CO2`, heating_value: `None`
 - `MWh_el/t_CO2` → unit: `MWh/t`, carrier: `el/CO2`, heating_value: `LHV`
 - `MWh_th/t_CO2` → unit: `MWh/t`, carrier: `thermal/CO2`, heating_value: `LHV`
+- `t_CH4` → unit: `t`, carrier: `CH4`, heating_value: `None` (standalone mass carrier)
+- `MWh/t_CO2` → unit: `MWh/t`, carrier: `1/CO2`, heating_value: `LHV` (energy to mass with carrier)
 
-The parser also fills missing values in the `scenario` column with `"not_available"`.
+**Missing values**: The parser fills missing values in the `scenario` column with `"not_available"`.
 
-The parser applies the following unit conversions:
+**Unit conversions**: The parser applies the following conversions:
 
+- Convert `1000km` to `km` and divide the corresponding `value` by 1000.0, rounding to `num_digits` decimals.
 - Convert `per unit` to `%` and multiply the corresponding `value` by 100.0, rounding to `num_digits` decimals.
 
-Function `Commons.update_unit_with_currency_year(unit, currency_year)` appends `currency_year` information to currency units when present. This is because `technologydata` follows the currency pattern `\b(?P<cu_iso3>[A-Z]{3})_(?P<year>\d{4})\b`, as for example `USD_2022`.
+**Currency year integration**: Function `Commons.update_unit_with_currency_year(unit, currency_year)` appends `currency_year` information to currency units when present. This is because `technologydata` follows the currency pattern `\b(?P<cu_iso3>[A-Z]{3})_(?P<year>\d{4})\b`, as for example `USD_2022`.
 
 ### Populate and export the source and technology collections
 
 Function `_build_technology_collection()`:
 
-- if `archive_source` is set, constructs a `Source` object for the manual input USA dataset, calls `ensure_in_wayback()` and writes `sources.json`; otherwise reads an existing `sources.json`.
-- groups the cleaned DataFrame by `scenario`, `year`, `technology`.
+- if `archive_source` is set, constructs `Source` objects for both the USA and other datasets, calls `ensure_in_wayback()` on each, and writes `sources.json`; otherwise reads an existing `sources.json`.
+- groups the cleaned DataFrame by `scenario`, `year`, `technology`, `region`.
 - for each group, builds a dictionary of `Parameter` objects (each with `magnitude`, `sources`, and optionally `carrier`, `heating_value`, `units`, `note`).
 - captures the `financial_case` value from rows within each group to combine with `scenario`.
 - creates a `case` value by combining `scenario` and `financial_case` in the format `"{scenario} - {financial_case}"` when `financial_case` is present; otherwise uses `scenario` alone.
-- creates a `Technology` object for each group, with `name` = `technology`, `detailed_technology` = `technology`, `year` = `year`, `region` = `USA`, `case` = combined case value, and collects them into a `TechnologyCollection` object.
+- creates a `Technology` object for each group, with `name` = `technology`, `detailed_technology` = `technology`, `year` = `year`, `region` = region from the DataFrame (`"USA"` for USA data, `"not_available"` for other data), `case` = combined case value, and collects them into a `TechnologyCollection` object.
 - writes the `TechnologyCollection` object to a `technologies.json`.
 
 ## Running the parser

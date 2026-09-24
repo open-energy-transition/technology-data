@@ -45,6 +45,11 @@ class LegacyInputDataV0134Parser(ParserBase):
         - Mass/energy ratios: t_{carrier1}/MWh_{carrier2}
         - Time-based units with /h suffix
         - Geographic distance-based units with /km
+        - Standalone mass with carrier: t_{carrier}
+        - Energy without carrier to mass with carrier: {energy}/t_{carrier}
+
+        The function also normalizes malformed unit strings (e.g., tCO2 -> t_CO2) before
+        pattern matching.
 
         Parameters
         ----------
@@ -69,6 +74,12 @@ class LegacyInputDataV0134Parser(ParserBase):
         ('MWh/MWh', 'H2/FT', 'LHV')
         >>> _extract_units_carriers_heating_value("USD_2023/t_CO2/h")
         ('USD_2023/t/h', '1/CO2', None)
+        >>> _extract_units_carriers_heating_value("EUR/(tCO2/h)/km")
+        ('EUR/t/h/km', '1/CO2', None)
+        >>> _extract_units_carriers_heating_value("t_CH4")
+        ('t', 'CH4', None)
+        >>> _extract_units_carriers_heating_value("MWh/t_CO2")
+        ('MWh/t', '1/CO2', 'LHV')
 
         """
         if not isinstance(input_unit, str):
@@ -270,16 +281,27 @@ class LegacyInputDataV0134Parser(ParserBase):
         **kwargs: Any,
     ) -> None:
         """
-        Parse and process version 0.13.4 of the raw/legacy_input_data/usa.csv and raw/legacy_input_data/other.csv dataset.
+        Parse and process version 0.13.4 of the raw/legacy_input_data/usa.csv and raw/legacy_input_data/other.csv datasets.
 
-        This method reads the raw data from both CSV files, cleans and transforms
-        it through a series of steps, and then builds a TechnologyCollection.
+        This method reads the raw data from both CSV files (usa.csv and other.csv), cleans and
+        transforms it through a series of steps, and then builds a TechnologyCollection.
         The processed data is saved to JSON files.
+
+        Data processing steps include:
+        - USA data is tagged with region='USA', other data with region='not_available'
+        - Unit normalization: tCO2 -> t_CO2, MWHh_el -> MWh_el, MWhth -> MWh_th,
+          kWel -> kW_el, MWh_thdh -> MWh_th
+        - Removal of design point suffix: ,dp removed from units
+        - Distance normalization: 1000km -> km (with value divided by 1000)
+        - Percentage conversion: 'per unit' -> '%' (with value multiplied by 100)
+        - Currency year integration: currency_year column merged into unit string
+        - Unit/carrier/heating value extraction using regex pattern matching
 
         Parameters
         ----------
         input_path : pathlib.Path | list[pathlib.Path]
-            Paths to the raw input data files (CSV).
+            List of paths to the raw input data files. Must contain two CSV files:
+            one with 'usa' or 'us' in the filename, and one 'other' file.
         num_digits : int
             Number of significant digits to round numerical values.
         archive_source : bool
@@ -291,7 +313,9 @@ class LegacyInputDataV0134Parser(ParserBase):
         Raises
         ------
         TypeError
-            If input_path is a list instead of a single Path.
+            If input_path is a single Path instead of a list.
+        ValueError
+            If the USA file or other file cannot be identified from the filenames.
 
         Returns
         -------

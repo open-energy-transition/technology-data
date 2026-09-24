@@ -167,11 +167,11 @@ To load them, use the `DataAccessor`:
 ``` py
 >>> from technologydata import DataAccessor
 >>> dea = DataAccessor(data_source="dea_energy_storage", version="v10").load()
->>> usa = DataAccessor(data_source="manual_input_usa", version="v0.13.4").load()
+>>> usa = DataAccessor(data_source="legacy_input_data", version="v0.13.4").load()
 >>> print(dea.name, dea.version, len(dea.technologies.technologies))
 dea_energy_storage v10 136
 >>> print(usa.name, usa.version, len(usa.technologies.technologies))
-manual_input_usa v0.13.4 85
+legacy_input_data v0.13.4 292
 ```
 
 Both come back as `DataPackage` objects, the same shape as `package` from the previous section — just with a lot more technologies inside.
@@ -228,7 +228,7 @@ To work with both catalogues at once, concatenate them into one collection:
 ...     technologies=dea.technologies.technologies + usa.technologies.technologies
 ... )
 >>> print(len(combined.technologies))
-221
+428
 ```
 
 ## 8. Save it and load it back
