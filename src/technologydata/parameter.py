@@ -576,7 +576,7 @@ class Parameter(BaseModel):
         -----
         This method checks for parameter compatibility before performing the addition.
         The resulting Parameter retains the carrier, heating value, and combines provenance,
-        notes, and sources from both operands. Preserves the provenance of both parameters 
+        notes, and sources from both operands. Preserves the provenance of both parameters
         and adds a provenance entry for the operation.
 
         """
