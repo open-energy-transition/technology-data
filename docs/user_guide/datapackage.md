@@ -72,6 +72,21 @@ not a bug.
 - For generating bibliography or citation lists
 - For archival/documentation purposes
 
+#### Schema Version
+
+Every `technologies.json` and `sources.json` file has a `schema_version` at the beginning, which is an integer describing the layout of the file (see `technologydata.SCHEMA_VERSION`):
+
+```json
+{
+    "schema_version": 1,
+    "technologies": [...]
+}
+```
+
+The schema version is independent of the package version and of the dataset `version` and incremented whenever the data schema chanes.
+When loading with `from_json()` a `ValueError` is raised if the file's `schema_version` differs from the one supported by the installed `technologydata`.
+In that case the file either needs to be regenerated with the current version of `technologydata` or migrated to the new data schema.
+
 ### Exporting to JSON
 
 Export the data package to JSON files in a specified folder:

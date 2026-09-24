@@ -9,13 +9,13 @@ import json
 import pathlib
 import re
 from collections.abc import Iterator
-from typing import Annotated, Self
+from typing import Annotated, Any, Self
 
 import pandas
 import pydantic
 import pydantic_core
 
-from technologydata.schema_version import SCHEMA_VERSION
+from technologydata.schema_version import SCHEMA_VERSION, check_schema_version
 from technologydata.source import Source
 
 
@@ -25,14 +25,27 @@ class SourceCollection(pydantic.BaseModel):
 
     Attributes
     ----------
+    schema_version : int
+        Version of the data schema, see `SCHEMA_VERSION`.
     sources : List[Source]
         List of Source objects.
 
     """
 
+    schema_version: Annotated[
+        int, pydantic.Field(description="Version of the data schema.")
+    ] = SCHEMA_VERSION
     sources: Annotated[
         list[Source], pydantic.Field(description="List of Source objects.")
     ]
+
+    @pydantic.model_validator(mode="before")
+    @classmethod
+    def _validate_schema_version(cls, data: Any) -> Any:
+        """Reject data with an explicit schema version other than the current one."""
+        if isinstance(data, dict) and "schema_version" in data:
+            check_schema_version(data, cls.__name__)
+        return data
 
     def __iter__(self) -> Iterator["Source"]:  # type: ignore
         """
@@ -183,7 +196,7 @@ class SourceCollection(pydantic.BaseModel):
         self,
         file_path: pathlib.Path,
         schema_path: pathlib.Path | None = None,
-        output_schema: bool = True,
+        output_schema: bool = False,
     ) -> None:
         """
         Export the SourceCollection to a JSON file, together with a data schema.
@@ -194,7 +207,7 @@ class SourceCollection(pydantic.BaseModel):
             The path to the JSON file to be created.
         schema_path : pathlib.Path
             The path to the JSON schema file to be created. By default, created with a `schema` suffix next to `file_path`.
-        output_schema : bool, default True
+        output_schema : bool, default False
             If True, generates a JSON schema file describing the data structure.
             The schema will include field descriptions and type information.
 
@@ -205,9 +218,6 @@ class SourceCollection(pydantic.BaseModel):
 
             # Export the model's schema with descriptions to a dict
             schema = self.model_json_schema()
-
-            # Add schema_version to the schema
-            schema["schema_version"] = SCHEMA_VERSION
 
             # Save the schema (which includes descriptions) to a JSON file
             with open(schema_path, "w") as f:
@@ -229,6 +239,18 @@ class SourceCollection(pydantic.BaseModel):
         ----------
         file_path : pathlib.Path | str
             The path to the JSON file to be imported.
+
+        Returns
+        -------
+        SourceCollection
+            An instance of SourceCollection initialized with the data from the JSON file.
+
+        Raises
+        ------
+        TypeError
+            If `file_path` is not a pathlib.Path or str.
+        ValueError
+            If the file's ``schema_version`` differs from `SCHEMA_VERSION`.
 
         """
         if isinstance(file_path, (pathlib.Path | str)):
