@@ -70,6 +70,14 @@ class UnitPatternRegex(StrEnum):
     # Examples: MW_e/km/MW_CH4, MW_e/km/MW_H2
     POWER_DISTANCE_POWER = r"^([kMGT]?W)_([A-Za-z0-9]+)/km/([kMGT]?W)_([A-Za-z0-9]+)$"
 
+    # Pattern 11: Standalone mass with carrier
+    # Examples: t_CH4, t_HBI, t_ore
+    MASS_CARRIER = r"^t_([A-Za-z0-9]+)$"
+
+    # Pattern 12: Energy without carrier to mass with carrier
+    # Examples: MWh/t_CO2, kWh/t_cement
+    ENERGY_MASS_CARRIER = r"^([kMGT]?Wh)/t_([A-Za-z0-9]+)$"
+
 
 class UnitCarrierHeatingValueExtractor:
     """Process matched unit patterns into standardized unit, carrier, and heating value tuples."""
@@ -162,6 +170,20 @@ class UnitCarrierHeatingValueExtractor:
         # Distinguish between power (W) and energy (Wh) units
         heating_value = "1/LHV"
         return standardized_unit, carrier_str, heating_value
+
+    @staticmethod
+    def process_mass_carrier(match: re.Match[str]) -> tuple[str, str, None]:
+        """Process standalone mass with carrier pattern."""
+        carrier = match.groups()[0]
+        return "t", carrier, None
+
+    @staticmethod
+    def process_energy_mass_carrier(match: re.Match[str]) -> tuple[str, str, str]:
+        """Process energy without carrier to mass with carrier pattern."""
+        unit, carrier = match.groups()
+        standardized_unit = f"{unit}/t"
+        carrier_str = f"1/{carrier}"
+        return standardized_unit, carrier_str, "LHV"
 
 
 class ArgumentConfig(BaseModel):

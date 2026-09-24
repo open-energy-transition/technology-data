@@ -130,6 +130,16 @@ class LegacyInputDataV0134Parser(ParserBase):
         if match:
             return UnitCarrierHeatingValueExtractor.process_power_distance_power(match)
 
+        # Pattern 11: Standalone mass with carrier
+        match = re.match(UnitPatternRegex.MASS_CARRIER.value, input_unit)
+        if match:
+            return UnitCarrierHeatingValueExtractor.process_mass_carrier(match)
+
+        # Pattern 12: Energy without carrier to mass with carrier
+        match = re.match(UnitPatternRegex.ENERGY_MASS_CARRIER.value, input_unit)
+        if match:
+            return UnitCarrierHeatingValueExtractor.process_energy_mass_carrier(match)
+
         # No pattern matched - return as-is
         return input_unit, None, None
 
@@ -340,12 +350,12 @@ class LegacyInputDataV0134Parser(ParserBase):
             "value"
         ].astype(float)
 
-        # Correct typo: MWHh_el -> MWh_el
+        # Perform change: MWHh_el -> MWh_el
         legacy_input_data_other_df["unit"] = legacy_input_data_other_df[
             "unit"
         ].str.replace("MWHh_el", "MWh_el")
 
-        # Correct typo: MWhth -> MWh_th
+        # Perform change: MWhth -> MWh_th
         legacy_input_data_other_df["unit"] = legacy_input_data_other_df[
             "unit"
         ].str.replace("MWhth", "MWh_th", regex=False)
@@ -355,20 +365,30 @@ class LegacyInputDataV0134Parser(ParserBase):
             "unit"
         ].str.replace("tCO2", "t_CO2", regex=False)
 
-        # Remove design point suffix from units: kW_th,dp -> kW_th
+        # Perform change: kW_th,dp -> kW_th
         legacy_input_data_other_df["unit"] = legacy_input_data_other_df[
             "unit"
         ].str.replace(",dp", "", regex=False)
 
-        # Correct typo: MWh_thdh -> MWh_th
+        # Perform change: MWh_thdh -> MWh_th
         legacy_input_data_other_df["unit"] = legacy_input_data_other_df[
             "unit"
         ].str.replace("MWh_thdh", "MWh_th", regex=False)
 
-        # Correct typo: t_cl -> t/clinker
+        # Perform change: t_cl -> t/clinker
         legacy_input_data_other_df["unit"] = legacy_input_data_other_df[
             "unit"
         ].str.replace(" t_cl/t_cement", "t_clinker/t_cement,")
+
+        # Perform change: EUR/kWel -> EUR/kW_el
+        legacy_input_data_other_df["unit"] = legacy_input_data_other_df[
+            "unit"
+        ].str.replace("EUR/kWel", "EUR/kW_el")
+
+        # Perform change: t_FTfuel -> t_FT
+        legacy_input_data_other_df["unit"] = legacy_input_data_other_df[
+            "unit"
+        ].str.replace("t_FTfuel", "t_FT")
 
         # Add missing columns for other.csv
         legacy_input_data_other_df["scenario"] = "not_available"
