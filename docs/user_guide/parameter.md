@@ -161,13 +161,30 @@ param_mixed_hhv = param_mixed.change_heating_value("HHV")
 0.13 kWh/kg higher_heating_value
 ```
 
+### Provenance Tracking
+
+Every transformation on a `Parameter` returns a new `Parameter` object with the transformation tracked in the `provenance` field.
+This history keeps track in a human-readable way.
+Operations that do not change the parameter, e.g. converting to the units it already has, add no entry.
+
+```python
+param = Parameter(magnitude=1000, units="USD_2020/kW", provenance=["Directly extracted from literature"])
+converted = param.to("USD_2020/MW") * 2
+>>> print("\n".join(converted.provenance))
+Directly extracted from literature
+Converted units from 'USD_2020 / kilowatt' to 'USD_2020 / megawatt': 1000 USD_2020 / kilowatt -> 1000000.0 USD_2020 / megawatt
+Multiplied by 2: 1000000.0 -> 2000000.0
+```
+
+For arithmetic between two parameters, the histories of both parameters are concatenated (left parameter first), followed by an entry describing the operation, e.g. `Calculated as (3 kilowatt) + (1 kilowatt) = 4 kilowatt`.
+
 ## API Reference
 
 Please refer to the [API documentation](../api/parameter.md) for detailed information on the `Parameter` class methods and attributes.
 
 ## Notes
 
-- **Provenance/Note/Sources in Arithmetic**: When performing arithmetic operations, `provenance` lists are concatenated (preserving both operands' full history); merging of `note` and `sources` is not yet implemented (see `TODO` comments in the code).
+- **Note/Sources in Arithmetic**: When performing arithmetic operations, `provenance` is tracked as described above; proper merging of `note` and `sources` is not yet implemented (see `TODO` comments in the code).
 - **Unit Conversion**: The `.to()` method does not support currency conversion; use `.to_currency()` for that.
 - **Partial Unit Compatibility**: Only certain combinations of units, carriers, and heating values are supported for arithmetic operations.
 - **No Uncertainty Handling**: There is currently no support for uncertainty or error propagation.

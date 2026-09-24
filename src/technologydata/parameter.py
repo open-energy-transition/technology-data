@@ -164,8 +164,59 @@ class Parameter(BaseModel):
             parts.append(f"heating_value={self.heating_value}")
         return ", ".join(parts)
 
+    def _extend_provenance(self, entry: str) -> list[str]:
+        """
+        Return a copy of the provenance history with a new entry appended.
+
+        Parameters
+        ----------
+        entry : str
+            Concise description of the transformation applied.
+
+        Returns
+        -------
+        list[str]
+            The existing provenance entries followed by `entry`.
+
+        """
+        return [*(self.provenance or []), entry]
+
+    def _merge_provenance(self, other: Self, entry: str) -> list[str]:
+        """
+        Return the combined provenance history of two operands with a new entry appended.
+
+        Parameters
+        ----------
+        other : Parameter
+            The second operand of the operation.
+        entry : str
+            Human-readable description of the operation applied.
+
+        Returns
+        -------
+        list[str]
+            The provenance entries of `self`, then of `other`, followed by `entry`.
+
+        """
+        return [*(self.provenance or []), *(other.provenance or []), entry]
+
     def to(self, units: str) -> Self:
-        """Convert the parameter's quantity to new units."""
+        """
+        Convert the parameter's quantity to new units.
+
+        A provenance entry recording the conversion is appended, unless the units are unchanged.
+
+        Parameters
+        ----------
+        units : str
+            The target units, which must not change the currency.
+
+        Returns
+        -------
+        Parameter
+            A new Parameter object in the target units.
+
+        """
         self._update_pint_attributes()
 
         # Do not allow for currency conversion here, as it requires additional information
@@ -178,12 +229,20 @@ class Parameter(BaseModel):
             )
 
         new_quantity = self._pint_quantity.to(units)
+        from_units = str(self._pint_quantity.units)
+        to_units = str(new_quantity.units)
+        provenance = self.provenance
+        if to_units != from_units:
+            provenance = self._extend_provenance(
+                f"Converted units from '{from_units}' to '{to_units}': "
+                f"{self._pint_quantity} -> {new_quantity}"
+            )
         return Parameter(
             magnitude=new_quantity.magnitude,
-            units=str(new_quantity.units),
+            units=to_units,
             carrier=self.carrier,
             heating_value=self.heating_value,
-            provenance=self.provenance,
+            provenance=provenance,
             note=self.note,
             sources=self.sources,
         )  # type: ignore
@@ -262,6 +321,7 @@ class Parameter(BaseModel):
         -------
         Parameter
             A new Parameter object with the converted currency.
+            Records a provenance entry for the conversion.
 
         Examples
         --------
@@ -333,12 +393,20 @@ class Parameter(BaseModel):
         # Actual conversion using pint
         quantity = self._pint_quantity.to(to_units, context)
 
+        provenance = self.provenance
+        if str(quantity.units) != str(from_units):
+            provenance = self._extend_provenance(
+                f"Converted currency from '{from_units}' to '{quantity.units}' "
+                f"using inflation data for country '{country}' from source '{source}': "
+                f"{self._pint_quantity} -> {quantity}"
+            )
+
         return Parameter(
             magnitude=quantity.magnitude,
             units=str(quantity.units),
             carrier=self.carrier,
             heating_value=self.heating_value,
-            provenance=self.provenance,
+            provenance=provenance,
             note=self.note,
             sources=self.sources,
         )  # type: ignore
@@ -359,6 +427,7 @@ class Parameter(BaseModel):
         -------
         Parameter
             A new Parameter object with the converted heating value.
+            Records a provenance entry for the conversion.
 
         Raises
         ------
@@ -444,7 +513,12 @@ class Parameter(BaseModel):
             units=self.units,
             carrier=self.carrier,
             heating_value=to_heating_value,
-            provenance=self.provenance,  # TODO implement for this function
+            provenance=self._extend_provenance(
+                f"Converted heating value from '{self.heating_value}' to "
+                f"'{to_heating_value_pint}' for carrier '{self.carrier}' "
+                f"using factor {multiplier:g}: "
+                f"{self.magnitude} -> {self.magnitude * multiplier}"
+            ),
             note=self.note,
             sources=self.sources,
         )  # type: ignore
@@ -502,17 +576,21 @@ class Parameter(BaseModel):
         -----
         This method checks for parameter compatibility before performing the addition.
         The resulting Parameter retains the carrier, heating value, and combines provenance,
-        notes, and sources from both operands.
+        notes, and sources from both operands. Preserves the provenance of both parameters 
+        and adds a provenance entry for the operation.
 
         """
         self._check_parameter_compatibility(other)
         new_quantity = self._pint_quantity + other._pint_quantity
+        provenance = self._merge_provenance(
+            other, f"Calculated as ({self}) + ({other}) = {new_quantity}"
+        )
         return Parameter(
             magnitude=new_quantity.magnitude,
             units=new_quantity.units,
             carrier=self.carrier,
             heating_value=self.heating_value,
-            provenance=(self.provenance or []) + (other.provenance or []),
+            provenance=provenance,
             note=(self.note or "") + (other.note or ""),  # TODO make nicer
             sources=SourceCollection(
                 sources=(self.sources.sources + other.sources.sources)
@@ -537,16 +615,20 @@ class Parameter(BaseModel):
         -----
         This method checks for parameter compatibility before performing the subtraction.
         The resulting Parameter retains the carrier, heating value, and combines provenance, notes, and sources.
+        Preserves the provenance of both parameters and adds a provenance entry for the operation.
 
         """
         self._check_parameter_compatibility(other)
         new_quantity = self._pint_quantity - other._pint_quantity
+        provenance = self._merge_provenance(
+            other, f"Calculated as ({self}) - ({other}) = {new_quantity}"
+        )
         return Parameter(
             magnitude=new_quantity.magnitude,
             units=str(new_quantity.units),
             carrier=self.carrier,
             heating_value=self.heating_value,
-            provenance=(self.provenance or []) + (other.provenance or []),
+            provenance=provenance,
             note=(self.note or "") + (other.note or ""),  # TODO make nicer
             sources=SourceCollection(
                 sources=(self.sources.sources + other.sources.sources)
@@ -571,6 +653,8 @@ class Parameter(BaseModel):
         ------
         ValueError
             If the heating values of the two parameters are different.
+            Preserves the provenance of both parameters and adds a provenance
+            entry for the operation.
 
         Notes
         -----
@@ -584,7 +668,9 @@ class Parameter(BaseModel):
                 units=self.units,
                 carrier=self.carrier,
                 heating_value=self.heating_value,
-                provenance=self.provenance,
+                provenance=self._extend_provenance(
+                    f"Divided by {other}: {self.magnitude} -> {self.magnitude / other}"
+                ),
                 note=self.note,
                 sources=self.sources,
             )  # type: ignore
@@ -598,6 +684,9 @@ class Parameter(BaseModel):
             )
 
         new_quantity = self._pint_quantity / other._pint_quantity
+        provenance = self._merge_provenance(
+            other, f"Calculated as ({self}) / ({other}) = {new_quantity}"
+        )
         new_carrier = (
             self._pint_carrier / other._pint_carrier
             if self._pint_carrier and other._pint_carrier
@@ -614,7 +703,7 @@ class Parameter(BaseModel):
             units=str(new_quantity.units),
             carrier=new_carrier,
             heating_value=new_heating_value,
-            provenance=(self.provenance or []) + (other.provenance or []),
+            provenance=provenance,
             note=(self.note or "") + (other.note or ""),  # TODO make nicer
             sources=SourceCollection(
                 sources=(self.sources.sources + other.sources.sources)
@@ -645,7 +734,9 @@ class Parameter(BaseModel):
         - Multiplication is only performed if the heating values are compatible.
         - The method multiplies the underlying quantities and carriers (if present).
         - The heating value of the resulting parameter is the product of the input heating values.
-        - Provenance, notes, and sources are combined from both parameters.
+        - Provenance, notes, and sources are combined from both parameters, and a
+          provenance entry describing the multiplication is appended.
+        - Multiplying by a scalar appends a provenance entry recording the factor.
         - Compatibility checks beyond heating values are not performed.
 
         """
@@ -655,7 +746,9 @@ class Parameter(BaseModel):
                 units=self.units,
                 carrier=self.carrier,
                 heating_value=self.heating_value,
-                provenance=self.provenance,
+                provenance=self._extend_provenance(
+                    f"Multiplied by {other}: {self.magnitude} -> {self.magnitude * other}"
+                ),
                 note=self.note,
                 sources=self.sources,
             )  # type: ignore
@@ -669,6 +762,9 @@ class Parameter(BaseModel):
             )
 
         new_quantity = self._pint_quantity * other._pint_quantity
+        provenance = self._merge_provenance(
+            other, f"Calculated as ({self}) * ({other}) = {new_quantity}"
+        )
         new_carrier = (
             self._pint_carrier * other._pint_carrier
             if self._pint_carrier and other._pint_carrier
@@ -686,7 +782,7 @@ class Parameter(BaseModel):
             units=str(new_quantity.units),
             carrier=new_carrier,
             heating_value=new_heating_value,
-            provenance=(self.provenance or []) + (other.provenance or []),
+            provenance=provenance,
             note=(self.note or "") + (other.note or ""),  # TODO make nicer
             sources=SourceCollection(
                 sources=(self.sources.sources + other.sources.sources)
@@ -742,6 +838,7 @@ class Parameter(BaseModel):
         -----
         This method updates the internal pint attributes before applying the power operation.
         If the parameter has a carrier, it is also raised to the specified power.
+        A provenance entry recording the exponent is appended.
 
         """
         self._update_pint_attributes()
@@ -752,7 +849,10 @@ class Parameter(BaseModel):
             units=str(new_quantity.units),
             carrier=self._pint_carrier**exponent if self._pint_carrier else None,
             heating_value=self.heating_value,
-            provenance=self.provenance,
+            provenance=self._extend_provenance(
+                f"Raised to the power of {exponent}: "
+                f"{self._pint_quantity} -> {new_quantity}"
+            ),
             note=self.note,
             sources=self.sources,
         )  # type: ignore
