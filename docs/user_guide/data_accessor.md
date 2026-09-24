@@ -135,10 +135,13 @@ Where `data_path` defaults to the `parsers/` directory of the installed package 
 
 ### Parsing Raw Data
 
-The `parse()` method is used to execute the data processing pipeline for a specific data source and version. It takes the raw data file as input and generates the structured `technologies.json` and `sources.json` files.
+The `parse()` method is used to execute the data processing pipeline for a specific data source and version. It takes the raw data file as input and generates the structured `technologies.json` and `sources.json` files. The two snippets allow to parse respectively the Danish Energy Agency (DEA) Energy Storage dataset and the legacy input datasets hosted on the technology-data repository.
 
 ```python
 from technologydata import DataAccessor
+import pathlib
+
+dea_path = pathlib.Path("Technology_datasheet_for_energy_storage.xlsx")
 
 # Create an accessor for the version to be parsed
 parser_accessor = DataAccessor(
@@ -148,9 +151,33 @@ parser_accessor = DataAccessor(
 
 # Run the parser
 parser_accessor.parse(
-    input_file_name="dea_energy_storage_v10.xlsx",
-    num_digits=2,
-    archive_source=True
+    input_file_names=[dea_path],
+    num_digits=3,
+    archive_source=False,
+    filter_params=True,
+)
+```
+
+```python
+from technologydata import DataAccessor
+import pathlib
+
+usa_path = pathlib.Path("usa.csv")
+other_path = pathlib.Path("other.csv")
+
+# Create accessor for the data source you want to parse
+accessor = DataAccessor(
+    data_source="legacy_input_data",
+    version="v0.13.4"
+)
+
+# Run the parser
+accessor.parse(
+    input_file_names=[usa_path, other_path],
+    num_digits=4,
+    archive_source=False,
+    filter_params=False,
+    export_schema=False
 )
 ```
 

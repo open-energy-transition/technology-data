@@ -160,6 +160,7 @@ class LegacyInputDataV0134Parser(ParserBase):
         sources_path: pathlib.Path,
         archive_source: bool = False,
         output_schema: bool = False,
+        export_source: bool = True,
     ) -> TechnologyCollection:
         """
         Compute a collection of technologies from a grouped DataFrame.
@@ -187,6 +188,8 @@ class LegacyInputDataV0134Parser(ParserBase):
             Flag to decide whether to archive the source object on the Wayback Machine. Default False.
         output_schema : Optional[bool]
             Flag to decide whether to export the source collection schema. Default False.
+        export_source: Optional[bool]
+            Flag to decide whether to export the source collection to file. Default True.
 
         Returns
         -------
@@ -212,20 +215,32 @@ class LegacyInputDataV0134Parser(ParserBase):
             source_usa.ensure_in_wayback()
             source_other = Source(
                 title="Energy system technology data",
-                authors="Contributors to technology-data. Data source: other.csv",
+                authors="Contributors to technology-data. Data source: manual_input.csv",
                 url="https://github.com/PyPSA/technology-data/blob/master/inputs/manual_input.csv",
             )
             source_other.ensure_in_wayback()
-            sources = SourceCollection(sources=[source_usa, source_other])
-            sources.to_json(sources_path, output_schema=output_schema)
+            sources_combined = SourceCollection(sources=[source_usa, source_other])
+            sources_combined.to_json(sources_path, output_schema=output_schema)
         else:
-            sources = SourceCollection.from_json(sources_path)
+            sources_combined = SourceCollection.from_json(sources_path)
+
+        # Create separate source collections for USA and other regions
+        source_usa_collection = SourceCollection(sources=[sources_combined.sources[0]])
+        source_other_collection = SourceCollection(
+            sources=[sources_combined.sources[1]]
+        )
 
         for (scenario, year, technology, region), group in dataframe.groupby(
             ["scenario", "year", "technology", "region"]
         ):
             parameters = {}
             financial_case_for_tech = None
+
+            # Select appropriate source based on region
+            sources_for_tech = (
+                source_usa_collection if region == "USA" else source_other_collection
+            )
+
             for _, row in group.iterrows():
                 unit, carrier, heating_value = (
                     LegacyInputDataV0134Parser._extract_units_carriers_heating_value(
@@ -234,7 +249,7 @@ class LegacyInputDataV0134Parser(ParserBase):
                 )
                 param_kwargs = {
                     "magnitude": row["value"],
-                    "sources": sources,
+                    "sources": sources_for_tech,
                 }
                 if carrier is not None:
                     param_kwargs["carrier"] = carrier
