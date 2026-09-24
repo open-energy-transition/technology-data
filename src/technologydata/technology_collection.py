@@ -10,13 +10,14 @@ import logging
 import pathlib
 import re
 from collections.abc import Iterator, Sequence
-from typing import TYPE_CHECKING, Annotated, Self, overload
+from typing import TYPE_CHECKING, Annotated, Any, Self, overload
 
 import pandas
 import pydantic
 import pydantic_core
 
 from technologydata.parameter import Parameter
+from technologydata.schema_version import SCHEMA_VERSION, check_schema_version
 from technologydata.technologies.growth_models import GrowthModel, LinearGrowth
 from technologydata.technology import Technology
 
@@ -32,14 +33,27 @@ class TechnologyCollection(pydantic.BaseModel):
 
     Attributes
     ----------
+    schema_version : int
+        Version of the data schema, see `SCHEMA_VERSION`.
     technologies : List[Technology]
         List of Technology objects.
 
     """
 
+    schema_version: Annotated[
+        int, pydantic.Field(description="Version of the data schema.")
+    ] = SCHEMA_VERSION
     technologies: Annotated[
         list[Technology], pydantic.Field(description="List of Technology objects.")
     ]
+
+    @pydantic.model_validator(mode="before")
+    @classmethod
+    def _validate_schema_version(cls, data: Any) -> Any:
+        """Reject data with an explicit schema version other than the current one."""
+        if isinstance(data, dict) and "schema_version" in data:
+            check_schema_version(data, cls.__name__)
+        return data
 
     # Given the fact that the return type depends on the input type
     # We add the overload decorator to provide exact signatures
@@ -349,6 +363,8 @@ class TechnologyCollection(pydantic.BaseModel):
         ------
         TypeError
             If `file_path` is not a pathlib.Path or str.
+        ValueError
+            If the file's ``schema_version`` differs from `SCHEMA_VERSION`.
 
         """
         if isinstance(file_path, (pathlib.Path | str)):
