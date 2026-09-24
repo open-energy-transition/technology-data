@@ -13,7 +13,7 @@ SPDX-License-Identifier: MIT
 -->
 
 The template, section order and writing guidelines are in `docs/contributing/adding_a_dataset.md`; read it first and follow it exactly.
-`docs/datasets/dea_energy_storage.md` and `docs/datasets/manual_input_usa.md` are finished examples.
+`docs/datasets/dea_energy_storage.md` and `../../../docs/datasets/legacy_input_data.md` are finished examples.
 This skill covers how to find each fact and how to check it.
 
 Readers are experienced modellers and AI agents: tables and short bullets, no description of the parser code.
