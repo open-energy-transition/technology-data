@@ -160,7 +160,6 @@ class LegacyInputDataV0134Parser(ParserBase):
         sources_path: pathlib.Path,
         archive_source: bool = False,
         output_schema: bool = False,
-        export_source: bool = True,
     ) -> TechnologyCollection:
         """
         Compute a collection of technologies from a grouped DataFrame.
@@ -188,8 +187,6 @@ class LegacyInputDataV0134Parser(ParserBase):
             Flag to decide whether to archive the source object on the Wayback Machine. Default False.
         output_schema : Optional[bool]
             Flag to decide whether to export the source collection schema. Default False.
-        export_source: Optional[bool]
-            Flag to decide whether to export the source collection to file. Default True.
 
         Returns
         -------
@@ -210,12 +207,14 @@ class LegacyInputDataV0134Parser(ParserBase):
             source_usa = Source(
                 title="Energy system technology data for the US",
                 authors="Contributors to technology-data. Data source: manual_input_usa.csv",
+                version="v0.13.4",
                 url="https://github.com/PyPSA/technology-data/blob/master/inputs/US/manual_input_usa.csv",
             )
             source_usa.ensure_in_wayback()
             source_other = Source(
                 title="Energy system technology data",
                 authors="Contributors to technology-data. Data source: manual_input.csv",
+                version="v0.13.4",
                 url="https://github.com/PyPSA/technology-data/blob/master/inputs/manual_input.csv",
             )
             source_other.ensure_in_wayback()
