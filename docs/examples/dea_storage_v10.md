@@ -86,7 +86,7 @@ parser_accessor = DataAccessor(
 
 # Run the parser with desired options
 parser_accessor.parse(
-    input_file_name="Technology_datasheet_for_energy_storage.xlsx",
+    input_file_names=["Technology_datasheet_for_energy_storage.xlsx"],
     num_digits=3,
     archive_source=True,
     filter_params=True,
@@ -95,7 +95,7 @@ parser_accessor.parse(
 
 # You can also use a different Excel file with the same structure
 # parser_accessor.parse(
-#     input_file_name="Alternative_datasheet.xlsx",
+#     input_file_names=["Alternative_datasheet.xlsx"],
 #     num_digits=3,
 #     ...
 # )
@@ -103,7 +103,7 @@ parser_accessor.parse(
 
 The `parse` method accepts the following arguments:
 
-- `input_file_name` (str): The name of the Excel file located in `src/technologydata/parsers/raw/dea_energy_storage/`. This allows flexibility to parse alternative files with the same structure.
+- `input_file_names` (list of str): The names of the Excel files located in `src/technologydata/parsers/raw/dea_energy_storage/`. This allows flexibility to parse alternative files with the same structure.
 - `num_digits` (int, default 4): Number of decimals for rounding numeric values.
 - `archive_source` (bool, default False): Whether to store the source on the Wayback Machine.
 - `filter_params` (bool, default False): Whether to filter parameters.

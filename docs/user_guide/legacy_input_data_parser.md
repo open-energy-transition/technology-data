@@ -28,8 +28,8 @@ legacy_input_data_parser = LegacyInputDataParser()
 # Define parameters
 version = "v0.13.4"
 input_files = [
-    pathlib.Path("path/to/your/usa.csv"),
-    pathlib.Path("path/to/your/other.csv")
+    pathlib.Path("src/technologydata/parsers/raw/legacy_input_data/usa.csv"),
+    pathlib.Path("src/technologydata/parsers/raw/legacy_input_data/other.csv")
 ]
 num_digits = 3
 archive_source = False
