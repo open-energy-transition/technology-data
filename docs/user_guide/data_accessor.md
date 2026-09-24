@@ -151,7 +151,6 @@ parser_accessor.parse(
     input_file_names=["Technology_datasheet_for_energy_storage.xlsx"],
     num_digits=3,
     archive_source=False,
-    filter_params=True,
 )
 ```
 
