@@ -28,9 +28,10 @@ nav:
   - Data Accessor: user_guide/data_accessor.md
   - Use Cases: user_guide/design.md
 
-- Examples:
-  - Danish Energy Agency Parser (version 10): examples/dea_storage_v10.md
-  - Legacy Input Data Parser (version 0.13.4): examples/legacy_input_data_v0134.md
+- Datasets:
+  - datasets/index.md
+  - DEA Energy Storage: datasets/dea_energy_storage.md
+  - Legacy Input Data: datasets/legacy_input_data.md
 
 - API Reference:
   - Data Package: api/datapackage.md
@@ -57,6 +58,7 @@ nav:
   - Instructions: contributing/instructions.md
   - Code of Conduct: contributing/CODE_OF_CONDUCT.md
   - Contributors: contributing/contributors.md
+  - Adding a Dataset: contributing/adding_a_dataset.md
   - API Improvement Proposals: contributing/api_improvement_proposals.md
 
 # Theme settings

@@ -334,7 +334,7 @@ A published catalogue only covers the years its source measured. Growth-model cu
 
 - [`Parameter`](../user_guide/parameter.md), [`TechnologyCollection`](../user_guide/technology_collection.md) and [`DataPackage`](../user_guide/datapackage.md) — reference for the classes built above.
 - [`DataAccessor`](../user_guide/data_accessor.md) — every option for locating and loading a catalogue.
-- [Danish Energy Agency parser](../examples/dea_storage_v10.md) and [Manual Input USA parser](../examples/legacy_input_data_v0134.md) — how each bundled catalogue is produced from its raw file.
+- [Datasets](../datasets/index.md) — fact sheets of the bundled catalogues: contents, assumptions and how each is produced from its raw file.
 - [Parameter formula system](../user_guide/equations.md) — every built-in formula, how to register your own, and the details of how a formula is solved.
 - [`Technology`](../user_guide/technology.md) and [Models](../user_guide/models.md) — more on `calculate_parameters()`, `check_consistency()` and the growth-model curves.
 - [Use cases](../user_guide/design.md) — the scenarios the package was designed around.

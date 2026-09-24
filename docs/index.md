@@ -89,7 +89,7 @@ import technologydata
 # Load data provided by the DEA
 dea = technologydata.DataAccessor(data_source="dea_energy_storage", version="v10").load()
 # Load data from NREL's ATB2024
-atb = DataAccessor(data_source="legacy_input_data", version="v0.13.4", data_path=data).load()
+atb = technologydata.DataAccessor(data_source="legacy_input_data", version="v0.13.4").load()
 
 # We get the data specific to battery storage and adjust the currency year
 # from 2022 to 2023. By default the inflation adjustment uses World Bank data
