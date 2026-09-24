@@ -6,10 +6,16 @@
 
 import logging
 import math
-from typing import Annotated, Self
+from typing import Annotated, Any, Self
 
 import pint
-from pydantic import BaseModel, Field, PrivateAttr
+from pydantic import (
+    BaseModel,
+    Field,
+    PrivateAttr,
+    SerializerFunctionWrapHandler,
+    field_serializer,
+)
 
 import technologydata
 from technologydata.source_collection import SourceCollection
@@ -65,6 +71,23 @@ class Parameter(BaseModel):
         SourceCollection,
         Field(description="List of sources for this parameter."),
     ] = SourceCollection(sources=[])
+
+    @field_serializer("sources", mode="wrap")
+    def _serialize_sources(
+        self, value: SourceCollection, handler: SerializerFunctionWrapHandler
+    ) -> Any:
+        """
+        Serialize sources without their ``schema_version``.
+
+        `SourceCollection` carries a schema version for standalone ``sources.json``
+        files. Nested here, it would be repeated for every parameter in
+        ``technologies.json``. Since the top level already carries the version,
+        this serializer leaves it out of the nested objects.
+        """
+        serialized = handler(value)
+        if isinstance(serialized, dict):
+            serialized.pop("schema_version", None)
+        return serialized
 
     # Private attributes for derived pint objects
     _pint_quantity: pint.Quantity = PrivateAttr(None)

@@ -11,6 +11,7 @@ from technologydata.default_equations import (
 )
 from technologydata.equations import Equation, EquationRegistry
 from technologydata.parameter import Parameter
+from technologydata.schema_version import SCHEMA_VERSION
 from technologydata.source import Source
 from technologydata.source_collection import SourceCollection
 from technologydata.technology import Technology
@@ -35,6 +36,7 @@ __all__ = [
     "EquationRegistry",
     "FileExtensionEnum",
     "Parameter",
+    "SCHEMA_VERSION",
     "Source",
     "SourceCollection",
     "Technology",

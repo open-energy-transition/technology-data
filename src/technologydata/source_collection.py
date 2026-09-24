@@ -9,12 +9,13 @@ import json
 import pathlib
 import re
 from collections.abc import Iterator
-from typing import Annotated, Self
+from typing import Annotated, Any, Self
 
 import pandas
 import pydantic
 import pydantic_core
 
+from technologydata.schema_version import SCHEMA_VERSION, check_schema_version
 from technologydata.source import Source
 
 
@@ -24,14 +25,27 @@ class SourceCollection(pydantic.BaseModel):
 
     Attributes
     ----------
+    schema_version : int
+        Version of the data schema, see `SCHEMA_VERSION`.
     sources : List[Source]
         List of Source objects.
 
     """
 
+    schema_version: Annotated[
+        int, pydantic.Field(description="Version of the data schema.")
+    ] = SCHEMA_VERSION
     sources: Annotated[
         list[Source], pydantic.Field(description="List of Source objects.")
     ]
+
+    @pydantic.model_validator(mode="before")
+    @classmethod
+    def _validate_schema_version(cls, data: Any) -> Any:
+        """Reject data with an explicit schema version other than the current one."""
+        if isinstance(data, dict) and "schema_version" in data:
+            check_schema_version(data, cls.__name__)
+        return data
 
     def __iter__(self) -> Iterator["Source"]:  # type: ignore
         """
@@ -226,20 +240,30 @@ class SourceCollection(pydantic.BaseModel):
         file_path : pathlib.Path | str
             The path to the JSON file to be imported.
 
+        Returns
+        -------
+        SourceCollection
+            An instance of SourceCollection initialized with the data from the JSON file.
+
+        Raises
+        ------
+        TypeError
+            If `file_path` is not a pathlib.Path or str.
+        ValueError
+            If the file's ``schema_version`` differs from `SCHEMA_VERSION`.
+
         """
         if isinstance(file_path, (pathlib.Path | str)):
             file_path = pathlib.Path(file_path)
         else:
             raise TypeError("file_path must be a pathlib.Path or str")
 
-        json_data = None
-
-        # Load data from file if file_path is provided
+        # Load data from file
         with open(file_path, encoding="utf-8") as jsonfile:
             json_data = jsonfile.read()
 
         # pydantic_core.from_json return Any. Therefore, typing.cast makes sure that
-        # the output is indeed a TechnologyCollection
+        # the output is indeed a SourceCollection
         return cls.model_validate(
             pydantic_core.from_json(json_data, allow_partial=True)
         )
