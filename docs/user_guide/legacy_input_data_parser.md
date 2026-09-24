@@ -23,7 +23,7 @@ from technologydata.parsers.legacy_input_data import LegacyInputDataParser
 import pathlib
 
 # Instantiate the main parser
-legacy_data_parser = LegacyInputDataParser()
+legacy_input_data_parser = LegacyInputDataParser()
 
 # Define parameters
 version = "v0.13.4"
@@ -37,7 +37,7 @@ filter_params = True
 export_schema = False
 
 # Parse the data
-legacy_data_parser.parse(
+legacy_input_data_parser.parse(
     version=version,
     input_path=input_files,
     num_digits=num_digits,

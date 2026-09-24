@@ -139,9 +139,6 @@ The `parse()` method is used to execute the data processing pipeline for a speci
 
 ```python
 from technologydata import DataAccessor
-import pathlib
-
-dea_path = pathlib.Path("Technology_datasheet_for_energy_storage.xlsx")
 
 # Create an accessor for the version to be parsed
 parser_accessor = DataAccessor(
@@ -151,7 +148,7 @@ parser_accessor = DataAccessor(
 
 # Run the parser
 parser_accessor.parse(
-    input_file_names=[dea_path],
+    input_file_names=["Technology_datasheet_for_energy_storage.xlsx"],
     num_digits=3,
     archive_source=False,
     filter_params=True,
@@ -160,10 +157,6 @@ parser_accessor.parse(
 
 ```python
 from technologydata import DataAccessor
-import pathlib
-
-usa_path = pathlib.Path("usa.csv")
-other_path = pathlib.Path("other.csv")
 
 # Create accessor for the data source you want to parse
 accessor = DataAccessor(
@@ -173,7 +166,7 @@ accessor = DataAccessor(
 
 # Run the parser
 accessor.parse(
-    input_file_names=[usa_path, other_path],
+    input_file_names=["usa.csv", "other.csv"],
     num_digits=4,
     archive_source=False,
     filter_params=False,

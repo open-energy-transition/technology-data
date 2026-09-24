@@ -31,7 +31,7 @@ class DataSourceName(enum.StrEnum):
     """An enumeration of available data sources."""
 
     DEA_ENERGY_STORAGE = "dea_energy_storage"
-    LEGACY_DATA = "legacy_input_data"
+    LEGACY_INPUT_DATA = "legacy_input_data"
 
 
 class DataAccessor(pydantic.BaseModel):
@@ -360,7 +360,7 @@ class DataAccessor(pydantic.BaseModel):
 
         if self.data_source == DataSourceName.DEA_ENERGY_STORAGE:
             parser = DeaEnergyStorageParser()
-        elif self.data_source == DataSourceName.LEGACY_DATA:
+        elif self.data_source == DataSourceName.LEGACY_INPUT_DATA:
             parser = LegacyInputDataParser()
         else:
             raise ValueError(
