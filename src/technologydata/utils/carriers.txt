@@ -30,7 +30,7 @@ jet_fuel_a1 = [jet_fuel_a1] = JETA1
 kerosene = [kerosene]
 hydrogen = [hydrogen] = H2
 hydrogenated_dibenzyltoluene = [hydrogenated_dibenzyltoluene] = H18-DBT = HLOHC
-hot_briquetted_iron = [hot_briquetted_iron] = HBI
+hot_briquetted_iron = [hot_briquetted_iron] = HBI = hbi
 high_value_chemicals = [high_value_chemicals] = HVC
 lignite = [lignite]
 methane = [methane] = CH4

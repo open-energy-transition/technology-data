@@ -74,6 +74,9 @@ class LegacyInputDataV0134Parser(ParserBase):
         if not isinstance(input_unit, str):
             return input_unit, None, None
 
+        # Normalize tCO2 to t_CO2 (handles cases like EUR/(tCO2/h)/km)
+        input_unit = input_unit.replace("tCO2", "t_CO2")
+
         # Pattern 1: Currency with optional year and power/energy carrier
         match = re.match(UnitPatternRegex.CURRENCY_POWER_CARRIER.value, input_unit)
         if match:
@@ -347,10 +350,20 @@ class LegacyInputDataV0134Parser(ParserBase):
             "unit"
         ].str.replace("MWhth", "MWh_th", regex=False)
 
-        # Correct typo: tCO2 -> t_CO2
+        # Perform change: tCO2 -> t_CO2
         legacy_input_data_other_df["unit"] = legacy_input_data_other_df[
             "unit"
         ].str.replace("tCO2", "t_CO2", regex=False)
+
+        # Remove design point suffix from units: kW_th,dp -> kW_th
+        legacy_input_data_other_df["unit"] = legacy_input_data_other_df[
+            "unit"
+        ].str.replace(",dp", "", regex=False)
+
+        # Correct typo: MWh_thdh -> MWh_th
+        legacy_input_data_other_df["unit"] = legacy_input_data_other_df[
+            "unit"
+        ].str.replace("MWh_thdh", "MWh_th", regex=False)
 
         # Correct typo: t_cl -> t/clinker
         legacy_input_data_other_df["unit"] = legacy_input_data_other_df[
