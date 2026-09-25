@@ -318,7 +318,6 @@ Please also cite the underlying sources listed above and `technologydata`, see [
 
 ## See also
 
-- [Legacy Input Data Parser](../user_guide/legacy_input_data_parser.md) (user guide)
 - [Data Accessor](../user_guide/data_accessor.md)
 
 ## Parser API

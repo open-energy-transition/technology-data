@@ -14,7 +14,7 @@ Fact sheets are short and structured information: what the data is, where it com
 
 0. Clone the repository.
 1. Add the raw file to `src/technologydata/parsers/raw/<key>/` and its license to `REUSE.toml`.
-2. Add a parser under `src/technologydata/parsers/<key>/` and register `<key>` in `DataSourceName` and `DataAccessor.parse()`.
+2. Add a parser under `src/technologydata/parsers/<key>/` and register `<key>` in `DataSourceName` and `DataAccessor.parse()`, see [Writing a parser](writing_a_parser.md).
 3. Run the parser and commit the output in `src/technologydata/parsers/<key>/<version>/`.
 4. Copy the template below to `docs/datasets/<key>.md` and fill it in.
 5. Add the fact sheet to the `Datasets` section in `mkdocs.yaml` and a row to `docs/datasets/index.md`.
@@ -27,8 +27,8 @@ paste the new output into the fact sheet then to resolve.
 When a new version is added, add a row to the `Available versions` table, add the version to the front matter and update `Accessing the data` and `Contents` to the new version.
 
 !!! tip "Delegate work to AI agents"
-    Once the parser and the parsed data exist, writing the fact sheet and the parser user guide page can be delegated to an AI agent.
-    The repository contains the skill [`dataset-factsheet`](https://github.com/open-energy-transition/technology-data/blob/master/.claude/skills/dataset-factsheet/SKILL.md) with step-by-step instructions: where each fact comes from, how to generate the tables, how to write the parser pages and which checks to run.
+    Once the parser and the parsed data exist, writing the fact sheet can be delegated to an AI agent.
+    The repository contains the skill [`dataset-factsheet`](https://github.com/open-energy-transition/technology-data/blob/master/.claude/skills/dataset-factsheet/SKILL.md) with step-by-step instructions: where each fact comes from, how to generate the tables, how to check the parser docstrings and which checks to run.
     Claude Code picks it up automatically (ask e.g. "create the fact sheet for `<key>`" or run `/dataset-factsheet`); other agents are pointed to it by `AGENTS.md`.
     Always review the result created by AI; other people want to build their work on it.
     Pay particular attention to the assumptions, limitations and license.
@@ -187,7 +187,6 @@ Please also cite `technologydata`, see [Citing](../index.md#citing).
 
 ## See also
 
-- [<Parser> Parser](../user_guide/<key>_parser.md) (user guide)
 - [Data Accessor](../user_guide/data_accessor.md)
 
 ## Parser API

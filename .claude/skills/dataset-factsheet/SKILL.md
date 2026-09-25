@@ -1,6 +1,6 @@
 ---
 name: dataset-factsheet
-description: Create or update the documentation of a dataset shipped with technologydata, once its parser and parsed JSON exist - the fact sheet in docs/datasets/<key>.md, including its Parser API section, and the parser user guide page docs/user_guide/<key>_parser.md. Use when a data source or a new version of one is added, when a parser changes, or when a fact sheet's doctests fail after the data changed.
+description: Create or update the fact sheet in docs/datasets/<key>.md for a dataset shipped with technologydata, including its Parser API section, once its parser and parsed JSON exist. Use when a data source or a new version of one is added, when a parser changes, or when a fact sheet's doctests fail after the data changed.
 ---
 
 # Dataset fact sheet
@@ -13,8 +13,9 @@ SPDX-License-Identifier: MIT
 -->
 
 The template, section order and writing guidelines are in `docs/contributing/adding_a_dataset.md`; read it first and follow it exactly.
-`docs/datasets/dea_energy_storage.md` and `docs/datasets/legacy_input_data.md` are finished examples, `docs/user_guide/dea_energy_storage_parser.md` is a finished parser user guide page.
-This skill covers how to find each fact, how to write the parser pages and how to check them.
+`docs/datasets/dea_energy_storage.md` and `docs/datasets/legacy_input_data.md` are finished examples.
+How a parser is structured is described in `docs/contributing/writing_a_parser.md`.
+This skill covers how to find each fact, how to check the parser docstrings and how to check the page.
 
 Readers are experienced modellers and AI agents: tables and short bullets, no description of the parser code.
 Only state what you verified in the code or the data; if something cannot be verified (e.g. the upstream license), write what is known and tell the user.
@@ -91,48 +92,15 @@ Only a trailing-newline difference is acceptable; otherwise adjust the documente
 Never use `archive_source=True` here: it calls the Wayback Machine and rewrites `sources.json`.
 The test suite also re-parses the shipped files in place; restore them with `git checkout` after running it.
 
-## Parser pages
+## Parser API section
 
-### Parser API section
-
-The `Parser API` section of the fact sheet renders the docstrings of the parser classes with mkdocstrings, one `:::` block per class with `heading_level: 3`, as in the template: first the dispatcher, then one block per supported version.
-The docstrings are published there, so check them against the code: parameters, return value, raised errors and examples must match what the code does.
+The `Parser API` section at the end of the fact sheet renders the docstrings of the parser classes with mkdocstrings, one `:::` block per class with `heading_level: 3`, as in the template: first the dispatcher, then one block per supported version.
+It is the only per-parser documentation, so the docstrings must be complete and match the code: parameters and their types, what the parser writes where, raised errors, which options it ignores, and examples.
 Fix wrong docstrings in the parser, or tell the user if the fix is not obvious.
-
-### User guide page
-
-`docs/user_guide/<key>_parser.md` is limited to structure and usage; everything about the data belongs in the fact sheet.
-
-````markdown
-# <Parser name> Parser
-
-`<ParserClass>` produces the `<key>` dataset from <raw files>.
-For what the dataset contains and which choices the parser makes, see the [fact sheet](../datasets/<key>.md).
-
-## Structure
-
-- `<ParserClass>` dispatches to a version-specific parser; `get_supported_versions()` lists the versions it knows (currently `<version>`).
-- `<VersionParserClass>` <one sentence: what it reads and what it writes, and where>.
-
-## Usage
-
-The recommended entry point is `DataAccessor.parse()`, see [Reproduce](../datasets/<key>.md#reproduce).
-The parser can also be called directly:
-
-```python
-<the call of the dispatcher's parse() that reproduces the shipped files>
-```
-
-- `<argument>`: <one line per argument; say if the parser ignores it>
-
-## API Reference
-
-See the [Parser API](../datasets/<key>.md#parser-api) section of the fact sheet.
-````
 
 ## Wire up and check
 
-1. Add the fact sheet to the `Datasets` nav in `mkdocs.yaml` and a row to the table in `docs/datasets/index.md`; add the user guide page to the `User Guide` nav.
+1. Add the fact sheet to the `Datasets` nav in `mkdocs.yaml` and a row to the table in `docs/datasets/index.md`.
 2. Run `uv run pytest test/test_docs.py --test-docs` and `uv run pre-commit run --all-files`.
    Codespell may flag domain abbreviations; add real terms to `.codespell.ignore`.
 3. Run `READTHEDOCS_CANONICAL_URL=http://localhost/ uv run mkdocs build --strict -d /tmp/site` to check links, anchors and the `:::` blocks.

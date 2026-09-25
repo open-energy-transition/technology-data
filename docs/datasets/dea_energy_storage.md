@@ -186,7 +186,6 @@ Please also cite `technologydata`, see [Citing](../index.md#citing).
 
 ## See also
 
-- [DEA Energy Storage Parser](../user_guide/dea_energy_storage_parser.md) (user guide)
 - [Data Accessor](../user_guide/data_accessor.md)
 
 ## Parser API
