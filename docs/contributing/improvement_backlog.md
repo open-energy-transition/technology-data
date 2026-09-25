@@ -109,7 +109,7 @@ Cleanups identified in review but scoped out of the equations-focused simplifica
   `model_copy(update=...)` like `calculate_parameters`, and `country = overwrite_country or
   self.region`.
 
-## 7. Issues found while writing the tutorials
+## 6. Issues found while writing the tutorials
 
 Found while writing the Overview and the Tutorial; each was worked around in the docs.
 

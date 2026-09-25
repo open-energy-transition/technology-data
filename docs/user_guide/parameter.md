@@ -184,7 +184,7 @@ Please refer to the [API documentation](../api/parameter.md) for detailed inform
 
 ## Notes
 
-- **Note/Sources in Arithmetic**: When performing arithmetic operations, `provenance` is tracked as described above; proper merging of `note` and `sources` is not yet implemented (see `TODO` comments in the code).
+- **Note/Sources in Arithmetic**: When performing arithmetic operations, `provenance` is tracked as described above; fields`note` and `sources` are only combined in a very basic manner (for now).
 - **Unit Conversion**: The `.to()` method does not support currency conversion; use `.to_currency()` for that.
 - **Partial Unit Compatibility**: Only certain combinations of units, carriers, and heating values are supported for arithmetic operations.
 - **No Uncertainty Handling**: There is currently no support for uncertainty or error propagation.

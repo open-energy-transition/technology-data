@@ -38,7 +38,7 @@ class Parameter {
   - units: str
   - carrier: str
   - heating_value: str
-  - provenance: str
+  - provenance: list[str]
   - note: str
   - sources: SourceCollection
   - _pint_quantity: pint.Quantity
