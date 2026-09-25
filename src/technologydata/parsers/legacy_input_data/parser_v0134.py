@@ -304,7 +304,8 @@ class LegacyInputDataV0134Parser(ParserBase):
         Data processing steps include:
         - USA data is tagged with region='USA', other data with region='not_available'
         - Unit normalization: tCO2 -> t_CO2, MWHh_el -> MWh_el, MWhth -> MWh_th,
-          kWel -> kW_el, MWh_thdh -> MWh_th
+          kWel -> kW_el, MWh_thdh -> MWh_th, t_cl -> t_clinker,
+          t_HLOHC -> t_H18DBT, t_LOHC -> t_H0DBT, t_hbi -> t_HBI
         - Removal of design point suffix: ,dp removed from units
         - Distance normalization: 1000km -> km (with value divided by 1000)
         - Percentage conversion: 'per unit' -> '%' (with value multiplied by 100)
@@ -413,10 +414,25 @@ class LegacyInputDataV0134Parser(ParserBase):
             "unit"
         ].str.replace("MWh_thdh", "MWh_th", regex=False)
 
-        # Perform change: t_cl -> t/clinker
+        # Perform change: t_cl -> t_clinker
         legacy_input_data_other_df["unit"] = legacy_input_data_other_df[
             "unit"
-        ].str.replace(" t_cl/t_cement", "t_clinker/t_cement,")
+        ].str.replace("t_cl/", "t_clinker/", regex=False)
+
+        # Perform change: t_HLOHC -> t_H18DBT (loaded LOHC)
+        legacy_input_data_other_df["unit"] = legacy_input_data_other_df[
+            "unit"
+        ].str.replace("t_HLOHC", "t_H18DBT", regex=False)
+
+        # Perform change: t_LOHC -> t_H0DBT (unloaded LOHC)
+        legacy_input_data_other_df["unit"] = legacy_input_data_other_df[
+            "unit"
+        ].str.replace("t_LOHC", "t_H0DBT", regex=False)
+
+        # Perform change: t_hbi -> t_HBI
+        legacy_input_data_other_df["unit"] = legacy_input_data_other_df[
+            "unit"
+        ].str.replace("t_hbi", "t_HBI", regex=False)
 
         # Perform change: EUR/kWel -> EUR/kW_el
         legacy_input_data_other_df["unit"] = legacy_input_data_other_df[
