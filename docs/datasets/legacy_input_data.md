@@ -20,7 +20,7 @@ SPDX-License-Identifier: MIT
 
 -->
 
-The two hand-curated input CSVs used by [PyPSA technology-data](https://github.com/PyPSA/technology-data), which are a mix of many different data sources. 
+The two hand-curated input CSVs used by [PyPSA technology-data](https://github.com/PyPSA/technology-data), which are a mix of many different data sources.
 `usa.csv` holds USA-specific parameters, mostly compiled from the NREL ATB 2024 and ICCT IRA e-fuels assumptions.
 `other.csv` holds parameters that originally mainly served [PyPSA-Eur](https://pypsa-eur.readthedocs.io/en/latest/) but have been collected without paying attention to the region or consistency with each other:
 They are a list of over 100 technologies from ammonia, electricity, to hydrogen and materials like steel.
