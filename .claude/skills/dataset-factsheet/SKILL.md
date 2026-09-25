@@ -78,14 +78,16 @@ Look for these and quantify them where cheap ("7 of about 76 parameters"):
 ## Verify Reproduce
 
 The documented `parse()` call must reproduce the shipped files.
-It overwrites them, so check the working tree is clean for that directory first:
+It overwrites them, so check the working tree is clean for the output directory first:
 
 ```bash
-git status --short src/technologydata/parsers/<key>/
+git status --short src/technologydata/parsers/<key>/<version>/
 uv run python -c 'from technologydata import DataAccessor; DataAccessor(data_source="<key>", version="<version>").parse(input_file_names=["<file>"], num_digits=3)'
-git diff --stat src/technologydata/parsers/<key>/
-git checkout -- src/technologydata/parsers/<key>/
+git diff --stat src/technologydata/parsers/<key>/<version>/
+git checkout -- src/technologydata/parsers/<key>/<version>/
 ```
+
+Restore only the output directory `<key>/<version>/`: the parser code next to it may have uncommitted changes.
 
 `input_file_names` lists every raw file of the version, as file names inside `src/technologydata/parsers/raw/<key>/`.
 Only a trailing-newline difference is acceptable; otherwise adjust the documented options until the output matches.
