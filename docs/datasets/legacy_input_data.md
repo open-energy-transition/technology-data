@@ -20,7 +20,7 @@ SPDX-License-Identifier: MIT
 
 -->
 
-The two hand-curated input CSVs used by [PyPSA technology-data](https://github.com/PyPSA/technology-data), which are a mix of many different data sources. 
+The two hand-curated input CSVs used by [PyPSA technology-data](https://github.com/PyPSA/technology-data), which are a mix of many different data sources.
 `usa.csv` holds USA-specific parameters, mostly compiled from the NREL ATB 2024 and ICCT IRA e-fuels assumptions.
 `other.csv` holds parameters that originally mainly served [PyPSA-Eur](https://pypsa-eur.readthedocs.io/en/latest/) but have been collected without paying attention to the region or consistency with each other:
 They are a list of over 100 technologies from ammonia, electricity, to hydrogen and materials like steel.
@@ -40,7 +40,7 @@ This dataset will in the future be superseded by a better curated one.
 | Cases | NREL ATB scenario and financial cases, `not_available` for the remaining ones |
 | Currency | `USD_2019`, `USD_2022`, `USD_2023`; `EUR_2004` to `EUR_2023` |
 | Raw format | two manually curated CSV files |
-| Parser | [`LegacyInputDataParser`](../api/legacy_input_data_parser.md) |
+| Parser | [`LegacyInputDataParser`](#parser-api) |
 
 ## Available versions
 
@@ -318,5 +318,18 @@ Please also cite the underlying sources listed above and `technologydata`, see [
 
 ## See also
 
-- [Legacy Input Data Parser](../user_guide/legacy_input_data_parser.md) (user guide) and [API reference](../api/legacy_input_data_parser.md)
+- [Legacy Input Data Parser](../user_guide/legacy_input_data_parser.md) (user guide)
 - [Data Accessor](../user_guide/data_accessor.md)
+
+## Parser API
+
+The parser is only needed to reproduce or update the dataset, see [Reproduce](#reproduce); loading the data only needs `DataAccessor.load()`.
+The dispatcher selects the parser of the requested version.
+
+::: technologydata.parsers.legacy_input_data.LegacyInputDataParser
+    options:
+      heading_level: 3
+
+::: technologydata.parsers.legacy_input_data.parser_v0134.LegacyInputDataV0134Parser
+    options:
+      heading_level: 3

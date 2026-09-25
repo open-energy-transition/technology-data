@@ -37,7 +37,7 @@ The Danish Energy Agency (DEA) technology catalogue for energy storage: costs, e
 | Cases | `control` (central estimate), `lower`, `upper` (uncertainty range) |
 | Currency | `EUR_2020` |
 | Raw format | Excel, sheet `alldata_flat` |
-| Parser | [`DeaEnergyStorageParser`](../api/dea_energy_storage_parser.md) |
+| Parser | [`DeaEnergyStorageParser`](#parser-api) |
 
 ## Available versions
 
@@ -186,5 +186,18 @@ Please also cite `technologydata`, see [Citing](../index.md#citing).
 
 ## See also
 
-- [DEA Energy Storage Parser](../user_guide/dea_energy_storage_parser.md) (user guide) and [API reference](../api/dea_energy_storage_parser.md)
+- [DEA Energy Storage Parser](../user_guide/dea_energy_storage_parser.md) (user guide)
 - [Data Accessor](../user_guide/data_accessor.md)
+
+## Parser API
+
+The parser is only needed to reproduce or update the dataset, see [Reproduce](#reproduce); loading the data only needs `DataAccessor.load()`.
+The dispatcher selects the parser of the requested version.
+
+::: technologydata.parsers.dea_energy_storage.DeaEnergyStorageParser
+    options:
+      heading_level: 3
+
+::: technologydata.parsers.dea_energy_storage.parser_v10.DeaEnergyStorageV10Parser
+    options:
+      heading_level: 3
