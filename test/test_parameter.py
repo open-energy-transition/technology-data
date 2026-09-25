@@ -5,6 +5,7 @@
 """Test the initialization and methods of the Parameter class."""
 
 import pathlib
+from collections.abc import Callable
 
 import numpy as np
 import pandas as pd
@@ -320,8 +321,15 @@ class TestParameter:
         # Check that other attributes remain unchanged
         assert converted.carrier == param.carrier
         assert converted.heating_value == param.heating_value
-        assert converted.provenance == param.provenance
         assert converted.note == param.note
+        # Provenance history is kept and the conversion is appended
+        assert converted.provenance is not None
+        assert converted.provenance[:-1] == param.provenance
+        assert converted.provenance[-1].startswith(
+            "Converted currency from 'USD_2020 / kilowatt' to 'EUR_2023 / kilowatt' "
+            "using inflation data for country 'DEU' from source 'worldbank'"
+        )
+        assert param.provenance == ["literature"]
 
     def test_parameter_heating_value_compatibility(self) -> None:
         """Test that we do not permit operations on mixed heating values."""
@@ -742,7 +750,10 @@ class TestParameter:
         result = param**2
         assert result.carrier == f"{param.carrier} ** 2"
         assert result.heating_value == param.heating_value
-        assert result.provenance == param.provenance
+        assert result.provenance == [
+            "test",
+            "Raised to the power of 2: 3 kilogram -> 9 kilogram ** 2",
+        ]
         assert result.note == param.note
 
     def test_change_heating_value_h2_lhv_to_hhv(self) -> None:
@@ -894,3 +905,137 @@ class TestParameter:
                 reference_param.magnitude, rel=1e-2
             )
             assert output_param.units == reference_param.units
+
+
+class TestParameterProvenance:
+    """Test that transformations of a Parameter append to its provenance history."""
+
+    def test_to_records_unit_conversion(self) -> None:
+        """Test that `to` appends a unit conversion entry."""
+        param = technologydata.Parameter(
+            magnitude=1000, units="USD_2020/kW", provenance=["literature"]
+        )
+        converted = param.to("USD_2020/MW")
+        assert converted.provenance == [
+            "literature",
+            "Converted units from 'USD_2020 / kilowatt' to 'USD_2020 / megawatt': "
+            "1000 USD_2020 / kilowatt -> 1000000.0 USD_2020 / megawatt",
+        ]
+        assert param.provenance == ["literature"]
+
+    def test_to_same_units_records_nothing(self) -> None:
+        """Test that a no-op unit conversion does not add an entry."""
+        param = technologydata.Parameter(
+            magnitude=1, units="kW", provenance=["literature"]
+        )
+        assert param.to("kilowatt").provenance == ["literature"]
+
+    def test_to_without_prior_provenance(self) -> None:
+        """Test that a conversion entry is recorded even without prior history."""
+        converted = technologydata.Parameter(magnitude=1, units="kW").to("W")
+        assert converted.provenance is not None
+        assert len(converted.provenance) == 1
+        assert converted.provenance[0].startswith("Converted units from 'kilowatt'")
+
+    def test_to_currency_same_currency_records_nothing(self) -> None:
+        """Test that a no-op currency conversion does not add an entry."""
+        param = technologydata.Parameter(
+            magnitude=1, units="USD_2020/kW", provenance=["literature"]
+        )
+        assert param.to_currency("USD_2020", "USA").provenance == ["literature"]
+
+    def test_to_currency_records_country_and_source(self) -> None:
+        """Test that the currency conversion entry names country and data source."""
+        param = technologydata.Parameter(magnitude=1, units="USD_2020/kW")
+        converted = param.to_currency("EUR_2020", "DEU", source="imf")
+        assert converted.provenance is not None
+        assert len(converted.provenance) == 1
+        assert "country 'DEU'" in converted.provenance[0]
+        assert "source 'imf'" in converted.provenance[0]
+
+    def test_change_heating_value_records_conversion(self) -> None:
+        """Test that `change_heating_value` appends an entry with the factor used."""
+        param = technologydata.Parameter(
+            magnitude=1,
+            units="kWh",
+            carrier="H2",
+            heating_value="LHV",
+            provenance=["literature"],
+        )
+        converted = param.change_heating_value("HHV")
+        assert converted.provenance is not None
+        assert converted.provenance[0] == "literature"
+        assert converted.provenance[1].startswith(
+            "Converted heating value from 'lower_heating_value' to "
+            "'higher_heating_value' for carrier 'hydrogen' using factor "
+        )
+        assert len(converted.provenance) == 2
+
+    def test_change_heating_value_same_hv_records_nothing(self) -> None:
+        """Test that a no-op heating value change does not add an entry."""
+        param = technologydata.Parameter(
+            magnitude=1,
+            units="kWh",
+            carrier="H2",
+            heating_value="LHV",
+            provenance=["literature"],
+        )
+        assert param.change_heating_value("LHV").provenance == ["literature"]
+
+    @pytest.mark.parametrize(  # type: ignore
+        ("result_fn", "expected"),
+        [
+            (lambda p: p * 2, "Multiplied by 2: 4 -> 8"),
+            (lambda p: p / 2, "Divided by 2: 4 -> 2.0"),
+            (
+                lambda p: p**2,
+                "Raised to the power of 2: 4 kilowatt -> 16 kilowatt ** 2",
+            ),
+        ],
+    )
+    def test_scalar_operations_record_entry(
+        self,
+        result_fn: Callable[[technologydata.Parameter], technologydata.Parameter],
+        expected: str,
+    ) -> None:
+        """Test that scalar arithmetic appends a descriptive entry."""
+        param = technologydata.Parameter(
+            magnitude=4, units="kW", provenance=["literature"]
+        )
+        assert result_fn(param).provenance == ["literature", expected]
+
+    @pytest.mark.parametrize(  # type: ignore
+        ("result_fn", "expected"),
+        [
+            (
+                lambda a, b: a + b,
+                "Calculated as (3 kilowatt) + (1 kilowatt) = 4 kilowatt",
+            ),
+            (
+                lambda a, b: a - b,
+                "Calculated as (3 kilowatt) - (1 kilowatt) = 2 kilowatt",
+            ),
+            (
+                lambda a, b: a * b,
+                "Calculated as (3 kilowatt) * (1 kilowatt) = 3 kilowatt ** 2",
+            ),
+            (
+                lambda a, b: a / b,
+                "Calculated as (3 kilowatt) / (1 kilowatt) = 3.0 dimensionless",
+            ),
+        ],
+    )
+    def test_binary_operations_merge_and_record(
+        self,
+        result_fn: Callable[
+            [technologydata.Parameter, technologydata.Parameter],
+            technologydata.Parameter,
+        ],
+        expected: str,
+    ) -> None:
+        """Test that binary arithmetic keeps both histories and appends the operation."""
+        a = technologydata.Parameter(magnitude=3, units="kW", provenance=["source a"])
+        b = technologydata.Parameter(magnitude=1, units="kW", provenance=["source b"])
+        assert result_fn(a, b).provenance == ["source a", "source b", expected]
+        assert a.provenance == ["source a"]
+        assert b.provenance == ["source b"]
