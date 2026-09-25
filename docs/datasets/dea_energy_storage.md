@@ -8,7 +8,7 @@ documentation_url: https://ens.dk/media/6588/download
 license: CC-BY-4.0
 versions: [v10]
 region: EU
-raw_file: src/technologydata/parsers/raw/Technology_datasheet_for_energy_storage.xlsx
+raw_file: src/technologydata/parsers/raw/dea_energy_storage/Technology_datasheet_for_energy_storage.xlsx
 parser: technologydata.parsers.dea_energy_storage.DeaEnergyStorageParser
 ---
 
@@ -161,7 +161,7 @@ The parser overwrites the files shipped with the package.
 from technologydata import DataAccessor
 
 DataAccessor(data_source="dea_energy_storage", version="v10").parse(
-    input_file_name="Technology_datasheet_for_energy_storage.xlsx",
+    input_file_names=["Technology_datasheet_for_energy_storage.xlsx"],
     num_digits=3,
     filter_params=True,
 )
