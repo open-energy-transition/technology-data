@@ -36,7 +36,7 @@ from technologydata import DataAccessor
 
 # Create an accessor for a specific version
 accessor_v1 = DataAccessor(
-    data_source="manual_input_usa",
+    data_source="legacy_input_data",
     version="v1.0.0"
 )
 ```
@@ -50,7 +50,7 @@ The directory structure is expected to be: `src/technologydata/parsers/<data_sou
 The `load()` method will look for the exact version specified during instantiation. If the version is not provided, it will log a warning and use the latest available version. If the version is provided but not found, it will raise a `ValueError` and inform you of the latest available version.
 
 ```python
-# Assuming the path .../parsers/manual_input_usa/v1.0.0/ exists
+# Assuming the path .../parsers/legacy_input_data/v1.0.0/ exists
 dp_v1 = accessor_v1.load()
 
 # dp_v1 is now a DataPackage object containing the data from v1.0.0
@@ -135,7 +135,7 @@ Where `data_path` defaults to the `parsers/` directory of the installed package 
 
 ### Parsing Raw Data
 
-The `parse()` method is used to execute the data processing pipeline for a specific data source and version. It takes the raw data file as input and generates the structured `technologies.json` and `sources.json` files.
+The `parse()` method is used to execute the data processing pipeline for a specific data source and version. It takes the raw data file as input and generates the structured `technologies.json` and `sources.json` files. The two snippets allow to parse respectively the Danish Energy Agency (DEA) Energy Storage dataset and the legacy input datasets hosted on the technology-data repository.
 
 ```python
 from technologydata import DataAccessor
@@ -148,9 +148,28 @@ parser_accessor = DataAccessor(
 
 # Run the parser
 parser_accessor.parse(
-    input_file_name="dea_energy_storage_v10.xlsx",
-    num_digits=2,
-    archive_source=True
+    input_file_names=["Technology_datasheet_for_energy_storage.xlsx"],
+    num_digits=3,
+    archive_source=False,
+)
+```
+
+```python
+from technologydata import DataAccessor
+
+# Create accessor for the data source you want to parse
+accessor = DataAccessor(
+    data_source="legacy_input_data",
+    version="v0.13.4"
+)
+
+# Run the parser
+accessor.parse(
+    input_file_names=["usa.csv", "other.csv"],
+    num_digits=4,
+    archive_source=False,
+    filter_params=False,
+    export_schema=False
 )
 ```
 

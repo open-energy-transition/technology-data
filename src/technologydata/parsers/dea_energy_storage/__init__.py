@@ -34,7 +34,7 @@ class DeaEnergyStorageParser:
     def parse(
         self,
         version: str,
-        input_path: pathlib.Path,
+        input_path: pathlib.Path | list[pathlib.Path],
         num_digits: int,
         archive_source: bool,
         filter_params: bool,
@@ -50,16 +50,17 @@ class DeaEnergyStorageParser:
         ----------
         version : str
             The version of the dataset to parse (e.g., 'v10').
-        input_path : pathlib.Path
+        input_path : pathlib.Path | list[pathlib.Path]
             Path to the raw input data file.
-        num_digits : int, optional
-            Number of significant digits to round the values, by default 4.
-        archive_source : bool, optional
-            If True, archives the source object on the Wayback Machine, by default False.
-        filter_params : bool, optional
-            If True, filters the parameters stored in the output, by default False.
-        export_schema : bool, optional
-            If True, exports the Pydantic schema for the data models, by default False.
+        num_digits : int
+            Number of decimals to round numerical values to.
+        archive_source : bool
+            If True, archives the source object on the Wayback Machine and
+            rewrites sources.json.
+        filter_params : bool
+            If True, keeps only a predefined set of parameters.
+        export_schema : bool
+            If True, exports the Pydantic schema for the data models.
 
         Raises
         ------

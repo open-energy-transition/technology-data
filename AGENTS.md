@@ -18,7 +18,9 @@ maintained by a community of maintainers, based on an initiative of Open Energy 
   regenerate them via the parser, do not hand-edit.
   Each data source has a fact sheet in `docs/datasets/<key>.md`; when adding
   or changing a data source, follow `docs/contributing/adding_a_dataset.md`;
-  for writing the fact sheet, follow `.claude/skills/dataset-factsheet/SKILL.md`.
+  for writing a parser, see `docs/contributing/writing_a_parser.md`;
+  for writing the fact sheet (including its Parser API section), follow
+  `.claude/skills/dataset-factsheet/SKILL.md`.
 - `src/technologydata/data_accessor.py` — `DataAccessor` class for
   accessing external data either from the package or from a remote source.
   Import as `from technologydata import DataAccessor`.

@@ -15,7 +15,7 @@ class ParserBase(abc.ABC):
     @abc.abstractmethod
     def parse(
         self,
-        input_path: pathlib.Path,
+        input_path: pathlib.Path | list[pathlib.Path],
         num_digits: int,
         archive_source: bool,
         **kwargs: Any,
@@ -26,7 +26,7 @@ class ParserBase(abc.ABC):
         Parameters
         ----------
         input_path : pathlib.Path
-            Path to the raw input data file.
+            Path or list of paths to the raw input data file/s.
         num_digits : int
             Number of significant digits to round the values.
         archive_source : bool

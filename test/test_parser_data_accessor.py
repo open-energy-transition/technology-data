@@ -82,7 +82,9 @@ class TestDataAccessor:
         """Test parse and load data for dea_energy_storage."""
         data_accessor = DataAccessor(data_source="dea_energy_storage", version="v10")
         file_name = "Technology_datasheet_for_energy_storage.xlsx"
-        data_accessor.parse(file_name, num_digits=3, filter_params=True)
+        data_accessor.parse(
+            input_file_names=[file_name], num_digits=3, filter_params=True
+        )
         data_package = data_accessor.load()
 
         assert data_accessor.data_source == DataSourceName.DEA_ENERGY_STORAGE
@@ -94,21 +96,23 @@ class TestDataAccessor:
         assert data_package.version == "v10"
         assert len(data_package.technologies) == 136
 
-    def test_parse_and_access_data_manual_input_usa(self) -> None:
-        """Test parse and load data for manual_input_usa.csv."""
-        data_accessor = DataAccessor(data_source="manual_input_usa", version="v0.13.4")
-        file_name = "manual_input_usa.csv"
-        data_accessor.parse(file_name, num_digits=3)
+    def test_parse_and_access_data_legacy_data(self) -> None:
+        """Test parse and load data for legacy_input_data (usa.csv and other.csv)."""
+        data_accessor = DataAccessor(data_source="legacy_input_data", version="v0.13.4")
+        data_accessor.parse(
+            input_file_names=["usa.csv", "other.csv"],
+            num_digits=3,
+        )
         data_package = data_accessor.load()
 
-        assert data_accessor.data_source == DataSourceName.MANUAL_INPUT_USA
+        assert data_accessor.data_source == DataSourceName.LEGACY_INPUT_DATA
         assert data_accessor.version == "v0.13.4"
         assert data_package is not None
         assert data_package.technologies is not None
         assert data_package.sources is not None
-        assert data_package.name == "manual_input_usa"
+        assert data_package.name == "legacy_input_data"
         assert data_package.version == "v0.13.4"
-        assert len(data_package.technologies) == 85
+        assert len(data_package.technologies) == 292
 
     def test_load_falls_back_to_latest_for_invalid_version(self) -> None:
         """Test if load raises ValueError when an invalid version is provided."""
@@ -135,22 +139,22 @@ class TestDataAccessor:
             "https://raw.githubusercontent.com/open-energy-transition/technology-data/"
         )
         # Use specific commit SHA instead of branch name for test stability
-        commit_sha = "83bf906f714dac438a212ed871ad078e96c83a06/"
-        data_source = DataSourceName.MANUAL_INPUT_USA
+        commit_sha = "1813eb18a421ebbde785fecad32ea1b6ced05fa7/"
+        data_source = DataSourceName.LEGACY_INPUT_DATA
         version = "v0.13.4"
         target_url = f"src/technologydata/parsers/{data_source}/{version}/"
         url = base_url + commit_sha + target_url
         data_accessor = DataAccessor(
-            data_source="manual_input_usa", version="v0.13.4", data_path=tmp_path
+            data_source="legacy_input_data", version="v0.13.4", data_path=tmp_path
         )
         dp = data_accessor.download(url)
         assert dp is not None
         assert dp.sources is not None
         assert dp.technologies is not None
-        assert dp.name == "manual_input_usa"
+        assert dp.name == "legacy_input_data"
         assert dp.version == "v0.13.4"
-        assert len(dp.sources) == 1
-        assert len(dp.technologies) == 85
+        assert len(dp.sources) == 2
+        assert len(dp.technologies) == 292
         sources_reference_path = pathlib.Path(path_cwd, target_url, "sources.json")
         technologies_reference_path = pathlib.Path(
             path_cwd, target_url, "technologies.json"

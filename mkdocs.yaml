@@ -8,11 +8,11 @@ edit_uri: edit/master/docs/
 nav:
 - Home:
   - Home: index.md
+  - Overview: overview.md
+  - Tutorial: tutorial/index.md
   - Release Notes: home/release-notes.md
   - FAQ: home/faq.md
   - License: home/license.md
-
-- Tutorial: tutorial/index.md
 
 - User Guide:
   - Data Package: user_guide/datapackage.md
@@ -23,15 +23,13 @@ nav:
   - Technology: user_guide/technology.md
   - Technology Collection: user_guide/technology_collection.md
   - Equation System: user_guide/equations.md
-  - DEA Energy Storage Parser: user_guide/dea_energy_storage_parser.md
-  - Manual Input USA Parser: user_guide/manual_input_usa_parser.md
   - Data Accessor: user_guide/data_accessor.md
   - Use Cases: user_guide/design.md
 
 - Datasets:
   - datasets/index.md
   - DEA Energy Storage: datasets/dea_energy_storage.md
-  - Manual Input USA: datasets/manual_input_usa.md
+  - Legacy Input Data: datasets/legacy_input_data.md
 
 - API Reference:
   - Data Package: api/datapackage.md
@@ -42,8 +40,6 @@ nav:
   - Technology: api/technology.md
   - Technology Collection: api/technology_collection.md
   - Data Accessor: api/data_accessor.md
-  - Dea Energy Storage Parser: api/dea_energy_storage_parser.md
-  - Manual Input USA Parser: api/manual_input_usa_parser.md
   - Utils:
     - Commons:
       - Common functionalities: api/commons/commons.md
@@ -59,7 +55,8 @@ nav:
   - Code of Conduct: contributing/CODE_OF_CONDUCT.md
   - Contributors: contributing/contributors.md
   - Adding a Dataset: contributing/adding_a_dataset.md
-  - API Improvement Proposals: contributing/api_improvement_proposals.md
+  - Writing a Parser: contributing/writing_a_parser.md
+  - Improvement Backlog: contributing/improvement_backlog.md
 
 # Theme settings
 theme:

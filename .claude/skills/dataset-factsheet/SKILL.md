@@ -1,6 +1,6 @@
 ---
 name: dataset-factsheet
-description: Create or update the fact sheet in docs/datasets/<key>.md for a dataset shipped with technologydata, once its parser and parsed JSON exist. Use when a data source or a new version of one is added, or when a fact sheet's doctests fail after the data changed.
+description: Create or update the fact sheet in docs/datasets/<key>.md for a dataset shipped with technologydata, including its Parser API section, once its parser and parsed JSON exist. Use when a data source or a new version of one is added, when a parser changes, or when a fact sheet's doctests fail after the data changed.
 ---
 
 # Dataset fact sheet
@@ -13,8 +13,9 @@ SPDX-License-Identifier: MIT
 -->
 
 The template, section order and writing guidelines are in `docs/contributing/adding_a_dataset.md`; read it first and follow it exactly.
-`docs/datasets/dea_energy_storage.md` and `docs/datasets/manual_input_usa.md` are finished examples.
-This skill covers how to find each fact and how to check it.
+`docs/datasets/dea_energy_storage.md` and `docs/datasets/legacy_input_data.md` are finished examples.
+How a parser is structured is described in `docs/contributing/writing_a_parser.md`.
+This skill covers how to find each fact, how to check the parser docstrings and how to check the page.
 
 Readers are experienced modellers and AI agents: tables and short bullets, no description of the parser code.
 Only state what you verified in the code or the data; if something cannot be verified (e.g. the upstream license), write what is known and tell the user.
@@ -25,9 +26,9 @@ Determine, or ask the user if unclear:
 
 - `<key>`: the `DataSourceName` value in `src/technologydata/data_accessor.py`.
 - `<version>`: the directory in `src/technologydata/parsers/<key>/`.
-- The parser module `src/technologydata/parsers/<key>/`, the raw file in `src/technologydata/parsers/raw/`, and `sources.json` of the version.
+- The parser module `src/technologydata/parsers/<key>/`, the raw files in `src/technologydata/parsers/raw/<key>/`, and `sources.json` of the version.
 
-For a new version of an existing dataset, update the existing page instead (see the end of the checklist in `adding_a_dataset.md`).
+For a new version of an existing dataset, update the existing pages instead (see the end of the checklist in `adding_a_dataset.md`), including a `:::` block for the new version parser in `Parser API`.
 
 ## Where each fact comes from
 
@@ -40,6 +41,7 @@ For a new version of an existing dataset, update the existing page instead (see 
 | Naming conventions | the parser's cleaning functions (regexes, renames, case maps, unit replacements); one real example each |
 | Assumptions and deviations | hard-coded values in the parser: fixed region, parameter filters, filled-in units, dropped rows, merged cases, row-level sources not kept |
 | Known limitations | checks below |
+| Parser API | the dispatcher class in `src/technologydata/parsers/<key>/__init__.py` and the version parser class of each entry in its `get_supported_versions()` |
 
 ```python
 from technologydata import DataAccessor
@@ -76,22 +78,33 @@ Look for these and quantify them where cheap ("7 of about 76 parameters"):
 ## Verify Reproduce
 
 The documented `parse()` call must reproduce the shipped files.
-It overwrites them, so check the working tree is clean for that directory first:
+It overwrites them, so check the working tree is clean for the output directory first:
 
 ```bash
-git status --short src/technologydata/parsers/<key>/
-uv run python -c 'from technologydata import DataAccessor; DataAccessor(data_source="<key>", version="<version>").parse(input_file_name="<file>", num_digits=3)'
-git diff --stat src/technologydata/parsers/<key>/
-git checkout -- src/technologydata/parsers/<key>/
+git status --short src/technologydata/parsers/<key>/<version>/
+uv run python -c 'from technologydata import DataAccessor; DataAccessor(data_source="<key>", version="<version>").parse(input_file_names=["<file>"], num_digits=3)'
+git diff --stat src/technologydata/parsers/<key>/<version>/
+git checkout -- src/technologydata/parsers/<key>/<version>/
 ```
 
+Restore only the output directory `<key>/<version>/`: the parser code next to it may have uncommitted changes.
+
+`input_file_names` lists every raw file of the version, as file names inside `src/technologydata/parsers/raw/<key>/`.
 Only a trailing-newline difference is acceptable; otherwise adjust the documented options until the output matches.
 Never use `archive_source=True` here: it calls the Wayback Machine and rewrites `sources.json`.
+The test suite also re-parses the shipped files in place; restore them with `git checkout` after running it.
+
+## Parser API section
+
+The `Parser API` section at the end of the fact sheet renders the docstrings of the parser classes with mkdocstrings, one `:::` block per class with `heading_level: 3`, as in the template: first the dispatcher, then one block per supported version.
+It is the only per-parser documentation, so the docstrings must be complete and match the code: parameters and their types, what the parser writes where, raised errors, which options it ignores, and examples.
+Fix wrong docstrings in the parser, or tell the user if the fix is not obvious.
 
 ## Wire up and check
 
-1. Add the page to the `Datasets` nav in `mkdocs.yaml` and a row to the table in `docs/datasets/index.md`.
-2. If a user guide page `docs/user_guide/<key>_parser.md` exists, keep it to structure and usage and link to the fact sheet's `#reproduce`.
-3. Run `uv run pytest test/test_docs.py --test-docs` and `uv run pre-commit run --all-files`.
+1. Add the fact sheet to the `Datasets` nav in `mkdocs.yaml` and a row to the table in `docs/datasets/index.md`.
+2. Run `uv run pytest test/test_docs.py --test-docs` and `uv run pre-commit run --all-files`.
    Codespell may flag domain abbreviations; add real terms to `.codespell.ignore`.
-4. Report to the user: anything not verified, and parser problems found (such as overwritten values) as candidates for issues.
+3. Run `READTHEDOCS_CANONICAL_URL=http://localhost/ uv run mkdocs build --strict -d /tmp/site` to check links, anchors and the `:::` blocks.
+   Warnings `has no git logs` for new, uncommitted files can be ignored.
+4. Report to the user: anything not verified, and parser problems found (such as overwritten values or wrong docstrings) as candidates for issues.

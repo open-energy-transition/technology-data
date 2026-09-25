@@ -21,7 +21,14 @@ Harmonising to combine multiple sources into one energy system model therefore r
 This package contains a data schema and represents the techno-economic assumptions as Python objects.
 The objects called `Parameter` carry not only values ("magnitude"), but also unit information, currency year, energy carrier, heating-value basis, provenance and bibliographic sources.
 Commonly used conversions are available, parameters can be checked for consistency.
-Provenance information for modifying parameters is automatically recorded, e.g. to keep track of currency conversion factors or formulas used for calculation.
+Sources stay attached through conversions and arithmetic, and parameters derived with the built-in equations record the formula and input values used.
+
+The package is meant for energy system modellers who:
+
+- combine assumptions from more than one source, or from a source and their own numbers;
+- convert between currencies, price years, units and heating values without losing track of what was converted;
+- need to know where each number came from and how it was calculated;
+- derive related parameters or check them for consistency, and project values to years their sources do not cover.
 
 ## Installation
 
@@ -41,6 +48,8 @@ uv add install technologydata
 
 The package requires Python 3.12 or newer.
 The bundled datasets are installed with it; no additional download step is needed.
+
+New to `technologydata`? Start with the [Overview](overview.md).
 
 ## Features of the package
 
@@ -89,7 +98,7 @@ import technologydata
 # Load data provided by the DEA
 dea = technologydata.DataAccessor(data_source="dea_energy_storage", version="v10").load()
 # Load data from NREL's ATB2024
-atb = technologydata.DataAccessor(data_source="manual_input_usa", version="v0.13.4").load()
+atb = technologydata.DataAccessor(data_source="legacy_input_data", version="v0.13.4").load()
 
 # We get the data specific to battery storage and adjust the currency year
 # from 2022 to 2023. By default the inflation adjustment uses World Bank data

@@ -19,7 +19,7 @@ from pydantic import Field, field_validator
 
 from technologydata.datapackage import DataPackage
 from technologydata.parsers.dea_energy_storage import DeaEnergyStorageParser
-from technologydata.parsers.manual_input_usa import ManualInputUsaParser
+from technologydata.parsers.legacy_input_data import LegacyInputDataParser
 
 # The datasets are shipped inside the package, next to their parsers.
 path_parsers = pathlib.Path(__file__).parent / "parsers"
@@ -31,7 +31,7 @@ class DataSourceName(enum.StrEnum):
     """An enumeration of available data sources."""
 
     DEA_ENERGY_STORAGE = "dea_energy_storage"
-    MANUAL_INPUT_USA = "manual_input_usa"
+    LEGACY_INPUT_DATA = "legacy_input_data"
 
 
 class DataAccessor(pydantic.BaseModel):
@@ -320,7 +320,7 @@ class DataAccessor(pydantic.BaseModel):
 
     def parse(
         self,
-        input_file_name: str,
+        input_file_names: list[str],
         num_digits: int = 4,
         archive_source: bool = False,
         filter_params: bool = False,
@@ -334,8 +334,11 @@ class DataAccessor(pydantic.BaseModel):
 
         Parameters
         ----------
-        input_file_name : str
-            The name of the input file in the 'raw' directory.
+        input_file_names : list[str]
+            The names of the input files within the data source directory
+            in 'raw/{data_source}/'. Can be:
+            - A single element list with single-file data sources (e.g., ["Technology_datasheet_for_energy_storage.xlsx"])
+            - A list of filenames for multi-file data sources (e.g., ["usa.csv", "other.csv"])
         num_digits : int, optional
             Number of significant digits to round the values. Default is 4.
         archive_source : bool, optional
@@ -353,26 +356,25 @@ class DataAccessor(pydantic.BaseModel):
             If the required input data file is not found.
 
         """
-        parser: DeaEnergyStorageParser | ManualInputUsaParser
+        parser: DeaEnergyStorageParser | LegacyInputDataParser
 
         if self.data_source == DataSourceName.DEA_ENERGY_STORAGE:
             parser = DeaEnergyStorageParser()
-        elif self.data_source == DataSourceName.MANUAL_INPUT_USA:
-            parser = ManualInputUsaParser()
+        elif self.data_source == DataSourceName.LEGACY_INPUT_DATA:
+            parser = LegacyInputDataParser()
         else:
             raise ValueError(
                 f"Unsupported data source: {self.data_source}. "
                 f"Supported data sources are: {[e for e in DataSourceName]}"
             )
 
-        # Read the raw data
-        input_path = pathlib.Path(
+        # Read the raw data - construct path to data source directory
+        input_data_dir = pathlib.Path(
             self.data_path,
             "raw",
+            self.data_source,
         )
-        DataAccessor.ensure_path_exists(input_path)
-        input_data_path = pathlib.Path(input_path, input_file_name)
-        logger.info(f"Input data path set to: {input_data_path}")
+        DataAccessor.ensure_path_exists(input_data_dir)
 
         if self.version not in parser.get_supported_versions():
             logging.error(
@@ -380,6 +382,21 @@ class DataAccessor(pydantic.BaseModel):
                 f"Supported versions: {parser.get_supported_versions()}"
             )
             sys.exit(1)
+
+        input_data_path: pathlib.Path | list[pathlib.Path]
+
+        if len(input_file_names) == 0:
+            logging.error("No input data files were specified.")
+            sys.exit(1)
+        if len(input_file_names) == 1:
+            input_data_path = pathlib.Path(input_data_dir, input_file_names[0])
+        else:
+            input_data_path = [
+                pathlib.Path(input_data_dir, file_name)
+                for file_name in input_file_names
+            ]
+
+        logger.info(f"Input data path set to: {input_data_path}")
 
         try:
             parser.parse(

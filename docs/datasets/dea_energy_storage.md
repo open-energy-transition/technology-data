@@ -8,7 +8,7 @@ documentation_url: https://ens.dk/media/6588/download
 license: CC-BY-4.0
 versions: [v10]
 region: EU
-raw_file: src/technologydata/parsers/raw/Technology_datasheet_for_energy_storage.xlsx
+raw_file: src/technologydata/parsers/raw/dea_energy_storage/Technology_datasheet_for_energy_storage.xlsx
 parser: technologydata.parsers.dea_energy_storage.DeaEnergyStorageParser
 ---
 
@@ -37,7 +37,7 @@ The Danish Energy Agency (DEA) technology catalogue for energy storage: costs, e
 | Cases | `control` (central estimate), `lower`, `upper` (uncertainty range) |
 | Currency | `EUR_2020` |
 | Raw format | Excel, sheet `alldata_flat` |
-| Parser | [`DeaEnergyStorageParser`](../api/dea_energy_storage_parser.md) |
+| Parser | [`DeaEnergyStorageParser`](#parser-api) |
 
 ## Available versions
 
@@ -161,7 +161,7 @@ The parser overwrites the files shipped with the package.
 from technologydata import DataAccessor
 
 DataAccessor(data_source="dea_energy_storage", version="v10").parse(
-    input_file_name="Technology_datasheet_for_energy_storage.xlsx",
+    input_file_names=["Technology_datasheet_for_energy_storage.xlsx"],
     num_digits=3,
     filter_params=True,
 )
@@ -186,5 +186,17 @@ Please also cite `technologydata`, see [Citing](../index.md#citing).
 
 ## See also
 
-- [DEA Energy Storage Parser](../user_guide/dea_energy_storage_parser.md) (user guide) and [API reference](../api/dea_energy_storage_parser.md)
 - [Data Accessor](../user_guide/data_accessor.md)
+
+## Parser API
+
+The parser is only needed to reproduce or update the dataset, see [Reproduce](#reproduce); loading the data only needs `DataAccessor.load()`.
+The dispatcher selects the parser of the requested version.
+
+::: technologydata.parsers.dea_energy_storage.DeaEnergyStorageParser
+    options:
+      heading_level: 3
+
+::: technologydata.parsers.dea_energy_storage.parser_v10.DeaEnergyStorageV10Parser
+    options:
+      heading_level: 3

@@ -40,6 +40,10 @@ filtered = collection.get(name="Tech", region="DEU", year=2020, case="Base", det
 print(filtered)  # TechnologyCollection with matching technologies
 ```
 
+!!! warning "`get()` matches regular expressions, not literal text"
+    Every argument is compiled as a case-insensitive regular expression, so characters like `(` and `)` are read as a group rather than as brackets.
+    A name containing them silently matches nothing; pass it through `re.escape()` first.
+
 ### Exporting to CSV
 
 ```python

@@ -469,7 +469,7 @@ class DeaEnergyStorageV10Parser(ParserBase):
 
     def parse(
         self,
-        input_path: pathlib.Path,
+        input_path: pathlib.Path | list[pathlib.Path],
         num_digits: int,
         archive_source: bool,
         **kwargs: Any,
@@ -483,10 +483,11 @@ class DeaEnergyStorageV10Parser(ParserBase):
 
         Parameters
         ----------
-        input_path : pathlib.Path
-            Path to the raw input data file (Excel).
+        input_path : pathlib.Path | list[pathlib.Path]
+            Path to the raw input data file.
         num_digits : int
-            Number of significant digits to round numerical values.
+            Number of decimals to round numerical values to; for values in
+            scientific notation, the mantissa is rounded.
         archive_source : bool
             If True, archives the source object on the Wayback Machine.
         **kwargs : bool
@@ -495,12 +496,27 @@ class DeaEnergyStorageV10Parser(ParserBase):
             export_schema : bool
                 If True, exports the Pydantic schema for the data models.
 
+        Raises
+        ------
+        TypeError
+            If input_path is a list instead of a single Path.
+
         Returns
         -------
-        TechnologyCollection
-            A collection of parsed technology data.
+        Nothing.
+
+        Notes
+        -----
+        Writes parsed data to `src/technologydata/parsers/dea_energy_storage/v10/`.
 
         """
+        # Validate that input_path is a single Path, not a list
+        if isinstance(input_path, list):
+            raise TypeError(
+                "DeaEnergyStorageV10Parser requires a single Path, not a list. "
+                f"Got {len(input_path)} paths."
+            )
+
         filter_params = kwargs.get("filter_params", False)
         export_schema = kwargs.get("export_schema", False)
 

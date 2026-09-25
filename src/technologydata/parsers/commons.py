@@ -5,10 +5,261 @@
 """Classes for Commons methods for the data parsers."""
 
 import argparse
+import re
+from enum import StrEnum
 from typing import Annotated, Any
 
 import pydantic
 from pydantic import BaseModel, ConfigDict
+
+
+class UnitPatternRegex(StrEnum):
+    """
+    Enum defining regex patterns for extracting units, carriers, and heating values.
+
+    Each pattern matches a specific format of unit strings commonly found in
+    energy technology data. The patterns handle various combinations of:
+    - Currency units (USD, EUR) with optional year
+    - Energy units (kWh, MWh, GWh, etc.)
+    - Mass units (t)
+    - Carriers (H2, CH4, CO2, FT, etc.)
+    - Time dimensions (/h)
+    - Distance dimensions (/km)
+    """
+
+    # Pattern 1: Currency with optional year and power/energy carrier
+    # Examples: USD_2022/MW_FT, EUR/kWh_H2, EUR_2020/kW_CH4
+    CURRENCY_POWER_CARRIER = r"^(USD|EUR)(?:_(\d{4}))?/([kMGT]?Wh?)_([A-Za-z0-9]+)$"
+
+    # Pattern 2: Currency with optional year, mass carrier and time (without parentheses)
+    # Examples: USD_2023/t_CO2/h, EUR/t_cement/h
+    CURRENCY_MASS_TIME = r"^(USD|EUR)(?:_(\d{4}))?/t_([A-Za-z0-9]+)/h$"
+
+    # Pattern 3: Currency with optional year, mass carrier and time (with parentheses)
+    # Examples: EUR/(t_HVC/h), USD_2022/(t_CO2/h)
+    CURRENCY_MASS_TIME_PAREN = r"^(USD|EUR)(?:_(\d{4}))?/\(t_([A-Za-z0-9]+)/h\)$"
+
+    # Pattern 4: Energy ratio with carriers
+    # Examples: MWh_H2/MWh_FT, MWh_el/MWh_CH4, kWh_NG/kWh_H2
+    ENERGY_ENERGY_RATIO = r"^([kMGT]?Wh)_([A-Za-z0-9]+)/([kMGT]?Wh)_([A-Za-z0-9]+)$"
+
+    # Pattern 5: Mass/energy ratio with carriers (order agnostic)
+    # Examples: t_CO2/MWh_FT, MWh_el/t_CO2, MWh_H2/t_H18DBT
+    # Excludes el/th/thermal carriers which are handled by Pattern 6
+    MASS_ENERGY_RATIO = r"^(t|[kMGT]?Wh)_(?!(?:el|th|thermal)/)([A-Za-z0-9]+)/([kMGT]?Wh|t)_([A-Za-z0-9]+)$"
+
+    # Pattern 6: Energy unit with el/th/thermal carrier to mass with carrier
+    # Examples: MWh_el/t_CO2, MWh_th/t_cement, kWh_thermal/t_clinker
+    ENERGY_THERMAL_MASS = r"^([kMGT]?Wh)_(el|th|thermal)/t_([A-Za-z0-9]+)$"
+
+    # Pattern 7: Currency with generic unit and carrier per time (in parentheses)
+    # Examples: EUR/(t_HVC/h), USD/(MW_H2/h)
+    CURRENCY_GENERIC_TIME_PAREN = (
+        r"^(USD|EUR)(?:_(\d{4}))?/\(([A-Za-z0-9]+)_([A-Za-z0-9]+)/h\)$"
+    )
+
+    # Pattern 8: Currency per mass/time with distance dimension
+    # Examples: EUR/(t_CO2/h)/km, USD_2023/(t_cement/h)/km
+    CURRENCY_MASS_TIME_DISTANCE = r"^(USD|EUR)(?:_(\d{4}))?/\(t_([A-Za-z0-9]+)/h\)/km$"
+
+    # Pattern 9: Currency with optional year and mass carrier (without time)
+    # Examples: EUR/t_clinker, USD_2023/t_cement, EUR/t_HVC
+    CURRENCY_MASS_CARRIER = r"^(USD|EUR)(?:_(\d{4}))?/t_([A-Za-z0-9]+)$"
+
+    # Pattern 10: Power per distance per power with carriers
+    # Examples: MW_e/km/MW_CH4, MW_e/m/MW_H2
+    POWER_DISTANCE_POWER = (
+        r"^([kMGT]?W)_([A-Za-z0-9]+)/(k?m)/([kMGT]?W)_([A-Za-z0-9]+)$"
+    )
+
+    # Pattern 11: Standalone mass with carrier
+    # Examples: t_CH4, t_HBI, t_ore
+    MASS_CARRIER = r"^t_([A-Za-z0-9]+)$"
+
+    # Pattern 12: Energy without carrier to mass with carrier
+    # Examples: MWh/t_CO2, kWh/t_cement
+    ENERGY_MASS_CARRIER = r"^([kMGT]?Wh)/t_([A-Za-z0-9]+)$"
+
+
+class UnitCarrierHeatingValueExtractor:
+    """Process matched unit patterns into standardized unit, carrier, and heating value tuples."""
+
+    # Carriers without a heating value (electricity and heat)
+    CARRIERS_WITHOUT_HEATING_VALUE = frozenset({"e", "el", "th", "thermal"})
+
+    @staticmethod
+    def _normalize_carrier(carrier: str) -> str:
+        """Normalize "th" to "thermal"."""
+        return "thermal" if carrier == "th" else carrier
+
+    @staticmethod
+    def _heating_value(
+        numerator_carrier: str | None, denominator_carrier: str | None
+    ) -> str | None:
+        """
+        Return the heating value of a unit from the carriers of its energy parts.
+
+        Only energy or power units of a fuel carrier have a heating value;
+        electricity and heat have none. The heating value is placed where the
+        energy unit is: ``LHV`` in the numerator, ``1/LHV`` in the denominator.
+        A ratio of two fuels keeps ``LHV``, as both are on the same basis.
+
+        Parameters
+        ----------
+        numerator_carrier : str | None
+            Carrier of the energy or power unit in the numerator, None if the
+            numerator is not an energy or power unit.
+        denominator_carrier : str | None
+            Carrier of the energy or power unit in the denominator, None if the
+            denominator is not an energy or power unit.
+
+        Returns
+        -------
+        str | None
+            ``"LHV"``, ``"1/LHV"`` or None.
+
+        """
+        no_hv = UnitCarrierHeatingValueExtractor.CARRIERS_WITHOUT_HEATING_VALUE
+        numerator_fuel = (
+            numerator_carrier is not None and numerator_carrier not in no_hv
+        )
+        denominator_fuel = (
+            denominator_carrier is not None and denominator_carrier not in no_hv
+        )
+        if numerator_fuel:
+            return "LHV"
+        if denominator_fuel:
+            return "1/LHV"
+        return None
+
+    @staticmethod
+    def _is_energy(unit: str) -> bool:
+        """Return True if the unit is an energy or power unit."""
+        return unit.endswith("W") or unit.endswith("Wh")
+
+    @staticmethod
+    def process_currency_power_carrier(
+        match: re.Match[str],
+    ) -> tuple[str, str, str | None]:
+        """Process currency with power/energy carrier pattern."""
+        currency, year, unit, carrier = match.groups()
+        standardized_unit = (
+            f"{currency}_{year}/{unit}" if year else f"{currency}/{unit}"
+        )
+        carrier = UnitCarrierHeatingValueExtractor._normalize_carrier(carrier)
+        heating_value = UnitCarrierHeatingValueExtractor._heating_value(None, carrier)
+        return standardized_unit, f"1/{carrier}", heating_value
+
+    @staticmethod
+    def process_currency_mass_time(match: re.Match[str]) -> tuple[str, str, None]:
+        """
+        Process currency with mass carrier and time pattern.
+
+        The unit is a cost per capacity in mass per hour, e.g. EUR/(t_CO2/h),
+        also when the raw unit is written without parentheses (EUR/t_CO2/h).
+        """
+        currency, year, carrier = match.groups()
+        standardized_unit = f"{currency}_{year}/(t/h)" if year else f"{currency}/(t/h)"
+        carrier_str = f"1/{carrier}"
+        return standardized_unit, carrier_str, None
+
+    @staticmethod
+    def process_currency_mass_carrier(match: re.Match[str]) -> tuple[str, str, None]:
+        """Process currency with mass carrier (without time) pattern."""
+        currency, year, carrier = match.groups()
+        standardized_unit = f"{currency}_{year}/t" if year else f"{currency}/t"
+        carrier_str = f"1/{carrier}"
+        return standardized_unit, carrier_str, None
+
+    @staticmethod
+    def process_energy_ratio(match: re.Match[str]) -> tuple[str, str, str | None]:
+        """Process energy ratio with carriers pattern."""
+        unit1, carrier1, unit2, carrier2 = match.groups()
+        standardized_unit = f"{unit1}/{unit2}"
+        carrier1 = UnitCarrierHeatingValueExtractor._normalize_carrier(carrier1)
+        carrier2 = UnitCarrierHeatingValueExtractor._normalize_carrier(carrier2)
+        carrier_str = f"{carrier1}/{carrier2}"
+        heating_value = UnitCarrierHeatingValueExtractor._heating_value(
+            carrier1, carrier2
+        )
+        return standardized_unit, carrier_str, heating_value
+
+    @staticmethod
+    def process_mass_energy_ratio(match: re.Match[str]) -> tuple[str, str, str | None]:
+        """Process mass/energy ratio with carriers pattern."""
+        unit1, carrier1, unit2, carrier2 = match.groups()
+        standardized_unit = f"{unit1}/{unit2}"
+        carrier1 = UnitCarrierHeatingValueExtractor._normalize_carrier(carrier1)
+        carrier2 = UnitCarrierHeatingValueExtractor._normalize_carrier(carrier2)
+        carrier_str = f"{carrier1}/{carrier2}"
+        is_energy = UnitCarrierHeatingValueExtractor._is_energy
+        heating_value = UnitCarrierHeatingValueExtractor._heating_value(
+            carrier1 if is_energy(unit1) else None,
+            carrier2 if is_energy(unit2) else None,
+        )
+        return standardized_unit, carrier_str, heating_value
+
+    @staticmethod
+    def process_energy_thermal_mass(match: re.Match[str]) -> tuple[str, str, None]:
+        """Process energy unit with el/th/thermal carrier to mass pattern."""
+        unit, carrier1, carrier2 = match.groups()
+        standardized_unit = f"{unit}/t"
+        carrier1 = UnitCarrierHeatingValueExtractor._normalize_carrier(carrier1)
+        carrier_str = f"{carrier1}/{carrier2}"
+        # Electricity and heat have no heating value
+        return standardized_unit, carrier_str, None
+
+    @staticmethod
+    def process_currency_generic_time(match: re.Match[str]) -> tuple[str, str, None]:
+        """Process currency with generic unit and carrier per time pattern."""
+        currency, year, unit_type, carrier = match.groups()
+        standardized_unit = (
+            f"{currency}_{year}/({unit_type}/h)"
+            if year
+            else f"{currency}/({unit_type}/h)"
+        )
+        return standardized_unit, f"1/{carrier}", None
+
+    @staticmethod
+    def process_currency_mass_time_distance(
+        match: re.Match[str],
+    ) -> tuple[str, str, None]:
+        """Process currency per mass/time with distance dimension pattern."""
+        currency, year, carrier = match.groups()
+        standardized_unit = (
+            f"{currency}_{year}/(t/h)/km" if year else f"{currency}/(t/h)/km"
+        )
+        return standardized_unit, f"1/{carrier}", None
+
+    @staticmethod
+    def process_power_distance_power(
+        match: re.Match[str],
+    ) -> tuple[str, str, str | None]:
+        """Process power per distance per power with carriers pattern."""
+        unit1, carrier1, distance, unit2, carrier2 = match.groups()
+        standardized_unit = f"{unit1}/{distance}/{unit2}"
+        carrier1 = UnitCarrierHeatingValueExtractor._normalize_carrier(carrier1)
+        carrier2 = UnitCarrierHeatingValueExtractor._normalize_carrier(carrier2)
+        carrier_str = f"{carrier1}/{carrier2}"
+        heating_value = UnitCarrierHeatingValueExtractor._heating_value(
+            carrier1, carrier2
+        )
+        return standardized_unit, carrier_str, heating_value
+
+    @staticmethod
+    def process_mass_carrier(match: re.Match[str]) -> tuple[str, str, None]:
+        """Process standalone mass with carrier pattern."""
+        carrier = match.groups()[0]
+        return "t", carrier, None
+
+    @staticmethod
+    def process_energy_mass_carrier(match: re.Match[str]) -> tuple[str, str, None]:
+        """Process energy without carrier to mass with carrier pattern."""
+        unit, carrier = match.groups()
+        standardized_unit = f"{unit}/t"
+        carrier_str = f"1/{carrier}"
+        # The energy unit has no carrier, so no heating value can be assigned
+        return standardized_unit, carrier_str, None
 
 
 class ArgumentConfig(BaseModel):

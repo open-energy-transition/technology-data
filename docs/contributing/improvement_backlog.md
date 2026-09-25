@@ -1,9 +1,10 @@
-# API improvement proposals
+# Improvement backlog
 
-This document collects API additions, behavior changes, and code cleanups that were identified
-during a review of the formula-system branch but deliberately **not** implemented yet.
-Each entry names the owning class, a rough signature, and the rationale, so it can be picked up
-as an independent piece of work later.
+This document collects bugs, API additions, behavior changes, and code cleanups that were
+identified during reviews and while writing the documentation, many of them with the help of
+AI agents, but that are deliberately **not** implemented yet.
+Each entry names the owning class, a rough signature or the observed behavior, and the
+rationale, so it can be picked up as an independent piece of work later.
 
 ## 1. Promised in docs/design but missing (highest priority)
 
@@ -107,6 +108,81 @@ Cleanups identified in review but scoped out of the equations-focused simplifica
 - `Technology.to_currency()`: replace deep-copy-then-mutate with a dict comprehension +
   `model_copy(update=...)` like `calculate_parameters`, and `country = overwrite_country or
   self.region`.
+
+## 6. Issues found while writing the tutorials
+
+Found while writing the Overview and the Tutorial; each was worked around in the docs.
+
+### Heating values block multiplication with carriers that have none
+
+`Parameter.__mul__` and `__truediv__` require both operands to have the same heating value.
+Electricity has none, so the most natural electrolyser calculation fails:
+
+```python
+electricity = Parameter(magnitude=10, units="MW", carrier="el")
+efficiency = Parameter(magnitude=0.65, units="MWh/MWh", carrier="H2/el", heating_value="LHV")
+electricity * efficiency  # ValueError: different heating values: None and lower_heating_value
+```
+
+Proposal: treat a missing heating value as compatible and let the result take the one that is
+set. The rule for two set heating values also needs a decision: multiplying LHV by LHV
+currently yields `lower_heating_value ** 2`. This is a design decision and a behavior change.
+
+### Derived parameters drop the sources and provenance of their inputs
+
+`Technology.calculate_parameters` (via `EquationRegistry`) returns a parameter whose
+`provenance` contains only the formula entry and whose `sources` are empty, although the
+inputs carry both. The derived parameter should merge the inputs' sources and keep their
+provenance before the formula entry, as the arithmetic operators already do.
+
+### Wrong units for `eac`
+
+`calculate_parameters("eac")` from `specific_investment`, `wacc` and `lifetime` returns
+`EUR_2020 / kilowatt` instead of `EUR_2020 / kilowatt / year`. Parameters in exponent positions
+are passed as plain magnitudes (see `_get_exponent_symbols` in `equations.py`), so the `year`
+of `lifetime` is lost. The unit of the result has to be restored, e.g. by dividing by the unit
+of the exponent parameter where the formula implies it, or by declaring the target unit per
+equation.
+
+### Derived units are not simplified
+
+A derived `total_investment_cost` from `EUR_2020/kW` and `MW` is reported as
+`EUR_2020 * megawatt / kilowatt`. Results of equations (and possibly of `__mul__` /
+`__truediv__`) should be passed through pint's `to_reduced_units()`.
+
+### Misleading error message for incompatible units
+
+`Parameter._check_parameter_compatibility` compares currencies before dimensions, so any
+mismatch where one side has a currency is reported as
+`different currencies or currency years: 'megawatt_hour' and 'EUR_2020 / kilowatt'`.
+Check dimensionality first, and only report a currency mismatch when both sides have
+compatible dimensions.
+
+### Parameter names differ between datasets and equations
+
+The equations identify parameters by name (`specific_investment`, `total_investment_cost`),
+while the parsers keep the source's names (`specific investment` in `dea_energy_storage`,
+`investment` in `manual_input_usa`). Equations can therefore not be applied to the bundled
+datasets. Options: harmonise parameter keys in the parsers to the equation names (and document
+it under "Naming conventions" in the fact sheets), or add an alias mapping to the registry.
+
+### `TechnologyCollection.to_dataframe()` is not a flat table
+
+All parameters end up in one nested `parameters` column. A long format with one row per
+technology and parameter (`magnitude`, `units`, `carrier`, `heating_value`) would make the
+output usable for filtering and export.
+
+### `DataPackage.to_json()` docstring promises a schema that is not written
+
+The docstring says both files are exported "together with the corresponding data schema", but
+`TechnologyCollection.to_json` is called with `output_schema=False`. Either pass
+`output_schema=True` or add a parameter and fix the docstring.
+
+### `DataAccessor.download()` writes into the installed package by default
+
+Since `data_path` defaults to the package's `parsers` directory (so that `load()` works from any
+working directory), `download()` writes there too. In a non-editable install this is inside
+`site-packages` and may not be writable. Related to #92, #95 and #113.
 
 ## Considered and rejected
 
