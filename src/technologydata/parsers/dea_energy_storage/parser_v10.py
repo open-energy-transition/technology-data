@@ -500,7 +500,7 @@ class DeaEnergyStorageV10Parser(ParserBase):
         ------
         TypeError
             If input_path is a list instead of a single Path.
-        
+
         Returns
         -------
         Nothing.

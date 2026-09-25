@@ -358,7 +358,7 @@ class LegacyInputDataV0134Parser(ParserBase):
             If input_path is a single Path instead of a list.
         ValueError
             If the USA file or other file cannot be identified from the filenames.
-        
+
         Returns
         -------
         Nothing
