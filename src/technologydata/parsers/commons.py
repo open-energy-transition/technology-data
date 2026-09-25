@@ -84,17 +84,71 @@ class UnitPatternRegex(StrEnum):
 class UnitCarrierHeatingValueExtractor:
     """Process matched unit patterns into standardized unit, carrier, and heating value tuples."""
 
+    # Carriers without a heating value (electricity and heat)
+    CARRIERS_WITHOUT_HEATING_VALUE = frozenset({"e", "el", "th", "thermal"})
+
     @staticmethod
-    def process_currency_power_carrier(match: re.Match[str]) -> tuple[str, str, str]:
+    def _normalize_carrier(carrier: str) -> str:
+        """Normalize "th" to "thermal"."""
+        return "thermal" if carrier == "th" else carrier
+
+    @staticmethod
+    def _heating_value(
+        numerator_carrier: str | None, denominator_carrier: str | None
+    ) -> str | None:
+        """
+        Return the heating value of a unit from the carriers of its energy parts.
+
+        Only energy or power units of a fuel carrier have a heating value;
+        electricity and heat have none. The heating value is placed where the
+        energy unit is: ``LHV`` in the numerator, ``1/LHV`` in the denominator.
+        A ratio of two fuels keeps ``LHV``, as both are on the same basis.
+
+        Parameters
+        ----------
+        numerator_carrier : str | None
+            Carrier of the energy or power unit in the numerator, None if the
+            numerator is not an energy or power unit.
+        denominator_carrier : str | None
+            Carrier of the energy or power unit in the denominator, None if the
+            denominator is not an energy or power unit.
+
+        Returns
+        -------
+        str | None
+            ``"LHV"``, ``"1/LHV"`` or None.
+
+        """
+        no_hv = UnitCarrierHeatingValueExtractor.CARRIERS_WITHOUT_HEATING_VALUE
+        numerator_fuel = (
+            numerator_carrier is not None and numerator_carrier not in no_hv
+        )
+        denominator_fuel = (
+            denominator_carrier is not None and denominator_carrier not in no_hv
+        )
+        if numerator_fuel:
+            return "LHV"
+        if denominator_fuel:
+            return "1/LHV"
+        return None
+
+    @staticmethod
+    def _is_energy(unit: str) -> bool:
+        """Return True if the unit is an energy or power unit."""
+        return unit.endswith("W") or unit.endswith("Wh")
+
+    @staticmethod
+    def process_currency_power_carrier(
+        match: re.Match[str],
+    ) -> tuple[str, str, str | None]:
         """Process currency with power/energy carrier pattern."""
         currency, year, unit, carrier = match.groups()
         standardized_unit = (
             f"{currency}_{year}/{unit}" if year else f"{currency}/{unit}"
         )
-        carrier_str = f"1/{carrier}"
-        # Distinguish between power (W) and energy (Wh) units
-        heating_value = "LHV" if unit.endswith("h") else "1/LHV"
-        return standardized_unit, carrier_str, heating_value
+        carrier = UnitCarrierHeatingValueExtractor._normalize_carrier(carrier)
+        heating_value = UnitCarrierHeatingValueExtractor._heating_value(None, carrier)
+        return standardized_unit, f"1/{carrier}", heating_value
 
     @staticmethod
     def process_currency_mass_time(match: re.Match[str]) -> tuple[str, str, None]:
@@ -114,39 +168,46 @@ class UnitCarrierHeatingValueExtractor:
         """Process currency with mass carrier (without time) pattern."""
         currency, year, carrier = match.groups()
         standardized_unit = f"{currency}_{year}/t" if year else f"{currency}/t"
-        carrier_str = carrier
+        carrier_str = f"1/{carrier}"
         return standardized_unit, carrier_str, None
 
     @staticmethod
-    def process_energy_ratio(match: re.Match[str]) -> tuple[str, str, str]:
+    def process_energy_ratio(match: re.Match[str]) -> tuple[str, str, str | None]:
         """Process energy ratio with carriers pattern."""
         unit1, carrier1, unit2, carrier2 = match.groups()
         standardized_unit = f"{unit1}/{unit2}"
-        # Normalize "th" to "thermal"
-        normalized_carrier1 = "thermal" if carrier1 == "th" else carrier1
-        normalized_carrier2 = "thermal" if carrier2 == "th" else carrier2
-        carrier_str = f"{normalized_carrier1}/{normalized_carrier2}"
-        return standardized_unit, carrier_str, "LHV"
+        carrier1 = UnitCarrierHeatingValueExtractor._normalize_carrier(carrier1)
+        carrier2 = UnitCarrierHeatingValueExtractor._normalize_carrier(carrier2)
+        carrier_str = f"{carrier1}/{carrier2}"
+        heating_value = UnitCarrierHeatingValueExtractor._heating_value(
+            carrier1, carrier2
+        )
+        return standardized_unit, carrier_str, heating_value
 
     @staticmethod
     def process_mass_energy_ratio(match: re.Match[str]) -> tuple[str, str, str | None]:
         """Process mass/energy ratio with carriers pattern."""
         unit1, carrier1, unit2, carrier2 = match.groups()
         standardized_unit = f"{unit1}/{unit2}"
+        carrier1 = UnitCarrierHeatingValueExtractor._normalize_carrier(carrier1)
+        carrier2 = UnitCarrierHeatingValueExtractor._normalize_carrier(carrier2)
         carrier_str = f"{carrier1}/{carrier2}"
-        # Determine heating value based on unit types
-        heating_value = "LHV" if ("Wh" in unit1 or "Wh" in unit2) else None
+        is_energy = UnitCarrierHeatingValueExtractor._is_energy
+        heating_value = UnitCarrierHeatingValueExtractor._heating_value(
+            carrier1 if is_energy(unit1) else None,
+            carrier2 if is_energy(unit2) else None,
+        )
         return standardized_unit, carrier_str, heating_value
 
     @staticmethod
-    def process_energy_thermal_mass(match: re.Match[str]) -> tuple[str, str, str]:
+    def process_energy_thermal_mass(match: re.Match[str]) -> tuple[str, str, None]:
         """Process energy unit with el/th/thermal carrier to mass pattern."""
         unit, carrier1, carrier2 = match.groups()
         standardized_unit = f"{unit}/t"
-        # Normalize "th" to "thermal"
-        normalized_carrier1 = "thermal" if carrier1 == "th" else carrier1
-        carrier_str = f"{normalized_carrier1}/{carrier2}"
-        return standardized_unit, carrier_str, "LHV"
+        carrier1 = UnitCarrierHeatingValueExtractor._normalize_carrier(carrier1)
+        carrier_str = f"{carrier1}/{carrier2}"
+        # Electricity and heat have no heating value
+        return standardized_unit, carrier_str, None
 
     @staticmethod
     def process_currency_generic_time(match: re.Match[str]) -> tuple[str, str, None]:
@@ -171,13 +232,18 @@ class UnitCarrierHeatingValueExtractor:
         return standardized_unit, f"1/{carrier}", None
 
     @staticmethod
-    def process_power_distance_power(match: re.Match[str]) -> tuple[str, str, str]:
+    def process_power_distance_power(
+        match: re.Match[str],
+    ) -> tuple[str, str, str | None]:
         """Process power per distance per power with carriers pattern."""
         unit1, carrier1, distance, unit2, carrier2 = match.groups()
         standardized_unit = f"{unit1}/{distance}/{unit2}"
+        carrier1 = UnitCarrierHeatingValueExtractor._normalize_carrier(carrier1)
+        carrier2 = UnitCarrierHeatingValueExtractor._normalize_carrier(carrier2)
         carrier_str = f"{carrier1}/{carrier2}"
-        # Distinguish between power (W) and energy (Wh) units
-        heating_value = "1/LHV"
+        heating_value = UnitCarrierHeatingValueExtractor._heating_value(
+            carrier1, carrier2
+        )
         return standardized_unit, carrier_str, heating_value
 
     @staticmethod
@@ -187,12 +253,13 @@ class UnitCarrierHeatingValueExtractor:
         return "t", carrier, None
 
     @staticmethod
-    def process_energy_mass_carrier(match: re.Match[str]) -> tuple[str, str, str]:
+    def process_energy_mass_carrier(match: re.Match[str]) -> tuple[str, str, None]:
         """Process energy without carrier to mass with carrier pattern."""
         unit, carrier = match.groups()
         standardized_unit = f"{unit}/t"
         carrier_str = f"1/{carrier}"
-        return standardized_unit, carrier_str, "LHV"
+        # The energy unit has no carrier, so no heating value can be assigned
+        return standardized_unit, carrier_str, None
 
 
 class ArgumentConfig(BaseModel):

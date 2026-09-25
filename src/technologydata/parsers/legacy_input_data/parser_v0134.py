@@ -5,6 +5,7 @@
 """Parser for version 0.13.4 of the raw/legacy_input_data/other.csv and raw/legacy_input_data/usa.csv datasets."""
 
 import logging
+import math
 import pathlib
 import re
 from typing import Any
@@ -153,6 +154,27 @@ class LegacyInputDataV0134Parser(ParserBase):
 
         # No pattern matched - return as-is
         return input_unit, None, None
+
+    @staticmethod
+    def _round_value(value: float, num_digits: int) -> float:
+        """
+        Round a value to num_digits decimals, keeping at least num_digits significant digits.
+
+        Values below 1 would lose their significant digits when rounded to decimals
+        (e.g. 1.9e-08 would become 0.0), so they are rounded to significant digits.
+
+        Examples
+        --------
+        >>> LegacyInputDataV0134Parser._round_value(51259.5439606197, 3)
+        51259.544
+        >>> LegacyInputDataV0134Parser._round_value(1.94321e-08, 3)
+        1.94e-08
+
+        """
+        if pandas.isna(value) or value == 0:
+            return value
+        decimals = max(num_digits, num_digits - 1 - math.floor(math.log10(abs(value))))
+        return round(value, decimals)
 
     @staticmethod
     def _build_technology_collection(
@@ -307,9 +329,10 @@ class LegacyInputDataV0134Parser(ParserBase):
           kWel -> kW_el, MWh_thdh -> MWh_th, t_cl -> t_clinker,
           t_HLOHC -> t_H18DBT, t_LOHC -> t_H0DBT, t_hbi -> t_HBI
         - Removal of design point suffix: ,dp removed from units
-        - Distance normalization: 1000km -> m (with value divided by 1e6 and
-          rounded to num_digits significant digits)
+        - Distance normalization: 1000km -> m (with value divided by 1e6)
         - Percentage conversion: 'per unit' -> '%' (with value multiplied by 100)
+        - Rounding of all values to num_digits decimals, keeping at least
+          num_digits significant digits
         - Currency year integration: currency_year column merged into unit string
         - Unit/carrier/heating value extraction using regex pattern matching
 
@@ -319,7 +342,8 @@ class LegacyInputDataV0134Parser(ParserBase):
             List of paths to the raw input data files. Must contain two CSV files:
             one with 'usa' or 'us' in the filename, and one 'other' file.
         num_digits : int
-            Number of significant digits to round numerical values.
+            Number of decimals to round numerical values to; values below 1 keep
+            at least num_digits significant digits.
         archive_source : bool
             If True, archives the source object on the Wayback Machine.
         **kwargs : bool
@@ -466,18 +490,16 @@ class LegacyInputDataV0134Parser(ParserBase):
             "p.u.", "per unit", regex=False
         )
 
-        # Replace "1000km" with "m" (no SI prefix) and divide val by 1e6.
-        # The resulting values are very small, so they are rounded to
-        # significant digits rather than decimals to keep their precision.
+        # Replace "1000km" with "m" (no SI prefix) and divide val by 1e6
         mask_1000km = legacy_input_data_df["unit"].str.contains(
             "1000km", na=False, regex=False
         )
         legacy_input_data_df.loc[mask_1000km, "unit"] = legacy_input_data_df.loc[
             mask_1000km, "unit"
         ].str.replace("1000km", "m", regex=False)
-        legacy_input_data_df.loc[mask_1000km, "value"] = legacy_input_data_df.loc[
-            mask_1000km, "value"
-        ].apply(lambda value: float(f"{value / 1e6:.{num_digits}g}"))
+        legacy_input_data_df.loc[mask_1000km, "value"] = (
+            legacy_input_data_df.loc[mask_1000km, "value"] / 1e6
+        )
         logger.info("`1000km` replaced by `m`. Corresponding value divided by 1e6.")
 
         # Replace "per unit" with "%" and multiply val by 100
@@ -487,9 +509,14 @@ class LegacyInputDataV0134Parser(ParserBase):
         ].str.replace("per unit", "%")
         legacy_input_data_df.loc[mask_per_unit, "value"] = (
             legacy_input_data_df.loc[mask_per_unit, "value"] * 100.0
-        ).round(num_digits)
+        )
         logger.info(
             "`per unit` replaced by `%`. Corresponding value multiplied by 100."
+        )
+
+        # Round all values after the unit conversions
+        legacy_input_data_df["value"] = legacy_input_data_df["value"].apply(
+            lambda value: LegacyInputDataV0134Parser._round_value(value, num_digits)
         )
 
         # Include currency_year in unit if applicable

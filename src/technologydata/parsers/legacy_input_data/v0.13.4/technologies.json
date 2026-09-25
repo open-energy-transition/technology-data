@@ -3087,7 +3087,7 @@
                     "magnitude": 0.036,
                     "units": "dimensionless",
                     "carrier": "electricity / methane",
-                    "heating_value": "lower_heating_value",
+                    "heating_value": "1 / lower_heating_value",
                     "provenance": null,
                     "note": "Assuming 0.5 MWh/t_CH4 for refigeration cycle based on Table 2 of source; cleaning of gas presumed unnecessary as it should be nearly pure CH4 (=SNG). Assuming energy required is only electricity which is for Table 3 in the source provided with efficiencies of ~50% of LHV, making the numbers consistent with the numbers in Table 2.",
                     "sources": {
@@ -3138,7 +3138,7 @@
                     "magnitude": 0.0067,
                     "units": "megawatt_hour / metric_ton",
                     "carrier": "thermal / carbon_dioxide",
-                    "heating_value": "lower_heating_value",
+                    "heating_value": null,
                     "provenance": null,
                     "note": "For drying purposes.",
                     "sources": {
@@ -3159,7 +3159,7 @@
                     "magnitude": 0.123,
                     "units": "megawatt_hour / metric_ton",
                     "carrier": "electricity / carbon_dioxide",
-                    "heating_value": "lower_heating_value",
+                    "heating_value": null,
                     "provenance": null,
                     "note": null,
                     "sources": {
@@ -3210,7 +3210,7 @@
                     "magnitude": 0.203,
                     "units": "dimensionless",
                     "carrier": "electricity / hydrogen",
-                    "heating_value": "lower_heating_value",
+                    "heating_value": "1 / lower_heating_value",
                     "provenance": null,
                     "note": "6.78 kWh/kg_H2, considering H2 with LHV of 33.3333 MWh/t",
                     "sources": {
@@ -3237,10 +3237,10 @@
             "year": 0,
             "parameters": {
                 "electricity-input": {
-                    "magnitude": 0.2473,
+                    "magnitude": 0.247,
                     "units": "dimensionless",
                     "carrier": "electricity / ammonia",
-                    "heating_value": "lower_heating_value",
+                    "heating_value": "1 / lower_heating_value",
                     "provenance": null,
                     "note": "Assume 5 GJ/t_NH3 for compressors and NH3 LHV = 5.16666 MWh/t_NH3.",
                     "sources": {
@@ -3258,10 +3258,10 @@
                     }
                 },
                 "nitrogen-input": {
-                    "magnitude": 0.1597,
+                    "magnitude": 0.16,
                     "units": "metric_ton / megawatt_hour",
                     "carrier": "nitrogen / ammonia",
-                    "heating_value": "lower_heating_value",
+                    "heating_value": "1 / lower_heating_value",
                     "provenance": null,
                     "note": ".33 MWh electricity are required for ASU per t_NH3, considering 0.4 MWh are required per t_N2 and LHV of NH3 of 5.1666 Mwh.",
                     "sources": {
@@ -3279,7 +3279,7 @@
                     }
                 },
                 "hydrogen-input": {
-                    "magnitude": 1.1484,
+                    "magnitude": 1.148,
                     "units": "dimensionless",
                     "carrier": "hydrogen / ammonia",
                     "heating_value": "lower_heating_value",
@@ -3333,7 +3333,7 @@
                     "magnitude": 0.004,
                     "units": "megawatt_hour / metric_ton",
                     "carrier": "electricity / hydrogenated_dibenzyltoluene",
-                    "heating_value": "lower_heating_value",
+                    "heating_value": null,
                     "provenance": null,
                     "note": "Flow in figures shows 0.2 MW for 114 MW_HHV = 96.4326 MW_LHV = 2.89298 t hydrogen. At 5.6 wt-% effective H2 storage for loaded LOHC (H18-DBT, HLOHC), corresponds to 51.6604 t loaded LOHC .",
                     "sources": {
@@ -3444,7 +3444,7 @@
                     "magnitude": 0.25,
                     "units": "megawatt_hour / metric_ton",
                     "carrier": "electricity / nitrogen",
-                    "heating_value": "lower_heating_value",
+                    "heating_value": null,
                     "provenance": null,
                     "note": "For consistency reasons use value from Danish Energy Agency. DEA also reports range of values (0.2-0.4 MWh/t_N2) on pg. 288. Other efficienices reported are even higher, e.g. 0.11 Mwh/t_N2 from Morgan (2013): Techno-Economic Feasibility Study of Ammonia Plants Powered by Offshore Wind .",
                     "sources": {
@@ -3474,7 +3474,7 @@
                     "magnitude": 0.4,
                     "units": "megawatt_hour / metric_ton",
                     "carrier": "electricity / carbon_dioxide",
-                    "heating_value": "lower_heating_value",
+                    "heating_value": null,
                     "provenance": null,
                     "note": "0.4 MWh based on Beuttler et al (2019) for Climeworks LT DAC, alternative value: 0.182 MWh based on Breyer et al (2019). Should already include electricity for water scrubbing and compression (high quality CO2 output).",
                     "sources": {
@@ -3495,7 +3495,7 @@
                     "magnitude": 1.6,
                     "units": "megawatt_hour / metric_ton",
                     "carrier": "thermal / carbon_dioxide",
-                    "heating_value": "lower_heating_value",
+                    "heating_value": null,
                     "provenance": null,
                     "note": "Thermal energy demand. Provided via air-sourced heat pumps. 1.6 MWh based on Beuttler et al (2019) for Climeworks LT DAC, alternative value: 1.102 MWh based on Breyer et al (2019).",
                     "sources": {
@@ -3546,7 +3546,7 @@
                     "magnitude": 0.198,
                     "units": "metric_ton / megawatt_hour",
                     "carrier": "carbon_dioxide / methane",
-                    "heating_value": "lower_heating_value",
+                    "heating_value": "1 / lower_heating_value",
                     "provenance": null,
                     "note": "Additional H2 required for methanation process (2x H2 amount compared to stochiometric conversion).",
                     "sources": {
@@ -3576,7 +3576,7 @@
                     "magnitude": 0.271,
                     "units": "dimensionless",
                     "carrier": "electricity / methanol",
-                    "heating_value": "lower_heating_value",
+                    "heating_value": "1 / lower_heating_value",
                     "provenance": null,
                     "note": null,
                     "sources": {
@@ -3618,7 +3618,7 @@
                     "magnitude": 0.248,
                     "units": "metric_ton / megawatt_hour",
                     "carrier": "carbon_dioxide / methanol",
-                    "heating_value": "lower_heating_value",
+                    "heating_value": "1 / lower_heating_value",
                     "provenance": null,
                     "note": null,
                     "sources": {
@@ -3639,7 +3639,7 @@
                     "magnitude": 0.1,
                     "units": "dimensionless",
                     "carrier": "thermal / methanol",
-                    "heating_value": "lower_heating_value",
+                    "heating_value": "1 / lower_heating_value",
                     "provenance": null,
                     "note": "steam generation of 2 GJ/t_MeOH",
                     "sources": {
@@ -3669,7 +3669,7 @@
                     "magnitude": 0.003,
                     "units": "megawatt_hour / metric_ton",
                     "carrier": "electricity / water",
-                    "heating_value": "lower_heating_value",
+                    "heating_value": null,
                     "provenance": null,
                     "note": "Desalination using SWRO. Assume medium salinity of 35 Practical Salinity Units (PSUs) = 35 kg/m^3.",
                     "sources": {
@@ -3726,7 +3726,7 @@
             "year": 2004,
             "parameters": {
                 "investment": {
-                    "magnitude": 12.8928283642224,
+                    "magnitude": 12.893,
                     "units": "EUR_2004 * hour / metric_ton",
                     "carrier": "1 / carbon_dioxide",
                     "heating_value": null,
@@ -3842,7 +3842,7 @@
                 "VOM": {
                     "magnitude": 5.0,
                     "units": "EUR_2015 / metric_ton",
-                    "carrier": "clinker",
+                    "carrier": "1 / clinker",
                     "heating_value": null,
                     "provenance": null,
                     "note": null,
@@ -3906,7 +3906,7 @@
                     "magnitude": 0.0694,
                     "units": "megawatt_hour / metric_ton",
                     "carrier": "electricity / clinker",
-                    "heating_value": "lower_heating_value",
+                    "heating_value": null,
                     "provenance": null,
                     "note": "Original values 0.25 PJ per Mt clinker",
                     "sources": {
@@ -3924,10 +3924,10 @@
                     }
                 },
                 "heat-input": {
-                    "magnitude": 0.9444,
+                    "magnitude": 0.944,
                     "units": "megawatt_hour / metric_ton",
                     "carrier": "thermal / carbon_dioxide",
-                    "heating_value": "lower_heating_value",
+                    "heating_value": null,
                     "provenance": null,
                     "note": "Original values 3.4 PJ per Mt clinker",
                     "sources": {
@@ -3998,7 +3998,7 @@
                 "VOM": {
                     "magnitude": 3.0,
                     "units": "EUR_2015 / metric_ton",
-                    "carrier": "cement",
+                    "carrier": "1 / cement",
                     "heating_value": null,
                     "provenance": null,
                     "note": null,
@@ -4017,10 +4017,10 @@
                     }
                 },
                 "electricity-input": {
-                    "magnitude": 0.1736,
+                    "magnitude": 0.174,
                     "units": "megawatt_hour / metric_ton",
                     "carrier": "electricity / cement",
-                    "heating_value": "lower_heating_value",
+                    "heating_value": null,
                     "provenance": null,
                     "note": "Based on inputs for DE (major EU producer) with original value 0.6251 PJ per Mt cement.",
                     "sources": {
@@ -4155,7 +4155,7 @@
                     "magnitude": 24.9,
                     "units": "EUR_2015 / megawatt_hour",
                     "carrier": "1 / ethanol",
-                    "heating_value": "lower_heating_value",
+                    "heating_value": "1 / lower_heating_value",
                     "provenance": null,
                     "note": "Suited for USA and European production, original value 6.93 MEUR/PJ VAROM",
                     "sources": {
@@ -4269,7 +4269,7 @@
                     "magnitude": 21.9,
                     "units": "EUR_2015 / megawatt_hour",
                     "carrier": "1 / ethanol",
-                    "heating_value": "lower_heating_value",
+                    "heating_value": "1 / lower_heating_value",
                     "provenance": null,
                     "note": "Suited for Brazilian production, original value 6.09 MEUR/PJ VAROM",
                     "sources": {
@@ -4482,7 +4482,7 @@
             "year": 2012,
             "parameters": {
                 "investment": {
-                    "magnitude": 140.659340659341,
+                    "magnitude": 140.659,
                     "units": "EUR_2012 / metric_ton",
                     "carrier": null,
                     "heating_value": null,
@@ -4554,7 +4554,7 @@
             "year": 2012,
             "parameters": {
                 "investment": {
-                    "magnitude": 124.634858812074,
+                    "magnitude": 124.635,
                     "units": "EUR_2012 / metric_ton",
                     "carrier": null,
                     "heating_value": null,
@@ -4851,10 +4851,10 @@
             "year": 2015,
             "parameters": {
                 "investment": {
-                    "magnitude": 750.07500750075,
+                    "magnitude": 750.075,
                     "units": "EUR_2015 / megawatt_hour",
                     "carrier": "1 / hydrogen",
-                    "heating_value": "lower_heating_value",
+                    "heating_value": "1 / lower_heating_value",
                     "provenance": null,
                     "note": "Assuming currency year and technology year here (25 EUR/kg). Future target cost. Today’s cost potentially higher according to d’Amore-Domenech et al (2021): 10.1016/j.apenergy.2021.116625 , supplementary material pg. 16.",
                     "sources": {
@@ -4923,7 +4923,7 @@
             "year": 2015,
             "parameters": {
                 "investment": {
-                    "magnitude": 50728.0303189864,
+                    "magnitude": 50728.03,
                     "units": "EUR_2015 / megawatt",
                     "carrier": "1 / hydrogen",
                     "heating_value": "1 / lower_heating_value",
@@ -4995,7 +4995,7 @@
             "year": 2015,
             "parameters": {
                 "investment": {
-                    "magnitude": 51259.5439606197,
+                    "magnitude": 51259.544,
                     "units": "EUR_2015 / megawatt",
                     "carrier": "1 / hydrogen",
                     "heating_value": "1 / lower_heating_value",
@@ -5067,7 +5067,7 @@
             "year": 2015,
             "parameters": {
                 "investment": {
-                    "magnitude": 470085.47008547,
+                    "magnitude": 470085.47,
                     "units": "EUR_2015 / megawatt",
                     "carrier": "1 / hydrogen",
                     "heating_value": "1 / lower_heating_value",
@@ -5204,7 +5204,7 @@
                 "VOM": {
                     "magnitude": 180.0,
                     "units": "EUR_2015 / metric_ton",
-                    "carrier": "high_value_chemicals",
+                    "carrier": "1 / high_value_chemicals",
                     "heating_value": null,
                     "provenance": null,
                     "note": null,
@@ -5247,7 +5247,7 @@
                     "magnitude": 2.7,
                     "units": "megawatt_hour / metric_ton",
                     "carrier": "electricity / high_value_chemicals",
-                    "heating_value": "lower_heating_value",
+                    "heating_value": null,
                     "provenance": null,
                     "note": "Assuming electrified processing.",
                     "sources": {
@@ -5360,7 +5360,7 @@
                 "VOM": {
                     "magnitude": 30.0,
                     "units": "EUR_2015 / metric_ton",
-                    "carrier": "high_value_chemicals",
+                    "carrier": "1 / high_value_chemicals",
                     "heating_value": null,
                     "provenance": null,
                     "note": null,
@@ -5379,10 +5379,10 @@
                     }
                 },
                 "electricity-input": {
-                    "magnitude": 1.3889,
+                    "magnitude": 1.389,
                     "units": "megawatt_hour / metric_ton",
                     "carrier": "electricity / high_value_chemicals",
-                    "heating_value": "lower_heating_value",
+                    "heating_value": null,
                     "provenance": null,
                     "note": "5 GJ/t_HVC",
                     "sources": {
@@ -5421,7 +5421,7 @@
                     }
                 },
                 "carbondioxide-output": {
-                    "magnitude": 0.6107,
+                    "magnitude": 0.611,
                     "units": "dimensionless",
                     "carrier": "carbon_dioxide / high_value_chemicals",
                     "heating_value": null,
@@ -5577,7 +5577,7 @@
                     "magnitude": 1.5,
                     "units": "dimensionless",
                     "carrier": "electricity / hydrogen",
-                    "heating_value": "lower_heating_value",
+                    "heating_value": "1 / lower_heating_value",
                     "provenance": null,
                     "note": "Reference capacity 72 MW",
                     "sources": {
@@ -5640,7 +5640,7 @@
                     "magnitude": 0.54,
                     "units": "EUR_2010 / megawatt_hour",
                     "carrier": "1 / hydrogen",
-                    "heating_value": "lower_heating_value",
+                    "heating_value": "1 / lower_heating_value",
                     "provenance": null,
                     "note": "Reference capacity 72 MW",
                     "sources": {
@@ -5691,7 +5691,7 @@
                     "magnitude": 1.633,
                     "units": "dimensionless",
                     "carrier": "electricity / hydrogen",
-                    "heating_value": "lower_heating_value",
+                    "heating_value": "1 / lower_heating_value",
                     "provenance": null,
                     "note": "Reference capacity 33 MW",
                     "sources": {
@@ -5754,7 +5754,7 @@
                     "magnitude": 0.21,
                     "units": "EUR_2010 / megawatt_hour",
                     "carrier": "1 / hydrogen",
-                    "heating_value": "lower_heating_value",
+                    "heating_value": "1 / lower_heating_value",
                     "provenance": null,
                     "note": "Reference capacity 33 MW",
                     "sources": {
@@ -5805,7 +5805,7 @@
                     "magnitude": 1.62,
                     "units": "dimensionless",
                     "carrier": "electricity / hydrogen",
-                    "heating_value": "lower_heating_value",
+                    "heating_value": "1 / lower_heating_value",
                     "provenance": null,
                     "note": "Reference capacity 0.6 MW",
                     "sources": {
@@ -5868,7 +5868,7 @@
                     "magnitude": 0.96,
                     "units": "EUR_2010 / megawatt_hour",
                     "carrier": "1 / hydrogen",
-                    "heating_value": "lower_heating_value",
+                    "heating_value": "1 / lower_heating_value",
                     "provenance": null,
                     "note": "Reference capacity 0.6 MW",
                     "sources": {
@@ -6237,7 +6237,7 @@
                     "magnitude": 0.04,
                     "units": "dimensionless",
                     "carrier": "electricity / fischer_tropsch",
-                    "heating_value": "lower_heating_value",
+                    "heating_value": "1 / lower_heating_value",
                     "provenance": null,
                     "note": "0.005 MWh_el input per FT output, output increasing from 2020 to 2050 (0.65, 0.7, 0.73, 0.75 MWh liquid FT output).",
                     "sources": {
@@ -6258,7 +6258,7 @@
                     "magnitude": 0.32,
                     "units": "metric_ton / megawatt_hour",
                     "carrier": "carbon_dioxide / fischer_tropsch",
-                    "heating_value": "lower_heating_value",
+                    "heating_value": "1 / lower_heating_value",
                     "provenance": null,
                     "note": "Input per 1t FT liquid fuels output, carbon efficiency increases with years (4.3, 3.9, 3.6, 3.3 t_CO2/t_FT from 2020-2050 with LHV 11.95 MWh_th/t_FT).",
                     "sources": {
@@ -6393,7 +6393,7 @@
                     "magnitude": 0.008,
                     "units": "dimensionless",
                     "carrier": "electricity / fischer_tropsch",
-                    "heating_value": "lower_heating_value",
+                    "heating_value": "1 / lower_heating_value",
                     "provenance": null,
                     "note": "0.005 MWh_el input per FT output, output increasing from 2020 to 2050 (0.65, 0.7, 0.73, 0.75 MWh liquid FT output).",
                     "sources": {
@@ -6414,7 +6414,7 @@
                     "magnitude": 0.36,
                     "units": "metric_ton / megawatt_hour",
                     "carrier": "carbon_dioxide / fischer_tropsch",
-                    "heating_value": "lower_heating_value",
+                    "heating_value": "1 / lower_heating_value",
                     "provenance": null,
                     "note": "Input per 1t FT liquid fuels output, carbon efficiency increases with years (4.3, 3.9, 3.6, 3.3 t_CO2/t_FT from 2020-2050 with LHV 11.95 MWh_th/t_FT).",
                     "sources": {
@@ -6846,7 +6846,7 @@
                     "magnitude": 0.097,
                     "units": "dimensionless",
                     "carrier": "electricity / hydrogen",
-                    "heating_value": "lower_heating_value",
+                    "heating_value": "1 / lower_heating_value",
                     "provenance": null,
                     "note": null,
                     "sources": {
@@ -6909,7 +6909,7 @@
                     "magnitude": 0.45,
                     "units": "EUR_2010 / megawatt_hour",
                     "carrier": "1 / hydrogen",
-                    "heating_value": "lower_heating_value",
+                    "heating_value": "1 / lower_heating_value",
                     "provenance": null,
                     "note": null,
                     "sources": {
@@ -6981,7 +6981,7 @@
                     "magnitude": 0.143,
                     "units": "dimensionless",
                     "carrier": "electricity / hydrogen",
-                    "heating_value": "lower_heating_value",
+                    "heating_value": "1 / lower_heating_value",
                     "provenance": null,
                     "note": null,
                     "sources": {
@@ -7044,7 +7044,7 @@
                     "magnitude": 0.46,
                     "units": "EUR_2010 / megawatt_hour",
                     "carrier": "1 / hydrogen",
-                    "heating_value": "lower_heating_value",
+                    "heating_value": "1 / lower_heating_value",
                     "provenance": null,
                     "note": null,
                     "sources": {
@@ -7116,7 +7116,7 @@
                     "magnitude": 0.07,
                     "units": "dimensionless",
                     "carrier": "electricity / hydrogen",
-                    "heating_value": "lower_heating_value",
+                    "heating_value": "1 / lower_heating_value",
                     "provenance": null,
                     "note": null,
                     "sources": {
@@ -7179,7 +7179,7 @@
                     "magnitude": 0.587,
                     "units": "EUR_2010 / megawatt_hour",
                     "carrier": "1 / hydrogen",
-                    "heating_value": "lower_heating_value",
+                    "heating_value": "1 / lower_heating_value",
                     "provenance": null,
                     "note": null,
                     "sources": {
@@ -7251,7 +7251,7 @@
                     "magnitude": 0.111,
                     "units": "dimensionless",
                     "carrier": "electricity / hydrogen",
-                    "heating_value": "lower_heating_value",
+                    "heating_value": "1 / lower_heating_value",
                     "provenance": null,
                     "note": null,
                     "sources": {
@@ -7314,7 +7314,7 @@
                     "magnitude": 0.2,
                     "units": "EUR_2010 / megawatt_hour",
                     "carrier": "1 / hydrogen",
-                    "heating_value": "lower_heating_value",
+                    "heating_value": "1 / lower_heating_value",
                     "provenance": null,
                     "note": null,
                     "sources": {
@@ -7386,7 +7386,7 @@
                     "magnitude": 0.063,
                     "units": "dimensionless",
                     "carrier": "electricity / hydrogen",
-                    "heating_value": "lower_heating_value",
+                    "heating_value": "1 / lower_heating_value",
                     "provenance": null,
                     "note": null,
                     "sources": {
@@ -7449,7 +7449,7 @@
                     "magnitude": 0.14,
                     "units": "EUR_2010 / megawatt_hour",
                     "carrier": "1 / hydrogen",
-                    "heating_value": "lower_heating_value",
+                    "heating_value": "1 / lower_heating_value",
                     "provenance": null,
                     "note": null,
                     "sources": {
@@ -7521,7 +7521,7 @@
                     "magnitude": 0.02,
                     "units": "dimensionless",
                     "carrier": "electricity / hydrogen",
-                    "heating_value": "lower_heating_value",
+                    "heating_value": "1 / lower_heating_value",
                     "provenance": null,
                     "note": null,
                     "sources": {
@@ -7656,7 +7656,7 @@
                     "magnitude": 0.05,
                     "units": "dimensionless",
                     "carrier": "electricity / hydrogen",
-                    "heating_value": "lower_heating_value",
+                    "heating_value": "1 / lower_heating_value",
                     "provenance": null,
                     "note": null,
                     "sources": {
@@ -7791,7 +7791,7 @@
                     "magnitude": 0.044,
                     "units": "dimensionless",
                     "carrier": "electricity / hydrogen",
-                    "heating_value": "lower_heating_value",
+                    "heating_value": "1 / lower_heating_value",
                     "provenance": null,
                     "note": null,
                     "sources": {
@@ -7881,7 +7881,7 @@
             "year": 2020,
             "parameters": {
                 "investment": {
-                    "magnitude": 18016.8665097215,
+                    "magnitude": 18016.867,
                     "units": "EUR_2020 / megawatt",
                     "carrier": "1 / hydrogen",
                     "heating_value": "1 / lower_heating_value",
@@ -7983,10 +7983,10 @@
             "year": 2020,
             "parameters": {
                 "investment": {
-                    "magnitude": 146.66681333348,
+                    "magnitude": 146.667,
                     "units": "EUR_2010 / megawatt_hour",
                     "carrier": "1 / ammonia",
-                    "heating_value": "lower_heating_value",
+                    "heating_value": "1 / lower_heating_value",
                     "provenance": null,
                     "note": "Based on estimated for a double-wall liquid ammonia tank (~ambient pressure, -33°C), inner tank from stainless steel, outer tank from concrete including installations for liquefaction/condensation, boil-off gas recovery and safety installations; the necessary installations make only a small fraction of the total cost. The total cost are driven by material and working time on the tanks.\nWhile the costs do not scale strictly linearly, we here assume they do (good approximation c.f. ref. Fig 55.) and take the costs for a 9 kt NH3 (l) tank = 8 M$2010, which is smaller 4-5x smaller than the largest deployed tanks today.\nWe assume an exchange rate of 1.17$ to 1 €.\nThe investment value is given per MWh NH3 store capacity, using the LHV of NH3 of 5.18 MWh/t.",
                     "sources": {
@@ -8109,7 +8109,7 @@
                     "magnitude": 1.43,
                     "units": "dimensionless",
                     "carrier": "electricity / hydrogen",
-                    "heating_value": "lower_heating_value",
+                    "heating_value": "1 / lower_heating_value",
                     "provenance": null,
                     "note": "Reference capacity 1 MW",
                     "sources": {
@@ -8232,7 +8232,7 @@
                     "magnitude": 1.22,
                     "units": "dimensionless",
                     "carrier": "electricity / hydrogen",
-                    "heating_value": "lower_heating_value",
+                    "heating_value": "1 / lower_heating_value",
                     "provenance": null,
                     "note": null,
                     "sources": {
@@ -8301,10 +8301,10 @@
             "year": 2020,
             "parameters": {
                 "fuel": {
-                    "magnitude": 84.585016773297,
+                    "magnitude": 84.585,
                     "units": "EUR_2010 / megawatt_hour",
                     "carrier": "1 / thermal",
-                    "heating_value": "lower_heating_value",
+                    "heating_value": null,
                     "provenance": null,
                     "note": null,
                     "sources": {
@@ -8331,10 +8331,10 @@
             "year": 2020,
             "parameters": {
                 "fuel": {
-                    "magnitude": 54.6434100368518,
+                    "magnitude": 54.643,
                     "units": "EUR_2010 / megawatt_hour",
                     "carrier": "1 / thermal",
-                    "heating_value": "lower_heating_value",
+                    "heating_value": null,
                     "provenance": null,
                     "note": null,
                     "sources": {
@@ -8352,10 +8352,10 @@
                     }
                 },
                 "CO2 intensity": {
-                    "magnitude": 0.12894,
+                    "magnitude": 0.129,
                     "units": "metric_ton / megawatt_hour",
                     "carrier": "carbon_dioxide / thermal",
-                    "heating_value": "lower_heating_value",
+                    "heating_value": null,
                     "provenance": null,
                     "note": "CO2 released during fermentation of bioethanol crops, based on stochiometric composition: C6H12O6 -> 2 C2H5OH + 2 CO2 , i.e. 1 kg ethanol → ~0.956 kg CO₂ (from fermentation) → 0.1289 tCO₂/MWh (with LHV = 26.7 MJ/kg).",
                     "sources": {
@@ -8382,10 +8382,10 @@
             "year": 2020,
             "parameters": {
                 "fuel": {
-                    "magnitude": 17.3705908155502,
+                    "magnitude": 17.371,
                     "units": "EUR_2010 / megawatt_hour",
                     "carrier": "1 / thermal",
-                    "heating_value": "lower_heating_value",
+                    "heating_value": null,
                     "provenance": null,
                     "note": null,
                     "sources": {
@@ -8571,7 +8571,7 @@
                     "magnitude": 4575.69,
                     "units": "EUR_2023 / kilowatt",
                     "carrier": "1 / electricity",
-                    "heating_value": "1 / lower_heating_value",
+                    "heating_value": null,
                     "provenance": null,
                     "note": "Higher costs include coal plants with CCS, but since using here for calculating the average nevertheless. Calculated based on average of listed range, i.e. (3200+6775) USD/kW_e/2 / (1.09 USD/EUR).",
                     "sources": {
@@ -8610,10 +8610,10 @@
                     }
                 },
                 "VOM": {
-                    "magnitude": 3.89908256880734,
+                    "magnitude": 3.899,
                     "units": "EUR_2023 / megawatt_hour",
                     "carrier": "1 / electricity",
-                    "heating_value": "lower_heating_value",
+                    "heating_value": null,
                     "provenance": null,
                     "note": "Calculated based on average of listed range, i.e. (3+5.5)USD/MWh_e/2 / (1.09 USD/EUR).",
                     "sources": {
@@ -8676,7 +8676,7 @@
                     "magnitude": 8.4,
                     "units": "EUR_2010 / megawatt_hour",
                     "carrier": "1 / thermal",
-                    "heating_value": "lower_heating_value",
+                    "heating_value": null,
                     "provenance": null,
                     "note": "Based on IEA 2011 data, 99 USD/t.",
                     "sources": {
@@ -8706,7 +8706,7 @@
                     "magnitude": 159.96,
                     "units": "EUR_2020 / kilowatt",
                     "carrier": "1 / thermal",
-                    "heating_value": "1 / lower_heating_value",
+                    "heating_value": null,
                     "provenance": null,
                     "note": "Based on NREL’s SAM (v2021.12.2) numbers for a CSP power plant, 2020 numbers. CAPEX degression (=learning) taken from ATB database (“moderate”) scenario. Costs include solar field and solar tower as well as EPC cost for the default installation size (104 MWe plant). Total costs (223,708,924 USD) are divided by active area (heliostat reflective area, 1,269,054 m2) and multiplied by design point DNI (0.95 kW/m2) to obtain EUR/kW_th. Exchange rate: 1.16 USD to 1 EUR.",
                     "sources": {
@@ -8778,7 +8778,7 @@
                     "magnitude": 21.43,
                     "units": "EUR_2020 / kilowatt_hour",
                     "carrier": "1 / thermal",
-                    "heating_value": "lower_heating_value",
+                    "heating_value": null,
                     "provenance": null,
                     "note": "Based on NREL’s SAM (v2021.12.2) numbers for a CSP power plant, 2020 numbers. CAPEX degression (=learning) taken from ATB database (“moderate”) scenario. Costs include the TES incl. EPC cost for the default installation size (104 MWe plant, 2.791 MW_th TES). Total costs (69390776.7 USD) are divided by TES size to obtain EUR/kW_th. Exchange rate: 1.16 USD to 1 EUR.",
                     "sources": {
@@ -8850,7 +8850,7 @@
                     "magnitude": 1120.57,
                     "units": "EUR_2020 / kilowatt",
                     "carrier": "1 / electricity",
-                    "heating_value": "1 / lower_heating_value",
+                    "heating_value": null,
                     "provenance": null,
                     "note": "Based on NREL’s SAM (v2021.12.2) numbers for a CSP power plant, 2020 numbers. CAPEX degression (=learning) taken from ATB database (“moderate”) scenario. Costs include the power cycle incl. BOP and EPC cost for the default installation size (104 MWe plant). Total costs (135185685.5 USD) are divided by power block nameplate capacity size to obtain EUR/kW_e. Exchange rate: 1.16 USD to 1 EUR.",
                     "sources": {
@@ -8943,7 +8943,7 @@
                     "magnitude": 0.24,
                     "units": "megawatt_hour / metric_ton",
                     "carrier": "electricity / carbon_dioxide",
-                    "heating_value": "lower_heating_value",
+                    "heating_value": null,
                     "provenance": null,
                     "note": null,
                     "sources": {
@@ -8964,7 +8964,7 @@
                     "magnitude": 1.17,
                     "units": "megawatt_hour / metric_ton",
                     "carrier": "thermal / carbon_dioxide",
-                    "heating_value": "lower_heating_value",
+                    "heating_value": null,
                     "provenance": null,
                     "note": null,
                     "sources": {
@@ -9168,10 +9168,10 @@
                     }
                 },
                 "electricity-input": {
-                    "magnitude": 0.6395,
+                    "magnitude": 0.639,
                     "units": "megawatt_hour / metric_ton",
                     "carrier": "electricity / steel",
-                    "heating_value": "lower_heating_value",
+                    "heating_value": null,
                     "provenance": null,
                     "note": "Based on process ‘EAF’.",
                     "sources": {
@@ -9303,10 +9303,10 @@
                     }
                 },
                 "electricity-input": {
-                    "magnitude": 0.6395,
+                    "magnitude": 0.639,
                     "units": "megawatt_hour / metric_ton",
                     "carrier": "electricity / steel",
-                    "heating_value": "lower_heating_value",
+                    "heating_value": null,
                     "provenance": null,
                     "note": "Based on process ‘EAF’.",
                     "sources": {
@@ -9378,7 +9378,7 @@
                     "magnitude": 2000.0,
                     "units": "EUR_2020 / kilowatt",
                     "carrier": "1 / electricity",
-                    "heating_value": "1 / lower_heating_value",
+                    "heating_value": null,
                     "provenance": null,
                     "note": null,
                     "sources": {
@@ -9507,10 +9507,10 @@
             "year": 2020,
             "parameters": {
                 "fuel": {
-                    "magnitude": 14.066770723441,
+                    "magnitude": 14.067,
                     "units": "EUR_2010 / megawatt_hour",
                     "carrier": "1 / thermal",
-                    "heating_value": "lower_heating_value",
+                    "heating_value": null,
                     "provenance": null,
                     "note": null,
                     "sources": {
@@ -9540,7 +9540,7 @@
                     "magnitude": 21.6,
                     "units": "EUR_2010 / megawatt_hour",
                     "carrier": "1 / thermal",
-                    "heating_value": "lower_heating_value",
+                    "heating_value": null,
                     "provenance": null,
                     "note": "Based on IEA 2011 data.",
                     "sources": {
@@ -9570,7 +9570,7 @@
                     "magnitude": 0.12,
                     "units": "metric_ton / megawatt_hour",
                     "carrier": "carbon_dioxide / electricity",
-                    "heating_value": "lower_heating_value",
+                    "heating_value": null,
                     "provenance": null,
                     "note": "Likely to be improved; Average of 85 percent of global egs power plant capacity; Result of fluid circulation through rock formations",
                     "sources": {
@@ -9612,7 +9612,7 @@
                     "magnitude": 0.8,
                     "units": "dimensionless",
                     "carrier": "dimensionless",
-                    "heating_value": "lower_heating_value",
+                    "heating_value": null,
                     "provenance": null,
                     "note": "Heat-input, District Heat-output. This is an assessment of typical heat losses when heat is transmitted from the EGS plant to the DH network, This is a rough estimate, depends on local conditions",
                     "sources": {
@@ -9768,7 +9768,7 @@
                     "magnitude": 1.03,
                     "units": "megawatt_hour / metric_ton",
                     "carrier": "electricity / hot_briquetted_iron",
-                    "heating_value": "lower_heating_value",
+                    "heating_value": null,
                     "provenance": null,
                     "note": "Based on process ‘DRI-EAF_100% green H2’ reduced by electricity demand of process ‘EAF’.",
                     "sources": {
@@ -9840,7 +9840,7 @@
                     "magnitude": 2.28,
                     "units": "USD_2022 / kilowatt_hour",
                     "carrier": "1 / hydrogen",
-                    "heating_value": "lower_heating_value",
+                    "heating_value": "1 / lower_heating_value",
                     "provenance": null,
                     "note": null,
                     "sources": {
@@ -9903,7 +9903,7 @@
                     "magnitude": 0.05,
                     "units": "dimensionless",
                     "carrier": "electricity / hydrogen",
-                    "heating_value": "lower_heating_value",
+                    "heating_value": "1 / lower_heating_value",
                     "provenance": null,
                     "note": "1.707 kWh/kg.",
                     "sources": {
@@ -9933,7 +9933,7 @@
                     "magnitude": 16.87,
                     "units": "USD_2022 / kilowatt_hour",
                     "carrier": "1 / hydrogen",
-                    "heating_value": "lower_heating_value",
+                    "heating_value": "1 / lower_heating_value",
                     "provenance": null,
                     "note": null,
                     "sources": {
@@ -10056,7 +10056,7 @@
                     "magnitude": 4575.69,
                     "units": "EUR_2023 / kilowatt",
                     "carrier": "1 / electricity",
-                    "heating_value": "1 / lower_heating_value",
+                    "heating_value": null,
                     "provenance": null,
                     "note": "Higher costs include coal plants with CCS, but since using here for calculating the average nevertheless. Calculated based on average of listed range, i.e. (3200+6775) USD/kW_e/2 / (1.09 USD/EUR). Note: Assume same costs as for hard coal, as cost structure is apparently comparable, see https://diglib.tugraz.at/download.php?id=6093e88b63f93&location=browse and https://iea.blob.core.windows.net/assets/ae17da3d-e8a5-4163-a3ec-2e6fb0b5677d/Projected-Costs-of-Generating-Electricity-2020.pdf .",
                     "sources": {
@@ -10095,10 +10095,10 @@
                     }
                 },
                 "VOM": {
-                    "magnitude": 3.89908256880734,
+                    "magnitude": 3.899,
                     "units": "EUR_2023 / megawatt_hour",
                     "carrier": "1 / electricity",
-                    "heating_value": "lower_heating_value",
+                    "heating_value": null,
                     "provenance": null,
                     "note": "Calculated based on average of listed range, i.e. (3+5.5)USD/MWh_e/2 / (1.09 USD/EUR). Note: Assume same costs as for hard coal, as cost structure is apparently comparable, see https://diglib.tugraz.at/download.php?id=6093e88b63f93&location=browse and https://iea.blob.core.windows.net/assets/ae17da3d-e8a5-4163-a3ec-2e6fb0b5677d/Projected-Costs-of-Generating-Electricity-2020.pdf . ",
                     "sources": {
@@ -10161,7 +10161,7 @@
                     "magnitude": 2.9,
                     "units": "EUR_2010 / megawatt_hour",
                     "carrier": "1 / thermal",
-                    "heating_value": "lower_heating_value",
+                    "heating_value": null,
                     "provenance": null,
                     "note": "Based on IEA 2011 data, 10 USD/t.",
                     "sources": {
@@ -10260,7 +10260,7 @@
             "year": 2020,
             "parameters": {
                 "methanol-input": {
-                    "magnitude": 1.0764,
+                    "magnitude": 1.076,
                     "units": "dimensionless",
                     "carrier": "methanol / kerosene",
                     "heating_value": "lower_heating_value",
@@ -10368,7 +10368,7 @@
                     "magnitude": 1.35,
                     "units": "EUR_2020 / megawatt_hour",
                     "carrier": "1 / kerosene",
-                    "heating_value": "lower_heating_value",
+                    "heating_value": "1 / lower_heating_value",
                     "provenance": null,
                     "note": null,
                     "sources": {
@@ -10605,7 +10605,7 @@
                     "magnitude": 10275.0,
                     "units": "EUR_2023 / kilowatt",
                     "carrier": "1 / electricity",
-                    "heating_value": "1 / lower_heating_value",
+                    "heating_value": null,
                     "provenance": null,
                     "note": "U.S. specific costs including newly commissioned Vogtle plant, average of range and currency converted, i.e. (8475+13925)/2 USD/kW_e / (1.09 USD/EUR) .",
                     "sources": {
@@ -10647,7 +10647,7 @@
                     "magnitude": 4.24,
                     "units": "EUR_2023 / megawatt_hour",
                     "carrier": "1 / electricity",
-                    "heating_value": "lower_heating_value",
+                    "heating_value": null,
                     "provenance": null,
                     "note": "U.S. specific costs including newly commissioned Vogtle plant, average of range and currency converted, i.e. (4.25+5)/2 USD/kW_e / (1.09 USD/EUR) .",
                     "sources": {
@@ -10710,7 +10710,7 @@
                     "magnitude": 3.0,
                     "units": "EUR_2010 / megawatt_hour",
                     "carrier": "1 / thermal",
-                    "heating_value": "lower_heating_value",
+                    "heating_value": null,
                     "provenance": null,
                     "note": "Based on IEA 2011 data.",
                     "sources": {
@@ -10791,7 +10791,7 @@
                     "magnitude": 0.12,
                     "units": "dimensionless",
                     "carrier": "electricity / thermal",
-                    "heating_value": "lower_heating_value",
+                    "heating_value": null,
                     "provenance": null,
                     "note": "Heat-input, Electricity-output. This is a rough estimate, depends on input temperature, implies ~150 C.",
                     "sources": {
@@ -10833,7 +10833,7 @@
                     "magnitude": 1376.0,
                     "units": "EUR_2020 / kilowatt",
                     "carrier": "1 / electricity",
-                    "heating_value": "1 / lower_heating_value",
+                    "heating_value": null,
                     "provenance": null,
                     "note": "Low rollout complicates the estimation, compounded by a dependence both on plant size and temperature, converted from 1500 USD/kW using currency conversion 1.09 USD = 1 EUR.",
                     "sources": {
@@ -10863,7 +10863,7 @@
                     "magnitude": 72.0,
                     "units": "EUR_2020 / megawatt_hour",
                     "carrier": "1 / thermal",
-                    "heating_value": "lower_heating_value",
+                    "heating_value": null,
                     "provenance": null,
                     "note": "400 EUR/t assuming range roughly in the long-term range for green methanol (source 1) and late 2020+beyond values for grey methanol (source 2).",
                     "sources": {
@@ -10881,10 +10881,10 @@
                     }
                 },
                 "CO2 intensity": {
-                    "magnitude": 0.2482,
+                    "magnitude": 0.248,
                     "units": "metric_ton / megawatt_hour",
                     "carrier": "carbon_dioxide / thermal",
-                    "heating_value": "lower_heating_value",
+                    "heating_value": null,
                     "provenance": null,
                     "note": "Based on stochiometric composition.",
                     "sources": {
@@ -10914,7 +10914,7 @@
                     "magnitude": 3.0,
                     "units": "EUR_2010 / megawatt_hour",
                     "carrier": "1 / thermal",
-                    "heating_value": "lower_heating_value",
+                    "heating_value": null,
                     "provenance": null,
                     "note": "Based on IEA 2011 data.",
                     "sources": {
@@ -11004,7 +11004,7 @@
                     "magnitude": 1.38,
                     "units": "dimensionless",
                     "carrier": "electricity / hydrogen",
-                    "heating_value": "lower_heating_value",
+                    "heating_value": "1 / lower_heating_value",
                     "provenance": null,
                     "note": "Reference capacity 72 MW",
                     "sources": {
@@ -11046,7 +11046,7 @@
                     "magnitude": 0.21,
                     "units": "EUR_2010 / megawatt_hour",
                     "carrier": "1 / hydrogen",
-                    "heating_value": "lower_heating_value",
+                    "heating_value": "1 / lower_heating_value",
                     "provenance": null,
                     "note": "Reference capacity 72 MW",
                     "sources": {
@@ -11076,7 +11076,7 @@
                     "magnitude": 1.416,
                     "units": "dimensionless",
                     "carrier": "electricity / hydrogen",
-                    "heating_value": "lower_heating_value",
+                    "heating_value": "1 / lower_heating_value",
                     "provenance": null,
                     "note": "Reference capacity 33 MW",
                     "sources": {
@@ -11148,7 +11148,7 @@
                     "magnitude": 1.41,
                     "units": "dimensionless",
                     "carrier": "electricity / hydrogen",
-                    "heating_value": "lower_heating_value",
+                    "heating_value": "1 / lower_heating_value",
                     "provenance": null,
                     "note": "Reference capacity 0.6 MW",
                     "sources": {
@@ -11241,7 +11241,7 @@
                     "magnitude": 0.07,
                     "units": "dimensionless",
                     "carrier": "electricity / hydrogen",
-                    "heating_value": "lower_heating_value",
+                    "heating_value": "1 / lower_heating_value",
                     "provenance": null,
                     "note": null,
                     "sources": {
@@ -11304,7 +11304,7 @@
                     "magnitude": 0.587,
                     "units": "EUR_2010 / megawatt_hour",
                     "carrier": "1 / hydrogen",
-                    "heating_value": "lower_heating_value",
+                    "heating_value": "1 / lower_heating_value",
                     "provenance": null,
                     "note": null,
                     "sources": {
@@ -11355,7 +11355,7 @@
                     "magnitude": 0.111,
                     "units": "dimensionless",
                     "carrier": "electricity / hydrogen",
-                    "heating_value": "lower_heating_value",
+                    "heating_value": "1 / lower_heating_value",
                     "provenance": null,
                     "note": null,
                     "sources": {
@@ -11418,7 +11418,7 @@
                     "magnitude": 0.2,
                     "units": "EUR_2010 / megawatt_hour",
                     "carrier": "1 / hydrogen",
-                    "heating_value": "lower_heating_value",
+                    "heating_value": "1 / lower_heating_value",
                     "provenance": null,
                     "note": null,
                     "sources": {
@@ -11520,7 +11520,7 @@
                     "magnitude": 0.05,
                     "units": "dimensionless",
                     "carrier": "electricity / hydrogen",
-                    "heating_value": "lower_heating_value",
+                    "heating_value": "1 / lower_heating_value",
                     "provenance": null,
                     "note": null,
                     "sources": {
@@ -11592,7 +11592,7 @@
                     "magnitude": 1800.0,
                     "units": "EUR_2020 / kilowatt",
                     "carrier": "1 / electricity",
-                    "heating_value": "1 / lower_heating_value",
+                    "heating_value": null,
                     "provenance": null,
                     "note": null,
                     "sources": {
@@ -11721,7 +11721,7 @@
             "year": 2025,
             "parameters": {
                 "FOM": {
-                    "magnitude": 1.02185373078457,
+                    "magnitude": 1.022,
                     "units": "percent / year",
                     "carrier": null,
                     "heating_value": null,
@@ -11979,7 +11979,7 @@
                     "magnitude": 0.17,
                     "units": "EUR_2010 / megawatt_hour",
                     "carrier": "1 / hydrogen",
-                    "heating_value": "lower_heating_value",
+                    "heating_value": "1 / lower_heating_value",
                     "provenance": null,
                     "note": "Reference capacity 0.6 MW",
                     "sources": {
@@ -12750,7 +12750,7 @@
                     "magnitude": 0.007,
                     "units": "dimensionless",
                     "carrier": "electricity / fischer_tropsch",
-                    "heating_value": "lower_heating_value",
+                    "heating_value": "1 / lower_heating_value",
                     "provenance": null,
                     "note": "0.005 MWh_el input per FT output, output increasing from 2020 to 2050 (0.65, 0.7, 0.73, 0.75 MWh liquid FT output).",
                     "sources": {
@@ -12771,7 +12771,7 @@
                     "magnitude": 0.326,
                     "units": "metric_ton / megawatt_hour",
                     "carrier": "carbon_dioxide / fischer_tropsch",
-                    "heating_value": "lower_heating_value",
+                    "heating_value": "1 / lower_heating_value",
                     "provenance": null,
                     "note": "Input per 1t FT liquid fuels output, carbon efficiency increases with years (4.3, 3.9, 3.6, 3.3 t_CO2/t_FT from 2020-2050 with LHV 11.95 MWh_th/t_FT).",
                     "sources": {
@@ -13179,7 +13179,7 @@
                     "magnitude": 0.02,
                     "units": "dimensionless",
                     "carrier": "electricity / hydrogen",
-                    "heating_value": "lower_heating_value",
+                    "heating_value": "1 / lower_heating_value",
                     "provenance": null,
                     "note": null,
                     "sources": {
@@ -13221,7 +13221,7 @@
                     "magnitude": 0.445,
                     "units": "EUR_2010 / megawatt_hour",
                     "carrier": "1 / hydrogen",
-                    "heating_value": "lower_heating_value",
+                    "heating_value": "1 / lower_heating_value",
                     "provenance": null,
                     "note": null,
                     "sources": {
@@ -13272,7 +13272,7 @@
                     "magnitude": 0.023,
                     "units": "dimensionless",
                     "carrier": "electricity / hydrogen",
-                    "heating_value": "lower_heating_value",
+                    "heating_value": "1 / lower_heating_value",
                     "provenance": null,
                     "note": null,
                     "sources": {
@@ -13314,7 +13314,7 @@
                     "magnitude": 0.13,
                     "units": "EUR_2010 / megawatt_hour",
                     "carrier": "1 / hydrogen",
-                    "heating_value": "lower_heating_value",
+                    "heating_value": "1 / lower_heating_value",
                     "provenance": null,
                     "note": null,
                     "sources": {
@@ -13437,7 +13437,7 @@
                     "magnitude": 0.039,
                     "units": "dimensionless",
                     "carrier": "electricity / hydrogen",
-                    "heating_value": "lower_heating_value",
+                    "heating_value": "1 / lower_heating_value",
                     "provenance": null,
                     "note": null,
                     "sources": {
@@ -14301,7 +14301,7 @@
                     "magnitude": 1.33,
                     "units": "dimensionless",
                     "carrier": "electricity / hydrogen",
-                    "heating_value": "lower_heating_value",
+                    "heating_value": "1 / lower_heating_value",
                     "provenance": null,
                     "note": "Reference capacity 1 MW",
                     "sources": {
@@ -14352,7 +14352,7 @@
                     "magnitude": 1.19,
                     "units": "dimensionless",
                     "carrier": "electricity / hydrogen",
-                    "heating_value": "lower_heating_value",
+                    "heating_value": "1 / lower_heating_value",
                     "provenance": null,
                     "note": null,
                     "sources": {
@@ -14538,7 +14538,7 @@
                     "magnitude": 0.1,
                     "units": "megawatt_hour / metric_ton",
                     "carrier": "1 / carbon_dioxide",
-                    "heating_value": "lower_heating_value",
+                    "heating_value": null,
                     "provenance": null,
                     "note": null,
                     "sources": {
@@ -14607,10 +14607,10 @@
             "year": 2030,
             "parameters": {
                 "fuel": {
-                    "magnitude": 121.021431275337,
+                    "magnitude": 121.021,
                     "units": "EUR_2010 / megawatt_hour",
                     "carrier": "1 / thermal",
-                    "heating_value": "lower_heating_value",
+                    "heating_value": null,
                     "provenance": null,
                     "note": null,
                     "sources": {
@@ -14637,10 +14637,10 @@
             "year": 2030,
             "parameters": {
                 "fuel": {
-                    "magnitude": 72.477665790641,
+                    "magnitude": 72.478,
                     "units": "EUR_2010 / megawatt_hour",
                     "carrier": "1 / thermal",
-                    "heating_value": "lower_heating_value",
+                    "heating_value": null,
                     "provenance": null,
                     "note": null,
                     "sources": {
@@ -14667,10 +14667,10 @@
             "year": 2030,
             "parameters": {
                 "fuel": {
-                    "magnitude": 17.4674555553638,
+                    "magnitude": 17.467,
                     "units": "EUR_2010 / megawatt_hour",
                     "carrier": "1 / thermal",
-                    "heating_value": "lower_heating_value",
+                    "heating_value": null,
                     "provenance": null,
                     "note": null,
                     "sources": {
@@ -14742,7 +14742,7 @@
                     "magnitude": 0.16,
                     "units": "megawatt_hour / metric_ton",
                     "carrier": "1 / carbon_dioxide",
-                    "heating_value": "lower_heating_value",
+                    "heating_value": null,
                     "provenance": null,
                     "note": null,
                     "sources": {
@@ -14763,7 +14763,7 @@
                     "magnitude": 0.76,
                     "units": "megawatt_hour / metric_ton",
                     "carrier": "1 / carbon_dioxide",
-                    "heating_value": "lower_heating_value",
+                    "heating_value": null,
                     "provenance": null,
                     "note": null,
                     "sources": {
@@ -14835,7 +14835,7 @@
                     "magnitude": 108.37,
                     "units": "EUR_2020 / kilowatt",
                     "carrier": "1 / thermal",
-                    "heating_value": "1 / lower_heating_value",
+                    "heating_value": null,
                     "provenance": null,
                     "note": "Based on NREL’s SAM (v2021.12.2) numbers for a CSP power plant, 2020 numbers. CAPEX degression (=learning) taken from ATB database (“moderate”) scenario. Costs include solar field and solar tower as well as EPC cost for the default installation size (104 MWe plant). Total costs (223,708,924 USD) are divided by active area (heliostat reflective area, 1,269,054 m2) and multiplied by design point DNI (0.95 kW/m2) to obtain EUR/kW_th. Exchange rate: 1.16 USD to 1 EUR.",
                     "sources": {
@@ -14907,7 +14907,7 @@
                     "magnitude": 14.52,
                     "units": "EUR_2020 / kilowatt_hour",
                     "carrier": "1 / thermal",
-                    "heating_value": "lower_heating_value",
+                    "heating_value": null,
                     "provenance": null,
                     "note": "Based on NREL’s SAM (v2021.12.2) numbers for a CSP power plant, 2020 numbers. CAPEX degression (=learning) taken from ATB database (“moderate”) scenario. Costs include the TES incl. EPC cost for the default installation size (104 MWe plant, 2.791 MW_th TES). Total costs (69390776.7 USD) are divided by TES size to obtain EUR/kW_th. Exchange rate: 1.16 USD to 1 EUR.",
                     "sources": {
@@ -14979,7 +14979,7 @@
                     "magnitude": 759.17,
                     "units": "EUR_2020 / kilowatt",
                     "carrier": "1 / electricity",
-                    "heating_value": "1 / lower_heating_value",
+                    "heating_value": null,
                     "provenance": null,
                     "note": "Based on NREL’s SAM (v2021.12.2) numbers for a CSP power plant, 2020 numbers. CAPEX degression (=learning) taken from ATB database (“moderate”) scenario. Costs include the power cycle incl. BOP and EPC cost for the default installation size (104 MWe plant). Total costs (135185685.5 USD) are divided by power block nameplate capacity size to obtain EUR/kW_e. Exchange rate: 1.16 USD to 1 EUR.",
                     "sources": {
@@ -15051,7 +15051,7 @@
                     "magnitude": 1500.0,
                     "units": "EUR_2020 / kilowatt",
                     "carrier": "1 / electricity",
-                    "heating_value": "1 / lower_heating_value",
+                    "heating_value": null,
                     "provenance": null,
                     "note": null,
                     "sources": {
@@ -15123,7 +15123,7 @@
                     "magnitude": 0.12,
                     "units": "megawatt_hour / metric_ton",
                     "carrier": "1 / carbon_dioxide",
-                    "heating_value": "lower_heating_value",
+                    "heating_value": null,
                     "provenance": null,
                     "note": null,
                     "sources": {
@@ -15294,10 +15294,10 @@
             "year": 2030,
             "parameters": {
                 "fuel": {
-                    "magnitude": 12.767964974663,
+                    "magnitude": 12.768,
                     "units": "EUR_2010 / megawatt_hour",
                     "carrier": "1 / thermal",
-                    "heating_value": "lower_heating_value",
+                    "heating_value": null,
                     "provenance": null,
                     "note": null,
                     "sources": {
@@ -15390,7 +15390,7 @@
                     "magnitude": 0.05,
                     "units": "dimensionless",
                     "carrier": "electricity / hydrogen",
-                    "heating_value": "lower_heating_value",
+                    "heating_value": "1 / lower_heating_value",
                     "provenance": null,
                     "note": "1.707 kWh/kg.",
                     "sources": {
@@ -15420,7 +15420,7 @@
                     "magnitude": 13.5,
                     "units": "EUR_2020 / kilowatt_hour",
                     "carrier": "1 / hydrogen",
-                    "heating_value": "lower_heating_value",
+                    "heating_value": "1 / lower_heating_value",
                     "provenance": null,
                     "note": "450 EUR/kg_H2 converted with LHV to MWh. For a type 1 hydrogen storage tank (steel, 15-250 bar). Currency year assumed 2020 for initial publication of reference; observe note in SI.4.3 that no currency year is explicitly stated in the reference.",
                     "sources": {
@@ -15780,7 +15780,7 @@
                     "magnitude": 1.35,
                     "units": "EUR_2020 / megawatt_hour",
                     "carrier": "1 / kerosene",
-                    "heating_value": "lower_heating_value",
+                    "heating_value": "1 / lower_heating_value",
                     "provenance": null,
                     "note": null,
                     "sources": {
@@ -15882,7 +15882,7 @@
                     "magnitude": 2350.0,
                     "units": "EUR_2020 / kilowatt",
                     "carrier": "1 / electricity",
-                    "heating_value": "1 / lower_heating_value",
+                    "heating_value": null,
                     "provenance": null,
                     "note": null,
                     "sources": {
@@ -15993,7 +15993,7 @@
                     "magnitude": 400.0,
                     "units": "EUR_2017 / kilowatt",
                     "carrier": "1 / electricity",
-                    "heating_value": "1 / lower_heating_value",
+                    "heating_value": null,
                     "provenance": null,
                     "note": " assuming one onshore and one offshore node + 13% learning reduction",
                     "sources": {
@@ -16065,7 +16065,7 @@
                     "magnitude": 0.16,
                     "units": "megawatt_hour / metric_ton",
                     "carrier": "1 / carbon_dioxide",
-                    "heating_value": "lower_heating_value",
+                    "heating_value": null,
                     "provenance": null,
                     "note": null,
                     "sources": {
@@ -16086,7 +16086,7 @@
                     "magnitude": 0.76,
                     "units": "megawatt_hour / metric_ton",
                     "carrier": "1 / carbon_dioxide",
-                    "heating_value": "lower_heating_value",
+                    "heating_value": null,
                     "provenance": null,
                     "note": null,
                     "sources": {
@@ -16557,7 +16557,7 @@
             "year": 2035,
             "parameters": {
                 "FOM": {
-                    "magnitude": 1.10628646943421,
+                    "magnitude": 1.106,
                     "units": "percent / year",
                     "carrier": null,
                     "heating_value": null,
@@ -17001,7 +17001,7 @@
                     "magnitude": 0.007,
                     "units": "dimensionless",
                     "carrier": "electricity / fischer_tropsch",
-                    "heating_value": "lower_heating_value",
+                    "heating_value": "1 / lower_heating_value",
                     "provenance": null,
                     "note": "0.005 MWh_el input per FT output, output increasing from 2020 to 2050 (0.65, 0.7, 0.73, 0.75 MWh liquid FT output).",
                     "sources": {
@@ -17022,7 +17022,7 @@
                     "magnitude": 0.301,
                     "units": "metric_ton / megawatt_hour",
                     "carrier": "carbon_dioxide / fischer_tropsch",
-                    "heating_value": "lower_heating_value",
+                    "heating_value": "1 / lower_heating_value",
                     "provenance": null,
                     "note": "Input per 1t FT liquid fuels output, carbon efficiency increases with years (4.3, 3.9, 3.6, 3.3 t_CO2/t_FT from 2020-2050 with LHV 11.95 MWh_th/t_FT).",
                     "sources": {
@@ -17052,7 +17052,7 @@
                     "magnitude": 1.15,
                     "units": "dimensionless",
                     "carrier": "electricity / hydrogen",
-                    "heating_value": "lower_heating_value",
+                    "heating_value": "1 / lower_heating_value",
                     "provenance": null,
                     "note": null,
                     "sources": {
@@ -17100,10 +17100,10 @@
             "year": 2040,
             "parameters": {
                 "fuel": {
-                    "magnitude": 120.926387801857,
+                    "magnitude": 120.926,
                     "units": "EUR_2010 / megawatt_hour",
                     "carrier": "1 / thermal",
-                    "heating_value": "lower_heating_value",
+                    "heating_value": null,
                     "provenance": null,
                     "note": null,
                     "sources": {
@@ -17130,10 +17130,10 @@
             "year": 2040,
             "parameters": {
                 "fuel": {
-                    "magnitude": 75.7178710725453,
+                    "magnitude": 75.718,
                     "units": "EUR_2010 / megawatt_hour",
                     "carrier": "1 / thermal",
-                    "heating_value": "lower_heating_value",
+                    "heating_value": null,
                     "provenance": null,
                     "note": null,
                     "sources": {
@@ -17160,10 +17160,10 @@
             "year": 2040,
             "parameters": {
                 "fuel": {
-                    "magnitude": 17.4767827669554,
+                    "magnitude": 17.477,
                     "units": "EUR_2010 / megawatt_hour",
                     "carrier": "1 / thermal",
-                    "heating_value": "lower_heating_value",
+                    "heating_value": null,
                     "provenance": null,
                     "note": null,
                     "sources": {
@@ -17193,7 +17193,7 @@
                     "magnitude": 99.97,
                     "units": "EUR_2020 / kilowatt",
                     "carrier": "1 / thermal",
-                    "heating_value": "1 / lower_heating_value",
+                    "heating_value": null,
                     "provenance": null,
                     "note": "Based on NREL’s SAM (v2021.12.2) numbers for a CSP power plant, 2020 numbers. CAPEX degression (=learning) taken from ATB database (“moderate”) scenario. Costs include solar field and solar tower as well as EPC cost for the default installation size (104 MWe plant). Total costs (223,708,924 USD) are divided by active area (heliostat reflective area, 1,269,054 m2) and multiplied by design point DNI (0.95 kW/m2) to obtain EUR/kW_th. Exchange rate: 1.16 USD to 1 EUR.",
                     "sources": {
@@ -17265,7 +17265,7 @@
                     "magnitude": 13.39,
                     "units": "EUR_2020 / kilowatt_hour",
                     "carrier": "1 / thermal",
-                    "heating_value": "lower_heating_value",
+                    "heating_value": null,
                     "provenance": null,
                     "note": "Based on NREL’s SAM (v2021.12.2) numbers for a CSP power plant, 2020 numbers. CAPEX degression (=learning) taken from ATB database (“moderate”) scenario. Costs include the TES incl. EPC cost for the default installation size (104 MWe plant, 2.791 MW_th TES). Total costs (69390776.7 USD) are divided by TES size to obtain EUR/kW_th. Exchange rate: 1.16 USD to 1 EUR.",
                     "sources": {
@@ -17337,7 +17337,7 @@
                     "magnitude": 700.34,
                     "units": "EUR_2020 / kilowatt",
                     "carrier": "1 / electricity",
-                    "heating_value": "1 / lower_heating_value",
+                    "heating_value": null,
                     "provenance": null,
                     "note": "Based on NREL’s SAM (v2021.12.2) numbers for a CSP power plant, 2020 numbers. CAPEX degression (=learning) taken from ATB database (“moderate”) scenario. Costs include the power cycle incl. BOP and EPC cost for the default installation size (104 MWe plant). Total costs (135185685.5 USD) are divided by power block nameplate capacity size to obtain EUR/kW_e. Exchange rate: 1.16 USD to 1 EUR.",
                     "sources": {
@@ -17409,7 +17409,7 @@
                     "magnitude": 1200.0,
                     "units": "EUR_2020 / kilowatt",
                     "carrier": "1 / electricity",
-                    "heating_value": "1 / lower_heating_value",
+                    "heating_value": null,
                     "provenance": null,
                     "note": null,
                     "sources": {
@@ -17436,10 +17436,10 @@
             "year": 2040,
             "parameters": {
                 "fuel": {
-                    "magnitude": 11.5992033141145,
+                    "magnitude": 11.599,
                     "units": "EUR_2010 / megawatt_hour",
                     "carrier": "1 / thermal",
-                    "heating_value": "lower_heating_value",
+                    "heating_value": null,
                     "provenance": null,
                     "note": null,
                     "sources": {
@@ -17466,7 +17466,7 @@
             "year": 2040,
             "parameters": {
                 "FOM": {
-                    "magnitude": 1.1807773334732,
+                    "magnitude": 1.181,
                     "units": "percent / year",
                     "carrier": null,
                     "heating_value": null,
@@ -17580,7 +17580,7 @@
                     "magnitude": 1960.0,
                     "units": "EUR_2020 / kilowatt",
                     "carrier": "1 / electricity",
-                    "heating_value": "1 / lower_heating_value",
+                    "heating_value": null,
                     "provenance": null,
                     "note": null,
                     "sources": {
@@ -17774,7 +17774,7 @@
                 "investment": {
                     "magnitude": 2430.0,
                     "units": "EUR_2013 / metric_ton",
-                    "carrier": "carbon_dioxide",
+                    "carrier": "1 / carbon_dioxide",
                     "heating_value": null,
                     "provenance": null,
                     "note": "Assuming a 3000m^3 pressurised steel cylinder tanks and a CO2 density of 1100 kg/m^3 (close to triple point at -56.6°C and 5.2 bar with max density of 1200kg/m^3 ). Lauri et al. report costs 3x higher per m^3 for steel tanks, which are consistent with other sources. The numbers reported are in rather difficult to pinpoint as systems can greatly vary.",
@@ -17931,7 +17931,7 @@
                     "magnitude": 0.007,
                     "units": "dimensionless",
                     "carrier": "electricity / fischer_tropsch",
-                    "heating_value": "lower_heating_value",
+                    "heating_value": "1 / lower_heating_value",
                     "provenance": null,
                     "note": "0.005 MWh_el input per FT output, output increasing from 2020 to 2050 (0.65, 0.7, 0.73, 0.75 MWh liquid FT output).",
                     "sources": {
@@ -17952,7 +17952,7 @@
                     "magnitude": 0.276,
                     "units": "metric_ton / megawatt_hour",
                     "carrier": "carbon_dioxide / fischer_tropsch",
-                    "heating_value": "lower_heating_value",
+                    "heating_value": "1 / lower_heating_value",
                     "provenance": null,
                     "note": "Input per 1t FT liquid fuels output, carbon efficiency increases with years (4.3, 3.9, 3.6, 3.3 t_CO2/t_FT from 2020-2050 with LHV 11.95 MWh_th/t_FT).",
                     "sources": {
@@ -18369,7 +18369,7 @@
                     "magnitude": 1.25,
                     "units": "dimensionless",
                     "carrier": "electricity / hydrogen",
-                    "heating_value": "lower_heating_value",
+                    "heating_value": "1 / lower_heating_value",
                     "provenance": null,
                     "note": "Reference capacity 1 MW",
                     "sources": {
@@ -18399,7 +18399,7 @@
                     "magnitude": 1.11,
                     "units": "dimensionless",
                     "carrier": "electricity / hydrogen",
-                    "heating_value": "lower_heating_value",
+                    "heating_value": "1 / lower_heating_value",
                     "provenance": null,
                     "note": null,
                     "sources": {
@@ -18447,10 +18447,10 @@
             "year": 2050,
             "parameters": {
                 "fuel": {
-                    "magnitude": 115.905289026151,
+                    "magnitude": 115.905,
                     "units": "EUR_2010 / megawatt_hour",
                     "carrier": "1 / thermal",
-                    "heating_value": "lower_heating_value",
+                    "heating_value": null,
                     "provenance": null,
                     "note": null,
                     "sources": {
@@ -18477,10 +18477,10 @@
             "year": 2050,
             "parameters": {
                 "fuel": {
-                    "magnitude": 78.995541440487,
+                    "magnitude": 78.996,
                     "units": "EUR_2010 / megawatt_hour",
                     "carrier": "1 / thermal",
-                    "heating_value": "lower_heating_value",
+                    "heating_value": null,
                     "provenance": null,
                     "note": null,
                     "sources": {
@@ -18507,10 +18507,10 @@
             "year": 2050,
             "parameters": {
                 "fuel": {
-                    "magnitude": 17.5404377813252,
+                    "magnitude": 17.54,
                     "units": "EUR_2010 / megawatt_hour",
                     "carrier": "1 / thermal",
-                    "heating_value": "lower_heating_value",
+                    "heating_value": null,
                     "provenance": null,
                     "note": null,
                     "sources": {
@@ -18540,7 +18540,7 @@
                     "magnitude": 99.38,
                     "units": "EUR_2020 / kilowatt",
                     "carrier": "1 / thermal",
-                    "heating_value": "1 / lower_heating_value",
+                    "heating_value": null,
                     "provenance": null,
                     "note": "Based on NREL’s SAM (v2021.12.2) numbers for a CSP power plant, 2020 numbers. CAPEX degression (=learning) taken from ATB database (“moderate”) scenario. Costs include solar field and solar tower as well as EPC cost for the default installation size (104 MWe plant). Total costs (223,708,924 USD) are divided by active area (heliostat reflective area, 1,269,054 m2) and multiplied by design point DNI (0.95 kW/m2) to obtain EUR/kW_th. Exchange rate: 1.16 USD to 1 EUR.",
                     "sources": {
@@ -18612,7 +18612,7 @@
                     "magnitude": 13.32,
                     "units": "EUR_2020 / kilowatt_hour",
                     "carrier": "1 / thermal",
-                    "heating_value": "lower_heating_value",
+                    "heating_value": null,
                     "provenance": null,
                     "note": "Based on NREL’s SAM (v2021.12.2) numbers for a CSP power plant, 2020 numbers. CAPEX degression (=learning) taken from ATB database (“moderate”) scenario. Costs include the TES incl. EPC cost for the default installation size (104 MWe plant, 2.791 MW_th TES). Total costs (69390776.7 USD) are divided by TES size to obtain EUR/kW_th. Exchange rate: 1.16 USD to 1 EUR.",
                     "sources": {
@@ -18684,7 +18684,7 @@
                     "magnitude": 696.2,
                     "units": "EUR_2020 / kilowatt",
                     "carrier": "1 / electricity",
-                    "heating_value": "1 / lower_heating_value",
+                    "heating_value": null,
                     "provenance": null,
                     "note": "Based on NREL’s SAM (v2021.12.2) numbers for a CSP power plant, 2020 numbers. CAPEX degression (=learning) taken from ATB database (“moderate”) scenario. Costs include the power cycle incl. BOP and EPC cost for the default installation size (104 MWe plant). Total costs (135185685.5 USD) are divided by power block nameplate capacity size to obtain EUR/kW_e. Exchange rate: 1.16 USD to 1 EUR.",
                     "sources": {
@@ -18756,7 +18756,7 @@
                     "magnitude": 1000.0,
                     "units": "EUR_2020 / kilowatt",
                     "carrier": "1 / electricity",
-                    "heating_value": "1 / lower_heating_value",
+                    "heating_value": null,
                     "provenance": null,
                     "note": null,
                     "sources": {
@@ -18783,10 +18783,10 @@
             "year": 2050,
             "parameters": {
                 "fuel": {
-                    "magnitude": 10.5474097062402,
+                    "magnitude": 10.547,
                     "units": "EUR_2010 / megawatt_hour",
                     "carrier": "1 / thermal",
-                    "heating_value": "lower_heating_value",
+                    "heating_value": null,
                     "provenance": null,
                     "note": null,
                     "sources": {
@@ -18951,7 +18951,7 @@
                     "magnitude": 1.35,
                     "units": "EUR_2020 / megawatt_hour",
                     "carrier": "1 / kerosene",
-                    "heating_value": "lower_heating_value",
+                    "heating_value": "1 / lower_heating_value",
                     "provenance": null,
                     "note": null,
                     "sources": {
@@ -19053,7 +19053,7 @@
                     "magnitude": 1580.0,
                     "units": "EUR_2020 / kilowatt",
                     "carrier": "1 / electricity",
-                    "heating_value": "1 / lower_heating_value",
+                    "heating_value": null,
                     "provenance": null,
                     "note": null,
                     "sources": {
