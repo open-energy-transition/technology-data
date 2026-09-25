@@ -202,7 +202,7 @@ class LegacyInputDataV0134Parser(ParserBase):
             - 'unit': Parameter units
             - 'further_description': Extra information about the technology
             - 'financial_case': Technology financial case
-            - 'region': Region identifier (e.g., 'USA' or empty)
+            - 'region': Region identifier ('USA' or 'other')
         sources_path: pathlib.Path
             Output path for storing the SourceCollection object
         archive_source: Optional[bool]
@@ -324,7 +324,7 @@ class LegacyInputDataV0134Parser(ParserBase):
         The processed data is saved to JSON files.
 
         Data processing steps include:
-        - USA data is tagged with region='USA', other data with region='not_available'
+        - USA data is tagged with region='USA', other data with region='other'
         - Unit normalization: tCO2 -> t_CO2, MWHh_el -> MWh_el, MWhth -> MWh_th,
           kWel -> kW_el, MWh_thdh -> MWh_th, t_cl -> t_clinker,
           t_HLOHC -> t_H18DBT, t_LOHC -> t_H0DBT, t_hbi -> t_HBI
@@ -472,11 +472,9 @@ class LegacyInputDataV0134Parser(ParserBase):
         # Add missing columns for other.csv
         legacy_input_data_other_df["scenario"] = "not_available"
         legacy_input_data_other_df["financial_case"] = None
-        # Add region column (empty) for other data
-        legacy_input_data_other_df["region"] = "not_available"
-        logger.info(
-            "Other data loaded with region='not_available' and missing columns added."
-        )
+        # Add region column for other data
+        legacy_input_data_other_df["region"] = "other"
+        logger.info("Other data loaded with region='other' and missing columns added.")
 
         # Combine both dataframes
         legacy_input_data_df = pandas.concat(

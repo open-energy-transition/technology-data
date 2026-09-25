@@ -3029,7 +3029,7 @@
             "name": "Ammonia cracker",
             "detailed_technology": "Ammonia cracker",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 0,
             "parameters": {
                 "ammonia-input": {
@@ -3059,7 +3059,7 @@
             "name": "CH4 liquefaction",
             "detailed_technology": "CH4 liquefaction",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 0,
             "parameters": {
                 "methane-input": {
@@ -3110,7 +3110,7 @@
             "name": "CO2 liquefaction",
             "detailed_technology": "CO2 liquefaction",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 0,
             "parameters": {
                 "carbondioxide-input": {
@@ -3182,7 +3182,7 @@
             "name": "H2 liquefaction",
             "detailed_technology": "H2 liquefaction",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 0,
             "parameters": {
                 "hydrogen-input": {
@@ -3233,7 +3233,7 @@
             "name": "Haber-Bosch",
             "detailed_technology": "Haber-Bosch",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 0,
             "parameters": {
                 "electricity-input": {
@@ -3305,7 +3305,7 @@
             "name": "LOHC hydrogenation",
             "detailed_technology": "LOHC hydrogenation",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 0,
             "parameters": {
                 "hydrogen-input": {
@@ -3377,7 +3377,7 @@
             "name": "Methanol steam reforming",
             "detailed_technology": "Methanol steam reforming",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 0,
             "parameters": {
                 "methanol-input": {
@@ -3407,7 +3407,7 @@
             "name": "Steam methane reforming",
             "detailed_technology": "Steam methane reforming",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 0,
             "parameters": {
                 "methane-input": {
@@ -3437,7 +3437,7 @@
             "name": "air separation unit",
             "detailed_technology": "air separation unit",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 0,
             "parameters": {
                 "electricity-input": {
@@ -3467,7 +3467,7 @@
             "name": "direct air capture",
             "detailed_technology": "direct air capture",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 0,
             "parameters": {
                 "electricity-input": {
@@ -3518,7 +3518,7 @@
             "name": "methanation",
             "detailed_technology": "methanation",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 0,
             "parameters": {
                 "hydrogen-input": {
@@ -3569,7 +3569,7 @@
             "name": "methanolisation",
             "detailed_technology": "methanolisation",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 0,
             "parameters": {
                 "electricity-input": {
@@ -3662,7 +3662,7 @@
             "name": "seawater RO desalination",
             "detailed_technology": "seawater RO desalination",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 0,
             "parameters": {
                 "electricity-input": {
@@ -3692,7 +3692,7 @@
             "name": "CH4 (g) submarine pipeline",
             "detailed_technology": "CH4 (g) submarine pipeline",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2002,
             "parameters": {
                 "investment": {
@@ -3722,7 +3722,7 @@
             "name": "CO2 liquefaction",
             "detailed_technology": "CO2 liquefaction",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2004,
             "parameters": {
                 "investment": {
@@ -3794,7 +3794,7 @@
             "name": "cement dry clinker",
             "detailed_technology": "cement dry clinker",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2006,
             "parameters": {
                 "investment": {
@@ -3950,7 +3950,7 @@
             "name": "cement finishing",
             "detailed_technology": "cement finishing",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2006,
             "parameters": {
                 "investment": {
@@ -4106,7 +4106,7 @@
             "name": "ethanol from starch crop",
             "detailed_technology": "ethanol from starch crop",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2010,
             "parameters": {
                 "investment": {
@@ -4220,7 +4220,7 @@
             "name": "ethanol from sugar crops",
             "detailed_technology": "ethanol from sugar crops",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2010,
             "parameters": {
                 "investment": {
@@ -4334,7 +4334,7 @@
             "name": "General liquid hydrocarbon storage (crude)",
             "detailed_technology": "General liquid hydrocarbon storage (crude)",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2012,
             "parameters": {
                 "investment": {
@@ -4406,7 +4406,7 @@
             "name": "General liquid hydrocarbon storage (product)",
             "detailed_technology": "General liquid hydrocarbon storage (product)",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2012,
             "parameters": {
                 "investment": {
@@ -4478,7 +4478,7 @@
             "name": "LOHC loaded DBT storage",
             "detailed_technology": "LOHC loaded DBT storage",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2012,
             "parameters": {
                 "investment": {
@@ -4550,7 +4550,7 @@
             "name": "LOHC unloaded DBT storage",
             "detailed_technology": "LOHC unloaded DBT storage",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2012,
             "parameters": {
                 "investment": {
@@ -4622,7 +4622,7 @@
             "name": "methane storage tank incl. compressor",
             "detailed_technology": "methane storage tank incl. compressor",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2014,
             "parameters": {
                 "investment": {
@@ -4694,7 +4694,7 @@
             "name": "CH4 (g) submarine pipeline",
             "detailed_technology": "CH4 (g) submarine pipeline",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2015,
             "parameters": {
                 "FOM": {
@@ -4745,7 +4745,7 @@
             "name": "H2 (g) submarine pipeline",
             "detailed_technology": "H2 (g) submarine pipeline",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2015,
             "parameters": {
                 "FOM": {
@@ -4796,7 +4796,7 @@
             "name": "H2 (g) submarine pipeline repurposed",
             "detailed_technology": "H2 (g) submarine pipeline repurposed",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2015,
             "parameters": {
                 "FOM": {
@@ -4847,7 +4847,7 @@
             "name": "H2 (l) storage tank",
             "detailed_technology": "H2 (l) storage tank",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2015,
             "parameters": {
                 "investment": {
@@ -4919,7 +4919,7 @@
             "name": "LOHC dehydrogenation",
             "detailed_technology": "LOHC dehydrogenation",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2015,
             "parameters": {
                 "investment": {
@@ -4991,7 +4991,7 @@
             "name": "LOHC hydrogenation",
             "detailed_technology": "LOHC hydrogenation",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2015,
             "parameters": {
                 "investment": {
@@ -5063,7 +5063,7 @@
             "name": "Steam methane reforming",
             "detailed_technology": "Steam methane reforming",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2015,
             "parameters": {
                 "investment": {
@@ -5135,7 +5135,7 @@
             "name": "electric steam cracker",
             "detailed_technology": "electric steam cracker",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2015,
             "parameters": {
                 "investment": {
@@ -5291,7 +5291,7 @@
             "name": "methanol-to-olefins/aromatics",
             "detailed_technology": "methanol-to-olefins/aromatics",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2015,
             "parameters": {
                 "investment": {
@@ -5447,7 +5447,7 @@
             "name": "LNG storage tank",
             "detailed_technology": "LNG storage tank",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2019,
             "parameters": {
                 "investment": {
@@ -5549,7 +5549,7 @@
             "name": "Alkaline electrolyzer large size",
             "detailed_technology": "Alkaline electrolyzer large size",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2020,
             "parameters": {
                 "lifetime": {
@@ -5663,7 +5663,7 @@
             "name": "Alkaline electrolyzer medium size",
             "detailed_technology": "Alkaline electrolyzer medium size",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2020,
             "parameters": {
                 "lifetime": {
@@ -5777,7 +5777,7 @@
             "name": "Alkaline electrolyzer small size",
             "detailed_technology": "Alkaline electrolyzer small size",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2020,
             "parameters": {
                 "lifetime": {
@@ -5891,7 +5891,7 @@
             "name": "CH4 (g) pipeline",
             "detailed_technology": "CH4 (g) pipeline",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2020,
             "parameters": {
                 "electricity-input": {
@@ -5921,7 +5921,7 @@
             "name": "CH4 (g) submarine pipeline",
             "detailed_technology": "CH4 (g) submarine pipeline",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2020,
             "parameters": {
                 "electricity-input": {
@@ -5951,7 +5951,7 @@
             "name": "CO2 pipeline",
             "detailed_technology": "CO2 pipeline",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2020,
             "parameters": {
                 "investment": {
@@ -6023,7 +6023,7 @@
             "name": "CO2 submarine pipeline",
             "detailed_technology": "CO2 submarine pipeline",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2020,
             "parameters": {
                 "investment": {
@@ -6281,7 +6281,7 @@
             "name": "Fischer-Tropsch",
             "detailed_technology": "Fischer-Tropsch",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2020,
             "parameters": {
                 "efficiency": {
@@ -6437,7 +6437,7 @@
             "name": "H2 (g) fill compressor station",
             "detailed_technology": "H2 (g) fill compressor station",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2020,
             "parameters": {
                 "investment": {
@@ -6509,7 +6509,7 @@
             "name": "H2 (g) pipeline",
             "detailed_technology": "H2 (g) pipeline",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2020,
             "parameters": {
                 "investment": {
@@ -6602,7 +6602,7 @@
             "name": "H2 (g) pipeline repurposed",
             "detailed_technology": "H2 (g) pipeline repurposed",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2020,
             "parameters": {
                 "investment": {
@@ -6695,7 +6695,7 @@
             "name": "H2 (g) submarine pipeline",
             "detailed_technology": "H2 (g) submarine pipeline",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2020,
             "parameters": {
                 "investment": {
@@ -6746,7 +6746,7 @@
             "name": "H2 (g) submarine pipeline repurposed",
             "detailed_technology": "H2 (g) submarine pipeline repurposed",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2020,
             "parameters": {
                 "investment": {
@@ -6797,7 +6797,7 @@
             "name": "H2 production biomass gasification",
             "detailed_technology": "H2 production biomass gasification",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2020,
             "parameters": {
                 "lifetime": {
@@ -6932,7 +6932,7 @@
             "name": "H2 production biomass gasification CC",
             "detailed_technology": "H2 production biomass gasification CC",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2020,
             "parameters": {
                 "lifetime": {
@@ -7067,7 +7067,7 @@
             "name": "H2 production coal gasification",
             "detailed_technology": "H2 production coal gasification",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2020,
             "parameters": {
                 "lifetime": {
@@ -7202,7 +7202,7 @@
             "name": "H2 production coal gasification CC",
             "detailed_technology": "H2 production coal gasification CC",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2020,
             "parameters": {
                 "lifetime": {
@@ -7337,7 +7337,7 @@
             "name": "H2 production heavy oil partial oxidation",
             "detailed_technology": "H2 production heavy oil partial oxidation",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2020,
             "parameters": {
                 "lifetime": {
@@ -7472,7 +7472,7 @@
             "name": "H2 production natural gas steam reforming",
             "detailed_technology": "H2 production natural gas steam reforming",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2020,
             "parameters": {
                 "lifetime": {
@@ -7607,7 +7607,7 @@
             "name": "H2 production natural gas steam reforming CC",
             "detailed_technology": "H2 production natural gas steam reforming CC",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2020,
             "parameters": {
                 "lifetime": {
@@ -7742,7 +7742,7 @@
             "name": "H2 production solid biomass steam reforming",
             "detailed_technology": "H2 production solid biomass steam reforming",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2020,
             "parameters": {
                 "lifetime": {
@@ -7877,7 +7877,7 @@
             "name": "Methanol steam reforming",
             "detailed_technology": "Methanol steam reforming",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2020,
             "parameters": {
                 "investment": {
@@ -7979,7 +7979,7 @@
             "name": "NH3 (l) storage tank incl. liquefaction",
             "detailed_technology": "NH3 (l) storage tank incl. liquefaction",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2020,
             "parameters": {
                 "investment": {
@@ -8081,7 +8081,7 @@
             "name": "PEM electrolyzer small size",
             "detailed_technology": "PEM electrolyzer small size",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2020,
             "parameters": {
                 "lifetime": {
@@ -8204,7 +8204,7 @@
             "name": "SOEC",
             "detailed_technology": "SOEC",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2020,
             "parameters": {
                 "lifetime": {
@@ -8297,7 +8297,7 @@
             "name": "biodiesel crops",
             "detailed_technology": "biodiesel crops",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2020,
             "parameters": {
                 "fuel": {
@@ -8327,7 +8327,7 @@
             "name": "bioethanol crops",
             "detailed_technology": "bioethanol crops",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2020,
             "parameters": {
                 "fuel": {
@@ -8378,7 +8378,7 @@
             "name": "biogas manure",
             "detailed_technology": "biogas manure",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2020,
             "parameters": {
                 "fuel": {
@@ -8408,7 +8408,7 @@
             "name": "blast furnace-basic oxygen furnace",
             "detailed_technology": "blast furnace-basic oxygen furnace",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2020,
             "parameters": {
                 "investment": {
@@ -8564,7 +8564,7 @@
             "name": "coal",
             "detailed_technology": "coal",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2020,
             "parameters": {
                 "investment": {
@@ -8699,7 +8699,7 @@
             "name": "csp-tower",
             "detailed_technology": "csp-tower",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2020,
             "parameters": {
                 "investment": {
@@ -8771,7 +8771,7 @@
             "name": "csp-tower TES",
             "detailed_technology": "csp-tower TES",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2020,
             "parameters": {
                 "investment": {
@@ -8843,7 +8843,7 @@
             "name": "csp-tower power block",
             "detailed_technology": "csp-tower power block",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2020,
             "parameters": {
                 "investment": {
@@ -8987,7 +8987,7 @@
             "name": "dry bulk carrier Capesize",
             "detailed_technology": "dry bulk carrier Capesize",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2020,
             "parameters": {
                 "capacity": {
@@ -9080,7 +9080,7 @@
             "name": "electric arc furnace",
             "detailed_technology": "electric arc furnace",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2020,
             "parameters": {
                 "investment": {
@@ -9215,7 +9215,7 @@
             "name": "electric arc furnace with hbi and scrap",
             "detailed_technology": "electric arc furnace with hbi and scrap",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2020,
             "parameters": {
                 "investment": {
@@ -9371,7 +9371,7 @@
             "name": "electrolysis",
             "detailed_technology": "electrolysis",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2020,
             "parameters": {
                 "investment": {
@@ -9401,7 +9401,7 @@
             "name": "ethanol from starch crop",
             "detailed_technology": "ethanol from starch crop",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2020,
             "parameters": {
                 "investment": {
@@ -9452,7 +9452,7 @@
             "name": "ethanol from sugar crops",
             "detailed_technology": "ethanol from sugar crops",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2020,
             "parameters": {
                 "investment": {
@@ -9503,7 +9503,7 @@
             "name": "fuelwood",
             "detailed_technology": "fuelwood",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2020,
             "parameters": {
                 "fuel": {
@@ -9533,7 +9533,7 @@
             "name": "gas",
             "detailed_technology": "gas",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2020,
             "parameters": {
                 "fuel": {
@@ -9563,7 +9563,7 @@
             "name": "geothermal",
             "detailed_technology": "geothermal",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2020,
             "parameters": {
                 "CO2 intensity": {
@@ -9677,7 +9677,7 @@
             "name": "hydrogen direct iron reduction furnace",
             "detailed_technology": "hydrogen direct iron reduction furnace",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2020,
             "parameters": {
                 "investment": {
@@ -10019,7 +10019,7 @@
             "name": "iron ore DRI-ready",
             "detailed_technology": "iron ore DRI-ready",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2020,
             "parameters": {
                 "commodity": {
@@ -10049,7 +10049,7 @@
             "name": "lignite",
             "detailed_technology": "lignite",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2020,
             "parameters": {
                 "investment": {
@@ -10184,7 +10184,7 @@
             "name": "methanation",
             "detailed_technology": "methanation",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2020,
             "parameters": {
                 "investment": {
@@ -10256,7 +10256,7 @@
             "name": "methanol-to-kerosene",
             "detailed_technology": "methanol-to-kerosene",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2020,
             "parameters": {
                 "methanol-input": {
@@ -10391,7 +10391,7 @@
             "name": "methanolisation",
             "detailed_technology": "methanolisation",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2020,
             "parameters": {
                 "investment": {
@@ -10463,7 +10463,7 @@
             "name": "natural gas direct iron reduction furnace",
             "detailed_technology": "natural gas direct iron reduction furnace",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2020,
             "parameters": {
                 "investment": {
@@ -10598,7 +10598,7 @@
             "name": "nuclear",
             "detailed_technology": "nuclear",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2020,
             "parameters": {
                 "investment": {
@@ -10733,7 +10733,7 @@
             "name": "offwind-float",
             "detailed_technology": "offwind-float",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2020,
             "parameters": {
                 "lifetime": {
@@ -10763,7 +10763,7 @@
             "name": "organic rankine cycle",
             "detailed_technology": "organic rankine cycle",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2020,
             "parameters": {
                 "lifetime": {
@@ -10856,7 +10856,7 @@
             "name": "shipping fuel methanol",
             "detailed_technology": "shipping fuel methanol",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2020,
             "parameters": {
                 "fuel": {
@@ -10907,7 +10907,7 @@
             "name": "uranium",
             "detailed_technology": "uranium",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2020,
             "parameters": {
                 "fuel": {
@@ -10997,7 +10997,7 @@
             "name": "Alkaline electrolyzer large size",
             "detailed_technology": "Alkaline electrolyzer large size",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2025,
             "parameters": {
                 "electricity-input": {
@@ -11069,7 +11069,7 @@
             "name": "Alkaline electrolyzer medium size",
             "detailed_technology": "Alkaline electrolyzer medium size",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2025,
             "parameters": {
                 "electricity-input": {
@@ -11141,7 +11141,7 @@
             "name": "Alkaline electrolyzer small size",
             "detailed_technology": "Alkaline electrolyzer small size",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2025,
             "parameters": {
                 "electricity-input": {
@@ -11213,7 +11213,7 @@
             "name": "H2 production coal gasification",
             "detailed_technology": "H2 production coal gasification",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2025,
             "parameters": {
                 "coal-input": {
@@ -11327,7 +11327,7 @@
             "name": "H2 production coal gasification CC",
             "detailed_technology": "H2 production coal gasification CC",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2025,
             "parameters": {
                 "coal-input": {
@@ -11441,7 +11441,7 @@
             "name": "H2 production natural gas steam reforming",
             "detailed_technology": "H2 production natural gas steam reforming",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2025,
             "parameters": {
                 "gas-input": {
@@ -11492,7 +11492,7 @@
             "name": "H2 production natural gas steam reforming CC",
             "detailed_technology": "H2 production natural gas steam reforming CC",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2025,
             "parameters": {
                 "gas-input": {
@@ -11585,7 +11585,7 @@
             "name": "electrolysis",
             "detailed_technology": "electrolysis",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2025,
             "parameters": {
                 "investment": {
@@ -11615,7 +11615,7 @@
             "name": "ethanol from starch crop",
             "detailed_technology": "ethanol from starch crop",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2025,
             "parameters": {
                 "investment": {
@@ -11666,7 +11666,7 @@
             "name": "ethanol from sugar crops",
             "detailed_technology": "ethanol from sugar crops",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2025,
             "parameters": {
                 "investment": {
@@ -11717,7 +11717,7 @@
             "name": "iron-air battery",
             "detailed_technology": "iron-air battery",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2025,
             "parameters": {
                 "FOM": {
@@ -11768,7 +11768,7 @@
             "name": "iron-air battery charge",
             "detailed_technology": "iron-air battery charge",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2025,
             "parameters": {
                 "efficiency": {
@@ -11798,7 +11798,7 @@
             "name": "iron-air battery discharge",
             "detailed_technology": "iron-air battery discharge",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2025,
             "parameters": {
                 "efficiency": {
@@ -11828,7 +11828,7 @@
             "name": "Alkaline electrolyzer large size",
             "detailed_technology": "Alkaline electrolyzer large size",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2030,
             "parameters": {
                 "FOM": {
@@ -11879,7 +11879,7 @@
             "name": "Alkaline electrolyzer medium size",
             "detailed_technology": "Alkaline electrolyzer medium size",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2030,
             "parameters": {
                 "FOM": {
@@ -11930,7 +11930,7 @@
             "name": "Alkaline electrolyzer small size",
             "detailed_technology": "Alkaline electrolyzer small size",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2030,
             "parameters": {
                 "FOM": {
@@ -12002,7 +12002,7 @@
             "name": "Ammonia cracker",
             "detailed_technology": "Ammonia cracker",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2030,
             "parameters": {
                 "investment": {
@@ -12074,7 +12074,7 @@
             "name": "CH4 (l) transport ship",
             "detailed_technology": "CH4 (l) transport ship",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2030,
             "parameters": {
                 "investment": {
@@ -12167,7 +12167,7 @@
             "name": "CH4 evaporation",
             "detailed_technology": "CH4 evaporation",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2030,
             "parameters": {
                 "investment": {
@@ -12239,7 +12239,7 @@
             "name": "CH4 liquefaction",
             "detailed_technology": "CH4 liquefaction",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2030,
             "parameters": {
                 "investment": {
@@ -12659,7 +12659,7 @@
             "name": "Fischer-Tropsch",
             "detailed_technology": "Fischer-Tropsch",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2030,
             "parameters": {
                 "investment": {
@@ -12794,7 +12794,7 @@
             "name": "H2 (g) pipeline",
             "detailed_technology": "H2 (g) pipeline",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2030,
             "parameters": {
                 "electricity-input": {
@@ -12824,7 +12824,7 @@
             "name": "H2 (g) pipeline repurposed",
             "detailed_technology": "H2 (g) pipeline repurposed",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2030,
             "parameters": {
                 "electricity-input": {
@@ -12854,7 +12854,7 @@
             "name": "H2 (g) submarine pipeline",
             "detailed_technology": "H2 (g) submarine pipeline",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2030,
             "parameters": {
                 "electricity-input": {
@@ -12884,7 +12884,7 @@
             "name": "H2 (g) submarine pipeline repurposed",
             "detailed_technology": "H2 (g) submarine pipeline repurposed",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2030,
             "parameters": {
                 "electricity-input": {
@@ -12914,7 +12914,7 @@
             "name": "H2 (l) transport ship",
             "detailed_technology": "H2 (l) transport ship",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2030,
             "parameters": {
                 "investment": {
@@ -13007,7 +13007,7 @@
             "name": "H2 evaporation",
             "detailed_technology": "H2 evaporation",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2030,
             "parameters": {
                 "investment": {
@@ -13079,7 +13079,7 @@
             "name": "H2 liquefaction",
             "detailed_technology": "H2 liquefaction",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2030,
             "parameters": {
                 "investment": {
@@ -13151,7 +13151,7 @@
             "name": "H2 production coal gasification",
             "detailed_technology": "H2 production coal gasification",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2030,
             "parameters": {
                 "coal-input": {
@@ -13244,7 +13244,7 @@
             "name": "H2 production coal gasification CC",
             "detailed_technology": "H2 production coal gasification CC",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2030,
             "parameters": {
                 "coal-input": {
@@ -13337,7 +13337,7 @@
             "name": "H2 production natural gas steam reforming",
             "detailed_technology": "H2 production natural gas steam reforming",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2030,
             "parameters": {
                 "gas-input": {
@@ -13409,7 +13409,7 @@
             "name": "H2 production natural gas steam reforming CC",
             "detailed_technology": "H2 production natural gas steam reforming CC",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2030,
             "parameters": {
                 "gas-input": {
@@ -13523,7 +13523,7 @@
             "name": "HVAC overhead",
             "detailed_technology": "HVAC overhead",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2030,
             "parameters": {
                 "investment": {
@@ -13595,7 +13595,7 @@
             "name": "HVDC inverter pair",
             "detailed_technology": "HVDC inverter pair",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2030,
             "parameters": {
                 "investment": {
@@ -13667,7 +13667,7 @@
             "name": "HVDC overhead",
             "detailed_technology": "HVDC overhead",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2030,
             "parameters": {
                 "investment": {
@@ -13739,7 +13739,7 @@
             "name": "HVDC submarine",
             "detailed_technology": "HVDC submarine",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2030,
             "parameters": {
                 "investment": {
@@ -13811,7 +13811,7 @@
             "name": "HVDC underground",
             "detailed_technology": "HVDC underground",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2030,
             "parameters": {
                 "investment": {
@@ -14180,7 +14180,7 @@
             "name": "NH3 (l) transport ship",
             "detailed_technology": "NH3 (l) transport ship",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2030,
             "parameters": {
                 "capacity": {
@@ -14273,7 +14273,7 @@
             "name": "PEM electrolyzer small size",
             "detailed_technology": "PEM electrolyzer small size",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2030,
             "parameters": {
                 "lifetime": {
@@ -14345,7 +14345,7 @@
             "name": "SOEC",
             "detailed_technology": "SOEC",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2030,
             "parameters": {
                 "electricity-input": {
@@ -14396,7 +14396,7 @@
             "name": "allam",
             "detailed_technology": "allam",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2030,
             "parameters": {
                 "investment": {
@@ -14489,7 +14489,7 @@
             "name": "ammonia carbon capture retrofit",
             "detailed_technology": "ammonia carbon capture retrofit",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2030,
             "parameters": {
                 "FOM": {
@@ -14603,7 +14603,7 @@
             "name": "biodiesel crops",
             "detailed_technology": "biodiesel crops",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2030,
             "parameters": {
                 "fuel": {
@@ -14633,7 +14633,7 @@
             "name": "bioethanol crops",
             "detailed_technology": "bioethanol crops",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2030,
             "parameters": {
                 "fuel": {
@@ -14663,7 +14663,7 @@
             "name": "biogas manure",
             "detailed_technology": "biogas manure",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2030,
             "parameters": {
                 "fuel": {
@@ -14693,7 +14693,7 @@
             "name": "cement carbon capture retrofit",
             "detailed_technology": "cement carbon capture retrofit",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2030,
             "parameters": {
                 "FOM": {
@@ -14828,7 +14828,7 @@
             "name": "csp-tower",
             "detailed_technology": "csp-tower",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2030,
             "parameters": {
                 "investment": {
@@ -14900,7 +14900,7 @@
             "name": "csp-tower TES",
             "detailed_technology": "csp-tower TES",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2030,
             "parameters": {
                 "investment": {
@@ -14972,7 +14972,7 @@
             "name": "csp-tower power block",
             "detailed_technology": "csp-tower power block",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2030,
             "parameters": {
                 "investment": {
@@ -15044,7 +15044,7 @@
             "name": "electrolysis",
             "detailed_technology": "electrolysis",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2030,
             "parameters": {
                 "investment": {
@@ -15074,7 +15074,7 @@
             "name": "ethanol carbon capture retrofit",
             "detailed_technology": "ethanol carbon capture retrofit",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2030,
             "parameters": {
                 "FOM": {
@@ -15188,7 +15188,7 @@
             "name": "ethanol from starch crop",
             "detailed_technology": "ethanol from starch crop",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2030,
             "parameters": {
                 "investment": {
@@ -15239,7 +15239,7 @@
             "name": "ethanol from sugar crops",
             "detailed_technology": "ethanol from sugar crops",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2030,
             "parameters": {
                 "investment": {
@@ -15290,7 +15290,7 @@
             "name": "fuelwood",
             "detailed_technology": "fuelwood",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2030,
             "parameters": {
                 "fuel": {
@@ -15320,7 +15320,7 @@
             "name": "hydrogen storage compressor",
             "detailed_technology": "hydrogen storage compressor",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2030,
             "parameters": {
                 "investment": {
@@ -15413,7 +15413,7 @@
             "name": "hydrogen storage tank type 1",
             "detailed_technology": "hydrogen storage tank type 1",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2030,
             "parameters": {
                 "investment": {
@@ -15506,7 +15506,7 @@
             "name": "iron-air battery",
             "detailed_technology": "iron-air battery",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2030,
             "parameters": {
                 "FOM": {
@@ -15578,7 +15578,7 @@
             "name": "iron-air battery charge",
             "detailed_technology": "iron-air battery charge",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2030,
             "parameters": {
                 "efficiency": {
@@ -15608,7 +15608,7 @@
             "name": "iron-air battery discharge",
             "detailed_technology": "iron-air battery discharge",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2030,
             "parameters": {
                 "efficiency": {
@@ -15638,7 +15638,7 @@
             "name": "methanation",
             "detailed_technology": "methanation",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2030,
             "parameters": {
                 "investment": {
@@ -15710,7 +15710,7 @@
             "name": "methanol-to-kerosene",
             "detailed_technology": "methanol-to-kerosene",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2030,
             "parameters": {
                 "lifetime": {
@@ -15803,7 +15803,7 @@
             "name": "methanolisation",
             "detailed_technology": "methanolisation",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2030,
             "parameters": {
                 "investment": {
@@ -15875,7 +15875,7 @@
             "name": "offwind-float",
             "detailed_technology": "offwind-float",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2030,
             "parameters": {
                 "investment": {
@@ -15926,7 +15926,7 @@
             "name": "offwind-float-connection-submarine",
             "detailed_technology": "offwind-float-connection-submarine",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2030,
             "parameters": {
                 "investment": {
@@ -15956,7 +15956,7 @@
             "name": "offwind-float-connection-underground",
             "detailed_technology": "offwind-float-connection-underground",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2030,
             "parameters": {
                 "investment": {
@@ -15986,7 +15986,7 @@
             "name": "offwind-float-station",
             "detailed_technology": "offwind-float-station",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2030,
             "parameters": {
                 "investment": {
@@ -16016,7 +16016,7 @@
             "name": "steel carbon capture retrofit",
             "detailed_technology": "steel carbon capture retrofit",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2030,
             "parameters": {
                 "FOM": {
@@ -16151,7 +16151,7 @@
             "name": "FT fuel transport ship",
             "detailed_technology": "FT fuel transport ship",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2035,
             "parameters": {
                 "investment": {
@@ -16244,7 +16244,7 @@
             "name": "LOHC chemical",
             "detailed_technology": "LOHC chemical",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2035,
             "parameters": {
                 "investment": {
@@ -16295,7 +16295,7 @@
             "name": "LOHC dehydrogenation (small scale)",
             "detailed_technology": "LOHC dehydrogenation (small scale)",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2035,
             "parameters": {
                 "investment": {
@@ -16367,7 +16367,7 @@
             "name": "LOHC transport ship",
             "detailed_technology": "LOHC transport ship",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2035,
             "parameters": {
                 "capacity": {
@@ -16460,7 +16460,7 @@
             "name": "MeOH transport ship",
             "detailed_technology": "MeOH transport ship",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2035,
             "parameters": {
                 "investment": {
@@ -16553,7 +16553,7 @@
             "name": "iron-air battery",
             "detailed_technology": "iron-air battery",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2035,
             "parameters": {
                 "FOM": {
@@ -16604,7 +16604,7 @@
             "name": "iron-air battery charge",
             "detailed_technology": "iron-air battery charge",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2035,
             "parameters": {
                 "efficiency": {
@@ -16634,7 +16634,7 @@
             "name": "iron-air battery discharge",
             "detailed_technology": "iron-air battery discharge",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2035,
             "parameters": {
                 "efficiency": {
@@ -16664,7 +16664,7 @@
             "name": "CH4 (g) fill compressor station",
             "detailed_technology": "CH4 (g) fill compressor station",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2040,
             "parameters": {
                 "investment": {
@@ -16736,7 +16736,7 @@
             "name": "CH4 (l) transport ship",
             "detailed_technology": "CH4 (l) transport ship",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2040,
             "parameters": {
                 "investment": {
@@ -16829,7 +16829,7 @@
             "name": "CH4 evaporation",
             "detailed_technology": "CH4 evaporation",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2040,
             "parameters": {
                 "investment": {
@@ -16901,7 +16901,7 @@
             "name": "CH4 liquefaction",
             "detailed_technology": "CH4 liquefaction",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2040,
             "parameters": {
                 "investment": {
@@ -16973,7 +16973,7 @@
             "name": "Fischer-Tropsch",
             "detailed_technology": "Fischer-Tropsch",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2040,
             "parameters": {
                 "hydrogen-input": {
@@ -17045,7 +17045,7 @@
             "name": "SOEC",
             "detailed_technology": "SOEC",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2040,
             "parameters": {
                 "electricity-input": {
@@ -17096,7 +17096,7 @@
             "name": "biodiesel crops",
             "detailed_technology": "biodiesel crops",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2040,
             "parameters": {
                 "fuel": {
@@ -17126,7 +17126,7 @@
             "name": "bioethanol crops",
             "detailed_technology": "bioethanol crops",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2040,
             "parameters": {
                 "fuel": {
@@ -17156,7 +17156,7 @@
             "name": "biogas manure",
             "detailed_technology": "biogas manure",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2040,
             "parameters": {
                 "fuel": {
@@ -17186,7 +17186,7 @@
             "name": "csp-tower",
             "detailed_technology": "csp-tower",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2040,
             "parameters": {
                 "investment": {
@@ -17258,7 +17258,7 @@
             "name": "csp-tower TES",
             "detailed_technology": "csp-tower TES",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2040,
             "parameters": {
                 "investment": {
@@ -17330,7 +17330,7 @@
             "name": "csp-tower power block",
             "detailed_technology": "csp-tower power block",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2040,
             "parameters": {
                 "investment": {
@@ -17402,7 +17402,7 @@
             "name": "electrolysis",
             "detailed_technology": "electrolysis",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2040,
             "parameters": {
                 "investment": {
@@ -17432,7 +17432,7 @@
             "name": "fuelwood",
             "detailed_technology": "fuelwood",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2040,
             "parameters": {
                 "fuel": {
@@ -17462,7 +17462,7 @@
             "name": "iron-air battery",
             "detailed_technology": "iron-air battery",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2040,
             "parameters": {
                 "FOM": {
@@ -17513,7 +17513,7 @@
             "name": "iron-air battery charge",
             "detailed_technology": "iron-air battery charge",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2040,
             "parameters": {
                 "efficiency": {
@@ -17543,7 +17543,7 @@
             "name": "iron-air battery discharge",
             "detailed_technology": "iron-air battery discharge",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2040,
             "parameters": {
                 "efficiency": {
@@ -17573,7 +17573,7 @@
             "name": "offwind-float",
             "detailed_technology": "offwind-float",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2040,
             "parameters": {
                 "investment": {
@@ -17624,7 +17624,7 @@
             "name": "Ammonia cracker",
             "detailed_technology": "Ammonia cracker",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2050,
             "parameters": {
                 "investment": {
@@ -17696,7 +17696,7 @@
             "name": "CH4 (g) pipeline",
             "detailed_technology": "CH4 (g) pipeline",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2050,
             "parameters": {
                 "investment": {
@@ -17768,7 +17768,7 @@
             "name": "CO2 storage tank",
             "detailed_technology": "CO2 storage tank",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2050,
             "parameters": {
                 "investment": {
@@ -17840,7 +17840,7 @@
             "name": "Fischer-Tropsch",
             "detailed_technology": "Fischer-Tropsch",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2050,
             "parameters": {
                 "investment": {
@@ -17975,7 +17975,7 @@
             "name": "H2 (g) pipeline",
             "detailed_technology": "H2 (g) pipeline",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2050,
             "parameters": {
                 "FOM": {
@@ -18026,7 +18026,7 @@
             "name": "H2 (g) pipeline repurposed",
             "detailed_technology": "H2 (g) pipeline repurposed",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2050,
             "parameters": {
                 "FOM": {
@@ -18077,7 +18077,7 @@
             "name": "H2 (g) submarine pipeline",
             "detailed_technology": "H2 (g) submarine pipeline",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2050,
             "parameters": {
                 "electricity-input": {
@@ -18107,7 +18107,7 @@
             "name": "H2 (g) submarine pipeline repurposed",
             "detailed_technology": "H2 (g) submarine pipeline repurposed",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2050,
             "parameters": {
                 "electricity-input": {
@@ -18137,7 +18137,7 @@
             "name": "H2 evaporation",
             "detailed_technology": "H2 evaporation",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2050,
             "parameters": {
                 "investment": {
@@ -18209,7 +18209,7 @@
             "name": "H2 liquefaction",
             "detailed_technology": "H2 liquefaction",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2050,
             "parameters": {
                 "investment": {
@@ -18281,7 +18281,7 @@
             "name": "H2 production coal gasification",
             "detailed_technology": "H2 production coal gasification",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2050,
             "parameters": {
                 "FOM": {
@@ -18311,7 +18311,7 @@
             "name": "H2 production coal gasification CC",
             "detailed_technology": "H2 production coal gasification CC",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2050,
             "parameters": {
                 "FOM": {
@@ -18341,7 +18341,7 @@
             "name": "PEM electrolyzer small size",
             "detailed_technology": "PEM electrolyzer small size",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2050,
             "parameters": {
                 "lifetime": {
@@ -18392,7 +18392,7 @@
             "name": "SOEC",
             "detailed_technology": "SOEC",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2050,
             "parameters": {
                 "electricity-input": {
@@ -18443,7 +18443,7 @@
             "name": "biodiesel crops",
             "detailed_technology": "biodiesel crops",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2050,
             "parameters": {
                 "fuel": {
@@ -18473,7 +18473,7 @@
             "name": "bioethanol crops",
             "detailed_technology": "bioethanol crops",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2050,
             "parameters": {
                 "fuel": {
@@ -18503,7 +18503,7 @@
             "name": "biogas manure",
             "detailed_technology": "biogas manure",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2050,
             "parameters": {
                 "fuel": {
@@ -18533,7 +18533,7 @@
             "name": "csp-tower",
             "detailed_technology": "csp-tower",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2050,
             "parameters": {
                 "investment": {
@@ -18605,7 +18605,7 @@
             "name": "csp-tower TES",
             "detailed_technology": "csp-tower TES",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2050,
             "parameters": {
                 "investment": {
@@ -18677,7 +18677,7 @@
             "name": "csp-tower power block",
             "detailed_technology": "csp-tower power block",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2050,
             "parameters": {
                 "investment": {
@@ -18749,7 +18749,7 @@
             "name": "electrolysis",
             "detailed_technology": "electrolysis",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2050,
             "parameters": {
                 "investment": {
@@ -18779,7 +18779,7 @@
             "name": "fuelwood",
             "detailed_technology": "fuelwood",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2050,
             "parameters": {
                 "fuel": {
@@ -18809,7 +18809,7 @@
             "name": "methanation",
             "detailed_technology": "methanation",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2050,
             "parameters": {
                 "investment": {
@@ -18881,7 +18881,7 @@
             "name": "methanol-to-kerosene",
             "detailed_technology": "methanol-to-kerosene",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2050,
             "parameters": {
                 "lifetime": {
@@ -18974,7 +18974,7 @@
             "name": "methanolisation",
             "detailed_technology": "methanolisation",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2050,
             "parameters": {
                 "investment": {
@@ -19046,7 +19046,7 @@
             "name": "offwind-float",
             "detailed_technology": "offwind-float",
             "case": "not_available",
-            "region": "not_available",
+            "region": "other",
             "year": 2050,
             "parameters": {
                 "investment": {
