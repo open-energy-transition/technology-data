@@ -349,6 +349,8 @@ class LegacyInputDataV0134Parser(ParserBase):
         **kwargs : bool
             export_schema : bool
                 If True, exports the Pydantic schema for the data models.
+            filter_params : bool
+                Ignored by this parser.
 
         Raises
         ------
@@ -356,11 +358,14 @@ class LegacyInputDataV0134Parser(ParserBase):
             If input_path is a single Path instead of a list.
         ValueError
             If the USA file or other file cannot be identified from the filenames.
-
+        
         Returns
         -------
-        TechnologyCollection
-            A collection of parsed technology data.
+        Nothing
+
+        Notes
+        -----
+        Writes parsed files to `src/technologydata/parsers/legacy_input_data/v0.13.4/`.
 
         """
         # Validate that input_path is a single Path, not a list

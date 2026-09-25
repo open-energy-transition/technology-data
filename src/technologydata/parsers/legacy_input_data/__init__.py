@@ -50,16 +50,18 @@ class LegacyInputDataParser:
         ----------
         version : str
             The version of the dataset to parse (e.g., 'v0.13.4').
-        input_path : list of pathlib.Path
-            List of paths to the raw input data files (CSV).
-        num_digits : int, optional
-            Number of significant digits to round the values, by default 4.
-        archive_source : bool, optional
-            If True, archives the source object on the Wayback Machine, by default False.
-        filter_params : bool, optional
-            If True, filters the parameters stored in the output, by default False.
-        export_schema : bool, optional
-            If True, exports the Pydantic schema for the data models, by default False.
+        input_path : pathlib.Path | list[pathlib.Path]
+            Paths to the raw input data CSV files.
+        num_digits : int
+            Number of decimals to round numerical values to; values < 1 keep
+            at least num_digits significant digits.
+        archive_source : bool
+            If True, archives the source objects on the Wayback Machine and
+            rewrites sources.json
+        filter_params : bool
+            Ignored by this parser.
+        export_schema : bool
+            If True, exports the Pydantic schema for the data models.
 
         Raises
         ------
