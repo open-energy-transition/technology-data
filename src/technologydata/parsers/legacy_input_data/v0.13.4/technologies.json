@@ -184,7 +184,7 @@
                 },
                 "investment": {
                     "magnitude": 7103597.31,
-                    "units": "USD_2023 / hour / metric_ton",
+                    "units": "USD_2023 * hour / metric_ton",
                     "carrier": "1 / carbon_dioxide",
                     "heating_value": null,
                     "provenance": null,
@@ -1192,7 +1192,7 @@
                 },
                 "investment": {
                     "magnitude": 19180739.93,
-                    "units": "USD_2023 / hour / metric_ton",
+                    "units": "USD_2023 * hour / metric_ton",
                     "carrier": "1 / carbon_dioxide",
                     "heating_value": null,
                     "provenance": null,
@@ -2200,7 +2200,7 @@
                 },
                 "investment": {
                     "magnitude": 12398844.91,
-                    "units": "USD_2023 / hour / metric_ton",
+                    "units": "USD_2023 * hour / metric_ton",
                     "carrier": "1 / carbon_dioxide",
                     "heating_value": null,
                     "provenance": null,
@@ -3727,7 +3727,7 @@
             "parameters": {
                 "investment": {
                     "magnitude": 12.8928283642224,
-                    "units": "EUR_2004 / hour / metric_ton",
+                    "units": "EUR_2004 * hour / metric_ton",
                     "carrier": "1 / carbon_dioxide",
                     "heating_value": null,
                     "provenance": null,
@@ -3799,7 +3799,7 @@
             "parameters": {
                 "investment": {
                     "magnitude": 1095000.0,
-                    "units": "EUR_2015 / hour / metric_ton",
+                    "units": "EUR_2015 * hour / metric_ton",
                     "carrier": "1 / clinker",
                     "heating_value": null,
                     "provenance": null,
@@ -3955,7 +3955,7 @@
             "parameters": {
                 "investment": {
                     "magnitude": 87600.0,
-                    "units": "EUR_2015 / hour / metric_ton",
+                    "units": "EUR_2015 * hour / metric_ton",
                     "carrier": "1 / cement",
                     "heating_value": null,
                     "provenance": null,
@@ -5140,7 +5140,7 @@
             "parameters": {
                 "investment": {
                     "magnitude": 10512000.0,
-                    "units": "EUR_2015 / hour / metric_ton",
+                    "units": "EUR_2015 * hour / metric_ton",
                     "carrier": "1 / high_value_chemicals",
                     "heating_value": null,
                     "provenance": null,
@@ -5296,7 +5296,7 @@
             "parameters": {
                 "investment": {
                     "magnitude": 2628000.0,
-                    "units": "EUR_2015 / hour / metric_ton",
+                    "units": "EUR_2015 * hour / metric_ton",
                     "carrier": "1 / high_value_chemicals",
                     "heating_value": null,
                     "provenance": null,
@@ -5895,8 +5895,8 @@
             "year": 2020,
             "parameters": {
                 "electricity-input": {
-                    "magnitude": 0.0,
-                    "units": "1 / kilometer",
+                    "magnitude": 1e-8,
+                    "units": "1 / meter",
                     "carrier": "electricity / methane",
                     "heating_value": "1 / lower_heating_value",
                     "provenance": null,
@@ -5925,8 +5925,8 @@
             "year": 2020,
             "parameters": {
                 "electricity-input": {
-                    "magnitude": 0.0,
-                    "units": "1 / kilometer",
+                    "magnitude": 1e-8,
+                    "units": "1 / meter",
                     "carrier": "electricity / methane",
                     "heating_value": "1 / lower_heating_value",
                     "provenance": null,
@@ -5956,7 +5956,7 @@
             "parameters": {
                 "investment": {
                     "magnitude": 2000.0,
-                    "units": "EUR_2015 / hour / kilometer / metric_ton",
+                    "units": "EUR_2015 * hour / kilometer / metric_ton",
                     "carrier": "1 / carbon_dioxide",
                     "heating_value": null,
                     "provenance": null,
@@ -6028,7 +6028,7 @@
             "parameters": {
                 "investment": {
                     "magnitude": 4000.0,
-                    "units": "EUR_2015 / hour / kilometer / metric_ton",
+                    "units": "EUR_2015 * hour / kilometer / metric_ton",
                     "carrier": "1 / carbon_dioxide",
                     "heating_value": null,
                     "provenance": null,
@@ -6576,8 +6576,8 @@
                     }
                 },
                 "electricity-input": {
-                    "magnitude": 0.0,
-                    "units": "1 / kilometer",
+                    "magnitude": 2.1e-8,
+                    "units": "1 / meter",
                     "carrier": "electricity / hydrogen",
                     "heating_value": "1 / lower_heating_value",
                     "provenance": null,
@@ -6669,8 +6669,8 @@
                     }
                 },
                 "electricity-input": {
-                    "magnitude": 0.0,
-                    "units": "1 / kilometer",
+                    "magnitude": 2.1e-8,
+                    "units": "1 / meter",
                     "carrier": "electricity / hydrogen",
                     "heating_value": "1 / lower_heating_value",
                     "provenance": null,
@@ -6720,8 +6720,8 @@
                     }
                 },
                 "electricity-input": {
-                    "magnitude": 0.0,
-                    "units": "1 / kilometer",
+                    "magnitude": 2.1e-8,
+                    "units": "1 / meter",
                     "carrier": "electricity / hydrogen",
                     "heating_value": "1 / lower_heating_value",
                     "provenance": null,
@@ -6771,8 +6771,8 @@
                     }
                 },
                 "electricity-input": {
-                    "magnitude": 0.0,
-                    "units": "1 / kilometer",
+                    "magnitude": 2.1e-8,
+                    "units": "1 / meter",
                     "carrier": "electricity / hydrogen",
                     "heating_value": "1 / lower_heating_value",
                     "provenance": null,
@@ -8413,7 +8413,7 @@
             "parameters": {
                 "investment": {
                     "magnitude": 7637406.0,
-                    "units": "EUR_2020 / hour / metric_ton",
+                    "units": "EUR_2020 * hour / metric_ton",
                     "carrier": "1 / steel",
                     "heating_value": null,
                     "provenance": null,
@@ -9085,7 +9085,7 @@
             "parameters": {
                 "investment": {
                     "magnitude": 1839600.0,
-                    "units": "EUR_2020 / hour / metric_ton",
+                    "units": "EUR_2020 * hour / metric_ton",
                     "carrier": "1 / steel",
                     "heating_value": null,
                     "provenance": null,
@@ -9220,7 +9220,7 @@
             "parameters": {
                 "investment": {
                     "magnitude": 1839600.0,
-                    "units": "EUR_2020 / hour / metric_ton",
+                    "units": "EUR_2020 * hour / metric_ton",
                     "carrier": "1 / steel",
                     "heating_value": null,
                     "provenance": null,
@@ -9682,7 +9682,7 @@
             "parameters": {
                 "investment": {
                     "magnitude": 4277858.0,
-                    "units": "EUR_2020 / hour / metric_ton",
+                    "units": "EUR_2020 * hour / metric_ton",
                     "carrier": "1 / hot_briquetted_iron",
                     "heating_value": null,
                     "provenance": null,
@@ -10468,7 +10468,7 @@
             "parameters": {
                 "investment": {
                     "magnitude": 4277858.0,
-                    "units": "EUR_2020 / hour / metric_ton",
+                    "units": "EUR_2020 * hour / metric_ton",
                     "carrier": "1 / hot_briquetted_iron",
                     "heating_value": null,
                     "provenance": null,
@@ -12798,8 +12798,8 @@
             "year": 2030,
             "parameters": {
                 "electricity-input": {
-                    "magnitude": 0.0,
-                    "units": "1 / kilometer",
+                    "magnitude": 1.9e-8,
+                    "units": "1 / meter",
                     "carrier": "electricity / hydrogen",
                     "heating_value": "1 / lower_heating_value",
                     "provenance": null,
@@ -12828,8 +12828,8 @@
             "year": 2030,
             "parameters": {
                 "electricity-input": {
-                    "magnitude": 0.0,
-                    "units": "1 / kilometer",
+                    "magnitude": 1.9e-8,
+                    "units": "1 / meter",
                     "carrier": "electricity / hydrogen",
                     "heating_value": "1 / lower_heating_value",
                     "provenance": null,
@@ -12858,8 +12858,8 @@
             "year": 2030,
             "parameters": {
                 "electricity-input": {
-                    "magnitude": 0.0,
-                    "units": "1 / kilometer",
+                    "magnitude": 1.9e-8,
+                    "units": "1 / meter",
                     "carrier": "electricity / hydrogen",
                     "heating_value": "1 / lower_heating_value",
                     "provenance": null,
@@ -12888,8 +12888,8 @@
             "year": 2030,
             "parameters": {
                 "electricity-input": {
-                    "magnitude": 0.0,
-                    "units": "1 / kilometer",
+                    "magnitude": 1.9e-8,
+                    "units": "1 / meter",
                     "carrier": "electricity / hydrogen",
                     "heating_value": "1 / lower_heating_value",
                     "provenance": null,
@@ -14557,7 +14557,7 @@
                 },
                 "investment": {
                     "magnitude": 923290.0,
-                    "units": "USD_2019 / hour / metric_ton",
+                    "units": "USD_2019 * hour / metric_ton",
                     "carrier": "1 / carbon_dioxide",
                     "heating_value": null,
                     "provenance": null,
@@ -14782,7 +14782,7 @@
                 },
                 "investment": {
                     "magnitude": 2569739.0,
-                    "units": "USD_2019 / hour / metric_ton",
+                    "units": "USD_2019 * hour / metric_ton",
                     "carrier": "1 / carbon_dioxide",
                     "heating_value": null,
                     "provenance": null,
@@ -15142,7 +15142,7 @@
                 },
                 "investment": {
                     "magnitude": 922105.0,
-                    "units": "USD_2019 / hour / metric_ton",
+                    "units": "USD_2019 * hour / metric_ton",
                     "carrier": "1 / carbon_dioxide",
                     "heating_value": null,
                     "provenance": null,
@@ -16105,7 +16105,7 @@
                 },
                 "investment": {
                     "magnitude": 3536679.0,
-                    "units": "USD_2019 / hour / metric_ton",
+                    "units": "USD_2019 * hour / metric_ton",
                     "carrier": "1 / carbon_dioxide",
                     "heating_value": null,
                     "provenance": null,
@@ -18000,8 +18000,8 @@
                     }
                 },
                 "electricity-input": {
-                    "magnitude": 0.0,
-                    "units": "1 / kilometer",
+                    "magnitude": 1.7e-8,
+                    "units": "1 / meter",
                     "carrier": "electricity / hydrogen",
                     "heating_value": "1 / lower_heating_value",
                     "provenance": null,
@@ -18051,8 +18051,8 @@
                     }
                 },
                 "electricity-input": {
-                    "magnitude": 0.0,
-                    "units": "1 / kilometer",
+                    "magnitude": 1.7e-8,
+                    "units": "1 / meter",
                     "carrier": "electricity / hydrogen",
                     "heating_value": "1 / lower_heating_value",
                     "provenance": null,
@@ -18081,8 +18081,8 @@
             "year": 2050,
             "parameters": {
                 "electricity-input": {
-                    "magnitude": 0.0,
-                    "units": "1 / kilometer",
+                    "magnitude": 1.7e-8,
+                    "units": "1 / meter",
                     "carrier": "electricity / hydrogen",
                     "heating_value": "1 / lower_heating_value",
                     "provenance": null,
@@ -18111,8 +18111,8 @@
             "year": 2050,
             "parameters": {
                 "electricity-input": {
-                    "magnitude": 0.0,
-                    "units": "1 / kilometer",
+                    "magnitude": 1.7e-8,
+                    "units": "1 / meter",
                     "carrier": "electricity / hydrogen",
                     "heating_value": "1 / lower_heating_value",
                     "provenance": null,

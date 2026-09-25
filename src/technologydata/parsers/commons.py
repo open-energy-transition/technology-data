@@ -67,8 +67,10 @@ class UnitPatternRegex(StrEnum):
     CURRENCY_MASS_CARRIER = r"^(USD|EUR)(?:_(\d{4}))?/t_([A-Za-z0-9]+)$"
 
     # Pattern 10: Power per distance per power with carriers
-    # Examples: MW_e/km/MW_CH4, MW_e/km/MW_H2
-    POWER_DISTANCE_POWER = r"^([kMGT]?W)_([A-Za-z0-9]+)/km/([kMGT]?W)_([A-Za-z0-9]+)$"
+    # Examples: MW_e/km/MW_CH4, MW_e/m/MW_H2
+    POWER_DISTANCE_POWER = (
+        r"^([kMGT]?W)_([A-Za-z0-9]+)/(k?m)/([kMGT]?W)_([A-Za-z0-9]+)$"
+    )
 
     # Pattern 11: Standalone mass with carrier
     # Examples: t_CH4, t_HBI, t_ore
@@ -96,9 +98,14 @@ class UnitCarrierHeatingValueExtractor:
 
     @staticmethod
     def process_currency_mass_time(match: re.Match[str]) -> tuple[str, str, None]:
-        """Process currency with mass carrier and time pattern."""
+        """
+        Process currency with mass carrier and time pattern.
+
+        The unit is a cost per capacity in mass per hour, e.g. EUR/(t_CO2/h),
+        also when the raw unit is written without parentheses (EUR/t_CO2/h).
+        """
         currency, year, carrier = match.groups()
-        standardized_unit = f"{currency}_{year}/t/h" if year else f"{currency}/t/h"
+        standardized_unit = f"{currency}_{year}/(t/h)" if year else f"{currency}/(t/h)"
         carrier_str = f"1/{carrier}"
         return standardized_unit, carrier_str, None
 
@@ -146,7 +153,9 @@ class UnitCarrierHeatingValueExtractor:
         """Process currency with generic unit and carrier per time pattern."""
         currency, year, unit_type, carrier = match.groups()
         standardized_unit = (
-            f"{currency}_{year}/{unit_type}/h" if year else f"{currency}/{unit_type}/h"
+            f"{currency}_{year}/({unit_type}/h)"
+            if year
+            else f"{currency}/({unit_type}/h)"
         )
         return standardized_unit, f"1/{carrier}", None
 
@@ -157,15 +166,15 @@ class UnitCarrierHeatingValueExtractor:
         """Process currency per mass/time with distance dimension pattern."""
         currency, year, carrier = match.groups()
         standardized_unit = (
-            f"{currency}_{year}/t/h/km" if year else f"{currency}/t/h/km"
+            f"{currency}_{year}/(t/h)/km" if year else f"{currency}/(t/h)/km"
         )
         return standardized_unit, f"1/{carrier}", None
 
     @staticmethod
     def process_power_distance_power(match: re.Match[str]) -> tuple[str, str, str]:
         """Process power per distance per power with carriers pattern."""
-        unit1, carrier1, unit2, carrier2 = match.groups()
-        standardized_unit = f"{unit1}/km/{unit2}"
+        unit1, carrier1, distance, unit2, carrier2 = match.groups()
+        standardized_unit = f"{unit1}/{distance}/{unit2}"
         carrier_str = f"{carrier1}/{carrier2}"
         # Distinguish between power (W) and energy (Wh) units
         heating_value = "1/LHV"
