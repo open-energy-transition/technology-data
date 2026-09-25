@@ -70,21 +70,7 @@ parameter) covers the use case without overloading `__getitem__` semantics.
 - `add_provenance(entry: str) -> Self`: clean, supported way to append one history entry now
   that `provenance` is a `list[str]`.
 
-## 4. Provenance recording in transformations (behavior change)
-
-`to()`, `to_currency()`, and `change_heating_value()` currently copy `provenance` unchanged
-(see the `TODO` in `change_heating_value`). They should append a human-readable history entry,
-e.g. `"Converted from USD_2020/kW to EUR_2020/kW."`, completing the provenance-history design
-introduced with `provenance: list[str]`.
-
-Note this is an observable behavior change: converted parameters gain provenance entries, and
-`test/test_parameter.py` asserts `converted.provenance == param.provenance` after
-`to_currency`, which would need updating.
-
-Until then, the documentation must not claim that conversions are recorded; only parameters
-derived with the equation system get a provenance entry (see also §7).
-
-## 5. Collection and technology conveniences
+## 4. Collection and technology conveniences
 
 - `TechnologyCollection.append(tech)` and `__add__(other) -> Self`: merge primitive for
   combining harmonized datasets (design.md UC-002); currently requires
@@ -96,7 +82,7 @@ derived with the equation system get a provenance entry (see also §7).
   nested parameters, which is unreadable in a REPL. A summary (name/region/year/case + parameter
   names) matches the `__str__` methods recently added to `Parameter` and `Equation`.
 
-## 6. Deferred code simplifications (behavior-preserving)
+## 5. Deferred code simplifications (behavior-preserving)
 
 Cleanups identified in review but scoped out of the equations-focused simplification pass:
 

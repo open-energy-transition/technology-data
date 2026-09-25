@@ -202,10 +202,11 @@ class TestTechnology:
             converted.parameters["investment"].carrier
             == tech.parameters["investment"].carrier
         )
-        assert (
-            converted.parameters["investment"].provenance
-            == tech.parameters["investment"].provenance
-        )
+        # Provenance history is kept and the currency conversion is appended
+        converted_provenance = converted.parameters["investment"].provenance
+        assert converted_provenance is not None
+        assert converted_provenance[:-1] == tech.parameters["investment"].provenance
+        assert converted_provenance[-1].startswith("Converted currency from")
         assert (
             converted.parameters["investment"].note
             == tech.parameters["investment"].note
