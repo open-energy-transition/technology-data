@@ -13,7 +13,7 @@ Fact sheets are short and structured information: what the data is, where it com
 ## Checklist
 
 0. Clone the repository.
-1. Add the raw file to `src/technologydata/parsers/raw/` and its license to `REUSE.toml`.
+1. Add the raw file to `src/technologydata/parsers/raw/<key>/` and its license to `REUSE.toml`.
 2. Add a parser under `src/technologydata/parsers/<key>/` and register `<key>` in `DataSourceName` and `DataAccessor.parse()`.
 3. Run the parser and commit the output in `src/technologydata/parsers/<key>/<version>/`.
 4. Copy the template below to `docs/datasets/<key>.md` and fill it in.
@@ -27,8 +27,8 @@ paste the new output into the fact sheet then to resolve.
 When a new version is added, add a row to the `Available versions` table, add the version to the front matter and update `Accessing the data` and `Contents` to the new version.
 
 !!! tip "Delegate work to AI agents"
-    Once the parser and the parsed data exist, writing the fact sheet can be delegated to an AI agent.
-    The repository contains the skill [`dataset-factsheet`](https://github.com/open-energy-transition/technology-data/blob/master/.claude/skills/dataset-factsheet/SKILL.md) with step-by-step instructions: where each fact comes from, how to generate the tables and which checks to run.
+    Once the parser and the parsed data exist, writing the fact sheet and the parser user guide page can be delegated to an AI agent.
+    The repository contains the skill [`dataset-factsheet`](https://github.com/open-energy-transition/technology-data/blob/master/.claude/skills/dataset-factsheet/SKILL.md) with step-by-step instructions: where each fact comes from, how to generate the tables, how to write the parser pages and which checks to run.
     Claude Code picks it up automatically (ask e.g. "create the fact sheet for `<key>`" or run `/dataset-factsheet`); other agents are pointed to it by `AGENTS.md`.
     Always review the result created by AI; other people want to build their work on it.
     Pay particular attention to the assumptions, limitations and license.
@@ -54,7 +54,7 @@ documentation_url: <link to the documentation, if any>
 license: <SPDX identifier>
 versions: [<version>]
 region: <region code set by the parser>
-raw_file: src/technologydata/parsers/raw/<file>
+raw_file: src/technologydata/parsers/raw/<key>/<file>
 parser: technologydata.parsers.<key>.<ParserClass>
 ---
 
@@ -83,7 +83,7 @@ SPDX-License-Identifier: MIT
 | Cases | <case values and their meaning> |
 | Currency | `<CUR_YEAR>` |
 | Raw format | <format, sheet> |
-| Parser | [`<ParserClass>`](../api/<key>_parser.md) |
+| Parser | [`<ParserClass>`](#parser-api) |
 
 ## Available versions
 
@@ -166,7 +166,7 @@ The parser overwrites the files shipped with the package.
 from technologydata import DataAccessor
 
 DataAccessor(data_source="<key>", version="<version>").parse(
-    input_file_name="<file>",
+    input_file_names=["<file>"],
     num_digits=3,
 )
 ```
@@ -187,6 +187,19 @@ Please also cite `technologydata`, see [Citing](../index.md#citing).
 
 ## See also
 
-- [<Parser> Parser](../user_guide/<key>_parser.md) (user guide) and [API reference](../api/<key>_parser.md)
+- [<Parser> Parser](../user_guide/<key>_parser.md) (user guide)
 - [Data Accessor](../user_guide/data_accessor.md)
+
+## Parser API
+
+The parser is only needed to reproduce or update the dataset, see [Reproduce](#reproduce); loading the data only needs `DataAccessor.load()`.
+The dispatcher selects the parser of the requested version.
+
+::: technologydata.parsers.<key>.<ParserClass>
+    options:
+      heading_level: 3
+
+::: technologydata.parsers.<key>.<version_module>.<VersionParserClass>
+    options:
+      heading_level: 3
 ````
