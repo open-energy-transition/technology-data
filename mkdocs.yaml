@@ -42,8 +42,6 @@ nav:
   - Technology: api/technology.md
   - Technology Collection: api/technology_collection.md
   - Data Accessor: api/data_accessor.md
-  - Dea Energy Storage Parser: api/dea_energy_storage_parser.md
-  - Legacy Input Data Parser: api/legacy_input_data_parser.md
   - Utils:
     - Commons:
       - Common functionalities: api/commons/commons.md
