@@ -126,7 +126,7 @@ See the [tutorial](../tutorial/index.md) for filtering, unit and currency conver
 | electricity-input             | dimensionless, megawatt_hour / metric_ton                                                        | electricity / carbon_dioxide, electricity / fischer_tropsch |         2 |
 | heat-input                    | megawatt_hour / metric_ton                                                                       | thermal / carbon_dioxide                                    |         1 |
 | hydrogen-input                | dimensionless                                                                                    | hydrogen / fischer_tropsch                                  |         1 |
-| investment                    | USD_2022 / kilowatt, USD_2022 / kilowatt_hour, USD_2022 / megawatt, USD_2023 / hour / metric_ton | 1 / carbon_dioxide, 1 / fischer_tropsch, 1 / hydrogen       |        66 |
+| investment                    | USD_2022 / kilowatt, USD_2022 / kilowatt_hour, USD_2022 / megawatt, USD_2023 * hour / metric_ton | 1 / carbon_dioxide, 1 / fischer_tropsch, 1 / hydrogen       |        66 |
 | lifetime                      | year                                                                                             |                                                             |        17 |
 | min_fill_level                | percent                                                                                          |                                                             |         1 |
 ```

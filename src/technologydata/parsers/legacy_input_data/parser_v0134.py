@@ -73,9 +73,9 @@ class LegacyInputDataV0134Parser(ParserBase):
         >>> _extract_units_carriers_heating_value("MWh_H2/MWh_FT")
         ('MWh/MWh', 'H2/FT', 'LHV')
         >>> _extract_units_carriers_heating_value("USD_2023/t_CO2/h")
-        ('USD_2023/t/h', '1/CO2', None)
+        ('USD_2023/(t/h)', '1/CO2', None)
         >>> _extract_units_carriers_heating_value("EUR/(tCO2/h)/km")
-        ('EUR/t/h/km', '1/CO2', None)
+        ('EUR/(t/h)/km', '1/CO2', None)
         >>> _extract_units_carriers_heating_value("t_CH4")
         ('t', 'CH4', None)
         >>> _extract_units_carriers_heating_value("MWh/t_CO2")
@@ -307,7 +307,8 @@ class LegacyInputDataV0134Parser(ParserBase):
           kWel -> kW_el, MWh_thdh -> MWh_th, t_cl -> t_clinker,
           t_HLOHC -> t_H18DBT, t_LOHC -> t_H0DBT, t_hbi -> t_HBI
         - Removal of design point suffix: ,dp removed from units
-        - Distance normalization: 1000km -> km (with value divided by 1000)
+        - Distance normalization: 1000km -> m (with value divided by 1e6 and
+          rounded to num_digits significant digits)
         - Percentage conversion: 'per unit' -> '%' (with value multiplied by 100)
         - Currency year integration: currency_year column merged into unit string
         - Unit/carrier/heating value extraction using regex pattern matching
@@ -465,17 +466,19 @@ class LegacyInputDataV0134Parser(ParserBase):
             "p.u.", "per unit", regex=False
         )
 
-        # Replace "1000km" with "km" and divide val by 1000
+        # Replace "1000km" with "m" (no SI prefix) and divide val by 1e6.
+        # The resulting values are very small, so they are rounded to
+        # significant digits rather than decimals to keep their precision.
         mask_1000km = legacy_input_data_df["unit"].str.contains(
             "1000km", na=False, regex=False
         )
         legacy_input_data_df.loc[mask_1000km, "unit"] = legacy_input_data_df.loc[
             mask_1000km, "unit"
-        ].str.replace("1000km", "km", regex=False)
-        legacy_input_data_df.loc[mask_1000km, "value"] = (
-            legacy_input_data_df.loc[mask_1000km, "value"] / 1000.0
-        ).round(num_digits)
-        logger.info("`1000km` replaced by `km`. Corresponding value divided by 1000.")
+        ].str.replace("1000km", "m", regex=False)
+        legacy_input_data_df.loc[mask_1000km, "value"] = legacy_input_data_df.loc[
+            mask_1000km, "value"
+        ].apply(lambda value: float(f"{value / 1e6:.{num_digits}g}"))
+        logger.info("`1000km` replaced by `m`. Corresponding value divided by 1e6.")
 
         # Replace "per unit" with "%" and multiply val by 100
         mask_per_unit = legacy_input_data_df["unit"].str.contains("per unit", na=False)
