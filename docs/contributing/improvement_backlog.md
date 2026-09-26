@@ -10,23 +10,6 @@ rationale, so it can be picked up as an independent piece of work later.
 
 These are used or promised in the documentation today, so users following the docs hit errors.
 
-### `TechnologyCollection.__getitem__`
-
-```python
-def __getitem__(self, index: int | slice) -> Technology | Self: ...
-```
-
-`docs/user_guide/design.md` shows `tech = techs[0]` (twice), but indexing a collection currently
-raises `TypeError` even though `__iter__` and `__len__` exist. Integer indices should return the
-`Technology`, slices a new `TechnologyCollection`.
-
-### Optional filter arguments on `TechnologyCollection.get`
-
-All five arguments (`name`, `region`, `year`, `case`, `detailed_technology`) are currently
-required, although the method body already handles `None` and `design.md` shows partial
-filtering (`techs.get(technology="Solar PV", region="EUR")`). Give every argument a `= None`
-default.
-
 ### Public equation removal and lookup on `EquationRegistry`
 
 ```python
@@ -37,16 +20,6 @@ def get(self, name: str) -> Equation: ...      # KeyError on unknown name
 `docs/user_guide/technology.md` promises users can "remove or add equations", but removal and
 single-equation lookup currently require the private `_remove_equation` /
 `_equations_by_name`.
-
-### `TechnologyCollection.get_parameter`
-
-```python
-def get_parameter(self, name: str) -> list[Parameter | None]: ...
-```
-
-`design.md` shows cross-collection parameter access (`techs["lifetime"].values`). A method
-returning one entry per technology (with `None` or a skip-policy for technologies lacking the
-parameter) covers the use case without overloading `__getitem__` semantics.
 
 ## 2. Custom registry plumbing
 
@@ -72,15 +45,8 @@ parameter) covers the use case without overloading `__getitem__` semantics.
 
 ## 4. Collection and technology conveniences
 
-- `TechnologyCollection.append(tech)` and `__add__(other) -> Self`: merge primitive for
-  combining harmonized datasets (design.md UC-002); currently requires
-  `TechnologyCollection(technologies=a.technologies + b.technologies)` by hand.
-- `Technology.__contains__(key)`: `"eac" in tech` is natural given `__getitem__`/`__setitem__`
-  exist. `__delitem__` would complete the mapping protocol (the documented way to drop a
+- `Technology.__delitem__` would complete the mapping protocol (the documented way to drop a
   parameter is `del tech.parameters[name]`).
-- Compact `__str__` for `Technology` and `TechnologyCollection`: the pydantic repr dumps full
-  nested parameters, which is unreadable in a REPL. A summary (name/region/year/case + parameter
-  names) matches the `__str__` methods recently added to `Parameter` and `Equation`.
 
 ## 5. Deferred code simplifications (behavior-preserving)
 
@@ -127,13 +93,6 @@ electricity * efficiency  # ValueError: different heating values: None and lower
 Proposal: treat a missing heating value as compatible and let the result take the one that is
 set. The rule for two set heating values also needs a decision: multiplying LHV by LHV
 currently yields `lower_heating_value ** 2`. This is a design decision and a behavior change.
-
-### Derived parameters drop the sources and provenance of their inputs
-
-`Technology.calculate_parameters` (via `EquationRegistry`) returns a parameter whose
-`provenance` contains only the formula entry and whose `sources` are empty, although the
-inputs carry both. The derived parameter should merge the inputs' sources and keep their
-provenance before the formula entry, as the arithmetic operators already do.
 
 ### Wrong units for `eac`
 

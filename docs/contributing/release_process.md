@@ -31,7 +31,7 @@ Follow these steps to create a new release:
 ### 1. Update CITATION.cff
 
 !!! warning "Manual Step Required"
-    Due to a current limitation in the release workflow (see [HOTFIX in release.yml](https://github.com/open-energy-transition/technology-data/blob/master/.github/workflows/release.yml#L38)), you must manually update the version number in `CITATION.cff`.
+    Due to a current limitation in the release workflow, you must manually update the version number in `CITATION.cff`.
 
 Edit `CITATION.cff` and update the version number on line 9:
 
