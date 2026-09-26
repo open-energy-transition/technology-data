@@ -52,6 +52,7 @@ nav:
 
 - Contributing:
   - Instructions: contributing/instructions.md
+  - Release Process: contributing/release_process.md
   - Code of Conduct: contributing/CODE_OF_CONDUCT.md
   - Contributors: contributing/contributors.md
   - Adding a Dataset: contributing/adding_a_dataset.md
