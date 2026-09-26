@@ -141,7 +141,7 @@ The docstring says both files are exported "together with the corresponding data
 
 Since `data_path` defaults to the package's `parsers` directory (so that `load()` works from any
 working directory), `download()` writes there too. In a non-editable install this is inside
-`site-packages` and may not be writable. Related to #92, #95 and #113.
+`site-packages` and may not be writable.
 
 ## Considered and rejected
 
