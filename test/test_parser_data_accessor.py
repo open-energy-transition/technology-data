@@ -139,7 +139,7 @@ class TestDataAccessor:
             "https://raw.githubusercontent.com/open-energy-transition/technology-data/"
         )
         # Use specific commit SHA instead of branch name for test stability
-        commit_sha = "1813eb18a421ebbde785fecad32ea1b6ced05fa7/"
+        commit_sha = "4bba5670923a7c9e49cef8fa61674c76f516e1a8/"
         data_source = DataSourceName.LEGACY_INPUT_DATA
         version = "v0.13.4"
         target_url = f"src/technologydata/parsers/{data_source}/{version}/"
